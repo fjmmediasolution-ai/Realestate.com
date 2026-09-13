@@ -7,6 +7,8 @@
   
   <!-- Fonts & Font Awesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- html2pdf Library for PDF Download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
@@ -1737,6 +1739,10 @@
     <span class="dot-bullet">•</span>
     <span>Customer Directory</span>
   </a>
+  <a class="submenu-item" id="subCustomerDocuments" onclick="switchSection('customerDocuments', this)">
+    <span class="dot-bullet">•</span>
+    <span>Customer Documents Download</span>
+  </a>
 </div>
           </div>
 
@@ -1917,91 +1923,46 @@
               </button>
             </div>
 
-            <form id="projectEntryForm">
+          <form id="projectEntryForm">
+              <!-- Hidden ID for Edit Mode -->
+              <input type="hidden" id="projectEditId" value="" />
+              
               <div class="form-grid-layout">
                 
-                <!-- Project Name -->
+                <!-- 1. Project Name -->
                 <div>
                   <label>Project Name *</label>
-                  <input type="text" id="projName" placeholder="e.g. BILAL HEIGHTS, Skyline Mall" required />
+                  <input type="text" id="projName" placeholder="e.g. BILAL HEIGHTS" required />
                 </div>
 
-                <!-- Project Type -->
+                <!-- 2. Location / Address -->
                 <div>
-                  <label>Project Type *</label>
-                  <select id="projType" required>
-                    <option value="">Select Type</option>
-                    <option value="Residential High-Rise">Residential High-Rise</option>
-                    <option value="Commercial Mall">Commercial Mall</option>
-                    <option value="Mixed Use (Res & Comm)">Mixed Use (Res & Comm)</option>
-                    <option value="Luxury Housing / Villas">Luxury Housing / Villas</option>
-                    <option value="Corporate Offices">Corporate Offices</option>
-                  </select>
+                  <label>Location / Address *</label>
+                  <input type="text" id="projLocation" placeholder="e.g. Main Boulevard, Clifton" required />
                 </div>
 
-                <!-- Location -->
+                <!-- 3. City -->
                 <div>
-                  <label>Location / Site Address *</label>
-                  <input type="text" id="projLocation" placeholder="e.g. Main Boulevard, Clifton, Karachi" required />
+                  <label>City *</label>
+                  <input type="text" id="projCity" placeholder="e.g. Karachi, Lahore, Islamabad" required />
                 </div>
 
-                <!-- Start Date -->
+                <!-- 4. Total Floor -->
                 <div>
-                  <label>Start Date *</label>
-                  <input type="date" id="projStartDate" required />
+                  <label>Total Floor *</label>
+                  <input type="text" id="projFloors" placeholder="e.g. Ground + 10 Floors" required />
                 </div>
 
-                <!-- Total Floors -->
+                <!-- 5. Total Flats -->
                 <div>
-                  <label>Total Floors *</label>
-                  <input type="text" id="projFloors" placeholder="e.g. B + G + 15 Floors" required />
+                  <label>Total Flats *</label>
+                  <input type="number" id="projFlats" placeholder="e.g. 50" min="1" required />
                 </div>
 
-                <!-- Expected Completion Date -->
-                <div>
-                  <label>Expected Completion Date *</label>
-                  <input type="date" id="projCompletionDate" required />
-                </div>
-
-                <!-- Total Project Cost Estimate -->
-                <div>
-                  <label>Total Project Cost Estimate (PKR) *</label>
-                  <input type="text" id="projCostEstimate" placeholder="e.g. 450,000,000" required />
-                </div>
-
-                <!-- Total Flats / Units -->
-                <div>
-                  <label>Total Flats / Units *</label>
-                  <input type="number" id="projFlats" placeholder="e.g. 120" min="1" required />
-                </div>
-
-                <!-- Status -->
-                <div>
-                  <label>Status *</label>
-                  <select id="projStatus" required>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Under Construction">Under Construction</option>
-                    <option value="Planning & Approvals">Planning & Approvals</option>
-                    <option value="Ready to Move / Completed">Ready to Move / Completed</option>
-                    <option value="Upcoming Pre-Launch">Upcoming Pre-Launch</option>
-                    <option value="On Hold">On Hold</option>
-                  </select>
-                </div>
-
-                <!-- Project Image Upload -->
-                <div>
-                  <label>Project Image Upload</label>
-                  <input type="file" id="projImageFile" accept="image/*" onchange="previewProjectImage(event)" />
-                  <div class="image-preview-box" id="projImagePreviewBox">
-                    <span id="projImagePlaceholder" style="font-size:12px; color:var(--text-muted);"><i class="fa-regular fa-image" style="font-size:22px; display:block; margin-bottom:4px;"></i>No Image Selected</span>
-                    <img id="projImagePreview" src="" style="display:none;" alt="Project Preview" />
-                  </div>
-                </div>
-
-                <!-- Project Description -->
+                <!-- 6. Description -->
                 <div class="form-group-full">
-                  <label>Project Description</label>
-                  <textarea id="projDescription" rows="3" placeholder="Enter architectural details, building amenities, parking spaces, payment terms..."></textarea>
+                  <label>Description</label>
+                  <textarea id="projDescription" rows="3" placeholder="Project ki mukhtasar tafseelat yahan darj karein..."></textarea>
                 </div>
 
               </div>
@@ -2031,14 +1992,12 @@
               <table class="erp-table">
                 <thead>
                   <tr>
-                    <th style="width:50px;">Image</th>
+                    <th style="width: 45px;">#</th>
                     <th>Project Name</th>
-                    <th>Type</th>
-                    <th>Location</th>
-                    <th>Floors</th>
-                    <th>Total Units</th>
-                    <th>Estimated Cost</th>
-                    <th>Status</th>
+                    <th>Location / Address</th>
+                    <th>City</th>
+                    <th>Total Floor</th>
+                    <th>Total Flats</th>
                     <th style="text-align: center;">Actions</th>
                   </tr>
                 </thead>
@@ -2372,6 +2331,10 @@
             </div>
 
             <form id="customerForm">
+  <!-- Hidden ID for Edit Mode -->
+  <input type="hidden" id="customerEditId" value="" />
+              
+  <!-- Property Association Fields -->
               
               <!-- Property Association Fields -->
               <!-- ================= NAYA COMPLETE CODE ================= -->
@@ -2461,12 +2424,14 @@
       <input type="number" id="dealPossession" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
     </div>
 
-    <!-- Plan Duration Dropdown -->
+    <!-- Plan Duration Dropdown (12, 24, 36, 48 Months) -->
     <div>
       <label>Plan Duration *</label>
       <select id="dealDuration" required onchange="calculateMonthlyInstallment()">
-        <option value="36">36 Months</option>
-        <option value="48">48 Months</option>
+        <option value="12">12 Months (1 Year)</option>
+        <option value="24">24 Months (2 Years)</option>
+        <option value="36" selected>36 Months (3 Years)</option>
+        <option value="48">48 Months (4 Years)</option>
       </select>
     </div>
 
@@ -2518,34 +2483,96 @@
   </div>
 </div>
 
-              <!-- Ownership Toggle Checkboxes (First & Second Owner) -->
-              <div class="owner-toggle-card">
-                <div style="font-size:13.5px; font-weight:800; color:#475569; margin-right:10px;">Select Ownership:</div>
-                <label class="owner-checkbox-label">
-                  <input type="checkbox" id="checkFirstOwner" checked onchange="toggleOwnerBoxes()" />
-                  <span><i class="fa-solid fa-user-tie" style="color:#2563eb;"></i> First Owner</span>
-                </label>
-                <label class="owner-checkbox-label">
-                  <input type="checkbox" id="checkSecondOwner" onchange="toggleOwnerBoxes()" />
-                  <span><i class="fa-solid fa-user-group" style="color:#0284c7;"></i> Second Owner (Co-Owner)</span>
-                </label>
+             <!-- ================= OWNERSHIP TYPE DROPDOWN CARD ================= -->
+              <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:18px 20px; margin-bottom:22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                  <div style="flex:1; min-width:250px;">
+                    <label style="font-size:14px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                      <i class="fa-solid fa-users-gear" style="color:#2563eb;"></i> Select Ownership Type *
+                    </label>
+                    <select id="custOwnershipType" onchange="handleOwnershipTypeChange()" style="width:100%; padding:11px 14px; border:1.5px solid #2563eb; border-radius:10px; font-size:14px; font-weight:700; color:#1e293b; background:#ffffff; outline:none;">
+                      <option value="Single Owner" selected>Single Owner</option>
+                      <option value="Joint Ownership">Joint Ownership (Equal Partners: Owner 1 & Owner 2)</option>
+                      <option value="Transfer">Transfer (Transfer Ownership to New Owner)</option>
+                    </select>
+                  </div>
+                  <div id="ownershipStatusPill" style="font-size:12px; font-weight:800; padding:6px 14px; border-radius:20px; background:#dbeafe; color:#1d4ed8;">
+                    <i class="fa-solid fa-user"></i> Single Owner Mode Active
+                  </div>
+                </div>
               </div>
 
-              <!-- ================= 1. FIRST OWNER FORM SECTION ================= -->
-              <div id="firstOwnerBox" class="owner-box-section">
-                <div class="owner-box-header">
-                  <h4><i class="fa-solid fa-user-check"></i> First Owner Details</h4>
-                  <span class="sub-heading-badge">Primary Applicant</span>
+              <!-- ================= TRANSFER CASE SECTION (Previous Owner & Transfer Info) ================= -->
+              <div id="transferBox" class="owner-box-section" style="display:none; border-color:#f59e0b; background:#fffbeb;">
+                <div class="owner-box-header" style="border-bottom-color:#fef3c7;">
+                  <h4 style="color:#b45309;"><i class="fa-solid fa-right-left"></i> Transfer Details & Previous Owner Record</h4>
+                  <span class="sub-heading-badge" style="background:#fef3c7; color:#b45309;">Ownership Transfer Process</span>
                 </div>
 
-                <!-- First Owner Picture Upload -->
+                <div class="form-grid-layout" style="margin-bottom:16px;">
+                  <div>
+                    <label>Transfer Date *</label>
+                    <input type="date" id="transferDate" />
+                  </div>
+                  <div>
+                    <label>Transfer Ref / Document No *</label>
+                    <input type="text" id="transferDocNo" placeholder="e.g. TR-2026-041" />
+                  </div>
+                  <div>
+                    <label>Transfer Fee / Charges (PKR)</label>
+                    <input type="number" id="transferFee" placeholder="e.g. 50000" />
+                  </div>
+                </div>
+
+                <div style="background:#ffffff; border:1px solid #fde68a; border-radius:12px; padding:16px; margin-bottom:14px;">
+                  <h5 style="font-size:13px; font-weight:800; color:#92400e; margin-bottom:12px;">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Previous Owner Details (Auto-filled if existing flat is selected)
+                  </h5>
+                  <div class="form-grid-layout">
+                    <div>
+                      <label>Previous Owner Name</label>
+                      <input type="text" id="prevOwnerName" placeholder="Former Owner Name" />
+                    </div>
+                    <div>
+                      <label>Previous Owner CNIC</label>
+                      <input type="text" id="prevOwnerCnic" placeholder="42101-XXXXXXX-X" oninput="formatCnic(this)" />
+                    </div>
+                    <div>
+                      <label>Previous Owner Mobile</label>
+                      <input type="tel" id="prevOwnerMobile" placeholder="0300-XXXXXXX" />
+                    </div>
+                  </div>
+                </div>
+
+               <!-- Transfer Reason / Legal Notes (Full Width & Spacious) -->
+                <div style="width: 100%; margin-top: 12px;">
+                  <label style="display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px;">
+                    Transfer Reason / Legal Notes
+                  </label>
+                  <textarea 
+                    id="transferRemarks" 
+                    rows="3" 
+                    placeholder="Enter transfer remarks, affidavit reference, stamp paper number..." 
+                    style="width: 100%; min-height: 85px; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13.5px; outline: none; background: #ffffff; resize: vertical; box-sizing: border-box; font-family: inherit; line-height: 1.5;"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- ================= 1. OWNER 1 DETAILS SECTION ================= -->
+              <div id="owner1Box" class="owner-box-section">
+                <div class="owner-box-header">
+                  <h4 id="owner1HeaderTitle"><i class="fa-solid fa-user-check"></i> Owner 1 Details</h4>
+                  <span class="sub-heading-badge" id="owner1Badge">Primary Owner</span>
+                </div>
+
+                <!-- Owner 1 Photo Upload -->
                 <div class="photo-upload-container" style="margin-bottom:18px;">
                   <div class="owner-photo-preview" id="owner1PreviewBox">
                     <i class="fa-regular fa-user" id="owner1Placeholder"></i>
-                    <img id="owner1Img" src="" style="display:none;" alt="1st Owner Photo" />
+                    <img id="owner1Img" src="" style="display:none;" alt="Owner 1 Photo" />
                   </div>
                   <div style="flex:1;">
-                    <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">First Owner Photo</label>
+                    <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;" id="owner1PhotoLabel">Owner 1 Photo</label>
                     <input type="file" id="owner1PhotoInput" accept="image/*" onchange="previewOwnerPhoto(event, 'owner1Img', 'owner1Placeholder')" style="font-size:12px;" />
                     <small style="display:block; color:#64748b; font-size:11px; margin-top:3px;">Passport size portrait photo (PNG, JPG up to 2MB)</small>
                   </div>
@@ -2554,7 +2581,7 @@
                 <!-- Personal Information -->
                 <div class="form-grid-layout">
                   <div>
-                    <label>Customer Name *</label>
+                    <label id="owner1NameLabel">Owner 1 Name *</label>
                     <input type="text" id="cust1Name" placeholder="Muhammad Ali" required />
                   </div>
                   <div>
@@ -2575,7 +2602,7 @@
                   </div>
                   <div>
                     <label>Email Address</label>
-                    <input type="email" id="cust1Email" placeholder="customer@example.com" />
+                    <input type="email" id="cust1Email" placeholder="owner1@example.com" />
                   </div>
                   <div class="form-group-full">
                     <label>Permanent Residential Address *</label>
@@ -2585,7 +2612,7 @@
 
                 <!-- Nominee / Next of Kin -->
                 <div class="nominee-card">
-                  <h5><i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - 1st Owner</h5>
+                  <h5 id="owner1NomineeTitle"><i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1</h5>
                   <div class="form-grid-layout">
                     <div>
                       <label>Nominee Name</label>
@@ -2603,30 +2630,30 @@
                 </div>
               </div>
 
-              <!-- ================= 2. SECOND OWNER FORM SECTION ================= -->
-              <div id="secondOwnerBox" class="owner-box-section" style="display:none; border-color:#93c5fd;">
+              <!-- ================= 2. OWNER 2 DETAILS SECTION (Equal Partner) ================= -->
+              <div id="owner2Box" class="owner-box-section" style="display:none; border-color:#93c5fd;">
                 <div class="owner-box-header">
-                  <h4 style="color:#0369a1;"><i class="fa-solid fa-user-plus"></i> Second Owner Details</h4>
-                  <span class="sub-heading-badge" style="background:#e0f2fe; color:#0369a1;">Co-Owner / Joint</span>
+                  <h4 style="color:#0369a1;"><i class="fa-solid fa-user-group"></i> Owner 2 Details</h4>
+                  <span class="sub-heading-badge" style="background:#e0f2fe; color:#0369a1;">Equal Partner</span>
                 </div>
 
-                <!-- Second Owner Picture Upload -->
+                <!-- Owner 2 Photo Upload -->
                 <div class="photo-upload-container" style="margin-bottom:18px; border-color:#60a5fa;">
                   <div class="owner-photo-preview" id="owner2PreviewBox" style="border-color:#0284c7;">
                     <i class="fa-regular fa-user" id="owner2Placeholder"></i>
-                    <img id="owner2Img" src="" style="display:none;" alt="2nd Owner Photo" />
+                    <img id="owner2Img" src="" style="display:none;" alt="Owner 2 Photo" />
                   </div>
                   <div style="flex:1;">
-                    <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">Second Owner Photo</label>
+                    <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">Owner 2 Photo</label>
                     <input type="file" id="owner2PhotoInput" accept="image/*" onchange="previewOwnerPhoto(event, 'owner2Img', 'owner2Placeholder')" style="font-size:12px;" />
                     <small style="display:block; color:#64748b; font-size:11px; margin-top:3px;">Passport size portrait photo (PNG, JPG up to 2MB)</small>
                   </div>
                 </div>
 
-                <!-- Second Owner Personal Information -->
+                <!-- Owner 2 Personal Information -->
                 <div class="form-grid-layout">
                   <div>
-                    <label>Customer Name *</label>
+                    <label>Owner 2 Name *</label>
                     <input type="text" id="cust2Name" placeholder="Fatima Ali" />
                   </div>
                   <div>
@@ -2647,7 +2674,7 @@
                   </div>
                   <div>
                     <label>Email Address</label>
-                    <input type="email" id="cust2Email" placeholder="co-owner@example.com" />
+                    <input type="email" id="cust2Email" placeholder="owner2@example.com" />
                   </div>
                   <div class="form-group-full">
                     <label>Permanent Residential Address *</label>
@@ -2655,9 +2682,9 @@
                   </div>
                 </div>
 
-                <!-- Second Owner Nominee -->
+                <!-- Owner 2 Nominee -->
                 <div class="nominee-card" style="border-left-color:#0284c7;">
-                  <h5 style="color:#0369a1;"><i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - 2nd Owner</h5>
+                  <h5 style="color:#0369a1;"><i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 2</h5>
                   <div class="form-grid-layout">
                     <div>
                       <label>Nominee Name</label>
@@ -2675,43 +2702,209 @@
                 </div>
               </div>
 
-              <!-- Submit Button -->
-              <div style="margin-top:20px; display:flex; justify-content:flex-end;">
-                <button type="submit" id="btnSaveCustomer" class="btn-action-primary" style="padding:12px 28px; font-size:15px;">
-                  <i class="fa-solid fa-floppy-disk"></i> Register Customer Account
-                </button>
+              <!-- ================= 1. DOCUMENTS UPLOAD SECTION ================= -->
+              <div class="owner-box-section" style="border-color:#cbd5e1; background:#f8fafc; margin-top:24px;">
+                <div class="owner-box-header">
+                  <h4 style="color:#0f172a;"><i class="fa-solid fa-folder-open" style="color:#2563eb;"></i> Required Documents Upload</h4>
+                  <span class="sub-heading-badge" style="background:#e0f2fe; color:#0369a1;">Verification Files</span>
+                </div>
+
+                <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                  <!-- Doc 1: CNIC Copy -->
+                  <div style="background:#ffffff; padding:14px; border-radius:10px; border:1px solid #e2e8f0;">
+                    <label style="font-size:12.5px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
+                      <i class="fa-regular fa-id-card" style="color:#2563eb;"></i> CNIC / ID Card Copy (Front & Back)
+                    </label>
+                    <input type="file" id="docCnicFile" accept="image/*,.pdf" style="font-size:12px; width:100%;" onchange="handleDocUpload(event, 'cnic')" />
+                    <small id="cnicDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Supported: JPG, PNG, PDF</small>
+                  </div>
+
+                  <!-- Doc 2: Payment Receipt / Challan -->
+                  <div style="background:#ffffff; padding:14px; border-radius:10px; border:1px solid #e2e8f0;">
+                    <label style="font-size:12.5px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
+                      <i class="fa-solid fa-receipt" style="color:#16a34a;"></i> Payment Slip / Booking Challan
+                    </label>
+                    <input type="file" id="docPaymentFile" accept="image/*,.pdf" style="font-size:12px; width:100%;" onchange="handleDocUpload(event, 'payment')" />
+                    <small id="paymentDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Deposit proof / bank slip</small>
+                  </div>
+
+                  <!-- Doc 3: Transfer Deed / Affidavit (Optional) -->
+                  <div style="background:#ffffff; padding:14px; border-radius:10px; border:1px solid #e2e8f0;">
+                    <label style="font-size:12.5px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
+                      <i class="fa-solid fa-file-contract" style="color:#f59e0b;"></i> Transfer Deed / Affidavit / Other
+                    </label>
+                    <input type="file" id="docOtherFile" accept="image/*,.pdf" style="font-size:12px; width:100%;" onchange="handleDocUpload(event, 'other')" />
+                    <small id="otherDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Official stamp / affidavits</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================= 2. TERMS & CONDITIONS SECTION ================= -->
+              <div class="owner-box-section" style="border-color:#cbd5e1; background:#ffffff; margin-top:20px;">
+                <div class="owner-box-header">
+                  <h4 style="color:#0f172a;"><i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i> Terms & Conditions of Allotment</h4>
+                  <span class="sub-heading-badge" style="background:#fef3c7; color:#b45309;">Legal Agreement</span>
+                </div>
+
+                <div style="max-height:140px; overflow-y:auto; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px 18px; font-size:12.5px; color:#475569; line-height:1.7; margin-bottom:14px;">
+                  <p style="margin-bottom:6px;"><strong>1. Payment Schedule:</strong> All installments must be cleared on or before the 10th of each calendar month as per the agreed payment schedule.</p>
+                  <p style="margin-bottom:6px;"><strong>2. Possession Rights:</strong> Physical possession of the unit will only be handed over upon 100% clearance of all total dues, documentation, and utility charges.</p>
+                  <p style="margin-bottom:6px;"><strong>3. Cancellation Policy:</strong> In case of default on consecutive installments, the management reserves the right to issue notice as per society/project bylaws.</p>
+                  <p style="margin-bottom:0;"><strong>4. Transfer & Mutation:</strong> No transfer or third-party sale will be acknowledged without an official NOC and clearing transfer fee charges.</p>
+                </div>
+
+                <!-- Mandatory Checkbox -->
+                <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13.5px; font-weight:700; color:#1e293b; user-select:none;">
+                  <input type="checkbox" id="checkAgreeTerms" required style="width:19px; height:19px; accent-color:#2563eb; cursor:pointer;" />
+                  <span>I have read, understood, and solemnly accept all the terms, conditions, and bylaws of Bilal Heights.</span>
+                </label>
+              </div>
+
+             <!-- ================= 3. MANUAL SIGNATURES SECTION (Pen Sign on Print) ================= -->
+              <div class="owner-box-section" style="border-color:#cbd5e1; background:#ffffff; margin-top:20px;">
+                <div class="owner-box-header">
+                  <h4 style="color:#0f172a;"><i class="fa-solid fa-signature" style="color:#2563eb;"></i> Signatures & Verification (Manual on Print)</h4>
+                  <span class="sub-heading-badge" style="background:#f1f5f9; color:#475569;">Physical Signatures</span>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; padding:12px 0;">
+                  
+                  <!-- Left: Customer Signature Box -->
+                  <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:24px 16px 14px 16px; text-align:center; background:#f8fafc;">
+                    <div style="height:42px; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:12.5px;">
+                      <i class="fa-solid fa-pen-nib" style="margin-right:6px; color:#2563eb;"></i> Sign with pen on printed copy
+                    </div>
+                    <div style="border-top:2px solid #0f172a; padding-top:8px;">
+                      <div style="font-size:13px; font-weight:800; color:#0f172a; text-transform:uppercase; letter-spacing:0.5px;">Customer Signature</div>
+                      <div style="font-size:11px; color:#64748b;">(Primary Allottee / Purchaser)</div>
+                    </div>
+                  </div>
+
+                  <!-- Right: Authorized Person Signature Box -->
+                  <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:24px 16px 14px 16px; text-align:center; background:#f8fafc;">
+                    <div style="height:42px; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:12.5px;">
+                      <i class="fa-solid fa-stamp" style="margin-right:6px; color:#16a34a;"></i> Official Stamp & Signature
+                    </div>
+                    <div style="border-top:2px solid #0f172a; padding-top:8px;">
+                      <div style="font-size:13px; font-weight:800; color:#0f172a; text-transform:uppercase; letter-spacing:0.5px;">Authorized Person Signature</div>
+                      <div style="font-size:11px; color:#64748b;">(For & On Behalf of Bilal Heights)</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- ================= 4. CONFIRM REGISTRATION & AUTO DOWNLOAD BUTTONS ================= -->
+              <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div style="font-size:12.5px; color:#64748b;">
+                  <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Form save hote hi official Allotment PDF khud-ba-khud download ho jayega.
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                  <button type="submit" id="btnSaveCustomer" class="btn-action-primary" style="padding:13px 26px; font-size:14.5px; background:linear-gradient(135deg, #1e3a8a, #2563eb); box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+                    <i class="fa-solid fa-check-double"></i> Confirm Registration & Download PDF
+                  </button>
+                </div>
               </div>
 
             </form>
           </div>
         </section>
 
-        <!-- ================= CUSTOMER DIRECTORY LISTING ================= -->
+       <!-- ================= CUSTOMER DIRECTORY LISTING ================= -->
         <section id="sectionCustomerDetails" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
               <h3 class="panel-title"><i class="fa-solid fa-users"></i> Customer Directory</h3>
-              <button class="btn-action-primary" onclick="openAndSwitch('customerSubmenu', 'navCustomerParent', 'addCustomer', 'subAddCustomer')">
+              <button class="btn-action-primary" onclick="resetCustomerFormForNew(); openAndSwitch('customerSubmenu', 'navCustomerParent', 'addCustomer', 'subAddCustomer')">
                 <i class="fa-solid fa-user-plus"></i> Add New Customer
               </button>
+            </div>
+
+            <!-- Smart Multi-Search Bar -->
+            <div style="margin-bottom: 20px;">
+              <div style="position: relative; max-width: 550px;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px;"></i>
+                <input 
+                  type="text" 
+                  id="customerSearchInput" 
+                  placeholder="Search by Serial No (#1), CNIC, Mobile, WhatsApp or Name..." 
+                  oninput="filterCustomersTable()" 
+                  style="width: 100%; padding: 11px 16px 11px 42px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 14px; outline: none; background: #ffffff;"
+                />
+              </div>
             </div>
             
             <div class="table-container">
               <table class="erp-table">
                 <thead>
                   <tr>
-                    <th style="width:50px;">Photo</th>
-                    <th>Customer (1st Owner)</th>
+                    <th style="width: 45px;">#</th>
+                    <th style="width: 50px;">Photo</th>
+<th>Customer</th>
                     <th>CNIC</th>
                     <th>Mobile</th>
+                    <th>WhatsApp</th>
                     <th>Flat #</th>
-                    <th>Project</th>
-                    <th>Ownership Type</th>
-                    <th style="text-align:center;">Actions</th>
+                    <th>Ownership</th>
+                    <th style="text-align: center; min-width: 230px;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="customersTableBody">
-                  <tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Loading customers...</td></tr>
+                  <tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Loading customers...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+<!-- ================= SECTION: CUSTOMER DOCUMENTS DOWNLOAD REPOSITORY ================= -->
+        <section id="sectionCustomerDocuments" class="erp-section">
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3 class="panel-title">
+                <i class="fa-solid fa-folder-arrow-down" style="color:#2563eb;"></i> Customer Documents Repository
+              </h3>
+              <span id="docCountBadge" style="font-size:12px; font-weight:700; background:#dbeafe; color:#1d4ed8; padding:5px 14px; border-radius:20px;">
+                Searching All Customer Files
+              </span>
+            </div>
+
+            <!-- Smart Search Bar: Name, CNIC, Mobile -->
+            <div style="margin-bottom: 22px;">
+              <div style="position: relative; max-width: 600px;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px;"></i>
+                <input 
+                  type="text" 
+                  id="docSearchInput" 
+                  placeholder="Search by Customer Name, Mobile (0300...) or CNIC (42101...)..." 
+                  oninput="filterCustomerDocs()" 
+                  style="width: 100%; padding: 12px 16px 12px 44px; border: 1.5px solid #cbd5e1; border-radius: 12px; font-size: 14px; outline: none; background: #ffffff;"
+                />
+              </div>
+            </div>
+
+            <!-- Documents Table -->
+            <div class="table-container">
+              <table class="erp-table">
+                <thead>
+                  <tr>
+                    <th style="width: 45px;">#</th>
+                    <th>Customer Name</th>
+                    <th>CNIC No</th>
+                    <th>Mobile</th>
+                    <th>Flat #</th>
+                    <th style="text-align:center;">CNIC Copy</th>
+                    <th style="text-align:center;">Payment Slip</th>
+                    <th style="text-align:center;">Transfer / Other</th>
+                  </tr>
+                </thead>
+                <tbody id="customerDocsTableBody">
+                  <tr>
+                    <td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">
+                      Loading customer documents...
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -3044,9 +3237,14 @@
           document.getElementById('sectionFlatDetails').classList.add('active');
           pageHeading.textContent = 'Flat Details';
           break;
-        case 'customerDetails':
+       case 'customerDetails':
           document.getElementById('sectionCustomerDetails').classList.add('active');
           pageHeading.textContent = 'Customer Directory';
+          break;
+        case 'customerDocuments':
+          document.getElementById('sectionCustomerDocuments').classList.add('active');
+          pageHeading.textContent = 'Customer Documents Download';
+          renderCustomerDocsArchive();
           break;
         case 'addCustomer':
           document.getElementById('sectionAddCustomer').classList.add('active');
@@ -3121,46 +3319,49 @@
       reader.readAsDataURL(file);
     }
 
-    // Add Project Submission
+    // Add & Update Project Submission
     document.getElementById('projectEntryForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const editInput = document.getElementById('projectEditId');
+      const editId = editInput ? editInput.value : '';
       const btn = document.getElementById('btnSaveProject');
 
       const projectData = {
         name: document.getElementById('projName').value.trim(),
-        type: document.getElementById('projType').value,
         location: document.getElementById('projLocation').value.trim(),
-        startDate: document.getElementById('projStartDate').value,
+        city: document.getElementById('projCity').value.trim(),
         floors: document.getElementById('projFloors').value.trim(),
-        completionDate: document.getElementById('projCompletionDate').value,
-        costEstimate: document.getElementById('projCostEstimate').value.trim(),
         flatsCount: parseInt(document.getElementById('projFlats').value) || 0,
-        status: document.getElementById('projStatus').value,
-        image: projectBase64Image || '',
         description: document.getElementById('projDescription').value.trim() || '',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
       try {
-        await db.collection('projects').add(projectData);
-        alert('Project saved successfully!');
-        
-        // Reset Form & Preview
-        document.getElementById('projectEntryForm').reset();
-        projectBase64Image = '';
-        document.getElementById('projImagePreview').style.display = 'none';
-        document.getElementById('projImagePlaceholder').style.display = 'block';
+        if (editId) {
+          // Update Existing Project
+          await db.collection('projects').doc(editId).update(projectData);
+          alert('Project kamiyabi se update ho gaya!');
+        } else {
+          // Add New Project
+          projectData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('projects').add(projectData);
+          alert('Project kamiyabi se save ho gaya!');
+        }
 
-        // Automatic redirect to Project Details
+        // Form reset karein
+        document.getElementById('projectEntryForm').reset();
+        if (editInput) editInput.value = '';
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Project';
+
+        // Seedha Project Details directory par switch karein
         openAndSwitch('projectSubmenu', 'navProjectParent', 'projectDetails', 'subProjectDetails');
       } catch (err) {
-        alert('Error saving project: ' + err.message);
+        alert('Error: ' + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Project';
       }
     });
 
@@ -3173,12 +3374,13 @@
         if (expProjSelect) expProjSelect.innerHTML = '<option value="General / Head Office">General / Head Office</option>';
 
         if (snapshot.empty) {
-          tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">No projects registered yet. Click 'Add Project' to create one.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Koi project darj nahi hai. Naya project shamil karein.</td></tr>`;
           document.getElementById('statTotalProjects').textContent = 0;
           return;
         }
 
         let html = '';
+        let index = 1;
         snapshot.forEach((doc) => {
           const p = doc.data();
           allProjectsData.push({ id: doc.id, ...p });
@@ -3190,29 +3392,34 @@
             expProjSelect.appendChild(opt);
           }
 
-          let badgeClass = 'badge-available';
-          if (p.status === 'In Progress' || p.status === 'Under Construction') badgeClass = 'badge-progress';
-          else if (p.status === 'Planning & Approvals' || p.status === 'On Hold') badgeClass = 'badge-booked';
-
-          const thumb = p.image ? `<img src="${p.image}" class="project-thumb-img" alt="thumb" />` : `<div class="project-thumb-img" style="background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fa-solid fa-building"></i></div>`;
-
           html += `
             <tr>
-              <td>${thumb}</td>
-              <td><strong>${p.name}</strong></td>
-              <td>${p.type}</td>
+              <td style="font-weight:700; color:#475569;">${index++}</td>
+              <td><strong style="color:#0f172a; font-size:14px;">${p.name}</strong></td>
               <td>${p.location}</td>
+              <td><span class="badge-project-pill">${p.city || 'N/A'}</span></td>
               <td>${p.floors}</td>
               <td><strong style="color:var(--primary);">${p.flatsCount} Flats</strong></td>
-              <td>PKR ${p.costEstimate}</td>
-              <td><span class="badge-status ${badgeClass}">${p.status}</span></td>
-              <td style="text-align:center;">
-                <div style="display:inline-flex; gap:6px;">
-                  <button class="btn-action-primary" style="padding:6px 12px; font-size:12px;" onclick="viewProjectModal('${doc.id}')">
+             <td style="text-align:center;">
+                <div style="display:inline-flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                  <!-- 1. View Button -->
+                  <button class="btn-tbl-view" onclick="viewProjectModal('${doc.id}')" title="View Details">
                     <i class="fa-solid fa-eye"></i> View
                   </button>
-                  <button class="btn-action-primary" style="background:var(--danger); padding:6px 12px; font-size:12px;" onclick="deleteProjectRecord('${doc.id}')">
-                    <i class="fa-solid fa-trash-can"></i> Delete
+
+                  <!-- 2. Edit Button -->
+                  <button class="btn-tbl-edit" onclick="editProjectRecord('${doc.id}')" title="Edit Project">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                  </button>
+
+                  <!-- 3. PDF Download Button -->
+                  <button class="btn-action-primary" style="background:#059669; padding:6px 11px; font-size:12px;" onclick="downloadProjectPDF('${doc.id}')" title="Download Project PDF">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                  </button>
+
+                  <!-- 4. Delete Button -->
+                  <button class="btn-tbl-delete" onclick="deleteProjectRecord('${doc.id}')" title="Delete Project">
+                    <i class="fa-solid fa-trash-can"></i>
                   </button>
                 </div>
               </td>
@@ -3232,49 +3439,26 @@
 
       document.getElementById('modalProjectTitle').innerHTML = `<i class="fa-solid fa-city"></i> ${p.name}`;
 
-      const imageHtml = p.image ? `
-        <div style="margin-bottom:18px; border-radius:14px; overflow:hidden; max-height:260px; border:1px solid var(--border);">
-          <img src="${p.image}" style="width:100%; height:100%; object-fit:cover; display:block;" alt="${p.name}" />
-        </div>
-      ` : '';
-
       const content = `
-        ${imageHtml}
         <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
           <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
             <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">PROJECT NAME</label>
             <div style="font-size:15px; font-weight:700; color:var(--text-dark);">${p.name}</div>
           </div>
           <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">TYPE</label>
-            <div style="font-size:14px; font-weight:600;">${p.type}</div>
-          </div>
-          <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">STATUS</label>
-            <div><span class="badge-status badge-progress">${p.status}</span></div>
+            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">CITY</label>
+            <div style="font-size:14px; font-weight:700; color:#0284c7;">${p.city || 'N/A'}</div>
           </div>
           <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
             <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">TOTAL FLOORS</label>
             <div style="font-size:14px; font-weight:600;">${p.floors}</div>
           </div>
           <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">TOTAL FLATS / UNITS</label>
+            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">TOTAL FLATS</label>
             <div style="font-size:14px; font-weight:700; color:var(--primary);">${p.flatsCount} Units</div>
           </div>
-          <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">ESTIMATED COST</label>
-            <div style="font-size:14px; font-weight:700;">PKR ${p.costEstimate}</div>
-          </div>
-          <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">START DATE</label>
-            <div style="font-size:14px; font-weight:600;">${p.startDate || 'N/A'}</div>
-          </div>
-          <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">COMPLETION DATE</label>
-            <div style="font-size:14px; font-weight:600;">${p.completionDate || 'N/A'}</div>
-          </div>
           <div class="form-group-full" style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
-            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">LOCATION</label>
+            <label style="font-size:11.5px; color:var(--text-muted); font-weight:700;">LOCATION / ADDRESS</label>
             <div style="font-size:14px; font-weight:600;">${p.location}</div>
           </div>
           ${p.description ? `
@@ -3361,6 +3545,149 @@ document.getElementById('statTotalFlats').textContent = allFlatsData.length;
     }
   });
 }
+
+
+// 1. Edit Project Function (Data form mein pre-fill karega)
+    function editProjectRecord(projectId) {
+      const p = allProjectsData.find(item => item.id === projectId);
+      if (!p) return;
+
+      document.getElementById('projectEditId').value = p.id;
+      document.getElementById('projName').value = p.name || '';
+      document.getElementById('projLocation').value = p.location || '';
+      document.getElementById('projCity').value = p.city || '';
+      document.getElementById('projFloors').value = p.floors || '';
+      document.getElementById('projFlats').value = p.flatsCount || '';
+      document.getElementById('projDescription').value = p.description || '';
+
+      const btn = document.getElementById('btnSaveProject');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> Update Project';
+
+      // Add Project wale form par switch karein
+      openAndSwitch('projectSubmenu', 'navProjectParent', 'addProject', 'subAddProject');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 2. Download Official Project Profile PDF
+    function downloadProjectPDF(projectId) {
+      const p = allProjectsData.find(item => item.id === projectId);
+      if (!p) return;
+
+      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      // Printable Container
+      const pdfWrapper = document.createElement('div');
+      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.background = '#ffffff';
+      pdfWrapper.style.color = '#0f172a';
+      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
+
+      pdfWrapper.innerHTML = `
+        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
+          
+          <!-- Top Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: #0f2a59; color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">
+                BH
+              </div>
+              <div>
+                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; letter-spacing: 0.5px; text-transform: uppercase;">${p.name}</h1>
+                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Official Project Portfolio & Specifications</div>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block; text-transform: uppercase;">
+                PROJECT OVERVIEW
+              </div>
+              <div style="font-size: 10px; color: #334155; margin-top: 4px; font-weight: 700;">
+                DATE: <span>${todayDate}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Banner -->
+          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
+            <div style="font-size: 10px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Project Name</div>
+            <div style="font-size: 22px; font-weight: 900; color: #ffffff;">${p.name}</div>
+            <div style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">
+              <i class="fa-solid fa-location-dot"></i> ${p.location}, ${p.city || 'N/A'}
+            </div>
+          </div>
+
+          <!-- Key Specifications Grid -->
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px;">
+            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Location / Address</div>
+              <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px;">${p.location}</div>
+            </div>
+
+            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">City</div>
+              <div style="font-size: 14px; font-weight: 700; color: #1d4ed8; margin-top: 4px;">${p.city || 'N/A'}</div>
+            </div>
+
+            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Floors</div>
+              <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px;">${p.floors}</div>
+            </div>
+
+            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
+              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Flats / Units</div>
+              <div style="font-size: 14px; font-weight: 800; color: #16a34a; margin-top: 4px;">${p.flatsCount} Units</div>
+            </div>
+          </div>
+
+          <!-- Description Section -->
+          ${p.description ? `
+          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 24px;">
+            <div style="font-size: 11.5px; color: #0f2a59; font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">
+              Project Description & Remarks
+            </div>
+            <div style="font-size: 12.5px; color: #334155; line-height: 1.6;">
+              ${p.description}
+            </div>
+          </div>
+          ` : ''}
+
+          <!-- Official Stamp & Verification Signature -->
+          <div style="display: flex; justify-content: flex-end; margin-top: 40px; padding-right: 14px;">
+            <div style="text-align: center; width: 220px;">
+              <div style="height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+                <span style="border: 1px dashed #2563eb; color: #1d4ed8; font-size: 8.5px; font-weight: 800; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">
+                  Verified Record
+                </span>
+              </div>
+              <div style="border-top: 2px solid #0f172a; padding-top: 6px;">
+                <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                  AUTHORIZED PERSON
+                </div>
+                <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">
+                  Corporate Management
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `;
+
+      const opt = {
+        margin: [0.25, 0.25, 0.25, 0.25],
+        filename: `Project_${p.name.replace(/\s+/g, '_')}_Portfolio.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2.5, useCORS: true, logging: false },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(pdfWrapper).save();
+      } else {
+        alert('PDF library load nahi ho saki. Internet connection check karein.');
+      }
+    }
 
 function updateFlatsFilterProjects() {
   const projSelect = document.getElementById('flatProjectFilter');
@@ -3720,7 +4047,7 @@ async function confirmStatusChange() {
       });
     }
 
-    // Flat select karte hi Floor, Size aur Price khud ba khud fill honge
+    // Flat select karte hi Floor, Size, Price aur (Transfer ke waqt) Previous Owner auto-fill hoga
     function handleFlatSelection(flatId) {
       const flat = allFlatsData.find(f => f.id === flatId);
       if (!flat) {
@@ -3729,14 +4056,36 @@ async function confirmStatusChange() {
         return;
       }
 
-      document.getElementById('custFloor').value = flat.floor;
-      document.getElementById('custSize').value = `${flat.size} Sq. Ft`;
+      document.getElementById('custFloor').value = flat.floor || '';
+      document.getElementById('custSize').value = flat.size ? `${flat.size} Sq. Ft` : '';
 
-      const cleanPrice = String(flat.price).replace(/,/g, '').trim();
-      if (!isNaN(cleanPrice)) {
+      const cleanPrice = String(flat.price || '').replace(/,/g, '').trim();
+      if (!isNaN(cleanPrice) && cleanPrice !== '') {
         document.getElementById('dealTotalPrice').value = cleanPrice;
       }
       calculateMonthlyInstallment();
+
+      // Transfer Mode mein: Is flat ke puranay customer ka record dhoond kar Previous Owner me bharein
+      const ownershipType = document.getElementById('custOwnershipType')?.value;
+      if (ownershipType === 'Transfer') {
+        const prevCust = allCustomersData.find(c => c.flatId === flatId);
+        if (prevCust) {
+          const o = prevCust.firstOwner || prevCust.owner1 || {};
+          document.getElementById('prevOwnerName').value = o.name || '';
+          document.getElementById('prevOwnerCnic').value = o.cnic || '';
+          document.getElementById('prevOwnerMobile').value = o.mobile || '';
+
+          // Deal financials bhi puranay record se auto-match karein
+          if (prevCust.financials) {
+            document.getElementById('dealTotalPrice').value = prevCust.financials.totalPrice || cleanPrice;
+            document.getElementById('dealDownPayment').value = prevCust.financials.downPayment || 0;
+            document.getElementById('dealGreyStructure').value = prevCust.financials.greyStructure || 0;
+            document.getElementById('dealPossession').value = prevCust.financials.possession || 0;
+            document.getElementById('dealDuration').value = prevCust.financials.durationMonths || 36;
+            calculateMonthlyInstallment();
+          }
+        }
+      }
     }
 
     // Deal Financials Formula: Monthly Installment = (Total - Down - Grey - Possession) / Months
@@ -3754,32 +4103,130 @@ async function confirmStatusChange() {
       document.getElementById('dealMonthlyInstallment').value = `Rs. ${formattedMonthly} / Month`;
     }
 
-    // Toggle First & Second Owner Sections
-    function toggleOwnerBoxes() {
-      const check1 = document.getElementById('checkFirstOwner').checked;
-      const check2 = document.getElementById('checkSecondOwner').checked;
+    // =========================================================================
+    // NEW OWNERSHIP TYPE HANDLER: Single Owner, Joint Ownership, Transfer
+    // =========================================================================
+    function handleOwnershipTypeChange() {
+      const typeSelect = document.getElementById('custOwnershipType');
+      const selectedType = typeSelect ? typeSelect.value : 'Single Owner';
 
-      const box1 = document.getElementById('firstOwnerBox');
-      const box2 = document.getElementById('secondOwnerBox');
+      const owner1Box = document.getElementById('owner1Box');
+      const owner2Box = document.getElementById('owner2Box');
+      const transferBox = document.getElementById('transferBox');
+      const pill = document.getElementById('ownershipStatusPill');
 
-      if (!check1 && !check2) {
-        alert('Kam az kam ek Owner (First ya Second Owner) lazmi select karein!');
-        document.getElementById('checkFirstOwner').checked = true;
-        box1.style.display = 'block';
-        return;
+      const owner1Title = document.getElementById('owner1HeaderTitle');
+      const owner1Badge = document.getElementById('owner1Badge');
+      const owner1NameLabel = document.getElementById('owner1NameLabel');
+      const owner1PhotoLabel = document.getElementById('owner1PhotoLabel');
+      const owner1NomineeTitle = document.getElementById('owner1NomineeTitle');
+
+      // 1. Single Owner Mode
+      if (selectedType === 'Single Owner') {
+        owner1Box.style.display = 'block';
+        owner2Box.style.display = 'none';
+        transferBox.style.display = 'none';
+
+        pill.innerHTML = '<i class="fa-solid fa-user"></i> Single Owner Mode Active';
+        pill.style.background = '#dbeafe';
+        pill.style.color = '#1d4ed8';
+
+        owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
+        owner1Badge.textContent = 'Sole Owner';
+        owner1Badge.style.background = '#dbeafe';
+        owner1Badge.style.color = '#1d4ed8';
+        owner1NameLabel.textContent = 'Owner 1 Name *';
+        owner1PhotoLabel.textContent = 'Owner 1 Photo';
+        owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
+
+        // Required attributes
+        setOwnerFieldsRequired(true, false, false);
+        populateAvailableFlatsDropdown(); // Shows available flats
+      } 
+      // 2. Joint Ownership Mode (Owner 1 & Owner 2 Equal Partners)
+      else if (selectedType === 'Joint Ownership') {
+        owner1Box.style.display = 'block';
+        owner2Box.style.display = 'block';
+        transferBox.style.display = 'none';
+
+        pill.innerHTML = '<i class="fa-solid fa-user-group"></i> Joint Ownership (Owner 1 & Owner 2)';
+        pill.style.background = '#e0f2fe';
+        pill.style.color = '#0284c7';
+
+        owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
+        owner1Badge.textContent = 'Equal Partner 1';
+        owner1Badge.style.background = '#dbeafe';
+        owner1Badge.style.color = '#1d4ed8';
+        owner1NameLabel.textContent = 'Owner 1 Name *';
+        owner1PhotoLabel.textContent = 'Owner 1 Photo';
+        owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
+
+        setOwnerFieldsRequired(true, true, false);
+        populateAvailableFlatsDropdown();
+      } 
+      // 3. Transfer Mode
+      else if (selectedType === 'Transfer') {
+        owner1Box.style.display = 'block';
+        owner2Box.style.display = 'none';
+        transferBox.style.display = 'block';
+
+        pill.innerHTML = '<i class="fa-solid fa-right-left"></i> Ownership Transfer Active';
+        pill.style.background = '#fef3c7';
+        pill.style.color = '#b45309';
+
+        // Owner 1 box becomes "New Owner (Transferee)"
+        owner1Title.innerHTML = '<i class="fa-solid fa-user-shield"></i> New Owner Details (Transferee)';
+        owner1Badge.textContent = 'New Owner';
+        owner1Badge.style.background = '#dcfce7';
+        owner1Badge.style.color = '#15803d';
+        owner1NameLabel.textContent = 'New Owner Name *';
+        owner1PhotoLabel.textContent = 'New Owner Photo';
+        owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details - New Owner';
+
+        const transferDateInput = document.getElementById('transferDate');
+        if (transferDateInput && !transferDateInput.value) {
+          transferDateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        setOwnerFieldsRequired(true, false, true);
+        populateFlatsForTransfer(); // Lets you select the booked flat to transfer
       }
+    }
 
-      box1.style.display = check1 ? 'block' : 'none';
-      box2.style.display = check2 ? 'block' : 'none';
-
+    // Helper: Required validation switch
+    function setOwnerFieldsRequired(reqOwner1, reqOwner2, reqTransfer) {
       ['cust1Name', 'cust1Father', 'cust1Cnic', 'cust1Mobile', 'cust1Address'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.required = check1;
+        if (el) el.required = reqOwner1;
       });
 
       ['cust2Name', 'cust2Father', 'cust2Cnic', 'cust2Mobile', 'cust2Address'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.required = check2;
+        if (el) el.required = reqOwner2;
+      });
+
+      ['transferDate', 'transferDocNo'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.required = reqTransfer;
+      });
+    }
+
+    // Transfer ke waqt Tamam flats (booked flats samait) dikhana taake transfer kiya ja sake
+    function populateFlatsForTransfer() {
+      const select = document.getElementById('custFlatSelect');
+      if (!select) return;
+
+      select.innerHTML = '<option value="">-- Choose Flat to Transfer --</option>';
+
+      allFlatsData.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.id;
+        opt.textContent = `Flat ${f.flatNo} - ${f.floor} (${f.size} Sq. Ft) [${f.status}]`;
+        opt.setAttribute('data-floor', f.floor);
+        opt.setAttribute('data-size', f.size);
+        opt.setAttribute('data-price', f.price);
+        opt.setAttribute('data-flatno', f.flatNo);
+        select.appendChild(opt);
       });
     }
 
@@ -3801,31 +4248,59 @@ async function confirmStatusChange() {
       input.value = formatted;
     }
 
-    // Owner Photo Preview
-    function previewOwnerPhoto(event, imgId, placeholderId) {
-      const file = event.target.files[0];
-      if (!file) return;
+    // =========================================================================
+    // SMART AUTO IMAGE COMPRESSOR (Reduces 4MB to ~50KB to prevent 1MB limit)
+    // =========================================================================
+    function compressImageFile(file, maxWidth = 1000, maxHeight = 1000, quality = 0.65) {
+      return new Promise((resolve) => {
+        // Agar file PDF hai to size check karein (max 350KB allowed in direct Firestore)
+        if (file.type === 'application/pdf') {
+          if (file.size > 400 * 1024) {
+            alert('PDF file ka size 400KB se kam hona chahiye. Behtar hai ke image (JPG/PNG) upload karein jo auto-compress ho jati hai.');
+            resolve('');
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.readAsDataURL(file);
+          return;
+        }
 
-      if (file.size > 2 * 1024 * 1024) {
-        alert('Tasveer 2MB se kam size ki honi chahiye.');
-        event.target.value = '';
-        return;
-      }
+        // Agar tasveer hai to Canvas ke zariye compress karein
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const result = e.target.result;
-        const img = document.getElementById(imgId);
-        const placeholder = document.getElementById(placeholderId);
-        
-        img.src = result;
-        img.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
+            // Dimensions ko limit karein taake size bohot chota ho jaye
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
 
-        if (imgId === 'owner1Img') owner1Base64 = result;
-        if (imgId === 'owner2Img') owner2Base64 = result;
-      };
-      reader.readAsDataURL(file);
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // High quality JPEG mein 65% quality par compress (Size drops from 4MB to ~40KB-60KB)
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressedBase64);
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     // Single Thumb Impression Box Toggle
@@ -3901,33 +4376,124 @@ async function confirmStatusChange() {
       return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='120' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4'/><path d='M14 13.12c0 2.38 0 6.38-1 8.88'/><path d='M2 16h.01'/><path d='M21.8 16c.2-2 .131-5.354 0-6'/><path d='M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2'/><path d='M4 10.8a10 10 0 0 1 14.8-5.7'/><path d='M8 14v7'/><path d='M16 19.5v1.5'/><path d='M19 12a14 14 0 0 0-1.8-6.8'/><path d='M2 12a14 14 0 0 1 2.5-8'/><path d='M12 2a14 14 0 0 1 7.8 2.5'/></svg>";
     }
 
-    // Customer Form Single Submission Handler
+    // =========================================================================
+    // CUSTOMER MODULE: SEARCH, EDIT, VIEW, DELETE & PDF DOWNLOAD
+ // =========================================================================
+    // GOOGLE DRIVE CLOUD UPLOADER (Direct to Your Google Drive Folder)
+    // =========================================================================
+    const GOOGLE_DRIVE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRd8vy_jED54nLFznjJEDkX0v-L0snBB0MoIAnVUr3DWAzluesotbUjKmYBzhkMheY/exec";
+    let uploadedDocs = { cnic: '', payment: '', other: '' };
+
+    // Google Drive par direct file upload karne ka function
+    async function uploadToGoogleDrive(file, customFileName) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const payload = {
+            base64: e.target.result,
+            filename: customFileName || file.name,
+            mimeType: file.type || "image/jpeg"
+          };
+
+          try {
+            const response = await fetch(GOOGLE_DRIVE_SCRIPT_URL, {
+              method: "POST",
+              body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+            if (result.status === "success") {
+              resolve(result.fileUrl); // Google Drive ka link mil gaya
+            } else {
+              alert("Google Drive Upload Error: " + result.message);
+              resolve("");
+            }
+          } catch (err) {
+            console.error("Drive upload error:", err);
+            // Agar browser CORS block kare tab bhi link create karein
+            resolve(e.target.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Owner Photo Preview (Uploads directly to Google Drive)
+    async function previewOwnerPhoto(event, imgId, placeholderId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const placeholder = document.getElementById(placeholderId);
+      if (placeholder) {
+        placeholder.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size:22px; color:#2563eb;"></i>';
+      }
+
+      // Local preview turant dikhayein
+      const localPreviewUrl = URL.createObjectURL(file);
+      const img = document.getElementById(imgId);
+      img.src = localPreviewUrl;
+      img.style.display = 'block';
+      if (placeholder) placeholder.style.display = 'none';
+
+      // Google Drive par background upload karein
+      const driveUrl = await uploadToGoogleDrive(file, "Owner_Photo_" + Date.now() + "_" + file.name);
+
+      if (imgId === 'owner1Img') owner1Base64 = driveUrl || localPreviewUrl;
+      if (imgId === 'owner2Img') owner2Base64 = driveUrl || localPreviewUrl;
+    }
+
+    // Document Files Upload (Uploads directly to Google Drive)
+    async function handleDocUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById(type + 'DocStatus');
+      if (statusEl) {
+        statusEl.innerHTML = `<span style="color:#d97706; font-weight:bold;"><i class="fa-solid fa-cloud-arrow-up fa-bounce"></i> Uploading to Google Drive...</span>`;
+      }
+
+      const driveUrl = await uploadToGoogleDrive(file, type.toUpperCase() + "_" + Date.now() + "_" + file.name);
+
+      uploadedDocs[type] = driveUrl;
+
+      if (statusEl) {
+        statusEl.innerHTML = `<span style="color:#16a34a; font-weight:bold;"><i class="fa-solid fa-cloud-check"></i> Saved in Cloude!</span>`;
+      }
+    }
+
+    // =========================================================================
+    // 2. CUSTOMER FORM SUBMISSION WITH AUTO PDF DOWNLOAD
+    // =========================================================================
     document.getElementById('customerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const editInput = document.getElementById('customerEditId');
+      const editId = editInput ? editInput.value : '';
       const btn = document.getElementById('btnSaveCustomer');
 
       const flatSelect = document.getElementById('custFlatSelect');
       const selectedFlatId = flatSelect ? flatSelect.value : '';
 
       if (!selectedFlatId) {
-        alert('Bara-e-meherbani Available Flats ki list se Flat select karein!');
+        alert('Bara-e-meherbani list se Flat select karein!');
+        return;
+      }
+
+      const agreeTerms = document.getElementById('checkAgreeTerms').checked;
+      if (!agreeTerms) {
+        alert('Bara-e-meherbani Terms & Conditions ke checkbox ko accept karein!');
         return;
       }
 
       const selectedOption = flatSelect.options[flatSelect.selectedIndex];
-      const flatNo = selectedOption.getAttribute('data-flatno');
+      const flatNo = selectedOption.getAttribute('data-flatno') || selectedOption.textContent.split(' ')[1] || '';
 
-      const hasFirst = document.getElementById('checkFirstOwner').checked;
-      const hasSecond = document.getElementById('checkSecondOwner').checked;
-
-      if (!hasFirst && !hasSecond) {
-        alert('Kam az kam ek Owner select karein!');
-        return;
-      }
+      const ownershipType = document.getElementById('custOwnershipType').value;
+      const isSingle = (ownershipType === 'Single Owner');
+      const isJoint = (ownershipType === 'Joint Ownership');
+      const isTransfer = (ownershipType === 'Transfer');
 
       const isThumbEnabled = document.getElementById('checkSingleThumb').checked;
       if (isThumbEnabled && !customerThumbBase64) {
-        alert('Aap ne Thumb Impression par check lagaya hua hai lekin thumb scan nahi hua. Bara-e-meherbani ungli scan karein ya check hata dein!');
+        alert('Thumb Impression par check laga hua hai magar thumb capture nahi hua. Ungli scan karein ya check hata dein.');
         return;
       }
 
@@ -3944,7 +4510,7 @@ async function confirmStatusChange() {
         flatNo: flatNo,
         floor: document.getElementById('custFloor').value,
         size: document.getElementById('custSize').value,
-        ownershipStatus: document.getElementById('custOwnershipStatus').value,
+        ownershipType: ownershipType,
 
         financials: {
           totalPrice: totalPrice,
@@ -3956,31 +4522,31 @@ async function confirmStatusChange() {
         },
 
         thumbImpression: isThumbEnabled ? customerThumbBase64 : '',
-        hasFirstOwner: hasFirst,
-        hasSecondOwner: hasSecond,
-        ownershipType: (hasFirst && hasSecond) ? 'Joint (1st + 2nd)' : (hasFirst ? 'First Owner (Sole)' : 'Second Owner Only'),
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        documents: uploadedDocs,
+        termsAgreed: true,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      if (hasFirst) {
-        customerRecord.firstOwner = {
-          name: document.getElementById('cust1Name').value.trim(),
-          fatherHusband: document.getElementById('cust1Father').value.trim(),
-          cnic: document.getElementById('cust1Cnic').value.trim(),
-          mobile: document.getElementById('cust1Mobile').value.trim(),
-          whatsapp: document.getElementById('cust1Whatsapp').value.trim() || 'N/A',
-          email: document.getElementById('cust1Email').value.trim() || 'N/A',
-          address: document.getElementById('cust1Address').value.trim(),
-          photo: owner1Base64 || '',
-          nominee: {
-            name: document.getElementById('cust1NomineeName').value.trim() || 'N/A',
-            relation: document.getElementById('cust1NomineeRelation').value.trim() || 'N/A',
-            cnic: document.getElementById('cust1NomineeCnic').value.trim() || 'N/A'
-          }
-        };
-      }
+      // Owner 1 Details
+      customerRecord.firstOwner = {
+        name: document.getElementById('cust1Name').value.trim(),
+        fatherHusband: document.getElementById('cust1Father').value.trim(),
+        cnic: document.getElementById('cust1Cnic').value.trim(),
+        mobile: document.getElementById('cust1Mobile').value.trim(),
+        whatsapp: document.getElementById('cust1Whatsapp').value.trim() || 'N/A',
+        email: document.getElementById('cust1Email').value.trim() || 'N/A',
+        address: document.getElementById('cust1Address').value.trim(),
+        photo: owner1Base64 || '',
+        nominee: {
+          name: document.getElementById('cust1NomineeName').value.trim() || 'N/A',
+          relation: document.getElementById('cust1NomineeRelation').value.trim() || 'N/A',
+          cnic: document.getElementById('cust1NomineeCnic').value.trim() || 'N/A'
+        }
+      };
 
-      if (hasSecond) {
+      // Owner 2 Details (Joint only)
+      if (isJoint) {
+        customerRecord.hasSecondOwner = true;
         customerRecord.secondOwner = {
           name: document.getElementById('cust2Name').value.trim(),
           fatherHusband: document.getElementById('cust2Father').value.trim(),
@@ -3996,101 +4562,600 @@ async function confirmStatusChange() {
             cnic: document.getElementById('cust2NomineeCnic').value.trim() || 'N/A'
           }
         };
+      } else {
+        customerRecord.hasSecondOwner = false;
+        customerRecord.secondOwner = null;
+      }
+
+      // Transfer details
+      if (isTransfer) {
+        customerRecord.transferDetails = {
+          transferDate: document.getElementById('transferDate').value,
+          transferDocNo: document.getElementById('transferDocNo').value.trim(),
+          transferFee: document.getElementById('transferFee').value || 0,
+          previousOwnerName: document.getElementById('prevOwnerName').value.trim(),
+          previousOwnerCnic: document.getElementById('prevOwnerCnic').value.trim(),
+          previousOwnerMobile: document.getElementById('prevOwnerMobile').value.trim(),
+          transferRemarks: document.getElementById('transferRemarks').value.trim()
+        };
+      } else {
+        customerRecord.transferDetails = null;
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering Deal & Booking Unit...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving & Generating PDF...';
 
       try {
-        await db.collection('customers').add(customerRecord);
+        let savedCustomerId = editId;
 
-        // Flat ko live database mein 'Booked' mark karein
-        await db.collection('flats').doc(selectedFlatId).update({
-          status: 'Booked'
-        });
+        if (editId) {
+          const oldRecord = allCustomersData.find(c => c.id === editId);
+          if (oldRecord && oldRecord.flatId && oldRecord.flatId !== selectedFlatId) {
+            await db.collection('flats').doc(oldRecord.flatId).update({ status: 'Available' });
+          }
+          await db.collection('customers').doc(editId).update(customerRecord);
+          await db.collection('flats').doc(selectedFlatId).update({ status: 'Booked' });
+        } else {
+          customerRecord.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          const docRef = await db.collection('customers').add(customerRecord);
+          savedCustomerId = docRef.id;
+          await db.collection('flats').doc(selectedFlatId).update({ status: 'Booked' });
+        }
 
-        alert('Customer Deal Registered Successfully! Flat Status booked ho chuka hai.');
+        // Automatic PDF Trigger
+        customerRecord.id = savedCustomerId;
+        const existingIdx = allCustomersData.findIndex(x => x.id === savedCustomerId);
+        if (existingIdx >= 0) allCustomersData[existingIdx] = customerRecord;
+        else allCustomersData.unshift(customerRecord);
 
-        document.getElementById('customerForm').reset();
-        owner1Base64 = '';
-        owner2Base64 = '';
-        customerThumbBase64 = '';
+        // Download PDF automatically
+        downloadCustomerPDF(savedCustomerId);
 
-        document.getElementById('owner1Img').style.display = 'none';
-        document.getElementById('owner1Placeholder').style.display = 'block';
-        document.getElementById('owner2Img').style.display = 'none';
-        document.getElementById('owner2Placeholder').style.display = 'block';
+        alert('Registration kamiyabi se mukammal ho gayi aur Allotment PDF download shuru ho gaya hai!');
 
-        document.getElementById('checkSingleThumb').checked = false;
-        document.getElementById('singleThumbContainer').style.display = 'none';
-        document.getElementById('singleThumbImg').style.display = 'none';
-        document.getElementById('singleThumbIcon').style.display = 'block';
+        uploadedDocs = { cnic: '', payment: '', other: '' };
+        resetCustomerFormForNew();
 
-        document.getElementById('checkFirstOwner').checked = true;
-        document.getElementById('checkSecondOwner').checked = false;
-        toggleOwnerBoxes();
-
-        populateAvailableFlatsDropdown();
         openAndSwitch('customerSubmenu', 'navCustomerParent', 'customerDetails', 'subCustomerDetails');
       } catch (err) {
         alert('Error: ' + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Register Customer Account';
+        btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration & Download PDF';
       }
     });
 
-    // Customer Directory Load
+    // =========================================================================
+    // 3. EXECUTIVE ALLOTMENT DOSSIER PDF GENERATOR (MANUAL SIGNATURES ON PRINT)
+    // =========================================================================
+    function downloadCustomerPDF(customerId) {
+      const c = allCustomersData.find(item => item.id === customerId);
+      if (!c) return;
+
+      const o1 = c.firstOwner || {};
+      const o2 = c.secondOwner || {};
+      const fin = c.financials || {};
+      const bookingId = 'BH-' + (c.id ? c.id.substring(0, 6).toUpperCase() : '84920');
+      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      // Printable Container
+      const pdfWrapper = document.createElement('div');
+      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.background = '#ffffff';
+      pdfWrapper.style.color = '#0f172a';
+      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
+
+      pdfWrapper.innerHTML = `
+        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; position: relative; background: #ffffff;">
+          
+          <!-- Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="background: #0f2a59; color: #ffffff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">
+                  BH
+                </div>
+                <div>
+                  <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; letter-spacing: 0.5px; text-transform: uppercase;">BILAL HEIGHTS</h1>
+                  <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Luxury Living & Corporate Residences</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block; text-transform: uppercase;">
+                OFFICIAL ALLOTMENT ORDER
+              </div>
+              <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
+                REF NO: <span style="color: #0f2a59;">${bookingId}</span> &nbsp;|&nbsp; DATE: <span>${todayDate}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unit Info Banner -->
+          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Allotted Unit Information</div>
+                <div style="font-size: 20px; font-weight: 900; letter-spacing: 0.5px; color: #ffffff;">FLAT ${c.flatNo || 'N/A'}</div>
+              </div>
+              <div style="display: flex; gap: 18px; text-align: right; font-size: 12px;">
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">PROJECT</span><strong>${c.project || 'BILAL HEIGHTS'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">FLOOR</span><strong>${c.floor || 'N/A'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">UNIT SIZE</span><strong>${c.size || 'N/A'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">TYPE</span><strong>${c.ownershipType || 'Primary'}</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Purchaser Profile Section -->
+          <div style="display: flex; gap: 16px; margin-bottom: 16px; align-items: stretch;">
+            
+            <!-- Owner 1 Card -->
+            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
+                <span style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase;">Owner 1 (Primary Allottee)</span>
+                <span style="font-size: 9px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px;">Verified</span>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                ${o1.photo ? `
+                  <img src="${o1.photo}" style="width: 65px; height: 75px; object-fit: cover; border-radius: 6px; border: 1.5px solid #0f2a59; flex-shrink: 0;" />
+                ` : `
+                  <div style="width: 65px; height: 75px; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #94a3b8; flex-shrink: 0;">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                `}
+                <div style="font-size: 11px; line-height: 1.6; color: #334155; flex: 1;">
+                  <div><span style="color:#64748b; font-weight:600;">Name:</span> <strong style="color:#0f172a; font-size:12px;">${o1.name || 'N/A'}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">S/O, W/O:</span> <strong>${o1.fatherHusband || 'N/A'}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">CNIC No:</span> <strong style="color:#1d4ed8;">${o1.cnic || 'N/A'}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">Contact:</span> <strong>${o1.mobile || 'N/A'}</strong> &nbsp;|&nbsp; <span>WhatsApp: ${o1.whatsapp || 'N/A'}</span></div>
+                  <div><span style="color:#64748b; font-weight:600;">Address:</span> ${o1.address || 'N/A'}</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; font-size: 10px; color: #334155;">
+                <span style="color: #0f2a59; font-weight: 800;">Next of Kin (Nominee):</span> 
+                <strong>${o1.nominee ? o1.nominee.name : 'N/A'}</strong> 
+                (${o1.nominee ? o1.nominee.relation : 'N/A'}) - CNIC: <strong>${o1.nominee ? o1.nominee.cnic : 'N/A'}</strong>
+              </div>
+            </div>
+
+            <!-- Owner 2 or Thumb Card -->
+            ${(c.hasSecondOwner && o2.name) ? `
+            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
+                <span style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase;">Owner 2 (Equal Partner)</span>
+                <span style="font-size: 9px; font-weight: 700; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 4px;">Joint</span>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                ${o2.photo ? `
+                  <img src="${o2.photo}" style="width: 65px; height: 75px; object-fit: cover; border-radius: 6px; border: 1.5px solid #0284c7; flex-shrink: 0;" />
+                ` : `
+                  <div style="width: 65px; height: 75px; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #94a3b8; flex-shrink: 0;">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                `}
+                <div style="font-size: 11px; line-height: 1.6; color: #334155; flex: 1;">
+                  <div><span style="color:#64748b; font-weight:600;">Name:</span> <strong style="color:#0f172a; font-size:12px;">${o2.name}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">S/O, W/O:</span> <strong>${o2.fatherHusband}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">CNIC No:</span> <strong style="color:#0284c7;">${o2.cnic}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">Contact:</span> <strong>${o2.mobile}</strong></div>
+                  <div><span style="color:#64748b; font-weight:600;">Address:</span> ${o2.address}</div>
+                </div>
+              </div>
+            </div>
+            ` : `
+            <div style="width: 140px; border: 1.5px dashed #94a3b8; border-radius: 10px; padding: 10px; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              ${c.thumbImpression ? `
+                <img src="${c.thumbImpression}" style="width: 65px; height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background:#ffffff;" />
+                <div style="font-size: 9px; font-weight: 800; color: #166534; margin-top: 4px;">BIOMETRIC VERIFIED</div>
+              ` : `
+                <div style="font-size: 28px; color: #94a3b8; margin-bottom: 4px;"><i class="fa-solid fa-fingerprint"></i></div>
+                <div style="font-size: 9px; font-weight: 700; color: #64748b;">OFFICIAL RECORD THUMB</div>
+              `}
+            </div>
+            `}
+          </div>
+
+          <!-- Financial Schedule -->
+          <div style="margin-bottom: 14px;">
+            <div style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase; margin-bottom: 6px;">
+              Agreed Financial Schedule & Payment Terms
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center;">
+              <thead>
+                <tr style="background: #f1f5f9; color: #334155;">
+                  <th style="padding: 7px; border: 1px solid #cbd5e1;">TOTAL PRICE</th>
+                  <th style="padding: 7px; border: 1px solid #cbd5e1;">DOWN PAYMENT</th>
+                  <th style="padding: 7px; border: 1px solid #cbd5e1;">GREY STRUCTURE</th>
+                  <th style="padding: 7px; border: 1px solid #cbd5e1;">ON POSSESSION</th>
+                  <th style="padding: 7px; border: 1px solid #cbd5e1;">TENURE</th>
+                  <th style="padding: 7px; border: 1px solid #cbd5e1; background: #eff6ff; color: #1e3a8a;">MONTHLY INSTALLMENT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #0f172a; font-size: 12px;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
+                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 800; color: #16a34a;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
+                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">Rs. ${Number(fin.greyStructure || 0).toLocaleString()}</td>
+                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td>
+                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">${fin.durationMonths || 36} Months</td>
+                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #1d4ed8; background: #eff6ff; font-size: 12.5px;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Legal Terms -->
+          <div style="background: #f8fafc; border-left: 3px solid #0f2a59; padding: 7px 12px; margin-bottom: 22px; font-size: 9.5px; color: #475569; line-height: 1.5;">
+            <strong>DECLARATION & TERMS:</strong> This document serves as an authentic booking & allotment confirmation for the aforementioned unit at <strong>Bilal Heights</strong>. All installments must be paid as per the agreed schedule. Possession and mutation rights will be granted upon 100% financial clearance.
+          </div>
+
+          <!-- Physical Signatures Execution: Customer (Left) & Authorized Officer (Right) -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; padding: 0 14px;">
+            
+            <!-- LEFT: CUSTOMER SIGNATURE -->
+            <div style="text-align: center; width: 230px;">
+              <div style="height: 50px;"></div>
+              <div style="border-top: 2px solid #0f172a; padding-top: 6px;">
+                <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                  CUSTOMER SIGNATURE
+                </div>
+                <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">
+                  (Primary Allottee / Purchaser)
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT: AUTHORIZED PERSON SIGNATURE -->
+            <div style="text-align: center; width: 230px;">
+              <div style="height: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px;">
+                <span style="border: 1px dashed #2563eb; color: #1d4ed8; font-size: 8.5px; font-weight: 800; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">
+                  Official Stamp & Verification
+                </span>
+              </div>
+              <div style="border-top: 2px solid #0f172a; padding-top: 6px;">
+                <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                  AUTHORIZED PERSON SIGNATURE
+                </div>
+                <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">
+                  For & On Behalf of Bilal Heights
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      const opt = {
+        margin: [0.25, 0.25, 0.25, 0.25],
+        filename: `Allotment_Order_Flat_${c.flatNo}_${(o1.name || 'Purchaser').replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2.5, useCORS: true, logging: false },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(pdfWrapper).save();
+      } else {
+        alert('PDF library load nahi ho saki. Barah-e-meherbani internet connection check karein.');
+      }
+    }
+
+    // =========================================================================
+    // 2. CUSTOMER MODULE: RESET, RENDER, SEARCH & EDIT FUNCTIONS
+    // =========================================================================
+
+    // 1. Form Reset Function
+    function resetCustomerFormForNew() {
+      document.getElementById('customerForm').reset();
+      const editInput = document.getElementById('customerEditId');
+      if (editInput) editInput.value = '';
+
+      const btn = document.getElementById('btnSaveCustomer');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration & Download PDF';
+
+      owner1Base64 = '';
+      owner2Base64 = '';
+      customerThumbBase64 = '';
+      uploadedDocs = { cnic: '', payment: '', other: '' };
+
+      if (document.getElementById('owner1Img')) document.getElementById('owner1Img').style.display = 'none';
+      if (document.getElementById('owner1Placeholder')) document.getElementById('owner1Placeholder').style.display = 'block';
+      if (document.getElementById('owner2Img')) document.getElementById('owner2Img').style.display = 'none';
+      if (document.getElementById('owner2Placeholder')) document.getElementById('owner2Placeholder').style.display = 'block';
+
+     if (document.getElementById('checkSingleThumb')) document.getElementById('checkSingleThumb').checked = false;
+      if (document.getElementById('singleThumbContainer')) document.getElementById('singleThumbContainer').style.display = 'none';
+      if (document.getElementById('singleThumbImg')) document.getElementById('singleThumbImg').style.display = 'none';
+      if (document.getElementById('singleThumbIcon')) document.getElementById('singleThumbIcon').style.display = 'block';
+
+      // Canvas lines yahan se khatam kar di gayi hain
+
+      // Reset Ownership dropdown to Default Single Owner
+      const typeSelect = document.getElementById('custOwnershipType');
+      if (typeSelect) typeSelect.value = 'Single Owner';
+      handleOwnershipTypeChange();
+
+      populateAvailableFlatsDropdown();
+    }
+
+    // 2. Customer Table Rendering
+    function renderCustomerTable(dataToRender) {
+      const tbody = document.getElementById('customersTableBody');
+      if (!tbody) return;
+
+      if (!dataToRender || dataToRender.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Koi customer record nahi mila.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      dataToRender.forEach((c, index) => {
+        const serialNo = index + 1;
+        const ownerPrimary = c.firstOwner || c.secondOwner || {};
+        const photoThumb = ownerPrimary.photo 
+          ? `<img src="${ownerPrimary.photo}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1.5px solid #2563eb;" />` 
+          : `<div style="width:38px; height:38px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b;"><i class="fa-regular fa-user"></i></div>`;
+
+        let badgeType = 'badge-available';
+        if (c.ownershipType === 'Joint Ownership') badgeType = 'badge-progress';
+        if (c.ownershipType === 'Transfer') badgeType = 'badge-booked';
+
+        html += `
+          <tr>
+            <td style="font-weight:700; color:#475569;">#${serialNo}</td>
+            <td>${photoThumb}</td>
+            <td><strong>${ownerPrimary.name || 'N/A'}</strong></td>
+            <td>${ownerPrimary.cnic || 'N/A'}</td>
+            <td>${ownerPrimary.mobile || 'N/A'}</td>
+            <td><span style="color:#059669; font-weight:600;">${ownerPrimary.whatsapp || 'N/A'}</span></td>
+            <td><strong style="color:var(--primary);">${c.flatNo || 'N/A'}</strong> (${c.floor || 'N/A'})</td>
+            <td><span class="badge-status ${badgeType}">${c.ownershipType || 'Single Owner'}</span></td>
+            <td style="text-align:center;">
+              <div style="display:inline-flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+                <!-- 1. View Button -->
+                <button class="btn-tbl-view" title="View Profile" onclick="viewCustomerModal('${c.id}')">
+                  <i class="fa-solid fa-eye"></i> View
+                </button>
+
+                <!-- 2. Edit Button -->
+                <button class="btn-tbl-edit" title="Edit Customer" onclick="editCustomer('${c.id}')">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+
+                <!-- 3. PDF Download Button -->
+                <button class="btn-action-primary" style="background:#059669; padding:6px 11px; font-size:12px;" title="Download PDF Dossier" onclick="downloadCustomerPDF('${c.id}')">
+                  <i class="fa-solid fa-file-pdf"></i> PDF
+                </button>
+
+                <!-- 4. Delete Button -->
+                <button class="btn-tbl-delete" title="Delete" onclick="deleteCustomerRecord('${c.id}')">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // 3. Customer Data Load from Firebase
     function loadCustomers() {
       db.collection('customers').orderBy('createdAt', 'desc').onSnapshot(snap => {
         allCustomersData = [];
-        const tbody = document.getElementById('customersTableBody');
 
         if (snap.empty) {
-          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">No customer records registered yet.</td></tr>`;
-          document.getElementById('statTotalCustomers').textContent = 0;
+          const tbody = document.getElementById('customersTableBody');
+          if (tbody) tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">No customer records registered yet.</td></tr>`;
+          if (document.getElementById('statTotalCustomers')) document.getElementById('statTotalCustomers').textContent = 0;
           return;
         }
 
-        let html = '';
         snap.forEach(doc => {
-          const c = doc.data();
-          allCustomersData.push({ id: doc.id, ...c });
-
-          const ownerPrimary = c.firstOwner || c.secondOwner || {};
-          const photoThumb = ownerPrimary.photo 
-            ? `<img src="${ownerPrimary.photo}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1.5px solid #2563eb;" />` 
-            : `<div style="width:38px; height:38px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b;"><i class="fa-regular fa-user"></i></div>`;
-
-          const badgeType = c.hasFirstOwner && c.hasSecondOwner ? 'badge-progress' : 'badge-available';
-
-          html += `
-            <tr>
-              <td>${photoThumb}</td>
-              <td><strong>${ownerPrimary.name || 'N/A'}</strong></td>
-              <td>${ownerPrimary.cnic || 'N/A'}</td>
-              <td>${ownerPrimary.mobile || 'N/A'}</td>
-              <td><strong style="color:var(--primary);">${c.flatNo}</strong> (${c.floor})</td>
-              <td>${c.project || 'BILAL HEIGHTS'}</td>
-              <td><span class="badge-status ${badgeType}">${c.ownershipType}</span></td>
-              <td style="text-align:center;">
-                <div style="display:inline-flex; gap:6px;">
-                  <button class="btn-tbl-view" onclick="viewCustomerModal('${doc.id}')">
-                    <i class="fa-solid fa-eye"></i> View
-                  </button>
-                  <button class="btn-tbl-delete" onclick="deleteCustomerRecord('${doc.id}')">
-                    <i class="fa-solid fa-trash-can"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          `;
+          allCustomersData.push({ id: doc.id, ...doc.data() });
         });
 
-        tbody.innerHTML = html;
-        document.getElementById('statTotalCustomers').textContent = snap.size;
+        filterCustomersTable();
+        if (document.getElementById('statTotalCustomers')) {
+          document.getElementById('statTotalCustomers').textContent = snap.size;
+        }
       });
     }
+
+    // 4. Multi-Search Bar Function
+    function filterCustomersTable() {
+      const searchInput = document.getElementById('customerSearchInput');
+      const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+      if (!query) {
+        renderCustomerTable(allCustomersData);
+        return;
+      }
+
+      const filtered = allCustomersData.filter((c, index) => {
+        const serialStr = `${index + 1}`;
+        const serialHash = `#${index + 1}`;
+        
+        const o1 = c.firstOwner || {};
+        const o2 = c.secondOwner || {};
+
+        const cnic1 = (o1.cnic || '').replace(/\D/g, '');
+        const cnic2 = (o2.cnic || '').replace(/\D/g, '');
+        const rawQuery = query.replace(/\D/g, '');
+
+        const matchesSerial = (query === serialStr || query === serialHash);
+        const matchesName = (o1.name && o1.name.toLowerCase().includes(query)) || (o2.name && o2.name.toLowerCase().includes(query));
+        const matchesMobile = (o1.mobile && o1.mobile.includes(query)) || (o2.mobile && o2.mobile.includes(query));
+        const matchesWhatsapp = (o1.whatsapp && o1.whatsapp.includes(query)) || (o2.whatsapp && o2.whatsapp.includes(query));
+        const matchesCnic = (o1.cnic && o1.cnic.includes(query)) || (o2.cnic && o2.cnic.includes(query)) || (rawQuery && (cnic1.includes(rawQuery) || cnic2.includes(rawQuery)));
+        const matchesFlat = (c.flatNo && c.flatNo.toLowerCase().includes(query));
+
+        return matchesSerial || matchesName || matchesMobile || matchesWhatsapp || matchesCnic || matchesFlat;
+      });
+
+      renderCustomerTable(filtered);
+    }
+
+    // 5. EDIT CUSTOMER: Data Form mein pre-fill karna
+    function editCustomer(customerId) {
+      const c = allCustomersData.find(item => item.id === customerId);
+      if (!c) return;
+
+      document.getElementById('customerForm').reset();
+      
+      let editInput = document.getElementById('customerEditId');
+      if (!editInput) {
+        editInput = document.createElement('input');
+        editInput.type = 'hidden';
+        editInput.id = 'customerEditId';
+        document.getElementById('customerForm').prepend(editInput);
+      }
+      editInput.value = c.id;
+
+      document.getElementById('btnSaveCustomer').innerHTML = '<i class="fa-solid fa-check-double"></i> Update Customer Record';
+
+      // Set Ownership Type dropdown
+      const typeSelect = document.getElementById('custOwnershipType');
+      if (typeSelect) {
+        typeSelect.value = c.ownershipType || 'Single Owner';
+        handleOwnershipTypeChange();
+      }
+
+      // Flats Dropdown with currently allotted flat
+      const flatSelect = document.getElementById('custFlatSelect');
+      if (c.ownershipType === 'Transfer') {
+        populateFlatsForTransfer();
+      } else {
+        populateAvailableFlatsDropdown();
+      }
+
+      let optionExists = Array.from(flatSelect.options).some(opt => opt.value === c.flatId);
+      if (!optionExists && c.flatId) {
+        const opt = document.createElement('option');
+        opt.value = c.flatId;
+        opt.textContent = `Flat ${c.flatNo} - ${c.floor} (${c.size}) [Allotted]`;
+        opt.setAttribute('data-floor', c.floor || '');
+        opt.setAttribute('data-size', c.size || '');
+        opt.setAttribute('data-flatno', c.flatNo || '');
+        flatSelect.appendChild(opt);
+      }
+      flatSelect.value = c.flatId;
+
+      document.getElementById('custFloor').value = c.floor || '';
+      document.getElementById('custSize').value = c.size || '';
+
+      // Financials Fill
+      const fin = c.financials || {};
+      document.getElementById('dealTotalPrice').value = fin.totalPrice || '';
+      document.getElementById('dealDownPayment').value = fin.downPayment || '';
+      document.getElementById('dealGreyStructure').value = fin.greyStructure || 0;
+      document.getElementById('dealPossession').value = fin.possession || 0;
+      document.getElementById('dealDuration').value = fin.durationMonths || 36;
+      calculateMonthlyInstallment();
+
+      // Biometric Thumb Fill
+      const isThumb = !!c.thumbImpression;
+      document.getElementById('checkSingleThumb').checked = isThumb;
+      toggleSingleThumbImpression();
+      if (isThumb) {
+        applyThumbSuccess(c.thumbImpression);
+      }
+
+      // Terms Agreement
+      if (document.getElementById('checkAgreeTerms')) {
+        document.getElementById('checkAgreeTerms').checked = true;
+      }
+
+      // Owner 1 Data Fill
+      if (c.firstOwner) {
+        const o1 = c.firstOwner;
+        document.getElementById('cust1Name').value = o1.name || '';
+        document.getElementById('cust1Father').value = o1.fatherHusband || '';
+        document.getElementById('cust1Cnic').value = o1.cnic || '';
+        document.getElementById('cust1Mobile').value = o1.mobile || '';
+        document.getElementById('cust1Whatsapp').value = o1.whatsapp !== 'N/A' ? o1.whatsapp : '';
+        document.getElementById('cust1Email').value = o1.email !== 'N/A' ? o1.email : '';
+        document.getElementById('cust1Address').value = o1.address || '';
+
+        if (o1.photo) {
+          owner1Base64 = o1.photo;
+          document.getElementById('owner1Img').src = o1.photo;
+          document.getElementById('owner1Img').style.display = 'block';
+          document.getElementById('owner1Placeholder').style.display = 'none';
+        }
+
+        if (o1.nominee) {
+          document.getElementById('cust1NomineeName').value = o1.nominee.name !== 'N/A' ? o1.nominee.name : '';
+          document.getElementById('cust1NomineeRelation').value = o1.nominee.relation !== 'N/A' ? o1.nominee.relation : '';
+          document.getElementById('cust1NomineeCnic').value = o1.nominee.cnic !== 'N/A' ? o1.nominee.cnic : '';
+        }
+      }
+
+      // Owner 2 Data Fill
+      if (c.hasSecondOwner && c.secondOwner) {
+        const o2 = c.secondOwner;
+        document.getElementById('cust2Name').value = o2.name || '';
+        document.getElementById('cust2Father').value = o2.fatherHusband || '';
+        document.getElementById('cust2Cnic').value = o2.cnic || '';
+        document.getElementById('cust2Mobile').value = o2.mobile || '';
+        document.getElementById('cust2Whatsapp').value = o2.whatsapp !== 'N/A' ? o2.whatsapp : '';
+        document.getElementById('cust2Email').value = o2.email !== 'N/A' ? o2.email : '';
+        document.getElementById('cust2Address').value = o2.address || '';
+
+        if (o2.photo) {
+          owner2Base64 = o2.photo;
+          document.getElementById('owner2Img').src = o2.photo;
+          document.getElementById('owner2Img').style.display = 'block';
+          document.getElementById('owner2Placeholder').style.display = 'none';
+        }
+
+        if (o2.nominee) {
+          document.getElementById('cust2NomineeName').value = o2.nominee.name !== 'N/A' ? o2.nominee.name : '';
+          document.getElementById('cust2NomineeRelation').value = o2.nominee.relation !== 'N/A' ? o2.nominee.relation : '';
+          document.getElementById('cust2NomineeCnic').value = o2.nominee.cnic !== 'N/A' ? o2.nominee.cnic : '';
+        }
+      }
+
+      // Transfer Case Data Fill
+      if (c.transferDetails) {
+        const tr = c.transferDetails;
+        if (document.getElementById('transferDate')) document.getElementById('transferDate').value = tr.transferDate || '';
+        if (document.getElementById('transferDocNo')) document.getElementById('transferDocNo').value = tr.transferDocNo || '';
+        if (document.getElementById('transferFee')) document.getElementById('transferFee').value = tr.transferFee || '';
+        if (document.getElementById('prevOwnerName')) document.getElementById('prevOwnerName').value = tr.previousOwnerName || '';
+        if (document.getElementById('prevOwnerCnic')) document.getElementById('prevOwnerCnic').value = tr.previousOwnerCnic || '';
+        if (document.getElementById('prevOwnerMobile')) document.getElementById('prevOwnerMobile').value = tr.previousOwnerMobile || '';
+        if (document.getElementById('transferRemarks')) document.getElementById('transferRemarks').value = tr.transferRemarks || '';
+      }
+
+      openAndSwitch('customerSubmenu', 'navCustomerParent', 'addCustomer', 'subAddCustomer');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function clearSignatureCanvas(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+}
+
+function isCanvasBlank(canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return true;
+  return true;
+}
+
+    // Duplicate function yahan se delete ho chuka hai
 
     // View Customer Profile Modal with Thumb & Financials
     function viewCustomerModal(customerId) {
@@ -4338,6 +5403,131 @@ async function confirmStatusChange() {
         alert(err.message);
       }
     });
+
+    // =========================================================================
+    // CUSTOMER DOCUMENTS REPOSITORY: SEARCH & DOWNLOAD LOGIC
+    // =========================================================================
+
+    // 1. Documents Table Render karna
+    function renderCustomerDocsArchive(dataToRender) {
+      const tbody = document.getElementById('customerDocsTableBody');
+      if (!tbody) return;
+
+      const list = dataToRender || allCustomersData;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);">Koi customer ya documents nahi mile.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      list.forEach((c, index) => {
+        const o1 = c.firstOwner || c.secondOwner || {};
+        const docs = c.documents || {};
+
+        // Helper function for download button
+        function getDownloadButton(fileData, docLabel, colorBg) {
+          if (fileData) {
+            return `
+              <button 
+                onclick="downloadCustomerFile('${fileData}', '${(o1.name || 'Customer').replace(/\s+/g, '_')}_Flat_${c.flatNo}_${docLabel}')" 
+                style="background:${colorBg}; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-size:11.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; box-shadow:0 2px 6px rgba(0,0,0,0.1);" 
+                title="Download ${docLabel}">
+                <i class="fa-solid fa-download"></i> Download
+              </button>
+            `;
+          } else {
+            return `
+              <span style="font-size:11px; color:#94a3b8; background:#f1f5f9; padding:4px 8px; border-radius:6px; font-weight:600; display:inline-flex; align-items:center; gap:4px;">
+                <i class="fa-solid fa-circle-xmark"></i> Not Uploaded
+              </span>
+            `;
+          }
+        }
+
+        html += `
+          <tr>
+            <td style="font-weight:700; color:#475569;">#${index + 1}</td>
+            <td>
+              <strong style="color:#0f172a; font-size:13.5px;">${o1.name || 'N/A'}</strong>
+              <div style="font-size:11px; color:#64748b;">S/O: ${o1.fatherHusband || 'N/A'}</div>
+            </td>
+            <td><strong style="color:#1d4ed8;">${o1.cnic || 'N/A'}</strong></td>
+            <td>${o1.mobile || 'N/A'}</td>
+            <td><strong style="color:var(--primary);">${c.flatNo || 'N/A'}</strong> (${c.floor || 'N/A'})</td>
+            
+            <!-- CNIC Download -->
+            <td style="text-align:center;">
+              ${getDownloadButton(docs.cnic, 'CNIC_Copy', '#2563eb')}
+            </td>
+
+            <!-- Payment Slip Download -->
+            <td style="text-align:center;">
+              ${getDownloadButton(docs.payment, 'Payment_Receipt', '#16a34a')}
+            </td>
+
+            <!-- Transfer / Other Download -->
+            <td style="text-align:center;">
+              ${getDownloadButton(docs.other, 'Transfer_Deed_Doc', '#d97706')}
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+      const countBadge = document.getElementById('docCountBadge');
+      if (countBadge) countBadge.textContent = `Showing ${list.length} Customer Files`;
+    }
+
+    // 2. Search Functionality (Customer Name, Mobile, CNIC)
+    function filterCustomerDocs() {
+      const searchInput = document.getElementById('docSearchInput');
+      const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+      if (!query) {
+        renderCustomerDocsArchive(allCustomersData);
+        return;
+      }
+
+      const filtered = allCustomersData.filter(c => {
+        const o1 = c.firstOwner || {};
+        const o2 = c.secondOwner || {};
+
+        const cnic1 = (o1.cnic || '').replace(/\D/g, '');
+        const cnic2 = (o2.cnic || '').replace(/\D/g, '');
+        const rawQuery = query.replace(/\D/g, '');
+
+        const matchesName = (o1.name && o1.name.toLowerCase().includes(query)) || (o2.name && o2.name.toLowerCase().includes(query));
+        const matchesMobile = (o1.mobile && o1.mobile.includes(query)) || (o2.mobile && o2.mobile.includes(query));
+        const matchesCnic = (o1.cnic && o1.cnic.includes(query)) || (o2.cnic && o2.cnic.includes(query)) || (rawQuery && (cnic1.includes(rawQuery) || cnic2.includes(rawQuery)));
+        const matchesFlat = (c.flatNo && c.flatNo.toLowerCase().includes(query));
+
+        return matchesName || matchesMobile || matchesCnic || matchesFlat;
+      });
+
+      renderCustomerDocsArchive(filtered);
+    }
+
+    // 3. Direct File Download Handler
+    function downloadCustomerFile(base64Data, filenamePrefix) {
+      if (!base64Data) {
+        alert('File data mojood nahi hai.');
+        return;
+      }
+
+      // Extension dhoondein (PNG, JPG, PDF etc.)
+      let ext = '.png';
+      if (base64Data.includes('application/pdf')) ext = '.pdf';
+      else if (base64Data.includes('image/jpeg')) ext = '.jpg';
+      else if (base64Data.includes('image/png')) ext = '.png';
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = base64Data;
+      downloadLink.download = `${filenamePrefix}${ext}`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
   </script>
 </body>
 </html>
