@@ -2380,10 +2380,11 @@
     <!-- Ownership Status Dropdown -->
     <div>
       <label>Ownership Status *</label>
-      <select id="custOwnershipStatus" required>
-        <option value="First Owner">First Owner</option>
-        <option value="Second Owner (Transfer)">Second Owner (Transfer)</option>
-      </select>
+      <select id="custOwnershipType" onchange="handleOwnershipTypeChange()" style="width:100%; padding:11px 14px; border:1.5px solid #2563eb; border-radius:10px; font-size:14px; font-weight:700; color:#1e293b; background:#ffffff; outline:none;">
+  <option value="Single Owner" selected>Single Owner</option>
+  <option value="Joint Ownership">Joint Ownership (Share % Percentage Basis)</option>
+  <option value="Transfer">Transfer (Transfer Ownership to New Owner)</option>
+</select>
     </div>
   </div>
 </div>
@@ -2483,22 +2484,10 @@
   </div>
 </div>
 
-             <!-- ================= OWNERSHIP TYPE DROPDOWN CARD ================= -->
-              <div style="background:#f8fafc; border:1.5px solid #cbd5e1; border-radius:14px; padding:18px 20px; margin-bottom:22px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-                  <div style="flex:1; min-width:250px;">
-                    <label style="font-size:14px; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-                      <i class="fa-solid fa-users-gear" style="color:#2563eb;"></i> Select Ownership Type *
-                    </label>
-                    <select id="custOwnershipType" onchange="handleOwnershipTypeChange()" style="width:100%; padding:11px 14px; border:1.5px solid #2563eb; border-radius:10px; font-size:14px; font-weight:700; color:#1e293b; background:#ffffff; outline:none;">
-                      <option value="Single Owner" selected>Single Owner</option>
-                      <option value="Joint Ownership">Joint Ownership (Equal Partners: Owner 1 & Owner 2)</option>
-                      <option value="Transfer">Transfer (Transfer Ownership to New Owner)</option>
-                    </select>
-                  </div>
-                  <div id="ownershipStatusPill" style="font-size:12px; font-weight:800; padding:6px 14px; border-radius:20px; background:#dbeafe; color:#1d4ed8;">
-                    <i class="fa-solid fa-user"></i> Single Owner Mode Active
-                  </div>
+             <!-- ================= OWNERSHIP STATUS INDICATOR ================= -->
+              <div style="display:flex; justify-content:flex-end; margin-bottom:18px;">
+                <div id="ownershipStatusPill" style="font-size:12px; font-weight:800; padding:6px 16px; border-radius:20px; background:#dbeafe; color:#1d4ed8;">
+                  <i class="fa-solid fa-user"></i> Single Owner Mode Active
                 </div>
               </div>
 
@@ -2557,6 +2546,47 @@
                   ></textarea>
                 </div>
               </div>
+
+
+<!-- ================= JOINT OWNERSHIP SHARE RATIO CARD (Sirf Joint par show hoga) ================= -->
+<div id="jointShareCard" style="display:none; background:#eff6ff; border:1.5px solid #60a5fa; border-radius:14px; padding:18px 20px; margin-bottom:22px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #bfdbfe; padding-bottom:8px;">
+    <h4 style="font-size:15px; font-weight:800; color:#1e40af; display:flex; align-items:center; gap:8px;">
+      <i class="fa-solid fa-chart-pie"></i> Ownership Share Ratio (%)
+    </h4>
+    <span style="font-size:11.5px; background:#dbeafe; color:#1e40af; font-weight:800; padding:4px 12px; border-radius:20px;">
+      Total: 100%
+    </span>
+  </div>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:18px; align-items:center;">
+    <!-- Owner 1 Share Input -->
+    <div>
+      <label style="font-size:13px; font-weight:700; color:#1e3a8a; display:block; margin-bottom:6px;">
+        Owner 1 Share Percentage (%) *
+      </label>
+      <div style="position:relative; display:flex; align-items:center;">
+        <input type="number" id="cust1Share" min="1" max="99" value="50" oninput="calculateJointShare('owner1')" style="width:100%; padding:11px 40px 11px 14px; border:1.5px solid #3b82f6; border-radius:10px; font-size:15px; font-weight:800; color:#1e3a8a; background:#ffffff; outline:none;" />
+        <span style="position:absolute; right:14px; font-weight:800; color:#3b82f6; font-size:16px;">%</span>
+      </div>
+    </div>
+
+    <!-- Owner 2 Share Input -->
+    <div>
+      <label style="font-size:13px; font-weight:700; color:#0369a1; display:block; margin-bottom:6px;">
+        Owner 2 Share Percentage (%) *
+      </label>
+      <div style="position:relative; display:flex; align-items:center;">
+        <input type="number" id="cust2Share" min="1" max="99" value="50" oninput="calculateJointShare('owner2')" style="width:100%; padding:11px 40px 11px 14px; border:1.5px solid #0284c7; border-radius:10px; font-size:15px; font-weight:800; color:#0369a1; background:#ffffff; outline:none;" />
+        <span style="position:absolute; right:14px; font-weight:800; color:#0284c7; font-size:16px;">%</span>
+      </div>
+    </div>
+  </div>
+  <small style="display:block; color:#475569; font-size:12px; margin-top:8px;">
+    <i class="fa-solid fa-circle-info" style="color:#2563eb;"></i> Kisi ek owner ka percentage tabdeel karein, doosra khud-ba-khud 100% ke hisab se calculate ho jayega (maslan 30% aur 70%).
+  </small>
+</div>
+
 
               <!-- ================= 1. OWNER 1 DETAILS SECTION ================= -->
               <div id="owner1Box" class="owner-box-section">
@@ -2925,59 +2955,268 @@
         </div>
 
         <!-- ================= SECTION 7: PURCHASER ================= -->
+       <!-- ================= SECTION: ADD / RECORD NEW PURCHASE ================= -->
         <section id="sectionAddPurchaser" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-cart-plus"></i> Record New Purchaser Entry</h3>
+              <h3 class="panel-title"><i class="fa-solid fa-cart-plus"></i> Record New Purchase Bill</h3>
+              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails')">
+                <i class="fa-solid fa-table-list"></i> View Purchase List
+              </button>
             </div>
+
             <form id="purchaserForm">
+              <input type="hidden" id="purEditId" value="" />
+              
               <div class="form-grid-layout">
-                <div><label>Title *</label><input type="text" id="expTitle" required /></div>
-                <div><label>Category *</label><select id="expCategory" required></select></div>
-                <div><label>Project</label><select id="expProject"></select></div>
-                <div><label>Vendor *</label><input type="text" id="expVendor" required /></div>
-                <div><label>Date *</label><input type="date" id="expDate" required /></div>
-                <div><label>Total Bill *</label><input type="number" id="expTotalAmount" required oninput="calculatePurchaserBalance()" /></div>
-                <div><label>Paid *</label><input type="number" id="expPaidAmount" required oninput="calculatePurchaserBalance()" /></div>
-                <div><label>Remaining</label><input type="number" id="expRemainingAmount" readonly style="background:#f1f5f9; color:var(--danger); font-weight:700;" /></div>
-                <div><label>Payment Method</label><select id="expPaymentMethod"><option value="Cash">Cash</option><option value="Bank">Bank Transfer</option></select></div>
-                <div class="form-group-full"><label>Notes</label><textarea id="expNotes" rows="2"></textarea></div>
+                
+                <!-- Purchase No -->
+                <div>
+                  <label>Purchase Bill No. *</label>
+                  <input type="text" id="purBillNo" placeholder="e.g. PUR-001" required />
+                </div>
+
+                <!-- Date -->
+                <div>
+                  <label>Purchase Date *</label>
+                  <input type="date" id="purDate" required />
+                </div>
+
+                <!-- Project -->
+                <div>
+                  <label>Project *</label>
+                  <select id="purProject" required>
+                    <option value="BILAL HEIGHTS">BILAL HEIGHTS</option>
+                  </select>
+                </div>
+
+                <!-- Supplier / Vendor Name -->
+                <div>
+                  <label>Supplier / Vendor *</label>
+                  <input type="text" id="purVendor" placeholder="e.g. ABC Cement, XYZ Steel" required />
+                </div>
+
+                <!-- Item Description -->
+                <div>
+                  <label>Item Name *</label>
+                  <input type="text" id="purItem" placeholder="e.g. Cement, Steel, Bricks, Sand" required />
+                </div>
+
+                <!-- Quantity & Unit -->
+                <div>
+                  <label>Quantity * (e.g. 500 Bags, 2 Ton)</label>
+                  <input type="text" id="purQty" placeholder="e.g. 500 Bags" required oninput="calcPurchaseTotalAuto()" />
+                </div>
+
+                <!-- Rate per Unit -->
+                <div>
+                  <label>Rate (Rs.) *</label>
+                  <input type="number" id="purRate" placeholder="e.g. 1500" required oninput="calcPurchaseTotalAuto()" />
+                </div>
+
+                <!-- Total Amount (Auto Calculated) -->
+                <div>
+                  <label>Total Amount (Rs.) *</label>
+                  <input type="number" id="purTotalAmount" placeholder="e.g. 750000" required oninput="calculatePurchaserBalance()" />
+                </div>
+
+                <!-- Paid Amount -->
+                <div>
+                  <label>Paid Amount (Rs.) *</label>
+                  <input type="number" id="purPaidAmount" placeholder="e.g. 300000" required oninput="calculatePurchaserBalance()" />
+                </div>
+
+                <!-- Remaining Amount (Auto) -->
+                <div>
+                  <label>Remaining (Rs.) (Auto)</label>
+                  <input type="number" id="purRemainingAmount" readonly style="background:#f8fafc; font-weight:800; color:#dc2626;" value="0" />
+                </div>
+
+                <!-- Payment Method -->
+                <div>
+                  <label>Payment Method</label>
+                  <select id="purPaymentMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Cheque">Cheque</option>
+                  </select>
+                </div>
+
+                <!-- Notes / Remarks -->
+                <div class="form-group-full">
+                  <label>Notes / Remarks</label>
+                  <textarea id="purNotes" rows="2" placeholder="Enter bill details, vehicle number, delivery challan..."></textarea>
+                </div>
+
               </div>
-              <div style="margin-top:20px; display:flex; justify-content:flex-end;">
-                <button type="submit" id="btnSavePurchaser" class="btn-action-primary" style="background:#059669;">
-                  <i class="fa-solid fa-floppy-disk"></i> Save Purchaser Entry
+
+              <div style="margin-top:24px; display:flex; justify-content:flex-end;">
+                <button type="submit" id="btnSavePurchaser" class="btn-action-primary" style="background:#2563eb; padding:12px 24px;">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill
                 </button>
               </div>
             </form>
           </div>
         </section>
 
+       <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
         <section id="sectionPurchaserDetails" class="erp-section">
-          <div class="card-panel">
-            <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-scale-balanced"></i> Purchaser Ledger</h3>
+          
+          <!-- Top Header with Date Filter & Add Button -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-arrow-left" style="cursor: pointer; font-size: 18px; color: #2563eb;" onclick="switchSection('dashboard', document.getElementById('navDashboard'))"></i>
+                Purchase List
+              </h2>
+              <p style="font-size: 13px; color: #64748b; margin-top: 2px;">View and manage all purchases for your project.</p>
             </div>
-            <div class="table-container">
+
+            <!-- Date Range Controls & Add Purchase Button -->
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              
+              <!-- Date Range Filter Box -->
+              <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 6px 12px; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-regular fa-calendar-days" style="color: #2563eb; font-size: 15px;"></i>
+                <input type="date" id="purFilterStartDate" onchange="filterPurchases()" style="border: none; outline: none; font-size: 12.5px; font-weight: 600; color: #1e293b; background: transparent;" />
+                <span style="color: #94a3b8; font-weight: 700;">to</span>
+                <input type="date" id="purFilterEndDate" onchange="filterPurchases()" style="border: none; outline: none; font-size: 12.5px; font-weight: 600; color: #1e293b; background: transparent;" />
+              </div>
+
+              <!-- Add Purchase Button -->
+              <button class="btn-action-primary" onclick="openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'addPurchaser', 'subAddPurchaser')" style="background: #2563eb; padding: 10px 18px; font-size: 13.5px; border-radius: 10px;">
+                <i class="fa-solid fa-plus"></i> Add Purchase
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 Summary KPI Cards (As shown in screenshot) -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 22px;">
+            
+            <!-- Card 1: Total Purchase Amount -->
+            <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+              <div style="width: 52px; height: 52px; border-radius: 12px; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                <i class="fa-solid fa-cart-shopping"></i>
+              </div>
+              <div>
+                <div style="font-size: 12px; font-weight: 700; color: #1e40af;">Total Purchase Amount</div>
+                <div id="cardTotalPurchase" style="font-size: 23px; font-weight: 800; color: #0f172a; margin: 3px 0;">Rs. 0</div>
+                <div style="font-size: 11px; color: #64748b; font-weight: 600;">(Selected Period)</div>
+              </div>
+            </div>
+
+            <!-- Card 2: Total Paid Amount -->
+            <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+              <div style="width: 52px; height: 52px; border-radius: 12px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                <i class="fa-solid fa-coins"></i>
+              </div>
+              <div>
+                <div style="font-size: 12px; font-weight: 700; color: #166534;">Total Paid Amount</div>
+                <div id="cardTotalPaid" style="font-size: 23px; font-weight: 800; color: #0f172a; margin: 3px 0;">Rs. 0</div>
+                <div style="font-size: 11px; color: #64748b; font-weight: 600;">(To Suppliers)</div>
+              </div>
+            </div>
+
+            <!-- Card 3: Remaining Payable -->
+            <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+              <div style="width: 52px; height: 52px; border-radius: 12px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div>
+                <div style="font-size: 12px; font-weight: 700; color: #92400e;">Remaining Payable</div>
+                <div id="cardTotalRemaining" style="font-size: 23px; font-weight: 800; color: #0f172a; margin: 3px 0;">Rs. 0</div>
+                <div style="font-size: 11px; color: #64748b; font-weight: 600;">(To Suppliers)</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Filter & Search Controls Bar -->
+          <div class="card-panel" style="padding: 16px 20px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+              
+              <!-- Search Input -->
+              <div style="flex: 2; min-width: 250px; position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                <input type="text" id="purSearchInput" oninput="filterPurchases()" placeholder="Search by Purchase No, Supplier, Item..." style="width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13.5px; outline: none;" />
+              </div>
+
+              <!-- Project Filter Dropdown -->
+              <div style="flex: 1; min-width: 150px;">
+                <select id="purProjectFilter" onchange="filterPurchases()" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155; outline: none;">
+                  <option value="ALL">All Projects</option>
+                  <option value="BILAL HEIGHTS">BILAL HEIGHTS</option>
+                </select>
+              </div>
+
+              <!-- Supplier Filter Dropdown -->
+              <div style="flex: 1; min-width: 150px;">
+                <select id="purSupplierFilter" onchange="filterPurchases()" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155; outline: none;">
+                  <option value="ALL">All Suppliers</option>
+                </select>
+              </div>
+
+              <!-- Status Filter Dropdown -->
+              <div style="flex: 1; min-width: 130px;">
+                <select id="purStatusFilter" onchange="filterPurchases()" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155; outline: none;">
+                  <option value="ALL">All Status</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Partial">Partial</option>
+                  <option value="Unpaid">Unpaid</option>
+                </select>
+              </div>
+
+              <!-- Reset Button -->
+              <button onclick="resetPurchaseFilters()" style="background: #ffffff; border: 1.5px solid var(--border); color: #475569; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-rotate-right"></i> Reset
+              </button>
+
+            </div>
+          </div>
+
+          <!-- Bill-Wise Purchases Table -->
+          <div class="card-panel" style="padding: 0; overflow: hidden;">
+            <div class="table-container" style="border: none; border-radius: 0;">
               <table class="erp-table">
                 <thead>
-                  <tr>
+                  <tr style="background: #f8fafc;">
+                    <th style="width: 35px; text-align: center;"><input type="checkbox" id="checkAllPur" onclick="toggleSelectAllPurchases(this)" /></th>
+                    <th>Purchase No.</th>
                     <th>Date</th>
-                    <th>Item Title</th>
-                    <th>Category</th>
-                    <th>Vendor</th>
-                    <th>Total Bill</th>
-                    <th>Paid</th>
-                    <th>Remaining</th>
-                    <th>Status</th>
-                    <th style="text-align:center;">Actions</th>
+                    <th>Supplier / Vendor</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Rate (Rs.)</th>
+                    <th>Total Amount (Rs.)</th>
+                    <th>Paid (Rs.)</th>
+                    <th>Remaining (Rs.)</th>
+                    <th style="text-align: center;">Payment Status</th>
+                    <th style="text-align: center;">Actions</th>
                   </tr>
                 </thead>
-                <tbody id="expensesTableBody">
-                  <tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">No purchaser records found.</td></tr>
+                <tbody id="purchasesTableBody">
+                  <tr>
+                    <td colspan="12" style="text-align: center; padding: 35px; color: var(--text-muted);">
+                      Loading purchases ledger...
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
+
+            <!-- Table Pagination Footer -->
+            <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 12px;">
+              <div id="purCountDisplay" style="color: #64748b; font-size: 13px; font-weight: 500;">
+                Showing 0 to 0 of 0 purchases
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button class="page-btn" onclick="prevPurchasePage()"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="page-btn active" id="currentPurPageBtn">1</button>
+                <button class="page-btn" onclick="nextPurchasePage()"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
           </div>
+
         </section>
 
         <section id="sectionPurchaserCategories" class="erp-section">
@@ -4035,10 +4274,10 @@ async function confirmStatusChange() {
         return;
       }
 
-      availableFlats.forEach(f => {
+     availableFlats.forEach(f => {
         const opt = document.createElement('option');
         opt.value = f.id;
-        opt.textContent = `Flat ${f.flatNo} - ${f.floor} (${f.size} Sq. Ft) - Rs. ${f.price}`;
+        opt.textContent = f.flatNo; // <-- Sirf Flat Number show hoga (e.g. A-101)
         opt.setAttribute('data-floor', f.floor);
         opt.setAttribute('data-size', f.size);
         opt.setAttribute('data-price', f.price);
@@ -4106,93 +4345,124 @@ async function confirmStatusChange() {
     // =========================================================================
     // NEW OWNERSHIP TYPE HANDLER: Single Owner, Joint Ownership, Transfer
     // =========================================================================
-    function handleOwnershipTypeChange() {
-      const typeSelect = document.getElementById('custOwnershipType');
-      const selectedType = typeSelect ? typeSelect.value : 'Single Owner';
+   // =========================================================================
+// NEW OWNERSHIP TYPE HANDLER: Single Owner, Joint Ownership, Transfer
+// =========================================================================
+function handleOwnershipTypeChange() {
+  const typeSelect = document.getElementById('custOwnershipType');
+  const selectedType = typeSelect ? typeSelect.value : 'Single Owner';
 
-      const owner1Box = document.getElementById('owner1Box');
-      const owner2Box = document.getElementById('owner2Box');
-      const transferBox = document.getElementById('transferBox');
-      const pill = document.getElementById('ownershipStatusPill');
+  // Tamam Sections aur Boxes ko pick karein
+  const owner1Box = document.getElementById('owner1Box');
+  const owner2Box = document.getElementById('owner2Box');
+  const transferBox = document.getElementById('transferBox');
+  const jointShareCard = document.getElementById('jointShareCard'); // <-- Naya Percentage Box
+  const pill = document.getElementById('ownershipStatusPill');
 
-      const owner1Title = document.getElementById('owner1HeaderTitle');
-      const owner1Badge = document.getElementById('owner1Badge');
-      const owner1NameLabel = document.getElementById('owner1NameLabel');
-      const owner1PhotoLabel = document.getElementById('owner1PhotoLabel');
-      const owner1NomineeTitle = document.getElementById('owner1NomineeTitle');
+  const owner1Title = document.getElementById('owner1HeaderTitle');
+  const owner1Badge = document.getElementById('owner1Badge');
+  const owner1NameLabel = document.getElementById('owner1NameLabel');
+  const owner1PhotoLabel = document.getElementById('owner1PhotoLabel');
+  const owner1NomineeTitle = document.getElementById('owner1NomineeTitle');
 
-      // 1. Single Owner Mode
-      if (selectedType === 'Single Owner') {
-        owner1Box.style.display = 'block';
-        owner2Box.style.display = 'none';
-        transferBox.style.display = 'none';
+  // -------------------------------------------------------------
+  // 1. SINGLE OWNER MODE
+  // -------------------------------------------------------------
+  if (selectedType === 'Single Owner') {
+    owner1Box.style.display = 'block';
+    owner2Box.style.display = 'none';
+    transferBox.style.display = 'none';
+    
+    // Percentage card ko Single Owner par chupa (hide) dein
+    if (jointShareCard) jointShareCard.style.display = 'none';
 
-        pill.innerHTML = '<i class="fa-solid fa-user"></i> Single Owner Mode Active';
-        pill.style.background = '#dbeafe';
-        pill.style.color = '#1d4ed8';
+    pill.innerHTML = '<i class="fa-solid fa-user"></i> Single Owner Mode Active';
+    pill.style.background = '#dbeafe';
+    pill.style.color = '#1d4ed8';
 
-        owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
-        owner1Badge.textContent = 'Sole Owner';
-        owner1Badge.style.background = '#dbeafe';
-        owner1Badge.style.color = '#1d4ed8';
-        owner1NameLabel.textContent = 'Owner 1 Name *';
-        owner1PhotoLabel.textContent = 'Owner 1 Photo';
-        owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
+    owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
+    owner1Badge.textContent = '100% Sole Owner';
+    owner1Badge.style.background = '#dbeafe';
+    owner1Badge.style.color = '#1d4ed8';
+    owner1NameLabel.textContent = 'Owner 1 Name *';
+    owner1PhotoLabel.textContent = 'Owner 1 Photo';
+    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
 
-        // Required attributes
-        setOwnerFieldsRequired(true, false, false);
-        populateAvailableFlatsDropdown(); // Shows available flats
-      } 
-      // 2. Joint Ownership Mode (Owner 1 & Owner 2 Equal Partners)
-      else if (selectedType === 'Joint Ownership') {
-        owner1Box.style.display = 'block';
-        owner2Box.style.display = 'block';
-        transferBox.style.display = 'none';
+    // Required fields update karein
+    setOwnerFieldsRequired(true, false, false);
+    populateAvailableFlatsDropdown(); // Sirf Available Flats list mein aayenge
+  } 
 
-        pill.innerHTML = '<i class="fa-solid fa-user-group"></i> Joint Ownership (Owner 1 & Owner 2)';
-        pill.style.background = '#e0f2fe';
-        pill.style.color = '#0284c7';
-
-        owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
-        owner1Badge.textContent = 'Equal Partner 1';
-        owner1Badge.style.background = '#dbeafe';
-        owner1Badge.style.color = '#1d4ed8';
-        owner1NameLabel.textContent = 'Owner 1 Name *';
-        owner1PhotoLabel.textContent = 'Owner 1 Photo';
-        owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
-
-        setOwnerFieldsRequired(true, true, false);
-        populateAvailableFlatsDropdown();
-      } 
-      // 3. Transfer Mode
-      else if (selectedType === 'Transfer') {
-        owner1Box.style.display = 'block';
-        owner2Box.style.display = 'none';
-        transferBox.style.display = 'block';
-
-        pill.innerHTML = '<i class="fa-solid fa-right-left"></i> Ownership Transfer Active';
-        pill.style.background = '#fef3c7';
-        pill.style.color = '#b45309';
-
-        // Owner 1 box becomes "New Owner (Transferee)"
-        owner1Title.innerHTML = '<i class="fa-solid fa-user-shield"></i> New Owner Details (Transferee)';
-        owner1Badge.textContent = 'New Owner';
-        owner1Badge.style.background = '#dcfce7';
-        owner1Badge.style.color = '#15803d';
-        owner1NameLabel.textContent = 'New Owner Name *';
-        owner1PhotoLabel.textContent = 'New Owner Photo';
-        owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details - New Owner';
-
-        const transferDateInput = document.getElementById('transferDate');
-        if (transferDateInput && !transferDateInput.value) {
-          transferDateInput.value = new Date().toISOString().split('T')[0];
-        }
-
-        setOwnerFieldsRequired(true, false, true);
-        populateFlatsForTransfer(); // Lets you select the booked flat to transfer
-      }
+  // -------------------------------------------------------------
+  // 2. JOINT OWNERSHIP MODE (% Share Ratio Basis)
+  // -------------------------------------------------------------
+  else if (selectedType === 'Joint Ownership') {
+    owner1Box.style.display = 'block';
+    owner2Box.style.display = 'block'; // Owner 2 Form khul gaya
+    transferBox.style.display = 'none';
+    
+    // Naya Percentage Card samne (show) le aayein
+    if (jointShareCard) {
+      jointShareCard.style.display = 'block';
+      
+      // Agar pehle se khali ho to default 50% - 50% set kar dein
+      const s1 = document.getElementById('cust1Share');
+      const s2 = document.getElementById('cust2Share');
+      if (s1 && !s1.value) s1.value = 50;
+      if (s2 && !s2.value) s2.value = 50;
     }
 
+    pill.innerHTML = '<i class="fa-solid fa-user-group"></i> Joint Ownership (% Share Active)';
+    pill.style.background = '#e0f2fe';
+    pill.style.color = '#0284c7';
+
+    owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
+    owner1Badge.textContent = 'Partner 1 (Joint)';
+    owner1Badge.style.background = '#dbeafe';
+    owner1Badge.style.color = '#1d4ed8';
+    owner1NameLabel.textContent = 'Owner 1 Name *';
+    owner1PhotoLabel.textContent = 'Owner 1 Photo';
+    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
+
+    // Owner 1 aur Owner 2 dono ke fields lazmi (required) karein
+    setOwnerFieldsRequired(true, true, false);
+    populateAvailableFlatsDropdown();
+  } 
+
+  // -------------------------------------------------------------
+  // 3. TRANSFER OWNERSHIP MODE
+  // -------------------------------------------------------------
+  else if (selectedType === 'Transfer' || selectedType === 'Transfer Ownership') {
+    owner1Box.style.display = 'block';
+    owner2Box.style.display = 'none';
+    transferBox.style.display = 'block'; // Transfer Box open hoga
+    
+    // Percentage card ko Transfer par bhi chupa dein
+    if (jointShareCard) jointShareCard.style.display = 'none';
+
+    pill.innerHTML = '<i class="fa-solid fa-right-left"></i> Ownership Transfer Active';
+    pill.style.background = '#fef3c7';
+    pill.style.color = '#b45309';
+
+    // Owner 1 ka naam badal kar New Owner (Transferee) ho jayega
+    owner1Title.innerHTML = '<i class="fa-solid fa-user-shield"></i> New Owner Details (Transferee)';
+    owner1Badge.textContent = 'New Owner';
+    owner1Badge.style.background = '#dcfce7';
+    owner1Badge.style.color = '#15803d';
+    owner1NameLabel.textContent = 'New Owner Name *';
+    owner1PhotoLabel.textContent = 'New Owner Photo';
+    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details - New Owner';
+
+    const transferDateInput = document.getElementById('transferDate');
+    if (transferDateInput && !transferDateInput.value) {
+      transferDateInput.value = new Date().toISOString().split('T')[0];
+    }
+
+    // New Owner aur Transfer form ko required karein
+    setOwnerFieldsRequired(true, false, true);
+    populateFlatsForTransfer(); // Booked flats bhi dikhaye ga taake transfer ho sakein
+  }
+}
     // Helper: Required validation switch
     function setOwnerFieldsRequired(reqOwner1, reqOwner2, reqTransfer) {
       ['cust1Name', 'cust1Father', 'cust1Cnic', 'cust1Mobile', 'cust1Address'].forEach(id => {
@@ -4221,7 +4491,7 @@ async function confirmStatusChange() {
       allFlatsData.forEach(f => {
         const opt = document.createElement('option');
         opt.value = f.id;
-        opt.textContent = `Flat ${f.flatNo} - ${f.floor} (${f.size} Sq. Ft) [${f.status}]`;
+        opt.textContent = f.flatNo; // <-- Sirf Flat Number show hoga
         opt.setAttribute('data-floor', f.floor);
         opt.setAttribute('data-size', f.size);
         opt.setAttribute('data-price', f.price);
@@ -4486,10 +4756,10 @@ async function confirmStatusChange() {
       const selectedOption = flatSelect.options[flatSelect.selectedIndex];
       const flatNo = selectedOption.getAttribute('data-flatno') || selectedOption.textContent.split(' ')[1] || '';
 
-      const ownershipType = document.getElementById('custOwnershipType').value;
+     const ownershipType = document.getElementById('custOwnershipType').value;
       const isSingle = (ownershipType === 'Single Owner');
       const isJoint = (ownershipType === 'Joint Ownership');
-      const isTransfer = (ownershipType === 'Transfer');
+      const isTransfer = (ownershipType === 'Transfer Ownership' || ownershipType === 'Transfer');
 
       const isThumbEnabled = document.getElementById('checkSingleThumb').checked;
       if (isThumbEnabled && !customerThumbBase64) {
@@ -4527,9 +4797,13 @@ async function confirmStatusChange() {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
+     const share1 = isJoint ? (parseFloat(document.getElementById('cust1Share').value) || 50) : 100;
+      const share2 = isJoint ? (parseFloat(document.getElementById('cust2Share').value) || 50) : 0;
+
       // Owner 1 Details
       customerRecord.firstOwner = {
         name: document.getElementById('cust1Name').value.trim(),
+        sharePercentage: share1, // <-- Share saved (e.g. 30%)
         fatherHusband: document.getElementById('cust1Father').value.trim(),
         cnic: document.getElementById('cust1Cnic').value.trim(),
         mobile: document.getElementById('cust1Mobile').value.trim(),
@@ -4549,6 +4823,7 @@ async function confirmStatusChange() {
         customerRecord.hasSecondOwner = true;
         customerRecord.secondOwner = {
           name: document.getElementById('cust2Name').value.trim(),
+          sharePercentage: share2, // <-- Share saved (e.g. 70%)
           fatherHusband: document.getElementById('cust2Father').value.trim(),
           cnic: document.getElementById('cust2Cnic').value.trim(),
           mobile: document.getElementById('cust2Mobile').value.trim(),
@@ -4625,8 +4900,8 @@ async function confirmStatusChange() {
       }
     });
 
-    // =========================================================================
-    // 3. EXECUTIVE ALLOTMENT DOSSIER PDF GENERATOR (MANUAL SIGNATURES ON PRINT)
+   // =========================================================================
+    // 3. EXECUTIVE ALLOTMENT DOSSIER PDF GENERATOR (PERCENTAGE SHARE DISPLAY)
     // =========================================================================
     function downloadCustomerPDF(customerId) {
       const c = allCustomersData.find(item => item.id === customerId);
@@ -4637,6 +4912,11 @@ async function confirmStatusChange() {
       const fin = c.financials || {};
       const bookingId = 'BH-' + (c.id ? c.id.substring(0, 6).toUpperCase() : '84920');
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      // Percentage Share Logic for PDF
+      const isJoint = (c.ownershipType === 'Joint Ownership' || c.hasSecondOwner);
+      const share1 = isJoint ? (o1.sharePercentage || 50) : 100;
+      const share2 = isJoint ? (o2.sharePercentage || 50) : 0;
 
       // Printable Container
       const pdfWrapper = document.createElement('div');
@@ -4684,7 +4964,10 @@ async function confirmStatusChange() {
                 <div><span style="color:#93c5fd; font-size:10px; display:block;">PROJECT</span><strong>${c.project || 'BILAL HEIGHTS'}</strong></div>
                 <div><span style="color:#93c5fd; font-size:10px; display:block;">FLOOR</span><strong>${c.floor || 'N/A'}</strong></div>
                 <div><span style="color:#93c5fd; font-size:10px; display:block;">UNIT SIZE</span><strong>${c.size || 'N/A'}</strong></div>
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">TYPE</span><strong>${c.ownershipType || 'Primary'}</strong></div>
+                <div>
+                  <span style="color:#93c5fd; font-size:10px; display:block;">OWNERSHIP</span>
+                  <strong>${isJoint ? `Joint (${share1}% / ${share2}%)` : (c.ownershipType || 'Single Owner')}</strong>
+                </div>
               </div>
             </div>
           </div>
@@ -4695,8 +4978,14 @@ async function confirmStatusChange() {
             <!-- Owner 1 Card -->
             <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
               <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
-                <span style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase;">Owner 1 (Primary Allottee)</span>
-                <span style="font-size: 9px; font-weight: 700; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 4px;">Verified</span>
+                <span style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase;">
+                  ${isJoint ? 'Owner 1 (Partner)' : 'Owner 1 (Primary Allottee)'}
+                </span>
+                
+                <!-- Dynamic Share Percentage Badge -->
+                <span style="font-size: 10px; font-weight: 800; background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 3px 10px; border-radius: 5px;">
+                  ${isJoint ? `Share: ${share1}%` : '100% Sole Owner'}
+                </span>
               </div>
 
               <div style="display: flex; gap: 12px; align-items: flex-start;">
@@ -4724,11 +5013,15 @@ async function confirmStatusChange() {
             </div>
 
             <!-- Owner 2 or Thumb Card -->
-            ${(c.hasSecondOwner && o2.name) ? `
+            ${(isJoint && o2.name) ? `
             <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
               <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
-                <span style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase;">Owner 2 (Equal Partner)</span>
-                <span style="font-size: 9px; font-weight: 700; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 4px;">Joint</span>
+                <span style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase;">Owner 2 (Co-Partner)</span>
+                
+                <!-- Owner 2 Share Badge -->
+                <span style="font-size: 10px; font-weight: 800; background: #e0f2fe; color: #0284c7; border: 1px solid #93c5fd; padding: 3px 10px; border-radius: 5px;">
+                  Share: ${share2}%
+                </span>
               </div>
 
               <div style="display: flex; gap: 12px; align-items: flex-start;">
@@ -4746,6 +5039,12 @@ async function confirmStatusChange() {
                   <div><span style="color:#64748b; font-weight:600;">Contact:</span> <strong>${o2.mobile}</strong></div>
                   <div><span style="color:#64748b; font-weight:600;">Address:</span> ${o2.address}</div>
                 </div>
+              </div>
+
+              <div style="margin-top: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; font-size: 10px; color: #334155;">
+                <span style="color: #0284c7; font-weight: 800;">Next of Kin (Nominee):</span> 
+                <strong>${o2.nominee ? o2.nominee.name : 'N/A'}</strong> 
+                (${o2.nominee ? o2.nominee.relation : 'N/A'}) - CNIC: <strong>${o2.nominee ? o2.nominee.cnic : 'N/A'}</strong>
               </div>
             </div>
             ` : `
@@ -4801,7 +5100,7 @@ async function confirmStatusChange() {
             <!-- LEFT: CUSTOMER SIGNATURE -->
             <div style="text-align: center; width: 230px;">
               <div style="height: 50px;"></div>
-              <div style="border-top: 2px solid #0f172a; padding-top: 6px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 6px;">
                 <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
                   CUSTOMER SIGNATURE
                 </div>
@@ -4904,9 +5203,9 @@ async function confirmStatusChange() {
           ? `<img src="${ownerPrimary.photo}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1.5px solid #2563eb;" />` 
           : `<div style="width:38px; height:38px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b;"><i class="fa-regular fa-user"></i></div>`;
 
-        let badgeType = 'badge-available';
+       let badgeType = 'badge-available';
         if (c.ownershipType === 'Joint Ownership') badgeType = 'badge-progress';
-        if (c.ownershipType === 'Transfer') badgeType = 'badge-booked';
+        if (c.ownershipType === 'Transfer Ownership' || c.ownershipType === 'Transfer') badgeType = 'badge-booked';
 
         html += `
           <tr>
@@ -5042,7 +5341,7 @@ async function confirmStatusChange() {
       if (!optionExists && c.flatId) {
         const opt = document.createElement('option');
         opt.value = c.flatId;
-        opt.textContent = `Flat ${c.flatNo} - ${c.floor} (${c.size}) [Allotted]`;
+        opt.textContent = c.flatNo || 'N/A'; // <-- Sirf Flat Number show hoga
         opt.setAttribute('data-floor', c.floor || '');
         opt.setAttribute('data-size', c.size || '');
         opt.setAttribute('data-flatno', c.flatNo || '');
@@ -5312,97 +5611,309 @@ function isCanvasBlank(canvasId) {
     // ==========================================================================
     // 7. PURCHASER MODULE
     // ==========================================================================
+    // =========================================================================
+    // 7. PURCHASE LIST, FILTERS & SUMMARY CALCULATOR (EXACT MATCH TO SCREENSHOT)
+    // =========================================================================
+    let currentFilteredPurchases = [];
+    let curPurPage = 1;
+    const purItemsPerPage = 10;
+
+    // Initial Demo Seed Data (Agar Firebase mein koi purchase na ho to screenshot wala data load ho)
+    const seedPurchases = [
+      { billNo: "PUR-001", date: "2025-09-12", displayDate: "12 Sep 2025", vendor: "ABC Cement", item: "Cement", qty: "500 Bags", rate: 1500, total: 750000, paid: 300000, remaining: 450000, status: "Partial", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-002", date: "2025-09-10", displayDate: "10 Sep 2025", vendor: "XYZ Steel", item: "Steel", qty: "2 Ton", rate: 250000, total: 500000, paid: 500000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-003", date: "2025-09-08", displayDate: "08 Sep 2025", vendor: "Builders Bricks", item: "Bricks", qty: "10,000 Pcs", rate: 30, total: 300000, paid: 150000, remaining: 150000, status: "Partial", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-004", date: "2025-09-05", displayDate: "05 Sep 2025", vendor: "Pak Traders", item: "Sand", qty: "20 Ton", rate: 10000, total: 200000, paid: 200000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-005", date: "2025-09-02", displayDate: "02 Sep 2025", vendor: "ABC Cement", item: "Cement", qty: "300 Bags", rate: 1500, total: 450000, paid: 450000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-006", date: "2025-08-28", displayDate: "28 Aug 2025", vendor: "Liaqat Steel", item: "Steel", qty: "1 Ton", rate: 250000, total: 250000, paid: 250000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-007", date: "2025-08-25", displayDate: "25 Aug 2025", vendor: "Builders Bricks", item: "Bricks", qty: "5,000 Pcs", rate: 30, total: 150000, paid: 150000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-008", date: "2025-08-20", displayDate: "20 Aug 2025", vendor: "Sunrise Suppliers", item: "Tiles", qty: "500 Box", rate: 1200, total: 600000, paid: 600000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" }
+    ];
+
+    // Auto calculate Total = Qty * Rate
+    function calcPurchaseTotalAuto() {
+      const qtyStr = document.getElementById('purQty').value;
+      const numQty = parseFloat(qtyStr.replace(/[^0-9.]/g, '')) || 0;
+      const rate = parseFloat(document.getElementById('purRate').value) || 0;
+      if (numQty > 0 && rate > 0) {
+        document.getElementById('purTotalAmount').value = Math.round(numQty * rate);
+      }
+      calculatePurchaserBalance();
+    }
+
+    // Auto calculate Remaining = Total - Paid
     function calculatePurchaserBalance() {
-      const total = parseFloat(document.getElementById('expTotalAmount').value) || 0;
-      const paid = parseFloat(document.getElementById('expPaidAmount').value) || 0;
-      document.getElementById('expRemainingAmount').value = Math.max(0, total - paid);
+      const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
+      const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
+      document.getElementById('purRemainingAmount').value = Math.max(0, total - paid);
     }
 
+    // Load Purchases from Firestore with Date Filters
     function loadPurchaser() {
-      db.collection('expenses').orderBy('date', 'desc').onSnapshot(snap => {
+      // Default Date Range: Current Month (e.g. 01 Sep 2025 to End of Month)
+      const now = new Date();
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+      
+      const sInput = document.getElementById('purFilterStartDate');
+      const eInput = document.getElementById('purFilterEndDate');
+      if (sInput && !sInput.value) sInput.value = firstDay;
+      if (eInput && !eInput.value) eInput.value = lastDay;
+
+      // Firestore Listener
+      db.collection('purchases').orderBy('date', 'desc').onSnapshot(async (snap) => {
         allPurchaserData = [];
-        let grandTotal = 0;
-        const tbody = document.getElementById('expensesTableBody');
 
+        // Agar database khali ho to seed data load karein
         if (snap.empty) {
-          tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">No records found.</td></tr>`;
-          document.getElementById('statTotalPurchaser').textContent = 'PKR 0';
+          for (let item of seedPurchases) {
+            await db.collection('purchases').add({
+              ...item,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
           return;
         }
 
-        let html = '';
+        const supplierSet = new Set();
         snap.forEach(doc => {
-          const exp = doc.data();
-          allPurchaserData.push({ id: doc.id, ...exp });
-          grandTotal += exp.totalAmount || 0;
-          html += `
-            <tr>
-              <td>${exp.date}</td>
-              <td><strong>${exp.title}</strong></td>
-              <td>${exp.category}</td>
-              <td>${exp.vendor}</td>
-              <td>PKR ${Number(exp.totalAmount).toLocaleString()}</td>
-              <td style="color:var(--success); font-weight:700;">PKR ${Number(exp.paidAmount).toLocaleString()}</td>
-              <td style="color:var(--danger); font-weight:700;">PKR ${Number(exp.remainingAmount).toLocaleString()}</td>
-              <td><span class="badge-status ${exp.status === 'Paid' ? 'badge-available' : 'badge-booked'}">${exp.status}</span></td>
-              <td style="text-align:center;">
-                <button class="btn-action-primary" style="background:var(--danger); padding:5px 10px; font-size:11.5px;" onclick="db.collection('expenses').doc('${doc.id}').delete()"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-          `;
+          const data = doc.data();
+          allPurchaserData.push({ id: doc.id, ...data });
+          if (data.vendor) supplierSet.add(data.vendor);
         });
-        tbody.innerHTML = html;
-        document.getElementById('statTotalPurchaser').textContent = 'PKR ' + grandTotal.toLocaleString();
-      });
 
-      db.collection('expense_categories').onSnapshot(snap => {
-        const catSelect = document.getElementById('expCategory');
-        const container = document.getElementById('categoryChipsContainer');
-        if (catSelect) catSelect.innerHTML = '<option value="">Select Category</option>';
-        if (container) container.innerHTML = '';
-
-        if (snap.empty) {
-          ['Construction Material', 'Labor & Contractor', 'Machinery', 'Approvals'].forEach(async c => {
-            await db.collection('expense_categories').add({ name: c });
+        // Supplier Filter Dropdown Populate karein
+        const supFilter = document.getElementById('purSupplierFilter');
+        if (supFilter) {
+          supFilter.innerHTML = '<option value="ALL">All Suppliers</option>';
+          supplierSet.forEach(sup => {
+            supFilter.innerHTML += `<option value="${sup}">${sup}</option>`;
           });
-          return;
         }
 
-        snap.forEach(doc => {
-          const name = doc.data().name;
-          if (catSelect) catSelect.innerHTML += `<option value="${name}">${name}</option>`;
-          if (container) container.innerHTML += `<div style="background:#f1f5f9; padding:6px 14px; border-radius:20px; font-size:13px; font-weight:600;">${name}</div>`;
-        });
+        filterPurchases();
       });
     }
 
+    // Filter Logic & 3 Cards Recalculation
+    function filterPurchases() {
+      const query = (document.getElementById('purSearchInput')?.value || '').toLowerCase().trim();
+      const proj = document.getElementById('purProjectFilter')?.value || 'ALL';
+      const supplier = document.getElementById('purSupplierFilter')?.value || 'ALL';
+      const status = document.getElementById('purStatusFilter')?.value || 'ALL';
+      const startDate = document.getElementById('purFilterStartDate')?.value;
+      const endDate = document.getElementById('purFilterEndDate')?.value;
+
+      currentFilteredPurchases = allPurchaserData.filter(p => {
+        // Date Check
+        let matchesDate = true;
+        if (startDate && p.date < startDate) matchesDate = false;
+        if (endDate && p.date > endDate) matchesDate = false;
+
+        // Search Query Check
+        const matchesSearch = !query || 
+          (p.billNo && p.billNo.toLowerCase().includes(query)) ||
+          (p.vendor && p.vendor.toLowerCase().includes(query)) ||
+          (p.item && p.item.toLowerCase().includes(query));
+
+        // Dropdown checks
+        const matchesProj = (proj === 'ALL' || p.project === proj);
+        const matchesSupplier = (supplier === 'ALL' || p.vendor === supplier);
+        const matchesStatus = (status === 'ALL' || p.status === status);
+
+        return matchesDate && matchesSearch && matchesProj && matchesSupplier && matchesStatus;
+      });
+
+      // 3 Top Cards Calculate karein (Selected Date Range ke hisab se)
+      let sumTotal = 0;
+      let sumPaid = 0;
+      let sumRemaining = 0;
+
+      currentFilteredPurchases.forEach(p => {
+        sumTotal += (p.total || p.totalAmount || 0);
+        sumPaid += (p.paid || p.paidAmount || 0);
+        sumRemaining += (p.remaining || p.remainingAmount || 0);
+      });
+
+      document.getElementById('cardTotalPurchase').textContent = `Rs. ${sumTotal.toLocaleString()}`;
+      document.getElementById('cardTotalPaid').textContent = `Rs. ${sumPaid.toLocaleString()}`;
+      document.getElementById('cardTotalRemaining').textContent = `Rs. ${sumRemaining.toLocaleString()}`;
+
+      // Dashboard stat sync
+      if (document.getElementById('statTotalPurchaser')) {
+        document.getElementById('statTotalPurchaser').textContent = `Rs. ${sumTotal.toLocaleString()}`;
+      }
+
+      renderPurchasesTablePage();
+    }
+
+    // Render Table Page (Exactly like image)
+    function renderPurchasesTablePage() {
+      const tbody = document.getElementById('purchasesTableBody');
+      const totalCount = currentFilteredPurchases.length;
+
+      if (totalCount === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:35px; color:#64748b;">No purchases found for selected criteria.</td></tr>`;
+        document.getElementById('purCountDisplay').textContent = `Showing 0 to 0 of 0 purchases`;
+        return;
+      }
+
+      const totalPages = Math.ceil(totalCount / purItemsPerPage);
+      if (curPurPage > totalPages) curPurPage = totalPages;
+      if (curPurPage < 1) curPurPage = 1;
+
+      const startIndex = (curPurPage - 1) * purItemsPerPage;
+      const endIndex = Math.min(startIndex + purItemsPerPage, totalCount);
+      const pageData = currentFilteredPurchases.slice(startIndex, endIndex);
+
+      let html = '';
+      pageData.forEach((p) => {
+        const isPaid = (p.status === 'Paid');
+        const badgeBg = isPaid ? '#dcfce7' : '#fef3c7';
+        const badgeColor = isPaid ? '#15803d' : '#b45309';
+
+        html += `
+          <tr>
+            <td style="text-align:center;"><input type="checkbox" class="pur-row-check" /></td>
+            <td><strong style="color:#0f172a; font-weight:700;">${p.billNo || 'PUR-000'}</strong></td>
+            <td>${p.displayDate || p.date}</td>
+            <td><strong>${p.vendor || 'N/A'}</strong></td>
+            <td>${p.item || 'N/A'}</td>
+            <td>${p.qty || p.quantity || 'N/A'}</td>
+            <td>${Number(p.rate || 0).toLocaleString()}</td>
+            <td><strong>${Number(p.total || p.totalAmount || 0).toLocaleString()}</strong></td>
+            <td style="color:#16a34a; font-weight:600;">${Number(p.paid || p.paidAmount || 0).toLocaleString()}</td>
+            <td style="color:${(p.remaining > 0) ? '#dc2626' : '#64748b'}; font-weight:700;">${Number(p.remaining || p.remainingAmount || 0).toLocaleString()}</td>
+            <td style="text-align:center;">
+              <span style="background:${badgeBg}; color:${badgeColor}; padding:4px 12px; border-radius:20px; font-size:11.5px; font-weight:700;">
+                ${p.status}
+              </span>
+            </td>
+            <td style="text-align:center;">
+              <div style="display:inline-flex; gap:8px; align-items:center;">
+                <i class="fa-regular fa-eye" style="color:#2563eb; cursor:pointer; font-size:14px;" title="View Bill" onclick="viewPurchaseBill('${p.id}')"></i>
+                <i class="fa-solid fa-pen" style="color:#0284c7; cursor:pointer; font-size:13px;" title="Edit" onclick="editPurchaseBill('${p.id}')"></i>
+                <i class="fa-solid fa-trash-can" style="color:#ef4444; cursor:pointer; font-size:13px;" title="Delete" onclick="deletePurchaseBill('${p.id}')"></i>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+      document.getElementById('purCountDisplay').textContent = `Showing ${startIndex + 1} to ${endIndex} of ${totalCount} purchases`;
+      document.getElementById('currentPurPageBtn').textContent = curPurPage;
+    }
+
+    // Pagination Controls
+    function prevPurchasePage() {
+      if (curPurPage > 1) {
+        curPurPage--;
+        renderPurchasesTablePage();
+      }
+    }
+
+    function nextPurchasePage() {
+      const totalPages = Math.ceil(currentFilteredPurchases.length / purItemsPerPage);
+      if (curPurPage < totalPages) {
+        curPurPage++;
+        renderPurchasesTablePage();
+      }
+    }
+
+    // Reset Filters Button
+    function resetPurchaseFilters() {
+      document.getElementById('purSearchInput').value = '';
+      document.getElementById('purProjectFilter').value = 'ALL';
+      document.getElementById('purSupplierFilter').value = 'ALL';
+      document.getElementById('purStatusFilter').value = 'ALL';
+
+      // Reset to whole current month
+      const now = new Date();
+      document.getElementById('purFilterStartDate').value = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+      document.getElementById('purFilterEndDate').value = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+
+      filterPurchases();
+    }
+
+    // Form Save Listener
     document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const total = parseFloat(document.getElementById('expTotalAmount').value) || 0;
-      const paid = parseFloat(document.getElementById('expPaidAmount').value) || 0;
-      const data = {
-        title: document.getElementById('expTitle').value.trim(),
-        category: document.getElementById('expCategory').value,
-        project: document.getElementById('expProject').value,
-        vendor: document.getElementById('expVendor').value.trim(),
-        date: document.getElementById('expDate').value,
-        totalAmount: total,
-        paidAmount: paid,
-        remainingAmount: Math.max(0, total - paid),
-        paymentMethod: document.getElementById('expPaymentMethod').value,
-        notes: document.getElementById('expNotes').value.trim(),
-        status: (total - paid) <= 0 ? 'Paid' : 'Partial Paid',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      const editId = document.getElementById('purEditId').value;
+      const btn = document.getElementById('btnSavePurchaser');
+
+      const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
+      const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
+      const remaining = Math.max(0, total - paid);
+      const rawDate = document.getElementById('purDate').value;
+      
+      // Date Formatter: "12 Sep 2025"
+      const dateObj = new Date(rawDate);
+      const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      let status = 'Unpaid';
+      if (remaining <= 0) status = 'Paid';
+      else if (paid > 0 && remaining > 0) status = 'Partial';
+
+      const purchaseData = {
+        billNo: document.getElementById('purBillNo').value.trim(),
+        date: rawDate,
+        displayDate: formattedDate,
+        project: document.getElementById('purProject').value,
+        vendor: document.getElementById('purVendor').value.trim(),
+        item: document.getElementById('purItem').value.trim(),
+        qty: document.getElementById('purQty').value.trim(),
+        rate: parseFloat(document.getElementById('purRate').value) || 0,
+        total: total,
+        paid: paid,
+        remaining: remaining,
+        status: status,
+        paymentMethod: document.getElementById('purPaymentMethod').value,
+        notes: document.getElementById('purNotes').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Bill...';
+
       try {
-        await db.collection('expenses').add(data);
-        alert('Purchaser record created!');
+        if (editId) {
+          await db.collection('purchases').doc(editId).update(purchaseData);
+          alert('Purchase bill updated successfully!');
+        } else {
+          purchaseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('purchases').add(purchaseData);
+          alert('Purchase bill recorded successfully!');
+        }
+
         document.getElementById('purchaserForm').reset();
+        document.getElementById('purEditId').value = '';
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
+
+        // Table par wapis switch karein
         openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails');
       } catch (err) {
-        alert(err.message);
+        alert('Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
       }
     });
+
+    // Delete Bill
+    async function deletePurchaseBill(id) {
+      if (confirm('Are you sure you want to delete this purchase bill?')) {
+        try {
+          await db.collection('purchases').doc(id).delete();
+        } catch (err) {
+          alert('Failed to delete: ' + err.message);
+        }
+      }
+    }
+
+    // Select All Checkbox
+    function toggleSelectAllPurchases(master) {
+      document.querySelectorAll('.pur-row-check').forEach(chk => chk.checked = master.checked);
+    }
 
     // =========================================================================
     // CUSTOMER DOCUMENTS REPOSITORY: SEARCH & DOWNLOAD LOGIC
@@ -5528,6 +6039,30 @@ function isCanvasBlank(canvasId) {
       downloadLink.click();
       document.body.removeChild(downloadLink);
     }
+
+// Auto calculate 100% share between Owner 1 and Owner 2
+function calculateJointShare(source) {
+  const s1 = document.getElementById('cust1Share');
+  const s2 = document.getElementById('cust2Share');
+  if (!s1 || !s2) return;
+
+  if (source === 'owner1') {
+    let val1 = parseFloat(s1.value);
+    if (isNaN(val1)) val1 = 0;
+    if (val1 > 99) val1 = 99;
+    if (val1 < 1) val1 = 1;
+    s1.value = val1;
+    s2.value = (100 - val1);
+  } else {
+    let val2 = parseFloat(s2.value);
+    if (isNaN(val2)) val2 = 0;
+    if (val2 > 99) val2 = 99;
+    if (val2 < 1) val2 = 1;
+    s2.value = val2;
+    s1.value = (100 - val2);
+  }
+}
+
   </script>
 </body>
 </html>
