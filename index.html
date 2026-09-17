@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Real Estate ERP - Portal & Project Management</title>
   
-  <!-- Fonts & Font Awesome Icons -->
+  
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- html2pdf Library for PDF Download -->
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- Chart.js for Executive Dashboard Graphs -->
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
@@ -19,7 +19,7 @@
     
 
 
-/* Thumb Checkboxes ko Barabar aur Center karne ke liye */
+
 .thumb-selection-wrapper {
   display: flex;
   justify-content: center; /* Bilkul Center mein */
@@ -246,7 +246,7 @@
   gap: 8px;
 }
 
-/* Project Name Badge inside Table */
+
 .badge-project-pill {
   background: #eff6ff;
   color: #1d4ed8;
@@ -1860,12 +1860,12 @@
             </div>
           </a>
 
-          <!-- 2. Projects Dropdown (Updated with Arrow & Submenus) -->
+          <!-- 2. Projects Dropdown -->
           <div class="nav-dropdown">
             <div class="nav-item" id="navProjectParent" onclick="toggleDropdown('projectSubmenu', this)">
               <div class="nav-item-content">
                 <i class="fa-solid fa-city"></i>
-                <span>Projects</span>
+                <span>Project Detail</span>
               </div>
               <i class="fa-solid fa-chevron-down submenu-arrow"></i>
             </div>
@@ -1909,60 +1909,64 @@
             <div class="nav-item" id="navCustomerParent" onclick="toggleDropdown('customerSubmenu', this)">
               <div class="nav-item-content">
                 <i class="fa-solid fa-users"></i>
-                <span>Customers</span>
+                <span>Customer Management</span>
               </div>
               <i class="fa-solid fa-chevron-down submenu-arrow"></i>
             </div>
             
-            <!-- ================= NAYA CODE (NEW CODE) ================= -->
-<div class="submenu" id="customerSubmenu">
-  <a class="submenu-item" id="subAddCustomer" onclick="switchSection('addCustomer', this)">
-    <span class="dot-bullet">•</span>
-    <span>Add New Customer</span>
-  </a>
-  <a class="submenu-item" id="subCustomerDetails" onclick="switchSection('customerDetails', this)">
-    <span class="dot-bullet">•</span>
-    <span>Customer Directory</span>
-  </a>
-  <a class="submenu-item" id="subCustomerDocuments" onclick="switchSection('customerDocuments', this)">
-    <span class="dot-bullet">•</span>
-    <span>Customer Documents Download</span>
-  </a>
-</div>
+            <div class="submenu" id="customerSubmenu">
+              <a class="submenu-item" id="subAddCustomer" onclick="switchSection('addCustomer', this)">
+                <span class="dot-bullet">•</span>
+                <span>Add New Customer</span>
+              </a>
+              <a class="submenu-item" id="subCustomerDetails" onclick="switchSection('customerDetails', this)">
+                <span class="dot-bullet">•</span>
+                <span>Customer Directory</span>
+              </a>
+              <a class="submenu-item" id="subCustomerDocuments" onclick="switchSection('customerDocuments', this)">
+                <span class="dot-bullet">•</span>
+                <span>Customer Documents Download</span>
+              </a>
+            </div>
           </div>
 
           <!-- 5. Purchaser Dropdown -->
+          <!-- 5. Purchases Dropdown -->
           <div class="nav-dropdown">
             <div class="nav-item" id="navPurchaserParent" onclick="toggleDropdown('purchaserSubmenu', this)">
               <div class="nav-item-content">
                 <i class="fa-solid fa-cart-shopping"></i>
-                <span>Purchaser</span>
+                <span>Purchases</span>
               </div>
               <i class="fa-solid fa-chevron-down submenu-arrow"></i>
             </div>
             
-            <div class="submenu" id="purchaserSubmenu">
+           <div class="submenu" id="purchaserSubmenu">
+              <!-- YEH NAYA LINK ADD KIYA GAYA HAI -->
+              <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
+                <span class="dot-bullet">•</span>
+                <span>Add Purchaser Details</span>
+              </a>
               <a class="submenu-item" id="subAddPurchaser" onclick="switchSection('addPurchaser', this)">
                 <span class="dot-bullet">•</span>
-                <span>Record New Purchaser</span>
+                <span>Record New Purchase</span>
               </a>
               <a class="submenu-item" id="subPurchaserDetails" onclick="switchSection('purchaserDetails', this)">
                 <span class="dot-bullet">•</span>
-                <span>Purchaser Details & Ledger</span>
+                <span>Purchases Detail</span>
               </a>
               <a class="submenu-item" id="subPurchaserCategories" onclick="switchSection('purchaserCategories', this)">
                 <span class="dot-bullet">•</span>
-                <span>Purchaser Categories</span>
+                <span>Purchases Category</span>
               </a>
             </div>
           </div>
-
           <!-- 6. Payments Dropdown (With Arrow & Submenus) -->
           <div class="nav-dropdown">
             <div class="nav-item" id="navPaymentsParent" onclick="toggleDropdown('paymentsSubmenu', this)">
               <div class="nav-item-content">
                 <i class="fa-solid fa-credit-card"></i>
-                <span>Payments</span>
+                <span>Account & Finance</span>
               </div>
               <i class="fa-solid fa-chevron-down submenu-arrow"></i>
             </div>
@@ -3329,8 +3333,7 @@
           </div>
         </div>
 
-        <!-- ================= SECTION 7: PURCHASER ================= -->
-       <!-- ================= SECTION: ADD / RECORD NEW PURCHASE ================= -->
+     <!-- ================= SECTION: ADD / RECORD NEW PURCHASE ================= -->
         <section id="sectionAddPurchaser" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
@@ -3365,40 +3368,37 @@
                   </select>
                 </div>
 
-                <!-- Supplier / Vendor Name -->
+                <!-- Supplier / Vendor Name Dropdown -->
                 <div>
-                  <label>Supplier / Vendor *</label>
-                  <input type="text" id="purVendor" placeholder="e.g. ABC Cement, XYZ Steel" required />
+                  <label>Supplier / Vendor Company *</label>
+                  <select id="purVendor" required style="width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 600; background: #ffffff; color: #334155; outline:none;">
+                    <option value="">-- Select Purchaser / Vendor --</option>
+                  </select>
                 </div>
 
-                <!-- Item Description -->
-                <div>
-                  <label>Item Name *</label>
-                  <input type="text" id="purItem" placeholder="e.g. Cement, Steel, Bricks, Sand" required />
-                </div>
-
-                <!-- Quantity & Unit -->
-                <div>
-                  <label>Quantity * (e.g. 500 Bags, 2 Ton)</label>
-                  <input type="text" id="purQty" placeholder="e.g. 500 Bags" required oninput="calcPurchaseTotalAuto()" />
-                </div>
-
-                <!-- Rate per Unit -->
-                <div>
-                  <label>Rate (Rs.) *</label>
-                  <input type="number" id="purRate" placeholder="e.g. 1500" required oninput="calcPurchaseTotalAuto()" />
+                <!-- DYNAMIC MULTIPLE ITEMS CONTAINER -->
+                <div class="form-group-full" style="background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <label style="margin:0; font-size:15px; color:#1e3a8a;"><i class="fa-solid fa-list-check"></i> Purchase Items</label>
+                    <button type="button" class="btn-action-primary" style="padding:6px 12px; font-size:12px;" onclick="addPurchaseItemRow()">
+                      <i class="fa-solid fa-plus"></i> Add More Item
+                    </button>
+                  </div>
+                  <!-- Yahan JS ke zariye items ki rows add hongi -->
+                  <div id="purchaseItemsContainer" style="display:flex; flex-direction:column; gap:12px;">
+                  </div>
                 </div>
 
                 <!-- Total Amount (Auto Calculated) -->
                 <div>
                   <label>Total Amount (Rs.) *</label>
-                  <input type="number" id="purTotalAmount" placeholder="e.g. 750000" required oninput="calculatePurchaserBalance()" />
+                  <input type="number" id="purTotalAmount" placeholder="e.g. 750000" readonly style="background:#f8fafc; font-weight:800;" required />
                 </div>
 
                 <!-- Paid Amount -->
                 <div>
                   <label>Paid Amount (Rs.) *</label>
-                  <input type="number" id="purPaidAmount" placeholder="e.g. 300000" required oninput="calculatePurchaserBalance()" />
+                  <input type="number" id="purPaidAmount" placeholder="e.g. 300000" required oninput="calcPurchaseTotalAuto()" />
                 </div>
 
                 <!-- Remaining Amount (Auto) -->
@@ -3434,9 +3434,72 @@
           </div>
         </section>
 
-       <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
+        <!-- ================= SECTION: ADD PURCHASER / VENDOR DETAILS ================= -->
+        <section id="sectionVendorDetails" class="erp-section">
+          <!-- Add Vendor Form -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="fa-solid fa-truck-field" style="color:#2563eb;"></i> Add / Manage Purchaser (Vendor)</h3>
+            </div>
+            
+            <form id="vendorEntryForm">
+              <input type="hidden" id="vendorEditId" value="" />
+              
+              <div class="form-grid-layout">
+                <div>
+                  <label>Company / Agency Name *</label>
+                  <input type="text" id="venCompany" placeholder="e.g. ABC Cement Co." required />
+                </div>
+                <div>
+                  <label>Contact Person Name *</label>
+                  <input type="text" id="venName" placeholder="e.g. Muhammad Ali" required />
+                </div>
+                <div>
+                  <label>Mobile Number *</label>
+                  <input type="tel" id="venMobile" placeholder="e.g. 0300-1234567" required />
+                </div>
+                <div>
+                  <label>Office Address</label>
+                  <input type="text" id="venAddress" placeholder="e.g. Main Market, Karachi" />
+                </div>
+              </div>
+
+              <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" id="btnCancelVendorEdit" class="btn-back" style="display:none;" onclick="cancelVendorEdit()">Cancel</button>
+                <button type="submit" id="btnSaveVendor" class="btn-action-primary" style="background:#2563eb; padding:10px 20px;">
+                  <i class="fa-solid fa-floppy-disk"></i> Save Purchaser Detail
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Vendors Table List -->
+          <div class="card-panel" style="margin-top: 20px;">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="fa-solid fa-address-book"></i> Registered Purchasers / Vendors List</h3>
+            </div>
+            <div class="table-container">
+              <table class="erp-table">
+                <thead>
+                  <tr>
+                    <th style="width: 45px;">#</th>
+                    <th>Company Name</th>
+                    <th>Contact Person</th>
+                    <th>Mobile Number</th>
+                    <th>Address</th>
+                    <th style="text-align: center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="vendorTableBody">
+                  <tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-muted);">Loading purchasers...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
         <section id="sectionPurchaserDetails" class="erp-section">
-          
           <!-- Top Header with Date Filter & Add Button -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
             <div>
@@ -3446,29 +3509,22 @@
               </h2>
               <p style="font-size: 13px; color: #64748b; margin-top: 2px;">View and manage all purchases for your project.</p>
             </div>
-
             <!-- Date Range Controls & Add Purchase Button -->
             <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-              
-              <!-- Date Range Filter Box -->
               <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 6px 12px; display: flex; align-items: center; gap: 8px;">
                 <i class="fa-regular fa-calendar-days" style="color: #2563eb; font-size: 15px;"></i>
                 <input type="date" id="purFilterStartDate" onchange="filterPurchases()" style="border: none; outline: none; font-size: 12.5px; font-weight: 600; color: #1e293b; background: transparent;" />
                 <span style="color: #94a3b8; font-weight: 700;">to</span>
                 <input type="date" id="purFilterEndDate" onchange="filterPurchases()" style="border: none; outline: none; font-size: 12.5px; font-weight: 600; color: #1e293b; background: transparent;" />
               </div>
-
-              <!-- Add Purchase Button -->
               <button class="btn-action-primary" onclick="openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'addPurchaser', 'subAddPurchaser')" style="background: #2563eb; padding: 10px 18px; font-size: 13.5px; border-radius: 10px;">
                 <i class="fa-solid fa-plus"></i> Add Purchase
               </button>
             </div>
           </div>
 
-          <!-- 3 Summary KPI Cards (As shown in screenshot) -->
+          <!-- 3 Summary KPI Cards -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 22px;">
-            
-            <!-- Card 1: Total Purchase Amount -->
             <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
               <div style="width: 52px; height: 52px; border-radius: 12px; background: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
                 <i class="fa-solid fa-cart-shopping"></i>
@@ -3479,8 +3535,6 @@
                 <div style="font-size: 11px; color: #64748b; font-weight: 600;">(Selected Period)</div>
               </div>
             </div>
-
-            <!-- Card 2: Total Paid Amount -->
             <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
               <div style="width: 52px; height: 52px; border-radius: 12px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
                 <i class="fa-solid fa-coins"></i>
@@ -3491,8 +3545,6 @@
                 <div style="font-size: 11px; color: #64748b; font-weight: 600;">(To Suppliers)</div>
               </div>
             </div>
-
-            <!-- Card 3: Remaining Payable -->
             <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
               <div style="width: 52px; height: 52px; border-radius: 12px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;">
                 <i class="fa-solid fa-clock"></i>
@@ -3503,35 +3555,26 @@
                 <div style="font-size: 11px; color: #64748b; font-weight: 600;">(To Suppliers)</div>
               </div>
             </div>
-
           </div>
 
           <!-- Filter & Search Controls Bar -->
           <div class="card-panel" style="padding: 16px 20px; margin-bottom: 20px;">
             <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-              
-              <!-- Search Input -->
               <div style="flex: 2; min-width: 250px; position: relative;">
                 <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
                 <input type="text" id="purSearchInput" oninput="filterPurchases()" placeholder="Search by Purchase No, Supplier, Item..." style="width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13.5px; outline: none;" />
               </div>
-
-              <!-- Project Filter Dropdown -->
               <div style="flex: 1; min-width: 150px;">
                 <select id="purProjectFilter" onchange="filterPurchases()" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155; outline: none;">
                   <option value="ALL">All Projects</option>
                   <option value="BILAL HEIGHTS">BILAL HEIGHTS</option>
                 </select>
               </div>
-
-              <!-- Supplier Filter Dropdown -->
               <div style="flex: 1; min-width: 150px;">
                 <select id="purSupplierFilter" onchange="filterPurchases()" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155; outline: none;">
                   <option value="ALL">All Suppliers</option>
                 </select>
               </div>
-
-              <!-- Status Filter Dropdown -->
               <div style="flex: 1; min-width: 130px;">
                 <select id="purStatusFilter" onchange="filterPurchases()" style="width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155; outline: none;">
                   <option value="ALL">All Status</option>
@@ -3540,12 +3583,9 @@
                   <option value="Unpaid">Unpaid</option>
                 </select>
               </div>
-
-              <!-- Reset Button -->
               <button onclick="resetPurchaseFilters()" style="background: #ffffff; border: 1.5px solid var(--border); color: #475569; padding: 10px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                 <i class="fa-solid fa-rotate-right"></i> Reset
               </button>
-
             </div>
           </div>
 
@@ -3578,7 +3618,6 @@
                 </tbody>
               </table>
             </div>
-
             <!-- Table Pagination Footer -->
             <div style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 12px;">
               <div id="purCountDisplay" style="color: #64748b; font-size: 13px; font-weight: 500;">
@@ -3591,15 +3630,25 @@
               </div>
             </div>
           </div>
-
         </section>
 
+        <!-- ================= SECTION: PURCHASER CATEGORIES ================= -->
         <section id="sectionPurchaserCategories" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-tags"></i> Purchaser Categories</h3>
+              <h3 class="panel-title">
+                <i class="fa-solid fa-tags" style="color:#2563eb;"></i> Material & Purchaser Categories
+              </h3>
+              <button class="btn-action-primary" onclick="addCategoryPrompt('purchaser')" style="background:#2563eb; padding:9px 16px; font-size:13.5px;">
+                <i class="fa-solid fa-plus"></i> Add New Category
+              </button>
             </div>
-            <div id="categoryChipsContainer" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+            <p style="font-size:13px; color:#64748b; margin-bottom:20px;">
+              Yeh woh material categories hain jo Purchases add karte waqt dropdown mein istemal hoti hain.
+            </p>
+            <div id="purchaserCategoriesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+              <!-- Dynamic Chips / Cards yahan JavaScript se load honge -->
+            </div>
           </div>
         </section>
 
@@ -3874,117 +3923,6 @@
           </div>
 
         </section>
-
-        <!-- ================= COLLECT PAYMENT MODAL ================= -->
-        <div id="paymentModal" class="modal-overlay" onclick="closePaymentModal(event)">
-          <div class="modal-card" style="max-width:720px;" onclick="event.stopPropagation()">
-            <div class="modal-header">
-              <h3 id="payModalHeading"><i class="fa-solid fa-hand-holding-dollar" style="color:#16a34a;"></i> Collect Customer Payment</h3>
-              <button class="btn-close-modal" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div class="modal-body">
-              <form id="paymentCollectionForm">
-                
-                <!-- 1. Customer & Flat Selection -->
-                <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:14px; padding:16px; margin-bottom:18px;">
-                  <h4 style="font-size:13.5px; font-weight:800; color:#1e40af; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-hotel"></i> Select Booked Flat / Allottee
-                  </h4>
-
-                  <div class="form-grid-layout">
-                    <div>
-                      <label>Select Allotted Flat *</label>
-                      <select id="payFlatSelect" required onchange="handlePaymentFlatSelect(this.value)">
-                        <option value="">-- Choose Flat --</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label>Customer Name (Auto-Filled)</label>
-                      <input type="text" id="payCustName" readonly style="background:#f1f5f9; font-weight:700; color:#0f172a;" placeholder="Select flat above" />
-                    </div>
-
-                    <div>
-                      <label>Contact Number (Auto)</label>
-                      <input type="text" id="payCustMobile" readonly style="background:#f1f5f9; font-weight:600; color:#334155;" />
-                    </div>
-
-                    <div>
-                      <label style="color:#b91c1c; font-weight:800;">Current Remaining Balance (Auto)</label>
-                      <input type="text" id="payCurrentBalance" readonly style="background:#fef2f2; font-weight:800; color:#dc2626; border-color:#fca5a5;" placeholder="Rs. 0" />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- 2. Payment Transaction Inputs -->
-                <div class="form-grid-layout">
-                  <div>
-                    <label>Receipt Date *</label>
-                    <input type="date" id="payDate" required />
-                  </div>
-
-                  <div>
-                    <label>Payment Head / Purpose *</label>
-                    <select id="payHead" required>
-                      <option value="Monthly Installment">Monthly Installment</option>
-                      <option value="Down Payment">Down Payment</option>
-                      <option value="Grey Structure">Grey Structure</option>
-                      <option value="Possession Payment">Possession Payment</option>
-                      <option value="Transfer Fee">Transfer Fee</option>
-                      <option value="Utility Charges">Utility Charges</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label>Amount Received (Rs.) *</label>
-                    <input type="number" id="payAmount" min="1" placeholder="e.g. 25000" required oninput="calcPaymentNewBalance()" />
-                  </div>
-
-                  <div>
-                    <label>Payment Mode *</label>
-                    <select id="payMode" required onchange="toggleChequeReference(this.value)">
-                      <option value="Cash">Cash</option>
-                      <option value="Online Bank Transfer">Online Bank Transfer</option>
-                      <option value="Cheque">Cheque</option>
-                      <option value="Pay Order">Pay Order</option>
-                    </select>
-                  </div>
-
-                  <div id="payRefBox">
-                    <label>Slip / Cheque / Txn Ref No</label>
-                    <input type="text" id="payReference" placeholder="e.g. Online Trx ID / Cheque # 84920" />
-                  </div>
-
-                  <div>
-                    <label style="color:#166534; font-weight:800;">New Balance After Payment (Auto)</label>
-                    <input type="text" id="payNewBalance" readonly style="background:#f0fdf4; font-weight:800; color:#16a34a; border-color:#86efac;" value="Rs. 0" />
-                  </div>
-
-                  <div class="form-group-full">
-                    <label>Notes / Remarks</label>
-                    <input type="text" id="payRemarks" placeholder="e.g. September month installment cleared via online transfer" />
-                  </div>
-                </div>
-
-                <!-- Modal Buttons -->
-                <div style="margin-top:22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                  <div style="font-size:12px; color:#64748b;">
-                    <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Save hote hi official computerized PDF raseed auto-download hogi.
-                  </div>
-
-                  <div style="display:flex; gap:10px;">
-                    <button type="button" class="btn-back" onclick="closePaymentModal()">Cancel</button>
-                    <button type="submit" id="btnSavePayment" class="btn-action-primary" style="background:#16a34a; padding:12px 24px;">
-                      <i class="fa-solid fa-check-double"></i> Confirm & Generate PDF Receipt
-                    </button>
-                  </div>
-                </div>
-
-              </form>
-            </div>
-          </div>
-        </div>
       <!-- ================= 1. ADD SITE EXPENSE SECTION ================= -->
         <section id="sectionAddSiteExpense" class="erp-section">
           <div class="card-panel">
@@ -4885,7 +4823,55 @@
       </div>
     </div>
   </div>
+<!-- ================= PURCHASE VIEW MODAL ================= -->
+  <div id="purchaseViewModal" class="modal-overlay" onclick="closePurchaseViewModal(event)">
+    <div class="modal-card" style="max-width: 750px;" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="purModalTitle"><i class="fa-solid fa-file-invoice" style="color:#2563eb;"></i> Purchase Bill Details</h3>
+        <button class="btn-close-modal" onclick="closePurchaseViewModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" id="purchaseModalBodyContent">
+        <!-- Yahan JavaScript se Bill ki details aayengi -->
+      </div>
+    </div>
+  </div>
 
+<!-- ================= QUICK PAY PURCHASE MODAL ================= -->
+<div id="quickPayPurchaseModal" class="modal-overlay" onclick="closeQuickPayPurchaseModal(event)">
+  <div class="modal-card" style="max-width: 420px;" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3><i class="fa-solid fa-hand-holding-dollar" style="color:#16a34a;"></i> Pay Supplier Balance</h3>
+      <button class="btn-close-modal" onclick="closeQuickPayPurchaseModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="quickPayPurId" />
+      <div style="background:#f8fafc; padding:12px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:16px;">
+        <div style="font-size:12px; color:#64748b;">Supplier: <strong id="quickPayPurVendorText" style="color:#0f172a;">-</strong></div>
+        <div style="font-size:12px; color:#64748b; margin-top:2px;">Bill No: <span id="quickPayPurBillText">-</span></div>
+        <div style="font-size:13.5px; font-weight:800; color:#dc2626; margin-top:6px;">
+          Baqiya Raqam (Remaining): <span id="quickPayPurRemText">Rs. 0</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px; font-weight:700; color:#334155; display:block; margin-bottom:6px;">Ada Ki Jane Wali Raqam (Rs.) *</label>
+        <input type="number" id="quickPayPurAmountInput" min="1" placeholder="Raqam darj karein" style="width:100%; padding:11px; border:1.5px solid #2563eb; border-radius:10px; font-size:15px; font-weight:800; color:#0f172a; outline:none;" />
+        <small style="color:#64748b; font-size:11px; margin-top:4px; display:block;">Puri ya thori raqam ada kar sakte hain.</small>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button type="button" class="btn-back" onclick="closeQuickPayPurchaseModal()">Cancel</button>
+        <button type="button" class="btn-action-primary" onclick="confirmQuickPayPurchase()" style="background:#16a34a;">
+          <i class="fa-solid fa-check"></i> Confirm Payment
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  
   <!-- Firebase Compat Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -5024,7 +5010,7 @@
         if (document.getElementById('projStartDate')) document.getElementById('projStartDate').value = today;
         if (document.getElementById('expDate')) document.getElementById('expDate').value = today;
 
-      loadProjects();
+     loadProjects();
         loadFlats();
         loadCustomers();
         loadPurchaser();
@@ -5032,7 +5018,8 @@
         loadOfficeExpenses();
         loadSettingsFromDatabase();
         loadStaffUsers();
-        loadPayments(); // <--- Ensure payments are loaded into memory on login
+        loadPayments();
+        loadVendors(); // <--- NAYI LINE: Login par Purchasers load honge
       } else {
         appContainer.classList.remove('active');
         authContainer.style.display = 'flex';
@@ -5101,7 +5088,7 @@
           document.getElementById('sectionFlatDetails').classList.add('active');
           pageHeading.textContent = 'Flat Details';
           break;
-       case 'customerDetails':
+        case 'customerDetails':
           document.getElementById('sectionCustomerDetails').classList.add('active');
           pageHeading.textContent = 'Customer Directory';
           break;
@@ -5114,9 +5101,20 @@
           document.getElementById('sectionAddCustomer').classList.add('active');
           pageHeading.textContent = 'Add Customer';
           break;
-        case 'addPurchaser':
+        case 'vendorDetails':
+          document.getElementById('sectionVendorDetails').classList.add('active');
+          pageHeading.textContent = 'Add Purchaser / Vendor Details';
+          break;
+       case 'addPurchaser':
           document.getElementById('sectionAddPurchaser').classList.add('active');
           pageHeading.textContent = 'Record New Purchaser';
+          populatePurchaserCategoriesDropdown(); 
+          generatePurchaseBillNo(); // <-- Yeh Auto Bill Number generate karega
+          
+          // Aaj ki date bhi khud auto-fill kar dega
+          if (document.getElementById('purDate') && !document.getElementById('purEditId').value) {
+            document.getElementById('purDate').value = new Date().toISOString().split('T')[0];
+          }
           break;
         case 'purchaserDetails':
           document.getElementById('sectionPurchaserDetails').classList.add('active');
@@ -5125,6 +5123,7 @@
         case 'purchaserCategories':
           document.getElementById('sectionPurchaserCategories').classList.add('active');
           pageHeading.textContent = 'Purchaser Categories';
+          renderPurchaserCategoriesPage(); // <--- Categories grid render karne ke liye
           break;
         case 'addPayment':
           document.getElementById('sectionAddPayment').classList.add('active');
@@ -5139,7 +5138,7 @@
           pageHeading.textContent = 'Payment Details & Ledger';
           filterPaymentsTable();
           break;
-      case 'addSiteExpense':
+        case 'addSiteExpense':
           document.getElementById('sectionAddSiteExpense').classList.add('active');
           pageHeading.textContent = 'Add Site Expense';
           break;
@@ -5153,7 +5152,7 @@
           break;
         case 'officeExpenseDetails':
           document.getElementById('sectionOfficeExpenseDetails').classList.add('active');
-          pageHeading.textContent = 'Office Expense Details';
+          pageHeading.textContent = 'Expense Details';
           break;
         case 'reports':
           document.getElementById('sectionReports').classList.add('active');
@@ -7274,23 +7273,102 @@ function isCanvasBlank(canvasId) {
       { billNo: "PUR-008", date: "2025-08-20", displayDate: "20 Aug 2025", vendor: "Sunrise Suppliers", item: "Tiles", qty: "500 Box", rate: 1200, total: 600000, paid: 600000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" }
     ];
 
-    // Auto calculate Total = Qty * Rate
-    function calcPurchaseTotalAuto() {
-      const qtyStr = document.getElementById('purQty').value;
-      const numQty = parseFloat(qtyStr.replace(/[^0-9.]/g, '')) || 0;
-      const rate = parseFloat(document.getElementById('purRate').value) || 0;
-      if (numQty > 0 && rate > 0) {
-        document.getElementById('purTotalAmount').value = Math.round(numQty * rate);
-      }
-      calculatePurchaserBalance();
-    }
+    // 3. Purchase Form Submit Listener (For Multiple Items)
+    document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('purEditId').value;
+      const btn = document.getElementById('btnSavePurchaser');
 
-    // Auto calculate Remaining = Total - Paid
-    function calculatePurchaserBalance() {
+      // Tamam items ko array mein jama karna
+      const itemsArray = [];
+      const displayItemNames = [];
+      const rows = document.getElementById('purchaseItemsContainer').children;
+      
+      if(rows.length === 0) {
+        alert("Bara-e-meherbani kam az kam ek item zaroor add karein!");
+        return;
+      }
+
+      for(let i = 0; i < rows.length; i++) {
+        const itmName = rows[i].querySelector('.pur-item-select').value;
+        const itmQty = rows[i].querySelector('.pur-item-qty').value.trim();
+        const itmRate = parseFloat(rows[i].querySelector('.pur-item-rate').value) || 0;
+        const itmAmt = parseFloat(rows[i].querySelector('.pur-item-amount').value) || 0;
+        
+        if(!itmName) {
+          alert("Layn den (Item Category) select karna lazmi hai.");
+          return;
+        }
+
+        itemsArray.push({ item: itmName, qty: itmQty, rate: itmRate, amount: itmAmt });
+        displayItemNames.push(itmName);
+      }
+
       const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
       const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
-      document.getElementById('purRemainingAmount').value = Math.max(0, total - paid);
-    }
+      const remaining = Math.max(0, total - paid);
+      const rawDate = document.getElementById('purDate').value;
+      
+      const dateObj = new Date(rawDate);
+      const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      let status = 'Unpaid';
+      if (remaining <= 0) status = 'Paid';
+      else if (paid > 0 && remaining > 0) status = 'Partial';
+
+      let combinedItemString = displayItemNames.join(', ');
+      if(displayItemNames.length > 2) {
+        combinedItemString = displayItemNames[0] + ' + ' + (displayItemNames.length - 1) + ' more';
+      }
+
+      const purchaseData = {
+        billNo: document.getElementById('purBillNo').value.trim(),
+        date: rawDate,
+        displayDate: formattedDate,
+        project: document.getElementById('purProject').value,
+        vendor: document.getElementById('purVendor').value.trim(),
+        
+        itemsList: itemsArray,
+        item: combinedItemString,
+        qty: itemsArray.length > 1 ? "Multiple Items" : itemsArray[0].qty,
+        rate: itemsArray.length > 1 ? 0 : itemsArray[0].rate,
+
+        total: total,
+        paid: paid,
+        remaining: remaining,
+        status: status,
+        paymentMethod: document.getElementById('purPaymentMethod').value,
+        notes: document.getElementById('purNotes').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Bill...';
+
+      try {
+        if (editId) {
+          await db.collection('purchases').doc(editId).update(purchaseData);
+          alert('Purchase bill updated successfully!');
+        } else {
+          purchaseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('purchases').add(purchaseData);
+          alert('Purchase bill recorded successfully!');
+        }
+
+       document.getElementById('purchaserForm').reset();
+        document.getElementById('purEditId').value = '';
+        document.getElementById('purchaseItemsContainer').innerHTML = '';
+        addPurchaseItemRow(); // Reset hone ke baad aik khali item dal jaye
+        generatePurchaseBillNo(); // <-- Form clear hote hi agla naya Bill No tyar
+        
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
+        openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
 
     // Load Purchases from Firestore with Date Filters
     function loadPurchaser() {
@@ -7433,13 +7511,28 @@ function isCanvasBlank(canvasId) {
                 ${p.status}
               </span>
             </td>
-            <td style="text-align:center;">
-              <div style="display:inline-flex; gap:8px; align-items:center;">
-                <i class="fa-regular fa-eye" style="color:#2563eb; cursor:pointer; font-size:14px;" title="View Bill" onclick="viewPurchaseBill('${p.id}')"></i>
-                <i class="fa-solid fa-pen" style="color:#0284c7; cursor:pointer; font-size:13px;" title="Edit" onclick="editPurchaseBill('${p.id}')"></i>
-                <i class="fa-solid fa-trash-can" style="color:#ef4444; cursor:pointer; font-size:13px;" title="Delete" onclick="deletePurchaseBill('${p.id}')"></i>
-              </div>
-            </td>
+<td style="text-align:center;">
+  <div style="display:inline-flex; gap:6px; align-items:center;">
+
+    <!-- 1. Pay Button (Sirf baqiya raqam par aayega) -->
+    ${(p.remaining > 0) ? `
+      <button type="button" onclick="openQuickPayPurchaseModal('${p.id}')" style="background:#16a34a; color:#ffffff; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="Pay Remaining Balance">
+        <i class="fa-solid fa-hand-holding-dollar"></i> Pay
+      </button>
+    ` : ''}
+
+    <!-- 2. PDF Download Button -->
+    <button type="button" onclick="downloadPurchaseBillPDF('${p.id}')" style="background:#059669; color:#ffffff; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px;" title="Download Purchase PDF">
+      <i class="fa-solid fa-file-pdf"></i> PDF
+    </button>
+
+    <!-- 3. View, Edit, Delete Icons -->
+    <i class="fa-regular fa-eye" style="color:#2563eb; cursor:pointer; font-size:14px;" title="View Bill" onclick="viewPurchaseBill('${p.id}')"></i>
+    <i class="fa-solid fa-pen" style="color:#0284c7; cursor:pointer; font-size:13px;" title="Edit" onclick="editPurchaseBill('${p.id}')"></i>
+    <i class="fa-solid fa-trash-can" style="color:#ef4444; cursor:pointer; font-size:13px;" title="Delete" onclick="deletePurchaseBill('${p.id}')"></i>
+
+  </div>
+</td>
           </tr>
         `;
       });
@@ -7479,69 +7572,6 @@ function isCanvasBlank(canvasId) {
 
       filterPurchases();
     }
-
-    // Form Save Listener
-    document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const editId = document.getElementById('purEditId').value;
-      const btn = document.getElementById('btnSavePurchaser');
-
-      const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
-      const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
-      const remaining = Math.max(0, total - paid);
-      const rawDate = document.getElementById('purDate').value;
-      
-      // Date Formatter: "12 Sep 2025"
-      const dateObj = new Date(rawDate);
-      const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-      let status = 'Unpaid';
-      if (remaining <= 0) status = 'Paid';
-      else if (paid > 0 && remaining > 0) status = 'Partial';
-
-      const purchaseData = {
-        billNo: document.getElementById('purBillNo').value.trim(),
-        date: rawDate,
-        displayDate: formattedDate,
-        project: document.getElementById('purProject').value,
-        vendor: document.getElementById('purVendor').value.trim(),
-        item: document.getElementById('purItem').value.trim(),
-        qty: document.getElementById('purQty').value.trim(),
-        rate: parseFloat(document.getElementById('purRate').value) || 0,
-        total: total,
-        paid: paid,
-        remaining: remaining,
-        status: status,
-        paymentMethod: document.getElementById('purPaymentMethod').value,
-        notes: document.getElementById('purNotes').value.trim(),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Bill...';
-
-      try {
-        if (editId) {
-          await db.collection('purchases').doc(editId).update(purchaseData);
-          alert('Purchase bill updated successfully!');
-        } else {
-          purchaseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-          await db.collection('purchases').add(purchaseData);
-          alert('Purchase bill recorded successfully!');
-        }
-
-        document.getElementById('purchaserForm').reset();
-        document.getElementById('purEditId').value = '';
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
-
-        // Table par wapis switch karein
-        openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails');
-      } catch (err) {
-        alert('Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-      }
-    });
 
     // Delete Bill
     async function deletePurchaseBill(id) {
@@ -8053,7 +8083,7 @@ function fixJointShareOnBlur(source) {
       }
     });
 
-    // 9. PDF Voucher Download (Official Payment Slip)
+
     function downloadSiteExpensePDF(id) {
       const exp = allSiteExpensesData.find(x => x.id === id);
       if (!exp) return;
@@ -8882,7 +8912,7 @@ function fixJointShareOnBlur(source) {
       }
     }
 
-    // Add Category Handler from Settings Tab
+    // Add Category Handler from Settings Tab & Purchaser Categories Page
     async function addCategoryPrompt(type) {
       const label = type === 'site' ? 'Site Expense' : (type === 'office' ? 'Office Expense' : 'Material / Item');
       const val = prompt(`Nayi ${label} Category ka naam darj karein:`);
@@ -8896,14 +8926,22 @@ function fixJointShareOnBlur(source) {
         if (!officeExpenseCategories.includes(clean)) officeExpenseCategories.push(clean);
         populateOfficeCategoryDropdowns();
       } else if (type === 'purchaser') {
-        if (!purchaserCategoriesList.includes(clean)) purchaserCategoriesList.push(clean);
+        if (!purchaserCategoriesList.includes(clean)) {
+          purchaserCategoriesList.push(clean);
+        }
+        // Dropdown aur Grid dono ko foran update karein
+        populatePurchaserCategoriesDropdown();
+        if (typeof renderPurchaserCategoriesPage === 'function') {
+          renderPurchaserCategoriesPage();
+        }
       }
 
       renderCategoryChips();
       await autoSaveCategories();
+      alert(`Category "${clean}" kamiyabi se shamil ho gayi!`);
     }
 
-    // Remove Category Handler from Settings Tab
+    // Remove Category Handler from Settings Tab & Purchaser Categories Page
     async function removeSettingCategory(type, catName) {
       if (!confirm(`Kiya aap waqai "${catName}" ko delete karna chahte hain?`)) return;
 
@@ -8915,6 +8953,11 @@ function fixJointShareOnBlur(source) {
         populateOfficeCategoryDropdowns();
       } else if (type === 'purchaser') {
         purchaserCategoriesList = purchaserCategoriesList.filter(c => c !== catName);
+        // Dropdown aur Grid dono ko foran update karein
+        populatePurchaserCategoriesDropdown();
+        if (typeof renderPurchaserCategoriesPage === 'function') {
+          renderPurchaserCategoriesPage();
+        }
       }
 
       renderCategoryChips();
@@ -9012,17 +9055,21 @@ function fixJointShareOnBlur(source) {
           if (c.site && c.site.length) siteExpenseCategories = c.site;
           if (c.office && c.office.length) officeExpenseCategories = c.office;
           if (c.purchaser && c.purchaser.length) purchaserCategoriesList = c.purchaser;
+          
           populateCategoryDropdowns();
           populateOfficeCategoryDropdowns();
+          populatePurchaserCategoriesDropdown();
         }
 
         renderCategoryChips();
+        if (typeof renderPurchaserCategoriesPage === 'function') {
+          renderPurchaserCategoriesPage();
+        }
       } catch(err) {
         console.warn('Settings load error:', err);
       }
     }
 
-    // 6. Complete Database Offline Backup Exporter (.json)
     function exportCompleteDatabase() {
       const backupData = {
         exportDate: new Date().toISOString(),
@@ -9053,8 +9100,6 @@ function fixJointShareOnBlur(source) {
       }
     }
 
-    // Load settings when user logs in (Add to auth listener)
-    const existingAuthObserver = auth.onAuthStateChanged;
   
   // =========================================================================
     // 14. ACCESS MANAGEMENT & PERMISSION CONTROLLER
@@ -10020,6 +10065,833 @@ function fixJointShareOnBlur(source) {
         }
       });
     }
+
+
+// Purchaser Categories page ko render karne ka function
+function renderPurchaserCategoriesPage() {
+  const container = document.getElementById('purchaserCategoriesGrid');
+  if (!container) return;
+
+  if (!purchaserCategoriesList || purchaserCategoriesList.length === 0) {
+    container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:30px; color:#64748b;">Koi category mojood nahi hai. Naya add karein.</div>`;
+    return;
+  }
+
+  let html = '';
+  purchaserCategoriesList.forEach((cat) => {
+    html += `
+      <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 8px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 15px;">
+            <i class="fa-solid fa-box-archive"></i>
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: 800; color: #0f172a;">${cat}</div>
+            <div style="font-size: 11px; color: #64748b;">Active Material Head</div>
+          </div>
+        </div>
+        <button type="button" onclick="removeSettingCategory('purchaser', '${cat}')" style="background: #fee2e2; color: #dc2626; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Delete Category">
+          <i class="fa-solid fa-trash-can" style="font-size: 12px;"></i>
+        </button>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+// 1. Purchaser Categories ko Add Purchase ke Dropdown mein load karne ka function
+    function populatePurchaserCategoriesDropdown(selectedVal = '') {
+      const selectDropdown = document.getElementById('purItem');
+      if (!selectDropdown) return;
+
+      selectDropdown.innerHTML = '<option value="">-- Choose Purchase Category --</option>';
+      
+      if (window.purchaserCategoriesList && window.purchaserCategoriesList.length > 0) {
+        window.purchaserCategoriesList.forEach(cat => {
+          const opt = document.createElement('option');
+          opt.value = cat;
+          opt.textContent = cat;
+          if (cat === selectedVal) opt.selected = true;
+          selectDropdown.appendChild(opt);
+        });
+      }
+    }
+
+    // 2. Add Purchaser Form Submit Listener
+    document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('purEditId').value;
+      const btn = document.getElementById('btnSavePurchaser');
+
+      const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
+      const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
+      const remaining = Math.max(0, total - paid);
+      const rawDate = document.getElementById('purDate').value;
+      
+      const dateObj = new Date(rawDate);
+      const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      let status = 'Unpaid';
+      if (remaining <= 0) status = 'Paid';
+      else if (paid > 0 && remaining > 0) status = 'Partial';
+
+      const purchaseData = {
+        billNo: document.getElementById('purBillNo').value.trim(),
+        date: rawDate,
+        displayDate: formattedDate,
+        project: document.getElementById('purProject').value,
+        vendor: document.getElementById('purVendor').value.trim(),
+        item: document.getElementById('purItem').value, // <--- Dropdown ki selected category yahan save hogi
+        qty: document.getElementById('purQty').value.trim(),
+        rate: parseFloat(document.getElementById('purRate').value) || 0,
+        total: total,
+        paid: paid,
+        remaining: remaining,
+        status: status,
+        paymentMethod: document.getElementById('purPaymentMethod').value,
+        notes: document.getElementById('purNotes').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Bill...';
+
+      try {
+        if (editId) {
+          await db.collection('purchases').doc(editId).update(purchaseData);
+          alert('Purchase bill updated successfully!');
+        } else {
+          purchaseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('purchases').add(purchaseData);
+          alert('Purchase bill recorded successfully!');
+        }
+
+        document.getElementById('purchaserForm').reset();
+        document.getElementById('purEditId').value = '';
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
+
+        openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails');
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+// ========================================================
+// FUNCTION 1: Naya Item Row Add Karne Ke Liye (Updated)
+// ========================================================
+function addPurchaseItemRow() {
+  const container = document.getElementById('purchaseItemsContainer');
+  const rowId = 'purRow_' + Date.now() + Math.floor(Math.random() * 1000);
+  
+  // MASLA YAHAN THA: 'window.purchaserCategoriesList' ki jagah sirf 'purchaserCategoriesList' likha hai
+  let optionsHtml = '<option value="">-- Select Item --</option>';
+  if (typeof purchaserCategoriesList !== 'undefined' && purchaserCategoriesList.length > 0) {
+    purchaserCategoriesList.forEach(cat => {
+      optionsHtml += `<option value="${cat}">${cat}</option>`;
+    });
+  }
+
+  // Row ka design aur input fields
+  const html = `
+    <div id="${rowId}" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; background:#fff; padding:12px; border:1px dashed #cbd5e1; border-radius:10px; margin-bottom:10px;">
+      
+      <div style="flex:2; min-width:160px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Item Category *</label>
+        <select class="pur-item-select" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; background:#fff; color:#0f172a;">
+          ${optionsHtml}
+        </select>
+      </div>
+      
+      <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Qty *</label>
+        <input type="text" class="pur-item-qty" placeholder="e.g. 50" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
+      </div>
+      
+      <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Rate *</label>
+        <input type="number" class="pur-item-rate" placeholder="e.g. 1500" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
+      </div>
+      
+      <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Amount (Rs)</label>
+        <input type="number" class="pur-item-amount" readonly value="0" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:8px; font-size:13.5px; background:#f1f5f9; font-weight:800; color:#dc2626; outline:none;" />
+      </div>
+      
+      <div style="padding-bottom:1px;">
+        <button type="button" onclick="removePurchaseItemRow('${rowId}')" style="background:#fee2e2; color:#dc2626; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; transition:0.2s;" title="Remove Item" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+
+    </div>
+  `;
+  
+  container.insertAdjacentHTML('beforeend', html);
+  
+  if (typeof calcPurchaseTotalAuto === 'function') {
+    calcPurchaseTotalAuto();
+  }
+}
+
+// ========================================================
+// FUNCTION 2: Dropdowns Update Karne Ke Liye (Updated)
+// ========================================================
+function populatePurchaserCategoriesDropdown() {
+  // Is function mein bhi 'window.' hata diya gaya hai
+  document.querySelectorAll('.pur-item-select').forEach(selectDropdown => {
+    const currentVal = selectDropdown.value; 
+    selectDropdown.innerHTML = '<option value="">-- Select Item --</option>';
+    
+    if (typeof purchaserCategoriesList !== 'undefined' && purchaserCategoriesList.length > 0) {
+      purchaserCategoriesList.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if (cat === currentVal) opt.selected = true; 
+        selectDropdown.appendChild(opt);
+      });
+    }
+  });
+}
+
+// ==========================================================
+    // PURCHASER / VENDOR MANAGEMENT JAVASCRIPT
+    // ==========================================================
+    let allVendorsData = [];
+
+    // 1. Firebase se Vendors data mangwana
+    function loadVendors() {
+      db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot((snap) => {
+        allVendorsData = [];
+        snap.forEach(doc => {
+          allVendorsData.push({ id: doc.id, ...doc.data() });
+        });
+
+        renderVendorTable();
+        populateVendorDropdown(); // Add Purchase form mein dropdown update karna
+      });
+    }
+
+    // 2. Add Purchase Form mein Dropdown bharna
+    function populateVendorDropdown() {
+      const select = document.getElementById('purVendor');
+      if (!select) return;
+
+      // Pehli purani value yaad rakhna taake edit karte waqt tabdeel na ho
+      const currentVal = select.value;
+
+      select.innerHTML = '<option value="">-- Select Purchaser / Vendor --</option>';
+      allVendorsData.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.company;
+        opt.textContent = `${v.company} (${v.name})`;
+        
+        if (v.company === currentVal) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    // 3. Table mein Vendors show karna
+    function renderVendorTable() {
+      const tbody = document.getElementById('vendorTableBody');
+      if (!tbody) return;
+
+      if (allVendorsData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">Koi purchaser/vendor record mojood nahi. Naya add karein.</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      allVendorsData.forEach((v, idx) => {
+        html += `
+          <tr>
+            <td style="font-weight:700; color:#475569;">${idx + 1}</td>
+            <td><strong style="color:#0f172a;">${v.company}</strong></td>
+            <td>${v.name}</td>
+            <td><strong style="color:#2563eb;">${v.mobile}</strong></td>
+            <td>${v.address || '-'}</td>
+            <td style="text-align: center;">
+              <button class="btn-tbl-edit" onclick="editVendor('${v.id}')" title="Edit"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="btn-tbl-delete" onclick="deleteVendor('${v.id}')" title="Delete"><i class="fa-solid fa-trash-can"></i> Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    // 4. Vendor Form Save / Update karna
+    document.getElementById('vendorEntryForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('vendorEditId').value;
+      const btn = document.getElementById('btnSaveVendor');
+
+      const vendorData = {
+        company: document.getElementById('venCompany').value.trim(),
+        name: document.getElementById('venName').value.trim(),
+        mobile: document.getElementById('venMobile').value.trim(),
+        address: document.getElementById('venAddress').value.trim(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        if (editId) {
+          await db.collection('purchaser_vendors').doc(editId).update(vendorData);
+          alert('Purchaser record update ho gaya!');
+        } else {
+          vendorData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('purchaser_vendors').add(vendorData);
+          alert('Naya Purchaser record shamil ho gaya!');
+        }
+        cancelVendorEdit();
+      } catch(err) {
+        alert('Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    // 5. Vendor Edit karne ke liye Form mein data lana
+    function editVendor(id) {
+      const v = allVendorsData.find(x => x.id === id);
+      if (!v) return;
+
+      document.getElementById('vendorEditId').value = v.id;
+      document.getElementById('venCompany').value = v.company;
+      document.getElementById('venName').value = v.name;
+      document.getElementById('venMobile').value = v.mobile;
+      document.getElementById('venAddress').value = v.address || '';
+
+      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-check"></i> Update Detail';
+      document.getElementById('btnCancelVendorEdit').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 6. Edit cancel karna aur form clear karna
+    function cancelVendorEdit() {
+      document.getElementById('vendorEntryForm').reset();
+      document.getElementById('vendorEditId').value = '';
+      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchaser Detail';
+      document.getElementById('btnCancelVendorEdit').style.display = 'none';
+    }
+
+    // 7. Vendor Delete karna
+    async function deleteVendor(id) {
+      if (confirm('Kiya aap waqai is Purchaser/Vendor ko delete karna chahte hain?')) {
+        try {
+          await db.collection('purchaser_vendors').doc(id).delete();
+        } catch(err) {
+          alert('Delete failed: ' + err.message);
+        }
+      }
+    }
+
+// ========================================================
+// AUTOMATIC CALCULATION: QTY * RATE = AMOUNT & TOTAL BILL
+// ========================================================
+function calcPurchaseTotalAuto() {
+  let grandTotal = 0;
+  
+  // 1. Har item row ka Amount (Qty * Rate) nikalna
+  const rows = document.querySelectorAll('#purchaseItemsContainer > div');
+  rows.forEach(row => {
+    const qtyInput = row.querySelector('.pur-item-qty');
+    const rateInput = row.querySelector('.pur-item-rate');
+    const amountInput = row.querySelector('.pur-item-amount');
+    
+    if (qtyInput && rateInput && amountInput) {
+      const qty = parseFloat(qtyInput.value) || 0;
+      const rate = parseFloat(rateInput.value) || 0;
+      const amt = qty * rate;
+      
+      amountInput.value = amt; // Row ka amount update
+      grandTotal += amt;       // Grand total mein jama karein
+    }
+  });
+  
+  // 2. Niche wale "Total Amount (Rs.)" box mein Grand Total dikhana
+  const totalAmountBox = document.getElementById('purTotalAmount');
+  if (totalAmountBox) {
+    totalAmountBox.value = grandTotal;
+  }
+  
+  // 3. Remaining (Baqiya) Amount khud calculate karna (Total - Paid)
+  const paidInput = document.getElementById('purPaidAmount');
+  const remInput = document.getElementById('purRemainingAmount');
+  
+  if (paidInput && remInput) {
+    const paid = parseFloat(paidInput.value) || 0;
+    const remaining = Math.max(0, grandTotal - paid); // Minus mein na jaye isliye Math.max(0)
+    remInput.value = remaining;
+  }
+}
+
+// ========================================================
+// ROW DELETE HONE PAR TOTAL WAPIS UPDATE KARNA
+// ========================================================
+function removePurchaseItemRow(rowId) {
+  const row = document.getElementById(rowId);
+  if (row) {
+    row.remove(); // Row ko mita dein
+    calcPurchaseTotalAuto(); // Row delete hone ke baad Total calculation dobara chalayein
+  }
+}
+ 
+// ========================================================
+// AUTO GENERATE PURCHASE BILL NUMBER
+// ========================================================
+function generatePurchaseBillNo() {
+  const purBillInput = document.getElementById('purBillNo');
+  const editId = document.getElementById('purEditId').value;
+  
+  // Agar form naya hai (Edit mode nahi hai) tabhi auto-generate kare
+  if (purBillInput && !editId) {
+    // 5 digit ka random number generate karega
+    const randomNum = Math.floor(10000 + Math.random() * 90000);
+    purBillInput.value = 'PUR-' + randomNum;
+    
+    // Box ko lock (readonly) aur grey kar dein taake edit na ho sake
+    purBillInput.setAttribute('readonly', true);
+    purBillInput.style.backgroundColor = '#f1f5f9';
+    purBillInput.style.fontWeight = '800';
+    purBillInput.style.color = '#1e40af';
+  }
+}
+
+// ========================================================
+// VIEW PURCHASE BILL (Modal Open)
+// ========================================================
+function viewPurchaseBill(id) {
+  const p = allPurchaserData.find(x => x.id === id);
+  if (!p) return;
+
+  // Item List generate karna
+  let itemsHtml = '';
+  if (p.itemsList && p.itemsList.length > 0) {
+    p.itemsList.forEach(itm => {
+      itemsHtml += `
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px; color:#0f172a; font-weight:600;">${itm.item}</td>
+          <td style="padding:10px;">${itm.qty}</td>
+          <td style="padding:10px;">Rs. ${Number(itm.rate).toLocaleString()}</td>
+          <td style="padding:10px; font-weight:800; color:#0f172a;">Rs. ${Number(itm.amount).toLocaleString()}</td>
+        </tr>
+      `;
+    });
+  } else {
+    // Puranay data ka fallback jismein itemsList nahi tha
+    itemsHtml = `
+      <tr style="border-bottom:1px solid #e2e8f0;">
+        <td style="padding:10px; color:#0f172a; font-weight:600;">${p.item || 'N/A'}</td>
+        <td style="padding:10px;">${p.qty || 'N/A'}</td>
+        <td style="padding:10px;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
+        <td style="padding:10px; font-weight:800; color:#0f172a;">Rs. ${Number(p.total || 0).toLocaleString()}</td>
+      </tr>
+    `;
+  }
+
+  // Status Badge Colors
+  const badgeBg = p.status === 'Paid' ? '#dcfce7' : (p.status === 'Partial' ? '#fef3c7' : '#fee2e2');
+  const badgeColor = p.status === 'Paid' ? '#15803d' : (p.status === 'Partial' ? '#b45309' : '#dc2626');
+
+  // Modal ka poora HTML structure
+  const html = `
+    <div style="display:flex; justify-content:space-between; margin-bottom: 20px; flex-wrap:wrap; gap:10px;">
+      <div>
+        <div style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;">Supplier / Vendor</div>
+        <h4 style="color:#0f172a; font-weight:900; font-size:19px; margin:2px 0;">${p.vendor || 'N/A'}</h4>
+        <div style="font-size:12.5px; color:#64748b; font-weight:600;">Project: <span style="color:#2563eb;">${p.project}</span></div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase;">Bill No</div>
+        <div style="font-size:18px; font-weight:900; color:#2563eb;">${p.billNo}</div>
+        <div style="font-size:12px; color:#64748b; font-weight:600;">Date: ${p.displayDate || p.date}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px; border:1px solid #cbd5e1; border-radius:10px; overflow:hidden;">
+      <h5 style="font-size:13.5px; color:#1e3a8a; background:#f8fafc; padding:12px 16px; margin:0; border-bottom:1px solid #cbd5e1;"><i class="fa-solid fa-list-check"></i> Bill Items Details</h5>
+      <table style="width:100%; text-align:left; font-size:13px; border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f1f5f9; color:#475569; border-bottom:1.5px solid #cbd5e1;">
+            <th style="padding:10px 16px;">Material / Category</th>
+            <th style="padding:10px 16px;">Quantity</th>
+            <th style="padding:10px 16px;">Rate</th>
+            <th style="padding:10px 16px;">Amount</th>
+          </tr>
+        </thead>
+        <tbody style="background:#fff;">
+          ${itemsHtml}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:18px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; align-items:center;">
+      <div>
+        <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Grand Total</div>
+        <div style="font-size:20px; font-weight:900; color:#0f172a;">Rs. ${Number(p.total || 0).toLocaleString()}</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Paid Amount</div>
+        <div style="font-size:20px; font-weight:900; color:#16a34a;">Rs. ${Number(p.paid || 0).toLocaleString()}</div>
+      </div>
+      <div>
+        <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Remaining Payable</div>
+        <div style="font-size:20px; font-weight:900; color:#dc2626;">Rs. ${Number(p.remaining || 0).toLocaleString()}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px; color:#64748b; font-weight:700; text-transform:uppercase;">Payment Status</div>
+        <div style="margin-top:4px;"><span style="background:${badgeBg}; color:${badgeColor}; padding:6px 14px; border-radius:20px; font-size:12.5px; font-weight:800;">${p.status}</span></div>
+      </div>
+    </div>
+
+    ${p.notes ? `
+    <div style="margin-top:16px; padding:14px; background:#fffbeb; border:1.5px solid #fde68a; border-radius:10px;">
+      <strong style="font-size:12.5px; color:#92400e; display:block; margin-bottom:4px;"><i class="fa-solid fa-note-sticky"></i> Notes / Remarks:</strong>
+      <span style="font-size:13.5px; color:#b45309; line-height:1.5;">${p.notes}</span>
+    </div>
+    ` : ''}
+  `;
+
+  document.getElementById('purchaseModalBodyContent').innerHTML = html;
+  document.getElementById('purchaseViewModal').classList.add('active');
+}
+
+function closePurchaseViewModal() {
+  document.getElementById('purchaseViewModal').classList.remove('active');
+}
+
+// ========================================================
+// EDIT PURCHASE BILL (Form mein Data Pura Wapis Lana)
+// ========================================================
+function editPurchaseBill(id) {
+  const p = allPurchaserData.find(x => x.id === id);
+  if (!p) return;
+
+  // Form Fields Populate
+  document.getElementById('purEditId').value = p.id;
+  document.getElementById('purBillNo').value = p.billNo || '';
+  document.getElementById('purDate').value = p.date || '';
+  document.getElementById('purProject').value = p.project || 'BILAL HEIGHTS';
+  document.getElementById('purVendor').value = p.vendor || '';
+  
+  // Items Clear karna
+  const container = document.getElementById('purchaseItemsContainer');
+  container.innerHTML = ''; 
+
+  // Agar naya format (Multiple items) hai to loop chalao
+  if (p.itemsList && p.itemsList.length > 0) {
+    p.itemsList.forEach(itm => {
+      addPurchaseItemRowWithValue(itm.item, itm.qty, itm.rate, itm.amount);
+    });
+  } else {
+    // Agar purana single item hai
+    addPurchaseItemRowWithValue(p.item, p.qty, p.rate, p.total);
+  }
+
+  // Totals Populate
+  document.getElementById('purTotalAmount').value = p.total || 0;
+  document.getElementById('purPaidAmount').value = p.paid || 0;
+  document.getElementById('purRemainingAmount').value = p.remaining || 0;
+  document.getElementById('purPaymentMethod').value = p.paymentMethod || 'Cash';
+  document.getElementById('purNotes').value = p.notes || '';
+
+  // Button text change
+  const btn = document.getElementById('btnSavePurchaser');
+  btn.innerHTML = '<i class="fa-solid fa-check"></i> Update Purchase Bill';
+
+  // Bill Edit form pe bhejna
+  openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'addPurchaser', 'subAddPurchaser');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Helper: Edit ke waqt existing items ko add karne ka function
+function addPurchaseItemRowWithValue(itemVal, qtyVal, rateVal, amountVal) {
+  const container = document.getElementById('purchaseItemsContainer');
+  const rowId = 'purRow_' + Date.now() + Math.floor(Math.random() * 1000);
+  
+  let optionsHtml = '<option value="">-- Select Item --</option>';
+  if (typeof purchaserCategoriesList !== 'undefined' && purchaserCategoriesList.length > 0) {
+    purchaserCategoriesList.forEach(cat => {
+      const selected = (cat === itemVal) ? 'selected' : '';
+      optionsHtml += `<option value="${cat}" ${selected}>${cat}</option>`;
+    });
+  } else if (itemVal) {
+     optionsHtml += `<option value="${itemVal}" selected>${itemVal}</option>`;
+  }
+
+  const html = `
+    <div id="${rowId}" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; background:#fff; padding:12px; border:1px dashed #cbd5e1; border-radius:10px; margin-bottom:10px;">
+      <div style="flex:2; min-width:160px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Item Category *</label>
+        <select class="pur-item-select" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; background:#fff; color:#0f172a;">
+          ${optionsHtml}
+        </select>
+      </div>
+      <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Qty *</label>
+        <input type="text" class="pur-item-qty" value="${qtyVal || ''}" placeholder="e.g. 50" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
+      </div>
+      <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Rate *</label>
+        <input type="number" class="pur-item-rate" value="${rateVal || ''}" placeholder="e.g. 1500" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
+      </div>
+      <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Amount (Rs)</label>
+        <input type="number" class="pur-item-amount" readonly value="${amountVal || 0}" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:8px; font-size:13.5px; background:#f1f5f9; font-weight:800; color:#dc2626; outline:none;" />
+      </div>
+      <div style="padding-bottom:1px;">
+        <button type="button" onclick="removePurchaseItemRow('${rowId}')" style="background:#fee2e2; color:#dc2626; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; transition:0.2s;" title="Remove Item">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    </div>
+  `;
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+let activeQuickPayPur = null;
+
+// 1. Modal kholne ka function
+function openQuickPayPurchaseModal(purId) {
+  const p = allPurchaserData.find(x => x.id === purId);
+  if (!p) return;
+
+  activeQuickPayPur = p;
+  document.getElementById('quickPayPurId').value = p.id;
+  document.getElementById('quickPayPurVendorText').textContent = p.vendor || 'N/A';
+  document.getElementById('quickPayPurBillText').textContent = p.billNo || 'N/A';
+  document.getElementById('quickPayPurRemText').textContent = `Rs. ${Number(p.remaining || 0).toLocaleString()}`;
+  
+  // Default box mein puri baqiya raqam auto-fill hogi
+  document.getElementById('quickPayPurAmountInput').value = p.remaining || 0;
+
+  document.getElementById('quickPayPurchaseModal').classList.add('active');
+}
+
+// 2. Modal band karne ka function
+function closeQuickPayPurchaseModal(e) {
+  document.getElementById('quickPayPurchaseModal').classList.remove('active');
+  activeQuickPayPur = null;
+}
+
+// 3. Payment confirm kar ke Firebase update karne ka function
+async function confirmQuickPayPurchase() {
+  if (!activeQuickPayPur) return;
+
+  const payingNow = parseFloat(document.getElementById('quickPayPurAmountInput').value) || 0;
+  const currentRemaining = parseFloat(activeQuickPayPur.remaining) || 0;
+
+  if (payingNow <= 0) {
+    alert("Bara-e-meherbani ada ki jane wali raqam 0 se zyada darj karein.");
+    return;
+  }
+
+  if (payingNow > currentRemaining) {
+    alert(`Aap baqiya raqam (Rs. ${currentRemaining.toLocaleString()}) se zyada ada nahi kar sakte.`);
+    return;
+  }
+
+  const newPaidAmount = (parseFloat(activeQuickPayPur.paid) || 0) + payingNow;
+  const newRemaining = Math.max(0, currentRemaining - payingNow);
+  const newStatus = (newRemaining === 0) ? 'Paid' : 'Partial';
+
+  try {
+    await db.collection('purchases').doc(activeQuickPayPur.id).update({
+      paid: newPaidAmount,
+      remaining: newRemaining,
+      status: newStatus,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert(`Rs. ${payingNow.toLocaleString()} ki payment kamiyabi se darj ho gayi!`);
+    closeQuickPayPurchaseModal();
+  } catch(err) {
+    alert("Payment save karne mein masla aaya: " + err.message);
+  }
+}
+
+// ========================================================
+// DOWNLOAD OFFICIAL PURCHASE BILL / INVOICE PDF
+// ========================================================
+function downloadPurchaseBillPDF(id) {
+  const p = allPurchaserData.find(x => x.id === id);
+  if (!p) return;
+
+  const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const billNo = p.billNo || 'PUR-000';
+  const total = Number(p.total || 0);
+  const paid = Number(p.paid || 0);
+  const remaining = Number(p.remaining || 0);
+
+  // Status Colors
+  const isPaid = (p.status === 'Paid');
+  const badgeBg = isPaid ? '#dcfce7' : (p.status === 'Partial' ? '#fef3c7' : '#fee2e2');
+  const badgeColor = isPaid ? '#15803d' : (p.status === 'Partial' ? '#b45309' : '#dc2626');
+
+  // Items Table Rows banana (agar multiple items hon ya single)
+  let itemsRowsHtml = '';
+  if (p.itemsList && p.itemsList.length > 0) {
+    p.itemsList.forEach((itm, idx) => {
+      itemsRowsHtml += `
+        <tr style="border-bottom: 1px solid #cbd5e1;">
+          <td style="padding: 8px 10px; text-align: center; color: #64748b; font-weight: 700;">${idx + 1}</td>
+          <td style="padding: 8px 12px; font-weight: 700; color: #0f172a;">${itm.item || 'N/A'}</td>
+          <td style="padding: 8px 12px; text-align: center;">${itm.qty || '-'}</td>
+          <td style="padding: 8px 12px; text-align: right;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
+          <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #0f172a;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
+        </tr>
+      `;
+    });
+  } else {
+    // Puranay single-item records ka fallback
+    itemsRowsHtml = `
+      <tr style="border-bottom: 1px solid #cbd5e1;">
+        <td style="padding: 8px 10px; text-align: center; color: #64748b; font-weight: 700;">1</td>
+        <td style="padding: 8px 12px; font-weight: 700; color: #0f172a;">${p.item || 'General Material'}</td>
+        <td style="padding: 8px 12px; text-align: center;">${p.qty || '-'}</td>
+        <td style="padding: 8px 12px; text-align: right;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
+        <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #0f172a;">Rs. ${total.toLocaleString()}</td>
+      </tr>
+    `;
+  }
+
+  // Printable Design Wrapper
+  const pdfWrapper = document.createElement('div');
+  pdfWrapper.style.padding = '24px 28px';
+  pdfWrapper.style.background = '#ffffff';
+  pdfWrapper.style.color = '#0f172a';
+  pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+
+  pdfWrapper.innerHTML = `
+    <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
+      
+      <!-- Top Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="background: #0f2a59; color: #ffffff; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px;">BH</div>
+          <div>
+            <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+            <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Procurement & Material Purchase Invoice</div>
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
+            PURCHASE BILL
+          </div>
+          <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
+            BILL NO: <span style="color:#0f2a59;">${billNo}</span> &nbsp;|&nbsp; DATE: <span>${p.displayDate || p.date || todayDate}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supplier & Project Info Bar -->
+      <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Supplier / Vendor Company</div>
+          <div style="font-size: 18px; font-weight: 900;">${p.vendor || 'N/A'}</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Assigned Project</div>
+          <div style="font-size: 14px; font-weight: 800;">${p.project || 'BILAL HEIGHTS'}</div>
+        </div>
+      </div>
+
+      <!-- Meta Info Row -->
+      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; font-size: 11.5px;">
+        <div><strong>Payment Method:</strong> ${p.paymentMethod || 'Cash'}</div>
+        <div><strong>Payment Status:</strong> <span style="background:${badgeBg}; color:${badgeColor}; padding:2px 8px; border-radius:12px; font-weight:800; font-size:10.5px;">${p.status || 'Paid'}</span></div>
+      </div>
+
+      <!-- Items Details Table -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 11.5px;">
+        <thead>
+          <tr style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;">
+            <th style="padding: 8px 10px; width: 40px; text-align: center;">#</th>
+            <th style="padding: 8px 12px; text-align: left;">ITEM / MATERIAL DESCRIPTION</th>
+            <th style="padding: 8px 12px; text-align: center;">QUANTITY</th>
+            <th style="padding: 8px 12px; text-align: right;">RATE (Rs.)</th>
+            <th style="padding: 8px 12px; text-align: right;">AMOUNT (Rs.)</th>
+          </tr>
+        </thead>
+        <tbody style="border: 1px solid #cbd5e1;">
+          ${itemsRowsHtml}
+        </tbody>
+      </table>
+
+      <!-- Financial Totals Summary Card -->
+      <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div style="font-size: 10.5px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Bill Amount</div>
+          <div style="font-size: 18px; font-weight: 900; color: #0f172a;">Rs. ${total.toLocaleString()}</div>
+        </div>
+        <div>
+          <div style="font-size: 10.5px; color: #166534; font-weight: 700; text-transform: uppercase;">Paid Amount</div>
+          <div style="font-size: 18px; font-weight: 900; color: #16a34a;">Rs. ${paid.toLocaleString()}</div>
+        </div>
+        <div>
+          <div style="font-size: 10.5px; color: #991b1b; font-weight: 700; text-transform: uppercase;">Remaining Payable</div>
+          <div style="font-size: 18px; font-weight: 900; color: ${remaining > 0 ? '#dc2626' : '#16a34a'};">
+            Rs. ${remaining.toLocaleString()}
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes / Delivery Details (Agar mojood hon) -->
+      ${p.notes ? `
+      <div style="background: #fffbeb; border-left: 3px solid #f59e0b; padding: 8px 12px; margin-bottom: 20px; font-size: 11px;">
+        <strong style="color: #92400e;">Notes / Remarks / Delivery Info:</strong>
+        <span style="color: #451a03;"> ${p.notes}</span>
+      </div>
+      ` : ''}
+
+      <!-- Official Signatures -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 55px; padding: 0 14px;">
+        <div style="text-align: center; width: 210px;">
+          <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
+            SUPPLIER / VENDOR SIGNATURE
+          </div>
+          <div style="font-size: 9px; color: #64748b;">(Goods Received / Account Acknowledged)</div>
+        </div>
+
+        <div style="text-align: center; width: 210px;">
+          <div style="height: 28px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <span style="border: 1px dashed #059669; color: #059669; font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
+              Verified Material Entry
+            </span>
+          </div>
+          <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
+            PURCHASE / SITE MANAGER
+          </div>
+          <div style="font-size: 9px; color: #64748b;">For & On Behalf of Bilal Heights</div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  // PDF Configuration & Download
+  const opt = {
+    margin: [0.25, 0.25, 0.25, 0.25],
+    filename: `Purchase_Bill_${billNo}_${(p.vendor || 'Supplier').replace(/\s+/g, '_')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.5, useCORS: true },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(pdfWrapper).save();
+  } else {
+    alert('PDF library load nahi ho saki. Internet connection check karein.');
+  }
+}
 
   </script>
 </body>
