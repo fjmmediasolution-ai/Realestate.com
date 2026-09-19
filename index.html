@@ -1930,7 +1930,6 @@
             </div>
           </div>
 
-          <!-- 5. Purchaser Dropdown -->
           <!-- 5. Purchases Dropdown -->
           <div class="nav-dropdown">
             <div class="nav-item" id="navPurchaserParent" onclick="toggleDropdown('purchaserSubmenu', this)">
@@ -1941,19 +1940,14 @@
               <i class="fa-solid fa-chevron-down submenu-arrow"></i>
             </div>
             
-           <div class="submenu" id="purchaserSubmenu">
-              <!-- YEH NAYA LINK ADD KIYA GAYA HAI -->
+            <div class="submenu" id="purchaserSubmenu">
               <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Add Purchaser Details</span>
               </a>
               <a class="submenu-item" id="subAddPurchaser" onclick="switchSection('addPurchaser', this)">
                 <span class="dot-bullet">•</span>
-                <span>Record New Purchase</span>
-              </a>
-              <a class="submenu-item" id="subPurchaserDetails" onclick="switchSection('purchaserDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Purchases Detail</span>
+                <span>Add New vendor</span>
               </a>
               <a class="submenu-item" id="subPurchaserCategories" onclick="switchSection('purchaserCategories', this)">
                 <span class="dot-bullet">•</span>
@@ -1961,7 +1955,8 @@
               </a>
             </div>
           </div>
-          <!-- 6. Payments Dropdown (With Arrow & Submenus) -->
+
+          <!-- 6. Account & Finance Dropdown (Payments, Purchases, Site & Office Expenses) -->
           <div class="nav-dropdown">
             <div class="nav-item" id="navPaymentsParent" onclick="toggleDropdown('paymentsSubmenu', this)">
               <div class="nav-item-content">
@@ -1972,6 +1967,7 @@
             </div>
             
             <div class="submenu" id="paymentsSubmenu">
+              <!-- Payments -->
               <a class="submenu-item" id="subAddPayment" onclick="switchSection('addPayment', this)">
                 <span class="dot-bullet">•</span>
                 <span>Collect New Payment</span>
@@ -1980,52 +1976,36 @@
                 <span class="dot-bullet">•</span>
                 <span>Payment Details & Ledger</span>
               </a>
-            </div>
-          </div>
 
-        <!-- 7. Site Expenses Dropdown -->
-          <div class="nav-dropdown">
-            <div class="nav-item" id="navSiteExpensesParent" onclick="toggleDropdown('siteExpensesSubmenu', this)">
-              <div class="nav-item-content">
-                <i class="fa-solid fa-helmet-safety"></i>
-                <span>Site Expenses</span>
-              </div>
-              <i class="fa-solid fa-chevron-down submenu-arrow"></i>
-            </div>
-            
-            <div class="submenu" id="siteExpensesSubmenu">
+              <!-- Purchases Detail -->
+              <a class="submenu-item" id="subPurchaserDetails" onclick="switchSection('purchaserDetails', this)">
+                <span class="dot-bullet">•</span>
+                <span>Purchases Detail</span>
+              </a>
+
+              <!-- Site Expenses -->
               <a class="submenu-item" id="subAddSiteExpense" onclick="switchSection('addSiteExpense', this)">
                 <span class="dot-bullet">•</span>
                 <span>Add Site Expense</span>
               </a>
               <a class="submenu-item" id="subSiteExpenseDetails" onclick="switchSection('siteExpenseDetails', this)">
                 <span class="dot-bullet">•</span>
-                <span>Expense Details</span>
+                <span>Site Expense Details</span>
               </a>
-            </div>
-          </div>
 
-          <!-- 8. Office Expenses Dropdown -->
-          <div class="nav-dropdown">
-            <div class="nav-item" id="navOfficeExpensesParent" onclick="toggleDropdown('officeExpensesSubmenu', this)">
-              <div class="nav-item-content">
-                <i class="fa-solid fa-briefcase"></i>
-                <span>Office Expenses</span>
-              </div>
-              <i class="fa-solid fa-chevron-down submenu-arrow"></i>
-            </div>
-            
-            <div class="submenu" id="officeExpensesSubmenu">
+              <!-- Office Expenses -->
               <a class="submenu-item" id="subAddOfficeExpense" onclick="switchSection('addOfficeExpense', this)">
                 <span class="dot-bullet">•</span>
                 <span>Add Office Expense</span>
               </a>
               <a class="submenu-item" id="subOfficeExpenseDetails" onclick="switchSection('officeExpenseDetails', this)">
                 <span class="dot-bullet">•</span>
-                <span>Expense Details</span>
+                <span>Office Expense Details</span>
               </a>
             </div>
           </div>
+
+          
 
           <!-- 9. Reports Dropdown -->
           <div class="nav-dropdown">
@@ -2056,7 +2036,7 @@
                 <span>Customer Documents Download</span>
               </a>
 
-              <!-- 4. Purchaser Detail Report -->
+              <!-- 4. Purchaser Details Report -->
               <a class="submenu-item" id="subReportPurchaser" onclick="switchSection('purchaserDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Purchaser Details Report</span>
@@ -2252,7 +2232,7 @@
                 <button class="btn-action-primary" style="background: #0284c7; justify-content: center; padding: 12px;" onclick="openAndSwitch('customerSubmenu', 'navCustomerParent', 'customerDetails', 'subCustomerDetails')">
                   <i class="fa-solid fa-users"></i> Client Records
                 </button>
-                <button class="btn-action-primary" style="background: #7c3aed; justify-content: center; padding: 12px;" onclick="openAndSwitch('siteExpensesSubmenu', 'navSiteExpensesParent', 'addSiteExpense', 'subAddSiteExpense')">
+                <button class="btn-action-primary" style="background: #7c3aed; justify-content: center; padding: 12px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense')">
                   <i class="fa-solid fa-helmet-safety"></i> Add Site Expense
                 </button>
               </div>
@@ -3337,8 +3317,8 @@
         <section id="sectionAddPurchaser" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-cart-plus"></i> Record New Purchase Bill</h3>
-              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails')">
+              <h3 class="panel-title"><i class="fa-solid fa-cart-plus"></i> Add New vendor  Bill</h3>
+              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'purchaserDetails', 'subPurchaserDetails')">
                 <i class="fa-solid fa-table-list"></i> View Purchase List
               </button>
             </div>
@@ -3467,7 +3447,7 @@
               <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:10px;">
                 <button type="button" id="btnCancelVendorEdit" class="btn-back" style="display:none;" onclick="cancelVendorEdit()">Cancel</button>
                 <button type="submit" id="btnSaveVendor" class="btn-action-primary" style="background:#2563eb; padding:10px 20px;">
-                  <i class="fa-solid fa-floppy-disk"></i> Save Purchaser Detail
+                  <i class="fa-solid fa-floppy-disk"></i> Save Purchaser Details
                 </button>
               </div>
             </form>
@@ -3930,7 +3910,7 @@
               <h3 class="panel-title" id="siteExpFormHeading">
                 <i class="fa-solid fa-money-bill-transfer"></i> Record New Site Expense
               </h3>
-              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('siteExpensesSubmenu', 'navSiteExpensesParent', 'siteExpenseDetails', 'subSiteExpenseDetails')">
+              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'siteExpenseDetails', 'subSiteExpenseDetails')">
                 <i class="fa-solid fa-table-list"></i> View Expense Details
               </button>
             </div>
@@ -4081,7 +4061,7 @@
                 <select id="siteExpCategoryFilter" onchange="filterSiteExpenses()" style="width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-weight:600; outline:none;"></select>
               </div>
 
-              <button class="btn-action-primary" onclick="openAndSwitch('siteExpensesSubmenu', 'navSiteExpensesParent', 'addSiteExpense', 'subAddSiteExpense')" style="background:#2563eb; padding:9px 16px;">
+              <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense')" style="background:#2563eb; padding:9px 16px;">
                 <i class="fa-solid fa-plus"></i> Add Expense
               </button>
             </div>
@@ -4116,7 +4096,7 @@
               <h3 class="panel-title" id="officeExpFormHeading">
                 <i class="fa-solid fa-file-invoice-dollar"></i> Record New Office Expense
               </h3>
-              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('officeExpensesSubmenu', 'navOfficeExpensesParent', 'officeExpenseDetails', 'subOfficeExpenseDetails')">
+              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'officeExpenseDetails', 'subOfficeExpenseDetails')">
                 <i class="fa-solid fa-table-list"></i> View Expense Details
               </button>
             </div>
@@ -4270,7 +4250,7 @@
                 <select id="officeExpCategoryFilter" onchange="filterOfficeExpenses()" style="width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-weight:600; outline:none;"></select>
               </div>
 
-              <button class="btn-action-primary" onclick="openAndSwitch('officeExpensesSubmenu', 'navOfficeExpensesParent', 'addOfficeExpense', 'subAddOfficeExpense')" style="background:#2563eb; padding:9px 16px;">
+              <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAddOfficeExpense')" style="background:#2563eb; padding:9px 16px;">
                 <i class="fa-solid fa-plus"></i> Add Office Expense
               </button>
             </div>
@@ -5107,7 +5087,7 @@
           break;
        case 'addPurchaser':
           document.getElementById('sectionAddPurchaser').classList.add('active');
-          pageHeading.textContent = 'Record New Purchaser';
+          pageHeading.textContent = 'Add New vendor';
           populatePurchaserCategoriesDropdown(); 
           generatePurchaseBillNo(); // <-- Yeh Auto Bill Number generate karega
           
@@ -5947,10 +5927,11 @@ async function confirmStatusChange() {
 
       // Transfer Mode mein: Is flat ke puranay customer ka record dhoond kar Previous Owner me bharein
       const ownershipType = document.getElementById('custOwnershipType')?.value;
-      if (ownershipType === 'Transfer') {
-        const prevCust = allCustomersData.find(c => c.flatId === flatId);
+      if (ownershipType === 'Transfer' || ownershipType === 'Transfer Ownership') {
+        // Flat ID ya Flat No dono se purana record search karein
+        const prevCust = allCustomersData.find(c => (c.flatId === flatId) || (c.flatNo && flat && c.flatNo === flat.flatNo));
         if (prevCust) {
-          const o = prevCust.firstOwner || prevCust.owner1 || {};
+          const o = prevCust.firstOwner || {};
           document.getElementById('prevOwnerName').value = o.name || '';
           document.getElementById('prevOwnerCnic').value = o.cnic || '';
           document.getElementById('prevOwnerMobile').value = o.mobile || '';
@@ -6007,32 +5988,33 @@ function handleOwnershipTypeChange() {
   const owner1NomineeTitle = document.getElementById('owner1NomineeTitle');
 
   // -------------------------------------------------------------
-  // 1. SINGLE OWNER MODE
+  // 1. SINGLE OWNER MODE (Sirf Ek Owner Ki Poori Details - No Share %)
   // -------------------------------------------------------------
   if (selectedType === 'Single Owner') {
-    owner1Box.style.display = 'block';
-    owner2Box.style.display = 'none';
+    owner1Box.style.display = 'block'; // Poora Owner Details Form On
+    owner2Box.style.display = 'none';  // 2nd Owner Mukammal Band
     transferBox.style.display = 'none';
     
-    // Percentage card ko Single Owner par chupa (hide) dein
+    // Share Ratio (%) Box ko Single Owner par mukammal chupa dein
     if (jointShareCard) jointShareCard.style.display = 'none';
 
     pill.innerHTML = '<i class="fa-solid fa-user"></i> Single Owner Mode Active';
     pill.style.background = '#dbeafe';
     pill.style.color = '#1d4ed8';
 
-    owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
-    owner1Badge.textContent = '100% Sole Owner';
+    // Labels par se "Owner 1" aur "%" hata kar saaf labels
+    owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner Details';
+    owner1Badge.textContent = 'Sole Owner';
     owner1Badge.style.background = '#dbeafe';
     owner1Badge.style.color = '#1d4ed8';
-    owner1NameLabel.textContent = 'Owner 1 Name *';
-    owner1PhotoLabel.textContent = 'Owner 1 Photo';
-    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
+    owner1NameLabel.textContent = 'Owner Full Name *';
+    owner1PhotoLabel.textContent = 'Owner Photo';
+    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin)';
 
-    // Required fields update karein
+    // Sirf is ek owner ke fields required karein
     setOwnerFieldsRequired(true, false, false);
-    populateAvailableFlatsDropdown(); // Sirf Available Flats list mein aayenge
-  } 
+    populateAvailableFlatsDropdown();
+  }
 
   // -------------------------------------------------------------
   // 2. JOINT OWNERSHIP MODE (% Share Ratio Basis)
@@ -6438,13 +6420,10 @@ function handleOwnershipTypeChange() {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-     const share1 = isJoint ? (parseFloat(document.getElementById('cust1Share').value) || 50) : 100;
-      const share2 = isJoint ? (parseFloat(document.getElementById('cust2Share').value) || 50) : 0;
-
-      // Owner 1 Details
+     // Owner Details Save (Single Owner / Transferee / Joint Partner 1)
+      customerRecord.hasFirstOwner = true; // <-- Hamesha true rahega
       customerRecord.firstOwner = {
         name: document.getElementById('cust1Name').value.trim(),
-        sharePercentage: share1, // <-- Share saved (e.g. 30%)
         fatherHusband: document.getElementById('cust1Father').value.trim(),
         cnic: document.getElementById('cust1Cnic').value.trim(),
         mobile: document.getElementById('cust1Mobile').value.trim(),
@@ -6459,12 +6438,13 @@ function handleOwnershipTypeChange() {
         }
       };
 
-      // Owner 2 Details (Joint only)
+      // Share Percentage aur 2nd Owner sirf tab save hoga jab JOINT OWNERSHIP ho:
       if (isJoint) {
+        customerRecord.firstOwner.sharePercentage = parseFloat(document.getElementById('cust1Share').value) || 50;
         customerRecord.hasSecondOwner = true;
         customerRecord.secondOwner = {
           name: document.getElementById('cust2Name').value.trim(),
-          sharePercentage: share2, // <-- Share saved (e.g. 70%)
+          sharePercentage: parseFloat(document.getElementById('cust2Share').value) || 50,
           fatherHusband: document.getElementById('cust2Father').value.trim(),
           cnic: document.getElementById('cust2Cnic').value.trim(),
           mobile: document.getElementById('cust2Mobile').value.trim(),
@@ -6479,6 +6459,7 @@ function handleOwnershipTypeChange() {
           }
         };
       } else {
+        // Single Owner mein na 2nd owner hoga aur na hi share %
         customerRecord.hasSecondOwner = false;
         customerRecord.secondOwner = null;
       }
@@ -6554,8 +6535,9 @@ function handleOwnershipTypeChange() {
       const bookingId = 'BH-' + (c.id ? c.id.substring(0, 6).toUpperCase() : '84920');
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      // Percentage Share Logic for PDF
+     // Ownership Type Logic for PDF
       const isJoint = (c.ownershipType === 'Joint Ownership' || c.hasSecondOwner);
+      const isTransfer = (c.ownershipType === 'Transfer' || c.ownershipType === 'Transfer Ownership');
       const share1 = isJoint ? (o1.sharePercentage || 50) : 100;
       const share2 = isJoint ? (o2.sharePercentage || 50) : 0;
 
@@ -6620,14 +6602,19 @@ function handleOwnershipTypeChange() {
             <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
               <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
                 <span style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase;">
-                  ${isJoint ? 'Owner 1 (Partner)' : 'Owner 1 (Primary Allottee)'}
+                  ${isTransfer ? 'New Owner (Transferee)' : (isJoint ? 'Owner 1 (Partner)' : 'Sole Owner (Allottee)')}
                 </span>
                 
-                <!-- Dynamic Share Percentage Badge -->
+                <!-- Dynamic Ownership Badge -->
                 <span style="font-size: 10px; font-weight: 800; background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 3px 10px; border-radius: 5px;">
-                  ${isJoint ? `Share: ${share1}%` : '100% Sole Owner'}
+                  ${isTransfer ? 'Transfer Case' : (isJoint ? `Share: ${share1}%` : '100% Sole Owner')}
                 </span>
               </div>
+
+<div>
+                  <span style="color:#93c5fd; font-size:10px; display:block;">OWNERSHIP</span>
+                  <strong>${isTransfer ? 'Transfer Case' : (isJoint ? `Joint (${share1}% / ${share2}%)` : 'Single Owner')}</strong>
+                </div>
 
               <div style="display: flex; gap: 12px; align-items: flex-start;">
                 ${o1.photo ? `
@@ -7201,12 +7188,72 @@ function isCanvasBlank(canvasId) {
         </div>
       `;
 
-      if (c.hasFirstOwner && c.firstOwner) {
-        html += renderOwnerProfileCard('1st Owner (Primary Applicant)', c.firstOwner, 'Primary Owner', '#2563eb');
+     // 1. Transfer Case Record Display (Agar Transfer ho)
+      const isTransfer = (c.ownershipType === 'Transfer' || c.ownershipType === 'Transfer Ownership');
+      if (isTransfer && c.transferDetails) {
+        const tr = c.transferDetails;
+        html += `
+          <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:18px; margin-bottom:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #fef3c7; padding-bottom:8px;">
+              <h4 style="color:#b45309; font-weight:800; font-size:15px;">
+                <i class="fa-solid fa-right-left"></i> Ownership Transfer & Previous Owner Record
+              </h4>
+              <span style="background:#fef3c7; color:#b45309; font-size:11.5px; font-weight:800; padding:4px 12px; border-radius:20px;">
+                Transfer Case
+              </span>
+            </div>
+            <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:12px;">
+              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #fde68a;">
+                <label style="font-size:11px; color:#92400e; font-weight:700;">TRANSFER DATE</label>
+                <div style="font-size:13.5px; font-weight:800; color:#0f172a;">${tr.transferDate || 'N/A'}</div>
+              </div>
+              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #fde68a;">
+                <label style="font-size:11px; color:#92400e; font-weight:700;">TRANSFER REF / DOC NO</label>
+                <div style="font-size:13.5px; font-weight:800; color:#0f172a;">${tr.transferDocNo || 'N/A'}</div>
+              </div>
+              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #fde68a;">
+                <label style="font-size:11px; color:#92400e; font-weight:700;">TRANSFER FEE PAID</label>
+                <div style="font-size:13.5px; font-weight:800; color:#16a34a;">Rs. ${Number(tr.transferFee || 0).toLocaleString()}</div>
+              </div>
+            </div>
+            <div style="background:#ffffff; border:1px solid #fde68a; border-radius:10px; padding:12px; margin-bottom:10px;">
+              <div style="font-size:12px; font-weight:800; color:#b45309; margin-bottom:6px;"><i class="fa-solid fa-user-clock"></i> Former / Previous Owner Information</div>
+              <div style="display:flex; gap:20px; flex-wrap:wrap; font-size:12.5px; color:#334155;">
+                <div><strong>Name:</strong> ${tr.previousOwnerName || 'N/A'}</div>
+                <div><strong>CNIC:</strong> ${tr.previousOwnerCnic || 'N/A'}</div>
+                <div><strong>Mobile:</strong> ${tr.previousOwnerMobile || 'N/A'}</div>
+              </div>
+            </div>
+            ${tr.transferRemarks ? `
+              <div style="font-size:12px; color:#78350f; background:#fef3c7; padding:8px 12px; border-radius:8px;">
+                <strong>Remarks / Notes:</strong> ${tr.transferRemarks}
+              </div>
+            ` : ''}
+          </div>
+        `;
       }
 
+      // 2. Owner 1 (Single Owner / Transferee New Owner / Joint Partner 1)
+      if (c.firstOwner) {
+        let cardTitle = 'Single Owner Details';
+        let cardBadge = '100% Sole Owner';
+        let badgeColor = '#2563eb';
+
+        if (isTransfer) {
+          cardTitle = 'New Owner Details (Transferee)';
+          cardBadge = 'Current Allottee';
+          badgeColor = '#16a34a';
+        } else if (c.hasSecondOwner) {
+          cardTitle = '1st Owner (Partner 1)';
+          cardBadge = `Share: ${c.firstOwner.sharePercentage || 50}%`;
+        }
+
+        html += renderOwnerProfileCard(cardTitle, c.firstOwner, cardBadge, badgeColor);
+      }
+
+      // 3. Owner 2 (Joint Partner)
       if (c.hasSecondOwner && c.secondOwner) {
-        html += renderOwnerProfileCard('2nd Owner (Co-Owner / Joint)', c.secondOwner, 'Joint Owner', '#0284c7');
+        html += renderOwnerProfileCard('2nd Owner (Co-Owner / Joint)', c.secondOwner, `Share: ${c.secondOwner.sharePercentage || 50}%`, '#0284c7');
       }
 
       if (c.thumbImpression) {
@@ -7264,112 +7311,114 @@ function isCanvasBlank(canvasId) {
     // Initial Demo Seed Data (Agar Firebase mein koi purchase na ho to screenshot wala data load ho)
     const seedPurchases = [
       { billNo: "PUR-001", date: "2025-09-12", displayDate: "12 Sep 2025", vendor: "ABC Cement", item: "Cement", qty: "500 Bags", rate: 1500, total: 750000, paid: 300000, remaining: 450000, status: "Partial", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-002", date: "2025-09-10", displayDate: "10 Sep 2025", vendor: "XYZ Steel", item: "Steel", qty: "2 Ton", rate: 250000, total: 500000, paid: 500000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-002", date: "2025-09-10", displayDate: "10 Sep 2025", vendor: "XYZ Steel", item: "Steel", qty: "2 Qty", rate: 250000, total: 500000, paid: 500000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
       { billNo: "PUR-003", date: "2025-09-08", displayDate: "08 Sep 2025", vendor: "Builders Bricks", item: "Bricks", qty: "10,000 Pcs", rate: 30, total: 300000, paid: 150000, remaining: 150000, status: "Partial", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-004", date: "2025-09-05", displayDate: "05 Sep 2025", vendor: "Pak Traders", item: "Sand", qty: "20 Ton", rate: 10000, total: 200000, paid: 200000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-004", date: "2025-09-05", displayDate: "05 Sep 2025", vendor: "Pak Traders", item: "Sand", qty: "20 Qty", rate: 10000, total: 200000, paid: 200000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
       { billNo: "PUR-005", date: "2025-09-02", displayDate: "02 Sep 2025", vendor: "ABC Cement", item: "Cement", qty: "300 Bags", rate: 1500, total: 450000, paid: 450000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-006", date: "2025-08-28", displayDate: "28 Aug 2025", vendor: "Liaqat Steel", item: "Steel", qty: "1 Ton", rate: 250000, total: 250000, paid: 250000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
+      { billNo: "PUR-006", date: "2025-08-28", displayDate: "28 Aug 2025", vendor: "Liaqat Steel", item: "Steel", qty: "1 Qty", rate: 250000, total: 250000, paid: 250000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
       { billNo: "PUR-007", date: "2025-08-25", displayDate: "25 Aug 2025", vendor: "Builders Bricks", item: "Bricks", qty: "5,000 Pcs", rate: 30, total: 150000, paid: 150000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
       { billNo: "PUR-008", date: "2025-08-20", displayDate: "20 Aug 2025", vendor: "Sunrise Suppliers", item: "Tiles", qty: "500 Box", rate: 1200, total: 600000, paid: 600000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" }
     ];
 
-    // 3. Purchase Form Submit Listener (For Multiple Items)
-    document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const editId = document.getElementById('purEditId').value;
-      const btn = document.getElementById('btnSavePurchaser');
+    // ========================================================
+// PURCHASE FORM SUBMIT LISTENER (Saves Unit with each item)
+// ========================================================
+document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const editId = document.getElementById('purEditId').value;
+  const btn = document.getElementById('btnSavePurchaser');
 
-      // Tamam items ko array mein jama karna
-      const itemsArray = [];
-      const displayItemNames = [];
-      const rows = document.getElementById('purchaseItemsContainer').children;
-      
-      if(rows.length === 0) {
-        alert("Bara-e-meherbani kam az kam ek item zaroor add karein!");
-        return;
-      }
+  const itemsArray = [];
+  const displayItemNames = [];
+  const rows = document.getElementById('purchaseItemsContainer').children;
+  
+  if (rows.length === 0) {
+    alert("Bara-e-meherbani kam az kam ek item zaroor add karein!");
+    return;
+  }
 
-      for(let i = 0; i < rows.length; i++) {
-        const itmName = rows[i].querySelector('.pur-item-select').value;
-        const itmQty = rows[i].querySelector('.pur-item-qty').value.trim();
-        const itmRate = parseFloat(rows[i].querySelector('.pur-item-rate').value) || 0;
-        const itmAmt = parseFloat(rows[i].querySelector('.pur-item-amount').value) || 0;
-        
-        if(!itmName) {
-          alert("Layn den (Item Category) select karna lazmi hai.");
-          return;
-        }
+  for (let i = 0; i < rows.length; i++) {
+    const itmName = rows[i].querySelector('.pur-item-select').value;
+    const itmQty = rows[i].querySelector('.pur-item-qty').value.trim();
+    const itmUnit = rows[i].querySelector('.pur-item-unit').value; // Unit value
+    const itmRate = parseFloat(rows[i].querySelector('.pur-item-rate').value) || 0;
+    const itmAmt = parseFloat(rows[i].querySelector('.pur-item-amount').value) || 0;
+    
+    if (!itmName) {
+      alert("Item Category select karna lazmi hai.");
+      return;
+    }
 
-        itemsArray.push({ item: itmName, qty: itmQty, rate: itmRate, amount: itmAmt });
-        displayItemNames.push(itmName);
-      }
+    itemsArray.push({ item: itmName, qty: itmQty, unit: itmUnit, rate: itmRate, amount: itmAmt });
+    displayItemNames.push(itmName);
+  }
 
-      const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
-      const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
-      const remaining = Math.max(0, total - paid);
-      const rawDate = document.getElementById('purDate').value;
-      
-      const dateObj = new Date(rawDate);
-      const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const total = parseFloat(document.getElementById('purTotalAmount').value) || 0;
+  const paid = parseFloat(document.getElementById('purPaidAmount').value) || 0;
+  const remaining = Math.max(0, total - paid);
+  const rawDate = document.getElementById('purDate').value;
+  
+  const dateObj = new Date(rawDate);
+  const formattedDate = dateObj.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      let status = 'Unpaid';
-      if (remaining <= 0) status = 'Paid';
-      else if (paid > 0 && remaining > 0) status = 'Partial';
+  let status = 'Unpaid';
+  if (remaining <= 0) status = 'Paid';
+  else if (paid > 0 && remaining > 0) status = 'Partial';
 
-      let combinedItemString = displayItemNames.join(', ');
-      if(displayItemNames.length > 2) {
-        combinedItemString = displayItemNames[0] + ' + ' + (displayItemNames.length - 1) + ' more';
-      }
+  let combinedItemString = displayItemNames.join(', ');
+  if (displayItemNames.length > 2) {
+    combinedItemString = displayItemNames[0] + ' + ' + (displayItemNames.length - 1) + ' more';
+  }
 
-      const purchaseData = {
-        billNo: document.getElementById('purBillNo').value.trim(),
-        date: rawDate,
-        displayDate: formattedDate,
-        project: document.getElementById('purProject').value,
-        vendor: document.getElementById('purVendor').value.trim(),
-        
-        itemsList: itemsArray,
-        item: combinedItemString,
-        qty: itemsArray.length > 1 ? "Multiple Items" : itemsArray[0].qty,
-        rate: itemsArray.length > 1 ? 0 : itemsArray[0].rate,
+  const purchaseData = {
+    billNo: document.getElementById('purBillNo').value.trim(),
+    date: rawDate,
+    displayDate: formattedDate,
+    project: document.getElementById('purProject').value,
+    vendor: document.getElementById('purVendor').value.trim(),
+    
+    itemsList: itemsArray,
+    item: combinedItemString,
+    qty: itemsArray.length > 1 ? "Multiple Items" : (itemsArray[0].qty + ' ' + itemsArray[0].unit),
+    rate: itemsArray.length > 1 ? 0 : itemsArray[0].rate,
 
-        total: total,
-        paid: paid,
-        remaining: remaining,
-        status: status,
-        paymentMethod: document.getElementById('purPaymentMethod').value,
-        notes: document.getElementById('purNotes').value.trim(),
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
+    total: total,
+    paid: paid,
+    remaining: remaining,
+    status: status,
+    paymentMethod: document.getElementById('purPaymentMethod').value,
+    notes: document.getElementById('purNotes').value.trim(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
 
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Bill...';
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving Bill...';
 
-      try {
-        if (editId) {
-          await db.collection('purchases').doc(editId).update(purchaseData);
-          alert('Purchase bill updated successfully!');
-        } else {
-          purchaseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-          await db.collection('purchases').add(purchaseData);
-          alert('Purchase bill recorded successfully!');
-        }
+  try {
+    if (editId) {
+      await db.collection('purchases').doc(editId).update(purchaseData);
+      alert('Purchase bill updated successfully!');
+    } else {
+      purchaseData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('purchases').add(purchaseData);
+      alert('Purchase bill recorded successfully!');
+    }
 
-       document.getElementById('purchaserForm').reset();
-        document.getElementById('purEditId').value = '';
-        document.getElementById('purchaseItemsContainer').innerHTML = '';
-        addPurchaseItemRow(); // Reset hone ke baad aik khali item dal jaye
-        generatePurchaseBillNo(); // <-- Form clear hote hi agla naya Bill No tyar
-        
-        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
-        openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails');
-      } catch (err) {
-        alert('Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-      }
-    });
-
+    document.getElementById('purchaserForm').reset();
+    document.getElementById('purEditId').value = '';
+    document.getElementById('purchaseItemsContainer').innerHTML = '';
+    addPurchaseItemRow();
+    generatePurchaseBillNo();
+    
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
+    // Account & Finance (paymentsSubmenu) ko open karega:
+    openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'purchaserDetails', 'subPurchaserDetails');
+  } catch (err) {
+    alert('Error: ' + err.message);
+  } finally {
+    btn.disabled = false;
+  }
+});
     // Load Purchases from Firestore with Date Filters
     function loadPurchaser() {
       // Default Date Range: Current Month (e.g. 01 Sep 2025 to End of Month)
@@ -8022,7 +8071,8 @@ function fixJointShareOnBlur(source) {
       document.getElementById('btnSaveSiteExpense').innerHTML = '<i class="fa-solid fa-check"></i> Update Expense';
       document.getElementById('btnCancelEditSiteExp').style.display = 'inline-block';
 
-      openAndSwitch('siteExpensesSubmenu', 'navSiteExpensesParent', 'addSiteExpense', 'subAddSiteExpense');
+      // Seedha Account & Finance ke Add Site Expense form par le jaye ga:
+      openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -8075,7 +8125,8 @@ function fixJointShareOnBlur(source) {
         }
 
         cancelSiteExpenseEdit();
-        openAndSwitch('siteExpensesSubmenu', 'navSiteExpensesParent', 'siteExpenseDetails', 'subSiteExpenseDetails');
+        // Save hone ke baad Account & Finance ki Site Expense Details par redirect karega:
+        openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'siteExpenseDetails', 'subSiteExpenseDetails');
       } catch(err) {
         alert('Error: ' + err.message);
       } finally {
@@ -8638,7 +8689,7 @@ function fixJointShareOnBlur(source) {
       }
     }
 
-    // 9. Edit Office Expense
+   // 9. Edit Office Expense
     function editOfficeExpense(id) {
       const exp = allOfficeExpensesData.find(x => x.id === id);
       if (!exp) return;
@@ -8656,7 +8707,8 @@ function fixJointShareOnBlur(source) {
       document.getElementById('btnSaveOfficeExpense').innerHTML = '<i class="fa-solid fa-check"></i> Update Expense';
       document.getElementById('btnCancelEditOfficeExp').style.display = 'inline-block';
 
-      openAndSwitch('officeExpensesSubmenu', 'navOfficeExpensesParent', 'addOfficeExpense', 'subAddOfficeExpense');
+      // Seedha Account & Finance ke Add Office Expense form par le jaye ga:
+      openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAddOfficeExpense');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -8710,7 +8762,8 @@ function fixJointShareOnBlur(source) {
         }
 
         cancelOfficeExpenseEdit();
-        openAndSwitch('officeExpensesSubmenu', 'navOfficeExpensesParent', 'officeExpenseDetails', 'subOfficeExpenseDetails');
+        // Save hone ke baad Account & Finance ki Office Expense Details par redirect karega:
+        openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'officeExpenseDetails', 'subOfficeExpenseDetails');
       } catch(err) {
         alert('Error: ' + err.message);
       } finally {
@@ -10180,13 +10233,12 @@ function renderPurchaserCategoriesPage() {
     });
 
 // ========================================================
-// FUNCTION 1: Naya Item Row Add Karne Ke Liye (Updated)
+// FUNCTION 1: Naya Item Row Add Karne Ke Liye (With Unit)
 // ========================================================
 function addPurchaseItemRow() {
   const container = document.getElementById('purchaseItemsContainer');
   const rowId = 'purRow_' + Date.now() + Math.floor(Math.random() * 1000);
   
-  // MASLA YAHAN THA: 'window.purchaserCategoriesList' ki jagah sirf 'purchaserCategoriesList' likha hai
   let optionsHtml = '<option value="">-- Select Item --</option>';
   if (typeof purchaserCategoriesList !== 'undefined' && purchaserCategoriesList.length > 0) {
     purchaserCategoriesList.forEach(cat => {
@@ -10194,10 +10246,11 @@ function addPurchaseItemRow() {
     });
   }
 
-  // Row ka design aur input fields
+  // Row design with Item Category, Qty, Unit, Rate, Amount
   const html = `
     <div id="${rowId}" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; background:#fff; padding:12px; border:1px dashed #cbd5e1; border-radius:10px; margin-bottom:10px;">
       
+      <!-- 1. Item Category -->
       <div style="flex:2; min-width:160px;">
         <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Item Category *</label>
         <select class="pur-item-select" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; background:#fff; color:#0f172a;">
@@ -10205,21 +10258,43 @@ function addPurchaseItemRow() {
         </select>
       </div>
       
-      <div style="flex:1; min-width:100px;">
+      <!-- 2. Quantity -->
+      <div style="flex:1; min-width:85px;">
         <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Qty *</label>
         <input type="text" class="pur-item-qty" placeholder="e.g. 50" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
       </div>
-      
+
+      <!-- 3. Unit Option Dropdown -->
       <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Unit *</label>
+        <select class="pur-item-unit" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; background:#fff; color:#0f172a; font-weight:600;">
+          <option value="Bags">Bags</option>
+          <option value="Qty">Qty</option>
+          <option value="Pcs">Pcs</option>
+          <option value="Box">Box</option>
+          <option value="Cft">Cft</option>
+          <option value="Sq.Ft">Sq.Ft</option>
+          <option value="Kg">Kg</option>
+          <option value="Liter">Liter</option>
+          <option value="Feet">Feet</option>
+          <option value="Rft">Rft</option>
+          <option value="Nos">Nos</option>
+        </select>
+      </div>
+      
+      <!-- 4. Rate -->
+      <div style="flex:1; min-width:95px;">
         <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Rate *</label>
         <input type="number" class="pur-item-rate" placeholder="e.g. 1500" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
       </div>
       
+      <!-- 5. Amount (Auto) -->
       <div style="flex:1; min-width:100px;">
         <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Amount (Rs)</label>
         <input type="number" class="pur-item-amount" readonly value="0" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:8px; font-size:13.5px; background:#f1f5f9; font-weight:800; color:#dc2626; outline:none;" />
       </div>
       
+      <!-- 6. Delete Row Button -->
       <div style="padding-bottom:1px;">
         <button type="button" onclick="removePurchaseItemRow('${rowId}')" style="background:#fee2e2; color:#dc2626; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; transition:0.2s;" title="Remove Item" onmouseover="this.style.background='#fecaca'" onmouseout="this.style.background='#fee2e2'">
           <i class="fa-solid fa-trash-can"></i>
@@ -10235,7 +10310,6 @@ function addPurchaseItemRow() {
     calcPurchaseTotalAuto();
   }
 }
-
 // ========================================================
 // FUNCTION 2: Dropdowns Update Karne Ke Liye (Updated)
 // ========================================================
@@ -10377,7 +10451,7 @@ function populatePurchaserCategoriesDropdown() {
     function cancelVendorEdit() {
       document.getElementById('vendorEntryForm').reset();
       document.getElementById('vendorEditId').value = '';
-      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchaser Detail';
+      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchaser Details';
       document.getElementById('btnCancelVendorEdit').style.display = 'none';
     }
 
@@ -10465,42 +10539,38 @@ function generatePurchaseBillNo() {
 }
 
 // ========================================================
-// VIEW PURCHASE BILL (Modal Open)
+// VIEW PURCHASE BILL (Displays Qty + Unit)
 // ========================================================
 function viewPurchaseBill(id) {
   const p = allPurchaserData.find(x => x.id === id);
   if (!p) return;
 
-  // Item List generate karna
   let itemsHtml = '';
   if (p.itemsList && p.itemsList.length > 0) {
     p.itemsList.forEach(itm => {
       itemsHtml += `
         <tr style="border-bottom:1px solid #e2e8f0;">
           <td style="padding:10px; color:#0f172a; font-weight:600;">${itm.item}</td>
-          <td style="padding:10px;">${itm.qty}</td>
+          <td style="padding:10px; font-weight:700;">${itm.qty} <span style="font-size:11px; color:#64748b;">${itm.unit || ''}</span></td>
           <td style="padding:10px;">Rs. ${Number(itm.rate).toLocaleString()}</td>
           <td style="padding:10px; font-weight:800; color:#0f172a;">Rs. ${Number(itm.amount).toLocaleString()}</td>
         </tr>
       `;
     });
   } else {
-    // Puranay data ka fallback jismein itemsList nahi tha
     itemsHtml = `
       <tr style="border-bottom:1px solid #e2e8f0;">
         <td style="padding:10px; color:#0f172a; font-weight:600;">${p.item || 'N/A'}</td>
-        <td style="padding:10px;">${p.qty || 'N/A'}</td>
+        <td style="padding:10px; font-weight:700;">${p.qty || 'N/A'}</td>
         <td style="padding:10px;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
         <td style="padding:10px; font-weight:800; color:#0f172a;">Rs. ${Number(p.total || 0).toLocaleString()}</td>
       </tr>
     `;
   }
 
-  // Status Badge Colors
   const badgeBg = p.status === 'Paid' ? '#dcfce7' : (p.status === 'Partial' ? '#fef3c7' : '#fee2e2');
   const badgeColor = p.status === 'Paid' ? '#15803d' : (p.status === 'Partial' ? '#b45309' : '#dc2626');
 
-  // Modal ka poora HTML structure
   const html = `
     <div style="display:flex; justify-content:space-between; margin-bottom: 20px; flex-wrap:wrap; gap:10px;">
       <div>
@@ -10521,7 +10591,7 @@ function viewPurchaseBill(id) {
         <thead>
           <tr style="background:#f1f5f9; color:#475569; border-bottom:1.5px solid #cbd5e1;">
             <th style="padding:10px 16px;">Material / Category</th>
-            <th style="padding:10px 16px;">Quantity</th>
+            <th style="padding:10px 16px;">Quantity & Unit</th>
             <th style="padding:10px 16px;">Rate</th>
             <th style="padding:10px 16px;">Amount</th>
           </tr>
@@ -10568,51 +10638,47 @@ function closePurchaseViewModal() {
 }
 
 // ========================================================
-// EDIT PURCHASE BILL (Form mein Data Pura Wapis Lana)
+// EDIT PURCHASE BILL (Calls helper with Unit)
 // ========================================================
 function editPurchaseBill(id) {
   const p = allPurchaserData.find(x => x.id === id);
   if (!p) return;
 
-  // Form Fields Populate
   document.getElementById('purEditId').value = p.id;
   document.getElementById('purBillNo').value = p.billNo || '';
   document.getElementById('purDate').value = p.date || '';
   document.getElementById('purProject').value = p.project || 'BILAL HEIGHTS';
   document.getElementById('purVendor').value = p.vendor || '';
   
-  // Items Clear karna
   const container = document.getElementById('purchaseItemsContainer');
   container.innerHTML = ''; 
 
-  // Agar naya format (Multiple items) hai to loop chalao
   if (p.itemsList && p.itemsList.length > 0) {
     p.itemsList.forEach(itm => {
-      addPurchaseItemRowWithValue(itm.item, itm.qty, itm.rate, itm.amount);
+      addPurchaseItemRowWithValue(itm.item, itm.qty, itm.unit || 'Bags', itm.rate, itm.amount);
     });
   } else {
-    // Agar purana single item hai
-    addPurchaseItemRowWithValue(p.item, p.qty, p.rate, p.total);
+    // Old single items fallback
+    addPurchaseItemRowWithValue(p.item, p.qty, 'Bags', p.rate, p.total);
   }
 
-  // Totals Populate
   document.getElementById('purTotalAmount').value = p.total || 0;
   document.getElementById('purPaidAmount').value = p.paid || 0;
   document.getElementById('purRemainingAmount').value = p.remaining || 0;
   document.getElementById('purPaymentMethod').value = p.paymentMethod || 'Cash';
   document.getElementById('purNotes').value = p.notes || '';
 
-  // Button text change
   const btn = document.getElementById('btnSavePurchaser');
   btn.innerHTML = '<i class="fa-solid fa-check"></i> Update Purchase Bill';
 
-  // Bill Edit form pe bhejna
   openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'addPurchaser', 'subAddPurchaser');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Helper: Edit ke waqt existing items ko add karne ka function
-function addPurchaseItemRowWithValue(itemVal, qtyVal, rateVal, amountVal) {
+// ========================================================
+// EDIT HELPER: EXISTING ITEM ROW WITH UNIT VALUE
+// ========================================================
+function addPurchaseItemRowWithValue(itemVal, qtyVal, unitVal, rateVal, amountVal) {
   const container = document.getElementById('purchaseItemsContainer');
   const rowId = 'purRow_' + Date.now() + Math.floor(Math.random() * 1000);
   
@@ -10626,6 +10692,14 @@ function addPurchaseItemRowWithValue(itemVal, qtyVal, rateVal, amountVal) {
      optionsHtml += `<option value="${itemVal}" selected>${itemVal}</option>`;
   }
 
+  // Unit Options
+  const unitsList = ["Bags", "Qty", "Pcs", "Box", "Cft", "Sq.Ft", "Kg", "Liter", "Feet", "Rft", "Nos"];
+  let unitOptionsHtml = '';
+  unitsList.forEach(u => {
+    const isUnitSelected = (u === unitVal) ? 'selected' : '';
+    unitOptionsHtml += `<option value="${u}" ${isUnitSelected}>${u}</option>`;
+  });
+
   const html = `
     <div id="${rowId}" style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap; background:#fff; padding:12px; border:1px dashed #cbd5e1; border-radius:10px; margin-bottom:10px;">
       <div style="flex:2; min-width:160px;">
@@ -10634,11 +10708,17 @@ function addPurchaseItemRowWithValue(itemVal, qtyVal, rateVal, amountVal) {
           ${optionsHtml}
         </select>
       </div>
-      <div style="flex:1; min-width:100px;">
+      <div style="flex:1; min-width:85px;">
         <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Qty *</label>
         <input type="text" class="pur-item-qty" value="${qtyVal || ''}" placeholder="e.g. 50" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
       </div>
       <div style="flex:1; min-width:100px;">
+        <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Unit *</label>
+        <select class="pur-item-unit" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; background:#fff; color:#0f172a; font-weight:600;">
+          ${unitOptionsHtml}
+        </select>
+      </div>
+      <div style="flex:1; min-width:95px;">
         <label style="font-size:12px; font-weight:600; color:#334155; margin-bottom:4px; display:block;">Rate *</label>
         <input type="number" class="pur-item-rate" value="${rateVal || ''}" placeholder="e.g. 1500" required oninput="calcPurchaseTotalAuto()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:8px; font-size:13.5px; outline:none; color:#0f172a;" />
       </div>
@@ -10718,7 +10798,7 @@ async function confirmQuickPayPurchase() {
 }
 
 // ========================================================
-// DOWNLOAD OFFICIAL PURCHASE BILL / INVOICE PDF
+// DOWNLOAD PURCHASE BILL PDF (With Unit included)
 // ========================================================
 function downloadPurchaseBillPDF(id) {
   const p = allPurchaserData.find(x => x.id === id);
@@ -10730,12 +10810,10 @@ function downloadPurchaseBillPDF(id) {
   const paid = Number(p.paid || 0);
   const remaining = Number(p.remaining || 0);
 
-  // Status Colors
   const isPaid = (p.status === 'Paid');
   const badgeBg = isPaid ? '#dcfce7' : (p.status === 'Partial' ? '#fef3c7' : '#fee2e2');
   const badgeColor = isPaid ? '#15803d' : (p.status === 'Partial' ? '#b45309' : '#dc2626');
 
-  // Items Table Rows banana (agar multiple items hon ya single)
   let itemsRowsHtml = '';
   if (p.itemsList && p.itemsList.length > 0) {
     p.itemsList.forEach((itm, idx) => {
@@ -10743,26 +10821,24 @@ function downloadPurchaseBillPDF(id) {
         <tr style="border-bottom: 1px solid #cbd5e1;">
           <td style="padding: 8px 10px; text-align: center; color: #64748b; font-weight: 700;">${idx + 1}</td>
           <td style="padding: 8px 12px; font-weight: 700; color: #0f172a;">${itm.item || 'N/A'}</td>
-          <td style="padding: 8px 12px; text-align: center;">${itm.qty || '-'}</td>
+          <td style="padding: 8px 12px; text-align: center; font-weight: 700;">${itm.qty || '-'} ${itm.unit || ''}</td>
           <td style="padding: 8px 12px; text-align: right;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
           <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #0f172a;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
         </tr>
       `;
     });
   } else {
-    // Puranay single-item records ka fallback
     itemsRowsHtml = `
       <tr style="border-bottom: 1px solid #cbd5e1;">
         <td style="padding: 8px 10px; text-align: center; color: #64748b; font-weight: 700;">1</td>
         <td style="padding: 8px 12px; font-weight: 700; color: #0f172a;">${p.item || 'General Material'}</td>
-        <td style="padding: 8px 12px; text-align: center;">${p.qty || '-'}</td>
+        <td style="padding: 8px 12px; text-align: center; font-weight: 700;">${p.qty || '-'}</td>
         <td style="padding: 8px 12px; text-align: right;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
         <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #0f172a;">Rs. ${total.toLocaleString()}</td>
       </tr>
     `;
   }
 
-  // Printable Design Wrapper
   const pdfWrapper = document.createElement('div');
   pdfWrapper.style.padding = '24px 28px';
   pdfWrapper.style.background = '#ffffff';
@@ -10771,8 +10847,6 @@ function downloadPurchaseBillPDF(id) {
 
   pdfWrapper.innerHTML = `
     <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
-      
-      <!-- Top Header -->
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
         <div style="display: flex; align-items: center; gap: 10px;">
           <div style="background: #0f2a59; color: #ffffff; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px;">BH</div>
@@ -10781,7 +10855,6 @@ function downloadPurchaseBillPDF(id) {
             <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Procurement & Material Purchase Invoice</div>
           </div>
         </div>
-
         <div style="text-align: right;">
           <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
             PURCHASE BILL
@@ -10792,7 +10865,6 @@ function downloadPurchaseBillPDF(id) {
         </div>
       </div>
 
-      <!-- Supplier & Project Info Bar -->
       <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <div>
           <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Supplier / Vendor Company</div>
@@ -10804,19 +10876,17 @@ function downloadPurchaseBillPDF(id) {
         </div>
       </div>
 
-      <!-- Meta Info Row -->
       <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; font-size: 11.5px;">
         <div><strong>Payment Method:</strong> ${p.paymentMethod || 'Cash'}</div>
         <div><strong>Payment Status:</strong> <span style="background:${badgeBg}; color:${badgeColor}; padding:2px 8px; border-radius:12px; font-weight:800; font-size:10.5px;">${p.status || 'Paid'}</span></div>
       </div>
 
-      <!-- Items Details Table -->
       <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 11.5px;">
         <thead>
           <tr style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;">
             <th style="padding: 8px 10px; width: 40px; text-align: center;">#</th>
             <th style="padding: 8px 12px; text-align: left;">ITEM / MATERIAL DESCRIPTION</th>
-            <th style="padding: 8px 12px; text-align: center;">QUANTITY</th>
+            <th style="padding: 8px 12px; text-align: center;">QUANTITY & UNIT</th>
             <th style="padding: 8px 12px; text-align: right;">RATE (Rs.)</th>
             <th style="padding: 8px 12px; text-align: right;">AMOUNT (Rs.)</th>
           </tr>
@@ -10826,7 +10896,6 @@ function downloadPurchaseBillPDF(id) {
         </tbody>
       </table>
 
-      <!-- Financial Totals Summary Card -->
       <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
           <div style="font-size: 10.5px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Bill Amount</div>
@@ -10844,7 +10913,6 @@ function downloadPurchaseBillPDF(id) {
         </div>
       </div>
 
-      <!-- Notes / Delivery Details (Agar mojood hon) -->
       ${p.notes ? `
       <div style="background: #fffbeb; border-left: 3px solid #f59e0b; padding: 8px 12px; margin-bottom: 20px; font-size: 11px;">
         <strong style="color: #92400e;">Notes / Remarks / Delivery Info:</strong>
@@ -10852,7 +10920,6 @@ function downloadPurchaseBillPDF(id) {
       </div>
       ` : ''}
 
-      <!-- Official Signatures -->
       <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 55px; padding: 0 14px;">
         <div style="text-align: center; width: 210px;">
           <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
@@ -10877,7 +10944,6 @@ function downloadPurchaseBillPDF(id) {
     </div>
   `;
 
-  // PDF Configuration & Download
   const opt = {
     margin: [0.25, 0.25, 0.25, 0.25],
     filename: `Purchase_Bill_${billNo}_${(p.vendor || 'Supplier').replace(/\s+/g, '_')}.pdf`,
@@ -10892,7 +10958,6 @@ function downloadPurchaseBillPDF(id) {
     alert('PDF library load nahi ho saki. Internet connection check karein.');
   }
 }
-
   </script>
 </body>
 </html>
