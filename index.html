@@ -3423,64 +3423,112 @@
           </div>
         </section>
 
-        <!-- ================= SECTION: ADD PURCHASER / VENDOR DETAILS ================= -->
+       <!-- ================= SECTION: MASTER ACCOUNTS DIRECTORY & LEDGERS ================= -->
         <section id="sectionVendorDetails" class="erp-section">
-          <!-- Add Vendor Form -->
+          <!-- Add Account Form -->
           <div class="card-panel">
             <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-truck-field" style="color:#2563eb;"></i> Add / Manage Purchaser (Vendor)</h3>
+              <h3 class="panel-title" id="accountFormHeading">
+                <i class="fa-solid fa-address-card" style="color:#2563eb;"></i> Create Master Account (One-Time Registration)
+              </h3>
+              <span style="font-size:11.5px; background:#dbeafe; color:#1d4ed8; font-weight:700; padding:4px 12px; border-radius:20px;">
+                Auto-Generates Live Ledger
+              </span>
             </div>
             
             <form id="vendorEntryForm">
               <input type="hidden" id="vendorEditId" value="" />
               
               <div class="form-grid-layout">
+                <!-- 1. Account Type / Designation -->
                 <div>
-                  <label>Company / Agency Name *</label>
-                  <input type="text" id="venCompany" placeholder="e.g. ABC Cement Co." required />
+                  <label>Account Type / Category *</label>
+                  <select id="accType" required style="font-weight:700; color:#1e3a8a;">
+                    <option value="Vendor / Supplier">Vendor / Supplier (Material / Stock)</option>
+                    <option value="Contractor / Thekedar">Contractor / Thekedar (Labour / Site)</option>
+                    <option value="Staff / Employee">Staff / Employee (Salary / Advance)</option>
+                    <option value="Other / Individual">Other / Individual Account</option>
+                  </select>
                 </div>
+
+                <!-- 2. Person / Company Name -->
                 <div>
-                  <label>Contact Person Name *</label>
-                  <input type="text" id="venName" placeholder="e.g. Muhammad Ali" required />
+                  <label>Person / Company Full Name *</label>
+                  <input type="text" id="accName" placeholder="e.g. ABC Cement Co. ya Tariq Contractor" required />
                 </div>
+
+                <!-- 3. Mobile Number (Duplicate Checker) -->
                 <div>
-                  <label>Mobile Number *</label>
-                  <input type="tel" id="venMobile" placeholder="e.g. 0300-1234567" required />
+                  <label>Mobile Number * (Unique)</label>
+                  <input type="tel" id="accMobile" placeholder="0300-1234567" required />
                 </div>
+
+                <!-- 4. CNIC (Optional) -->
                 <div>
-                  <label>Office Address</label>
-                  <input type="text" id="venAddress" placeholder="e.g. Main Market, Karachi" />
+                  <label>CNIC Number (Optional)</label>
+                  <input type="text" id="accCnic" placeholder="42101-XXXXXXX-X" maxlength="15" oninput="formatCnic(this)" />
+                </div>
+
+                <!-- 5. Address -->
+                <div class="form-group-full">
+                  <label>Address / Location</label>
+                  <input type="text" id="accAddress" placeholder="e.g. Shop # 12, Main Market, Karachi" />
+                </div>
+
+                <!-- 6. Opening Balance & Notes -->
+                <div>
+                  <label>Opening Balance (Rs.)</label>
+                  <input type="number" id="accOpeningBalance" placeholder="0" value="0" />
+                </div>
+
+                <div style="grid-column: span 2;">
+                  <label>Notes / Terms / Remarks</label>
+                  <input type="text" id="accNotes" placeholder="e.g. 15 Days credit limit ya Site Mazdoori contract" />
                 </div>
               </div>
 
-              <div style="margin-top:18px; display:flex; justify-content:flex-end; gap:10px;">
+              <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
                 <button type="button" id="btnCancelVendorEdit" class="btn-back" style="display:none;" onclick="cancelVendorEdit()">Cancel</button>
-                <button type="submit" id="btnSaveVendor" class="btn-action-primary" style="background:#2563eb; padding:10px 20px;">
-                  <i class="fa-solid fa-floppy-disk"></i> Save Purchaser Details
+                <button type="submit" id="btnSaveVendor" class="btn-action-primary" style="background:#2563eb; padding:11px 24px;">
+                  <i class="fa-solid fa-floppy-disk"></i> Save & Create Ledger
                 </button>
               </div>
             </form>
           </div>
 
-          <!-- Vendors Table List -->
+          <!-- Accounts Table List -->
           <div class="card-panel" style="margin-top: 20px;">
             <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-address-book"></i> Registered Purchasers / Vendors List</h3>
+              <h3 class="panel-title"><i class="fa-solid fa-book-bookmark"></i> Registered Accounts Directory & Ledgers</h3>
+              
+              <!-- Quick Filter by Type -->
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <select id="accTypeFilter" onchange="filterAccountsDirectory()" style="padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600;">
+                  <option value="ALL">All Account Types</option>
+                  <option value="Vendor / Supplier">Vendors / Suppliers</option>
+                  <option value="Contractor / Thekedar">Contractors</option>
+                  <option value="Staff / Employee">Staff / Employees</option>
+                  <option value="Other / Individual">Others</option>
+                </select>
+                <input type="text" id="accSearchInput" oninput="filterAccountsDirectory()" placeholder="Search by name, mobile, CNIC..." style="padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px;" />
+              </div>
             </div>
+
             <div class="table-container">
               <table class="erp-table">
                 <thead>
                   <tr>
                     <th style="width: 45px;">#</th>
-                    <th>Company Name</th>
-                    <th>Contact Person</th>
-                    <th>Mobile Number</th>
+                    <th>Account Title</th>
+                    <th>Type / Category</th>
+                    <th>Mobile</th>
+                    <th>CNIC</th>
                     <th>Address</th>
-                    <th style="text-align: center;">Actions</th>
+                    <th style="text-align: center; min-width: 200px;">Actions</th>
                   </tr>
                 </thead>
                 <tbody id="vendorTableBody">
-                  <tr><td colspan="6" style="text-align:center; padding:20px; color:var(--text-muted);">Loading purchasers...</td></tr>
+                  <tr><td colspan="7" style="text-align:center; padding:25px; color:var(--text-muted);">Loading accounts list...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -4812,6 +4860,21 @@
       </div>
     </div>
   </div>
+
+<!-- ================= AUTOMATIC LIVE ACCOUNT LEDGER MODAL ================= -->
+<div id="accountLedgerModal" class="modal-overlay" onclick="closeAccountLedgerModal(event)">
+  <div class="modal-card" style="max-width: 900px;" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="ledgerModalTitle"><i class="fa-solid fa-book-open-reader" style="color:#2563eb;"></i> Account Statement & Live Ledger</h3>
+      <button class="btn-close-modal" onclick="closeAccountLedgerModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <div class="modal-body" id="accountLedgerBody">
+      <!-- Dynamic Statement Content Auto Loads Here -->
+    </div>
+  </div>
+</div>
+
 <!-- ================= PURCHASE VIEW MODAL ================= -->
   <div id="purchaseViewModal" class="modal-overlay" onclick="closePurchaseViewModal(event)">
     <div class="modal-card" style="max-width: 750px;" onclick="event.stopPropagation()">
@@ -5092,7 +5155,7 @@
           break;
         case 'vendorDetails':
           document.getElementById('sectionVendorDetails').classList.add('active');
-          pageHeading.textContent = 'Add Purchaser / Vendor Details';
+          pageHeading.textContent = 'Account List';
           break;
        case 'addPurchaser':
           document.getElementById('sectionAddPurchaser').classList.add('active');
@@ -10341,11 +10404,11 @@ function populatePurchaserCategoriesDropdown() {
 }
 
 // ==========================================================
-    // PURCHASER / VENDOR MANAGEMENT JAVASCRIPT
+    // MASTER ACCOUNT DIRECTORY & LIVE AUTO-LEDGER SYSTEM
     // ==========================================================
     let allVendorsData = [];
 
-    // 1. Firebase se Vendors data mangwana
+    // 1. Firebase se Accounts Directory Load Karna
     function loadVendors() {
       db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot((snap) => {
         allVendorsData = [];
@@ -10353,70 +10416,132 @@ function populatePurchaserCategoriesDropdown() {
           allVendorsData.push({ id: doc.id, ...doc.data() });
         });
 
-        renderVendorTable();
-        populateVendorDropdown(); // Add Purchase form mein dropdown update karna
+        filterAccountsDirectory();
+        populateVendorDropdown(); // Add Purchase form dropdown update
       });
     }
 
-    // 2. Add Purchase Form mein Dropdown bharna
+    // 2. Dropdown Update for Purchases & Expenses
     function populateVendorDropdown() {
       const select = document.getElementById('purVendor');
       if (!select) return;
 
-      // Pehli purani value yaad rakhna taake edit karte waqt tabdeel na ho
       const currentVal = select.value;
-
       select.innerHTML = '<option value="">-- Select Purchaser / Vendor --</option>';
+
       allVendorsData.forEach(v => {
         const opt = document.createElement('option');
-        opt.value = v.company;
-        opt.textContent = `${v.company} (${v.name})`;
-        
-        if (v.company === currentVal) opt.selected = true;
+        const title = v.name || v.company;
+        opt.value = title;
+        opt.textContent = `${title} (${v.type || 'Vendor'}) - ${v.mobile}`;
+        if (title === currentVal) opt.selected = true;
         select.appendChild(opt);
       });
     }
 
-    // 3. Table mein Vendors show karna
-    function renderVendorTable() {
+    // 3. Render & Filter Accounts Directory Table
+    function filterAccountsDirectory() {
       const tbody = document.getElementById('vendorTableBody');
       if (!tbody) return;
 
-      if (allVendorsData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">Koi purchaser/vendor record mojood nahi. Naya add karein.</td></tr>`;
+      const typeFilter = document.getElementById('accTypeFilter')?.value || 'ALL';
+      const search = (document.getElementById('accSearchInput')?.value || '').toLowerCase().trim();
+
+      const filtered = allVendorsData.filter(acc => {
+        const accTitle = (acc.name || acc.company || '').toLowerCase();
+        const accMobile = (acc.mobile || '').toLowerCase();
+        const accCnic = (acc.cnic || '').toLowerCase();
+        const accType = acc.type || 'Vendor / Supplier';
+
+        const matchesType = (typeFilter === 'ALL' || accType === typeFilter);
+        const matchesSearch = !search || accTitle.includes(search) || accMobile.includes(search) || accCnic.includes(search);
+
+        return matchesType && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:25px; color:#64748b;">Koi account record nahi mila.</td></tr>`;
         return;
       }
 
       let html = '';
-      allVendorsData.forEach((v, idx) => {
+      filtered.forEach((v, idx) => {
+        const title = v.name || v.company || 'N/A';
+        const type = v.type || 'Vendor / Supplier';
+        
+        let typeBadgeClass = 'badge-available';
+        if (type.includes('Contractor')) typeBadgeClass = 'badge-progress';
+        if (type.includes('Staff')) typeBadgeClass = 'badge-booked';
+
         html += `
           <tr>
             <td style="font-weight:700; color:#475569;">${idx + 1}</td>
-            <td><strong style="color:#0f172a;">${v.company}</strong></td>
-            <td>${v.name}</td>
+            <td><strong style="color:#0f172a; font-size:13.5px;">${title}</strong></td>
+            <td><span class="badge-status ${typeBadgeClass}">${type}</span></td>
             <td><strong style="color:#2563eb;">${v.mobile}</strong></td>
-            <td>${v.address || '-'}</td>
+            <td>${v.cnic || '<span style="color:#94a3b8;">N/A</span>'}</td>
+            <td><span style="font-size:12px; color:#475569;">${v.address || '-'}</span></td>
             <td style="text-align: center;">
-              <button class="btn-tbl-edit" onclick="editVendor('${v.id}')" title="Edit"><i class="fa-solid fa-pen"></i> Edit</button>
-              <button class="btn-tbl-delete" onclick="deleteVendor('${v.id}')" title="Delete"><i class="fa-solid fa-trash-can"></i> Delete</button>
+              <div style="display:inline-flex; gap:6px; align-items:center;">
+                <!-- 1. LIVE AUTO LEDGER BUTTON -->
+                <button type="button" class="btn-action-primary" style="background:#0f2a59; padding:5px 11px; font-size:12px;" onclick="viewAccountLedger('${v.id}')" title="View Automatic Live Ledger">
+                  <i class="fa-solid fa-book-open"></i> Ledger
+                </button>
+
+                <!-- 2. EDIT BUTTON -->
+                <button type="button" class="btn-tbl-edit" style="padding:5px 9px;" onclick="editVendor('${v.id}')" title="Edit Account">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+
+                <!-- 3. DELETE BUTTON -->
+                <button type="button" class="btn-tbl-delete" style="padding:5px 9px;" onclick="deleteVendor('${v.id}')" title="Delete Account">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
             </td>
           </tr>
         `;
       });
+
       tbody.innerHTML = html;
     }
 
-    // 4. Vendor Form Save / Update karna
+    // 4. Save Account (With Unique Check to prevent duplicate creation)
     document.getElementById('vendorEntryForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const editId = document.getElementById('vendorEditId').value;
       const btn = document.getElementById('btnSaveVendor');
 
-      const vendorData = {
-        company: document.getElementById('venCompany').value.trim(),
-        name: document.getElementById('venName').value.trim(),
-        mobile: document.getElementById('venMobile').value.trim(),
-        address: document.getElementById('venAddress').value.trim(),
+      const name = document.getElementById('accName').value.trim();
+      const mobile = document.getElementById('accMobile').value.trim();
+      const type = document.getElementById('accType').value;
+      const cnic = document.getElementById('accCnic').value.trim();
+      const address = document.getElementById('accAddress').value.trim();
+      const openingBal = parseFloat(document.getElementById('accOpeningBalance').value) || 0;
+      const notes = document.getElementById('accNotes').value.trim();
+
+      // Duplicate Check (Phone or Name Match)
+      if (!editId) {
+        const duplicate = allVendorsData.find(v => 
+          (v.mobile && v.mobile.replace(/\D/g,'') === mobile.replace(/\D/g,'')) || 
+          (v.name && v.name.toLowerCase() === name.toLowerCase())
+        );
+
+        if (duplicate) {
+          alert(`Ye account pehle se mojood hai!\n\nName: ${duplicate.name || duplicate.company}\nMobile: ${duplicate.mobile}\nType: ${duplicate.type || 'Vendor'}\n\nEk person ya company ka account system mein sirf ek dafa banta hai.`);
+          return;
+        }
+      }
+
+      const accountData = {
+        name: name,
+        company: name,
+        type: type,
+        mobile: mobile,
+        cnic: cnic,
+        address: address,
+        openingBalance: openingBal,
+        notes: notes,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
@@ -10425,12 +10550,12 @@ function populatePurchaserCategoriesDropdown() {
 
       try {
         if (editId) {
-          await db.collection('purchaser_vendors').doc(editId).update(vendorData);
-          alert('Purchaser record update ho gaya!');
+          await db.collection('purchaser_vendors').doc(editId).update(accountData);
+          alert('Account details kamiyabi se update ho gayin!');
         } else {
-          vendorData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-          await db.collection('purchaser_vendors').add(vendorData);
-          alert('Naya Purchaser record shamil ho gaya!');
+          accountData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('purchaser_vendors').add(accountData);
+          alert(`Account "${name}" create ho gaya aur iska Auto-Ledger tayyar hai!`);
         }
         cancelVendorEdit();
       } catch(err) {
@@ -10440,39 +10565,205 @@ function populatePurchaserCategoriesDropdown() {
       }
     });
 
-    // 5. Vendor Edit karne ke liye Form mein data lana
+    // 5. Edit Account Helper
     function editVendor(id) {
       const v = allVendorsData.find(x => x.id === id);
       if (!v) return;
 
       document.getElementById('vendorEditId').value = v.id;
-      document.getElementById('venCompany').value = v.company;
-      document.getElementById('venName').value = v.name;
-      document.getElementById('venMobile').value = v.mobile;
-      document.getElementById('venAddress').value = v.address || '';
+      document.getElementById('accType').value = v.type || 'Vendor / Supplier';
+      document.getElementById('accName').value = v.name || v.company || '';
+      document.getElementById('accMobile').value = v.mobile || '';
+      document.getElementById('accCnic').value = v.cnic || '';
+      document.getElementById('accAddress').value = v.address || '';
+      document.getElementById('accOpeningBalance').value = v.openingBalance || 0;
+      document.getElementById('accNotes').value = v.notes || '';
 
-      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-check"></i> Update Detail';
+      document.getElementById('accountFormHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Master Account Details';
+      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-check"></i> Update Account';
       document.getElementById('btnCancelVendorEdit').style.display = 'inline-block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 6. Edit cancel karna aur form clear karna
     function cancelVendorEdit() {
       document.getElementById('vendorEntryForm').reset();
       document.getElementById('vendorEditId').value = '';
-      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchaser Details';
+      document.getElementById('accountFormHeading').innerHTML = '<i class="fa-solid fa-address-card" style="color:#2563eb;"></i> Create Master Account (One-Time Registration)';
+      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save & Create Ledger';
       document.getElementById('btnCancelVendorEdit').style.display = 'none';
     }
 
-    // 7. Vendor Delete karna
     async function deleteVendor(id) {
-      if (confirm('Kiya aap waqai is Purchaser/Vendor ko delete karna chahte hain?')) {
+      if (confirm('Kiya aap waqai is Account ko delete karna chahte hain?')) {
         try {
           await db.collection('purchaser_vendors').doc(id).delete();
         } catch(err) {
           alert('Delete failed: ' + err.message);
         }
       }
+    }
+
+    // ==========================================================
+    // 6. AUTOMATIC LIVE LEDGER CALCULATOR & VIEWER
+    // ==========================================================
+    function viewAccountLedger(accId) {
+      const acc = allVendorsData.find(x => x.id === accId);
+      if (!acc) return;
+
+      const accTitle = acc.name || acc.company;
+      const accType = acc.type || 'Vendor / Supplier';
+      const transactions = [];
+
+      // 1. Opening Balance
+      let runningBal = parseFloat(acc.openingBalance) || 0;
+      if (runningBal !== 0) {
+        transactions.push({
+          date: acc.createdAt ? new Date(acc.createdAt.toDate()).toISOString().split('T')[0] : 'Opening',
+          desc: 'Opening Balance (Initial Setup)',
+          ref: 'OPEN-BAL',
+          debit: runningBal > 0 ? runningBal : 0,
+          credit: runningBal < 0 ? Math.abs(runningBal) : 0,
+          balance: runningBal
+        });
+      }
+
+      // 2. Auto-fetch from Purchases (Supplier Bills)
+      allPurchaserData.forEach(pur => {
+        if (pur.vendor && pur.vendor.toLowerCase().trim() === accTitle.toLowerCase().trim()) {
+          const total = parseFloat(pur.total || pur.totalAmount) || 0;
+          const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
+
+          // Bill Added (Credit / Payable to Vendor)
+          if (total > 0) {
+            runningBal += total;
+            transactions.push({
+              date: pur.date || 'Recent',
+              desc: `Purchase Bill: ${pur.item || 'Materials'} (${pur.qty || ''})`,
+              ref: pur.billNo || 'PUR-BILL',
+              credit: total,
+              debit: 0,
+              balance: runningBal
+            });
+          }
+
+          // Payment Cleared (Debit)
+          if (paid > 0) {
+            runningBal -= paid;
+            transactions.push({
+              date: pur.date || 'Recent',
+              desc: `Payment Made via ${pur.paymentMethod || 'Cash'}`,
+              ref: `PAY-${pur.billNo || '001'}`,
+              credit: 0,
+              debit: paid,
+              balance: runningBal
+            });
+          }
+        }
+      });
+
+      // 3. Auto-fetch from Office Expenses (Staff Salaries / Others)
+      allOfficeExpensesData.forEach(off => {
+        if (off.paidTo && off.paidTo.toLowerCase().trim() === accTitle.toLowerCase().trim()) {
+          const total = parseFloat(off.totalAmount) || 0;
+          const paid = parseFloat(off.paidAmount) || 0;
+
+          if (total > 0) {
+            runningBal += total;
+            transactions.push({
+              date: off.date,
+              desc: `Expense Bill: ${off.category} - ${off.description}`,
+              ref: 'OFF-EXP',
+              credit: total,
+              debit: 0,
+              balance: runningBal
+            });
+          }
+
+          if (paid > 0) {
+            runningBal -= paid;
+            transactions.push({
+              date: off.date,
+              desc: `Payment Paid: ${off.category}`,
+              ref: 'OFF-PAY',
+              credit: 0,
+              debit: paid,
+              balance: runningBal
+            });
+          }
+        }
+      });
+
+      // Render Ledger Table & Top Banner
+      let rowsHtml = '';
+      if (transactions.length === 0) {
+        rowsHtml = `<tr><td colspan="7" style="text-align:center; padding:25px; color:#64748b;">No transactions recorded yet. Live ledger is initialized.</td></tr>`;
+      } else {
+        transactions.forEach((t, i) => {
+          rowsHtml += `
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="font-weight:600; color:#64748b;">${i + 1}</td>
+              <td><strong>${t.date}</strong></td>
+              <td>${t.desc}</td>
+              <td style="color:#2563eb; font-weight:700;">${t.ref}</td>
+              <td style="color:#16a34a; font-weight:700; text-align:right;">${t.debit > 0 ? 'Rs. ' + t.debit.toLocaleString() : '-'}</td>
+              <td style="color:#dc2626; font-weight:700; text-align:right;">${t.credit > 0 ? 'Rs. ' + t.credit.toLocaleString() : '-'}</td>
+              <td style="font-weight:900; color:#0f172a; text-align:right;">Rs. ${t.balance.toLocaleString()}</td>
+            </tr>
+          `;
+        });
+      }
+
+      const modalHtml = `
+        <div style="background:#0f2a59; color:#fff; padding:18px 22px; border-radius:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="font-size:11px; text-transform:uppercase; color:#93c5fd; font-weight:700;">${accType}</div>
+            <h2 style="font-size:22px; font-weight:900; margin:2px 0;">${accTitle}</h2>
+            <div style="font-size:12px; color:#cbd5e1;">Mobile: <strong>${acc.mobile}</strong> &nbsp;|&nbsp; CNIC: <strong>${acc.cnic || 'N/A'}</strong></div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; text-transform:uppercase; color:#93c5fd; font-weight:700;">Current Net Balance</div>
+            <div style="font-size:24px; font-weight:900; color:${runningBal > 0 ? '#fca5a5' : '#86efac'};">
+              Rs. ${runningBal.toLocaleString()}
+            </div>
+            <div style="font-size:11px; color:#cbd5e1;">${runningBal > 0 ? '(Payable / Dena Hai)' : '(Settled / No Dues)'}</div>
+          </div>
+        </div>
+
+        <div class="table-container" style="max-height:350px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:10px;">
+          <table class="erp-table">
+            <thead>
+              <tr style="background:#f8fafc; position:sticky; top:0; z-index:2;">
+                <th style="width:35px;">#</th>
+                <th>Date</th>
+                <th>Transaction Description</th>
+                <th>Ref No.</th>
+                <th style="text-align:right; color:#166534;">Debit (Paid)</th>
+                <th style="text-align:right; color:#991b1b;">Credit (Bills)</th>
+                <th style="text-align:right;">Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <span style="font-size:12px; color:#64748b;">
+            <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Yeh ledger automatic purchases aur expenses se link hai.
+          </span>
+          <button type="button" class="btn-action-primary" style="background:#059669;" onclick="closeAccountLedgerModal()">
+            <i class="fa-solid fa-check"></i> Close Ledger
+          </button>
+        </div>
+      `;
+
+      document.getElementById('accountLedgerBody').innerHTML = modalHtml;
+      document.getElementById('accountLedgerModal').classList.add('active');
+    }
+
+    function closeAccountLedgerModal(e) {
+      document.getElementById('accountLedgerModal').classList.remove('active');
     }
 
 // ========================================================
