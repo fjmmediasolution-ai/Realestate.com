@@ -1941,19 +1941,19 @@
             </div>
             
             <div class="submenu" id="purchaserSubmenu">
-              <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Add Purchaser Details</span>
-              </a>
-              <a class="submenu-item" id="subAddPurchaser" onclick="switchSection('addPurchaser', this)">
-                <span class="dot-bullet">•</span>
-                <span>Add New vendor</span>
-              </a>
-              <a class="submenu-item" id="subPurchaserCategories" onclick="switchSection('purchaserCategories', this)">
-                <span class="dot-bullet">•</span>
-                <span>Purchases Category</span>
-              </a>
-            </div>
+  <a class="submenu-item" id="subAddPurchaser" onclick="switchSection('addPurchaser', this)">
+    <span class="dot-bullet">•</span>
+    <span>Add Purchase</span>
+  </a>
+  <a class="submenu-item" id="subPurchaserDetails" onclick="switchSection('purchaserDetails', this)">
+    <span class="dot-bullet">•</span>
+    <span>Purchases Detail</span>
+  </a>
+  <a class="submenu-item" id="subPurchaserCategories" onclick="switchSection('purchaserCategories', this)">
+    <span class="dot-bullet">•</span>
+    <span>Purchases Category</span>
+  </a>
+</div>
           </div>
 
           <!-- 6. Account & Finance Dropdown (Payments, Purchases, Site & Office Expenses) -->
@@ -1967,21 +1967,30 @@
             </div>
             
             <div class="submenu" id="paymentsSubmenu">
-              <!-- Payments -->
-              <a class="submenu-item" id="subAddPayment" onclick="switchSection('addPayment', this)">
-                <span class="dot-bullet">•</span>
-                <span>Collect New Payment</span>
-              </a>
-              <a class="submenu-item" id="subPaymentDetails" onclick="switchSection('paymentDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Payment Details & Ledger</span>
-              </a>
+  <!-- Payments -->
+  <a class="submenu-item" id="subAddPayment" onclick="switchSection('addPayment', this)">
+    <span class="dot-bullet">•</span>
+    <span>Collect New Payment</span>
+  </a>
+  <a class="submenu-item" id="subPaymentDetails" onclick="switchSection('paymentDetails', this)">
+    <span class="dot-bullet">•</span>
+    <span>Payment Details & Ledger</span>
+  </a>
 
-              <!-- Purchases Detail -->
-              <a class="submenu-item" id="subPurchaserDetails" onclick="switchSection('purchaserDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Purchases Detail</span>
-              </a>
+  <!-- Purchaser / Vendor Details -->
+  <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
+    <span class="dot-bullet">•</span>
+    <span>Account List </span>
+  </a>
+
+  <!-- Site Expenses -->
+  <a class="submenu-item" id="subAddSiteExpense" onclick="switchSection('addSiteExpense', this)">
+    <span class="dot-bullet">•</span>
+    <span>Add Site Expense</span>
+  </a>
+              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'purchaserDetails', 'subPurchaserDetails')">
+  <i class="fa-solid fa-table-list"></i> View Purchase List
+</button>
 
               <!-- Site Expenses -->
               <a class="submenu-item" id="subAddSiteExpense" onclick="switchSection('addSiteExpense', this)">
@@ -3317,7 +3326,7 @@
         <section id="sectionAddPurchaser" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-cart-plus"></i> Add New vendor  Bill</h3>
+              <h3 class="panel-title"><i class="fa-solid fa-cart-plus"></i> Add Purchase  Bill</h3>
               <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'purchaserDetails', 'subPurchaserDetails')">
                 <i class="fa-solid fa-table-list"></i> View Purchase List
               </button>
@@ -5087,7 +5096,7 @@
           break;
        case 'addPurchaser':
           document.getElementById('sectionAddPurchaser').classList.add('active');
-          pageHeading.textContent = 'Add New vendor';
+          pageHeading.textContent = 'Add Purchase';
           populatePurchaserCategoriesDropdown(); 
           generatePurchaseBillNo(); // <-- Yeh Auto Bill Number generate karega
           
@@ -7411,8 +7420,8 @@ document.getElementById('purchaserForm').addEventListener('submit', async (e) =>
     generatePurchaseBillNo();
     
     btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Purchase Bill';
-    // Account & Finance (paymentsSubmenu) ko open karega:
-    openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'purchaserDetails', 'subPurchaserDetails');
+// Purchases Menu (purchaserSubmenu) ko open karega:
+openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'subPurchaserDetails');
   } catch (err) {
     alert('Error: ' + err.message);
   } finally {
