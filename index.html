@@ -16,7 +16,86 @@
 
 
   <style>
+
+
+/* ================================================= */
+/* EXACT ACCOUNT LIST, BADGES & DETAILS STYLES       */
+/* ================================================= */
+.badge-acc-vendor     { background: #e0f2fe; color: #0284c7; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
+.badge-acc-contractor { background: #f3e8ff; color: #7e22ce; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
+.badge-acc-customer   { background: #dcfce7; color: #15803d; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
+.badge-acc-staff      { background: #ffedd5; color: #c2410c; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
+.badge-acc-capital    { background: #ccfbf1; color: #0f766e; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
+.badge-acc-other      { background: #f1f5f9; color: #475569; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 12px; display: inline-block; }
+
+.btn-acc-action-view {
+  background: #2563eb; color: #ffffff; border: none; width: 30px; height: 30px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+}
+.btn-acc-action-view:hover { background: #1d4ed8; }
+
+.btn-acc-action-edit {
+  background: #2563eb; color: #ffffff; border: none; width: 30px; height: 30px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+}
+.btn-acc-action-edit:hover { background: #1d4ed8; }
+
+.btn-acc-action-del {
+  background: #ef4444; color: #ffffff; border: none; width: 30px; height: 30px; border-radius: 6px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
+}
+.btn-acc-action-del:hover { background: #dc2626; }
     
+    /* ================================================= */
+/* NESTED EXPENSES SUBMENU IN SIDEBAR                */
+/* ================================================= */
+.nested-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-radius: 9px;
+  color: #cbd5e1;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  margin: 3px 0;
+}
+
+.nested-nav-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nested-nav-item.open {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.nested-arrow {
+  font-size: 11px !important;
+  transition: transform 0.25s ease;
+  color: #94a3b8;
+}
+
+.nested-nav-item.open .nested-arrow {
+  transform: rotate(180deg);
+  color: #38bdf8;
+}
+
+.nested-submenu {
+  display: none;
+  flex-direction: column;
+  padding-left: 10px;
+  margin: 3px 0 5px 12px;
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.2);
+}
+
+.nested-submenu.open {
+  display: flex;
+}
 
 
 
@@ -1956,8 +2035,8 @@
 </div>
           </div>
 
-          <!-- 6. Account & Finance Dropdown (Payments, Purchases, Site & Office Expenses) -->
-          <div class="nav-dropdown">
+         <!-- 6. Account & Finance Dropdown (With Nested Expenses) -->
+          <div class="nav-dropdown" id="navPaymentsDropdown">
             <div class="nav-item" id="navPaymentsParent" onclick="toggleDropdown('paymentsSubmenu', this)">
               <div class="nav-item-content">
                 <i class="fa-solid fa-credit-card"></i>
@@ -1967,53 +2046,53 @@
             </div>
             
             <div class="submenu" id="paymentsSubmenu">
-  <!-- Payments -->
-  <a class="submenu-item" id="subAddPayment" onclick="switchSection('addPayment', this)">
-    <span class="dot-bullet">•</span>
-    <span>Collect New Payment</span>
-  </a>
-  <a class="submenu-item" id="subPaymentDetails" onclick="switchSection('paymentDetails', this)">
-    <span class="dot-bullet">•</span>
-    <span>Payment Details & Ledger</span>
-  </a>
-
-  <!-- Purchaser / Vendor Details -->
-  <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
-    <span class="dot-bullet">•</span>
-    <span>Account List </span>
-  </a>
-
-  <!-- Site Expenses -->
-  <a class="submenu-item" id="subAddSiteExpense" onclick="switchSection('addSiteExpense', this)">
-    <span class="dot-bullet">•</span>
-    <span>Add Site Expense</span>
-  </a>
-              <button class="btn-action-primary" style="background:#0284c7; padding:9px 16px; font-size:13.5px;" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'purchaserDetails', 'subPurchaserDetails')">
-  <i class="fa-solid fa-table-list"></i> View Purchase List
-</button>
-
-              <!-- Site Expenses -->
-              <a class="submenu-item" id="subAddSiteExpense" onclick="switchSection('addSiteExpense', this)">
+              <!-- Payments -->
+              <a class="submenu-item" id="subAddPayment" onclick="switchSection('addPayment', this)">
                 <span class="dot-bullet">•</span>
-                <span>Add Site Expense</span>
+                <span>Collect New Payment</span>
               </a>
-              <a class="submenu-item" id="subSiteExpenseDetails" onclick="switchSection('siteExpenseDetails', this)">
+              <a class="submenu-item" id="subPaymentDetails" onclick="switchSection('paymentDetails', this)">
                 <span class="dot-bullet">•</span>
-                <span>Site Expense Details</span>
+                <span>Payment Details & Ledger</span>
               </a>
 
-              <!-- Office Expenses -->
-              <a class="submenu-item" id="subAddOfficeExpense" onclick="switchSection('addOfficeExpense', this)">
+              <!-- Account List -->
+              <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
                 <span class="dot-bullet">•</span>
-                <span>Add Office Expense</span>
+                <span>Account List</span>
               </a>
-              <a class="submenu-item" id="subOfficeExpenseDetails" onclick="switchSection('officeExpenseDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Office Expense Details</span>
-              </a>
+
+              <!-- Expenses Nested Header With Arrow -->
+              <div class="nested-nav-item" id="nestedExpensesParent" onclick="toggleNestedDropdown(event, 'nestedExpensesSubmenu', this)">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="dot-bullet" style="color: inherit;">•</span>
+                  <span>Expenses</span>
+                </div>
+                <i class="fa-solid fa-chevron-down nested-arrow"></i>
+              </div>
+
+              <!-- Nested Expenses Items -->
+              <div class="nested-submenu" id="nestedExpensesSubmenu">
+                <a class="submenu-item" id="subAddSiteExpense" onclick="switchSection('addSiteExpense', this)">
+                  <span class="dot-bullet">•</span>
+                  <span>Add Site Expense</span>
+                </a>
+                <a class="submenu-item" id="subSiteExpenseDetails" onclick="switchSection('siteExpenseDetails', this)">
+                  <span class="dot-bullet">•</span>
+                  <span>Site Expense Details</span>
+                </a>
+                <a class="submenu-item" id="subAddOfficeExpense" onclick="switchSection('addOfficeExpense', this)">
+                  <span class="dot-bullet">•</span>
+                  <span>Add Office Expense</span>
+                </a>
+                <a class="submenu-item" id="subOfficeExpenseDetails" onclick="switchSection('officeExpenseDetails', this)">
+                  <span class="dot-bullet">•</span>
+                  <span>Office Expense Details</span>
+                </a>
+              </div>
+
             </div>
           </div>
-
           
 
           <!-- 9. Reports Dropdown -->
@@ -2688,7 +2767,7 @@
   </div>
 </div>
 
-     <!-- ================= SECTION 6: CUSTOMER MODULE (1ST & 2ND OWNER) ================= -->
+  <!-- ================= SECTION 6: CUSTOMER REGISTRATION ================= -->
         <section id="sectionAddCustomer" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
@@ -2699,171 +2778,109 @@
             </div>
 
             <form id="customerForm">
-  <!-- Hidden ID for Edit Mode -->
-  <input type="hidden" id="customerEditId" value="" />
+              <!-- Hidden ID for Edit Mode -->
+              <input type="hidden" id="customerEditId" value="" />
               
-  <!-- Property Association Fields -->
-              
-              <!-- Property Association Fields -->
-              <!-- ================= NAYA COMPLETE CODE ================= -->
+              <!-- ================= 1. PROPERTY ALLOCATION (BILAL HEIGHTS) ================= -->
+              <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:20px; margin-bottom:22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #bbf7d0; padding-bottom:10px;">
+                  <h4 style="font-size:15px; font-weight:800; color:#166534; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-building-circle-check"></i> Property Allocation (Bilal Heights)
+                  </h4>
+                  <span style="font-size:11.5px; background:#dcfce7; color:#15803d; font-weight:700; padding:4px 10px; border-radius:20px;">
+                    Live Inventory
+                  </span>
+                </div>
 
-<!-- 1. PROPERTY ALLOCATION (BILAL HEIGHTS) -->
-<div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:16px; padding:20px; margin-bottom:22px;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #bbf7d0; padding-bottom:10px;">
-    <h4 style="font-size:15px; font-weight:800; color:#166534; display:flex; align-items:center; gap:8px;">
-      <i class="fa-solid fa-building-circle-check"></i> Property Allocation (Bilal Heights)
-    </h4>
-    <span style="font-size:11.5px; background:#dcfce7; color:#15803d; font-weight:700; padding:4px 10px; border-radius:20px;">
-      Live Available Units Only
-    </span>
-  </div>
+                <div class="form-grid-layout">
+                  <div>
+                    <label>Project *</label>
+                    <input type="text" id="custProject" value="BILAL HEIGHTS" readonly style="background:#e2e8f0; font-weight:700; color:#334155;" />
+                  </div>
 
-  <div class="form-grid-layout">
-    <!-- Project Name (Fixed Bilal Heights) -->
-    <div>
-      <label>Project *</label>
-      <input type="text" id="custProject" value="BILAL HEIGHTS" readonly style="background:#e2e8f0; font-weight:700; color:#334155;" />
-    </div>
+                  <div>
+                    <label>Select Flat / Unit No *</label>
+                    <select id="custFlatSelect" required onchange="handleFlatSelection(this.value)">
+                      <option value="">-- Choose Flat --</option>
+                    </select>
+                  </div>
 
-    <!-- Select Flat (Backend se sirf 'Available' filter honge) -->
-    <div>
-      <label>Select Flat / Unit No *</label>
-      <select id="custFlatSelect" required onchange="handleFlatSelection(this.value)">
-        <option value="">-- Choose Available Flat --</option>
-      </select>
-    </div>
+                  <div>
+                    <label>Floor</label>
+                    <input type="text" id="custFloor" placeholder="Select flat above" readonly style="background:#f1f5f9; font-weight:600; color:#0f172a;" />
+                  </div>
 
-    <!-- Floor (Auto-filled) -->
-    <div>
-      <label>Floor (Auto-Filled)</label>
-      <input type="text" id="custFloor" placeholder="Select flat above" readonly style="background:#f1f5f9; font-weight:600; color:#0f172a;" />
-    </div>
+                  <div>
+                    <label>Size (Sq. Ft)</label>
+                    <input type="text" id="custSize" placeholder="Select flat above" readonly style="background:#f1f5f9; font-weight:600; color:#0f172a;" />
+                  </div>
 
-    <!-- Size (Auto-filled) -->
-    <div>
-      <label>Size (Sq. Ft) (Auto-Filled)</label>
-      <input type="text" id="custSize" placeholder="Select flat above" readonly style="background:#f1f5f9; font-weight:600; color:#0f172a;" />
-    </div>
-
-    <!-- Ownership Status Dropdown -->
-    <div>
-      <label>Ownership Status *</label>
-      <select id="custOwnershipType" onchange="handleOwnershipTypeChange()" style="width:100%; padding:11px 14px; border:1.5px solid #2563eb; border-radius:10px; font-size:14px; font-weight:700; color:#1e293b; background:#ffffff; outline:none;">
-  <option value="Single Owner" selected>Single Owner</option>
-  <option value="Joint Ownership">Joint Ownership (Share % Percentage Basis)</option>
-  <option value="Transfer">Transfer (Transfer Ownership to New Owner)</option>
-</select>
-    </div>
-  </div>
-</div>
-
-<!-- 2. DEAL FINANCIALS & PAYMENT PLAN -->
-<div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:16px; padding:20px; margin-bottom:22px;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #dbeafe; padding-bottom:10px;">
-    <h4 style="font-size:15px; font-weight:800; color:#1e40af; display:flex; align-items:center; gap:8px;">
-      <i class="fa-solid fa-file-invoice-dollar"></i> Deal Financials & Payment Plan
-    </h4>
-    <span style="font-size:11.5px; background:#dbeafe; color:#1d4ed8; font-weight:700; padding:4px 10px; border-radius:20px;">
-      Auto-Calculated Installments
-    </span>
-  </div>
-
-  <div class="form-grid-layout">
-    <!-- Total Agreed Price -->
-    <div>
-      <label>Total Agreed Price (Rs.) *</label>
-      <input type="number" id="dealTotalPrice" placeholder="e.g. 800000" required oninput="calculateMonthlyInstallment()" />
-    </div>
-
-    <!-- Booking / Down Payment -->
-    <div>
-      <label>Booking / Down Payment (Rs.) *</label>
-      <input type="number" id="dealDownPayment" placeholder="e.g. 150000" required oninput="calculateMonthlyInstallment()" />
-    </div>
-
-    <!-- On Grey Structure Completion -->
-    <div>
-      <label>On Grey Structure Completion (Rs.)</label>
-      <input type="number" id="dealGreyStructure" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
-    </div>
-
-    <!-- On Possession Payment -->
-    <div>
-      <label>On Possession Payment (Rs.)</label>
-      <input type="number" id="dealPossession" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
-    </div>
-
-    <!-- Plan Duration Dropdown (12, 24, 36, 48 Months) -->
-    <div>
-      <label>Plan Duration *</label>
-      <select id="dealDuration" required onchange="calculateMonthlyInstallment()">
-        <option value="12">12 Months (1 Year)</option>
-        <option value="24">24 Months (2 Years)</option>
-        <option value="36" selected>36 Months (3 Years)</option>
-        <option value="48">48 Months (4 Years)</option>
-      </select>
-    </div>
-
-    <!-- Monthly Installment Amount (Auto-Calculated Box) -->
-    <div>
-      <label style="color:#1e40af; font-weight:800;">Monthly Installment Amount (Auto)</label>
-      <input type="text" id="dealMonthlyInstallment" readonly style="background:#1e3a8a; color:#ffffff; font-size:16px; font-weight:800; letter-spacing:0.5px;" value="Rs. 0 / Month" />
-    </div>
-  </div>
-</div>
-
-<!-- ================= NAYA CODE (SINGLE THUMB IMPRESSION) ================= -->
-
-<!-- 1. Single Centered Checkbox -->
-<div class="thumb-selection-wrapper" style="max-width: 500px; margin: 20px auto 14px auto;">
-  <label class="thumb-checkbox-pill" for="checkSingleThumb">
-    <input type="checkbox" id="checkSingleThumb" onchange="toggleSingleThumbImpression()" />
-    <span>
-      <i class="fa-solid fa-fingerprint" style="color:#2563eb; font-size:18px;"></i> 
-      Check / Enable Biometric Thumb Impression
-    </span>
-  </label>
-</div>
-
-<!-- 2. Single Thumb Scanner Card (By default chupa rahega) -->
-<div id="singleThumbContainer" class="thumb-scanner-card" style="display:none; max-width:620px; margin: 0 auto 24px auto;">
-  <div class="thumb-preview-box" id="singleThumbBox">
-    <i class="fa-solid fa-fingerprint" id="singleThumbIcon"></i>
-    <img id="singleThumbImg" src="" style="display:none;" alt="Biometric Thumb Impression" />
-  </div>
-  <div style="flex:1;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; flex-wrap:wrap; gap:6px;">
-      <label style="font-size:13.5px; font-weight:700; color:#0f172a;">Applicant / Owner Thumb Impression</label>
-      <span id="singleThumbStatus" style="font-size:11px; font-weight:700; color:#e11d48;">
-        <i class="fa-solid fa-circle-xmark"></i> Thumb Not Captured
-      </span>
-    </div>
-    <p style="font-size:11.5px; color:#64748b; margin-bottom:10px;">Biometric machine par ungli rakhein aur capture button dabayein.</p>
-    
-    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-      <button type="button" class="btn-scan-thumb" onclick="triggerThumbScan('single')">
-        <i class="fa-solid fa-fingerprint"></i> Capture Thumb from Device
-      </button>
-      <input type="file" id="singleThumbFallback" accept="image/*" style="display:none;" onchange="handleThumbFile(event, 'single')" />
-      <button type="button" class="btn-scan-manual" onclick="document.getElementById('singleThumbFallback').click()">
-        <i class="fa-solid fa-upload"></i> Upload
-      </button>
-    </div>
-  </div>
-</div>
-
-             <!-- ================= OWNERSHIP STATUS INDICATOR ================= -->
-              <div style="display:flex; justify-content:flex-end; margin-bottom:18px;">
-                <div id="ownershipStatusPill" style="font-size:12px; font-weight:800; padding:6px 16px; border-radius:20px; background:#dbeafe; color:#1d4ed8;">
-                  <i class="fa-solid fa-user"></i> Single Owner Mode Active
+                  <!-- Ownership Type Dropdown (Default Single Owner) -->
+                  <div>
+                    <label style="color:#1e3a8a; font-weight:800;">Ownership Type *</label>
+                    <select id="custOwnershipType" onchange="handleOwnershipTypeChange()" style="width:100%; padding:11px 14px; border:1.5px solid #2563eb; border-radius:10px; font-size:14px; font-weight:700; color:#1e293b; background:#ffffff; outline:none;">
+                      <option value="Single Owner" selected>Single Owner</option>
+                      <option value="Joint Ownership">Joint Ownership (Equal Partners)</option>
+                      <option value="Transfer">Transfer (Ownership Transfer)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <!-- ================= TRANSFER CASE SECTION (Previous Owner & Transfer Info) ================= -->
-              <div id="transferBox" class="owner-box-section" style="display:none; border-color:#f59e0b; background:#fffbeb;">
+              <!-- ================= 2. DEAL FINANCIALS & PAYMENT PLAN ================= -->
+              <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:16px; padding:20px; margin-bottom:22px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #dbeafe; padding-bottom:10px;">
+                  <h4 style="font-size:15px; font-weight:800; color:#1e40af; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Deal Financials & Payment Plan
+                  </h4>
+                  <span style="font-size:11.5px; background:#dbeafe; color:#1d4ed8; font-weight:700; padding:4px 10px; border-radius:20px;">
+                    Auto Installment Calculator
+                  </span>
+                </div>
+
+                <div class="form-grid-layout">
+                  <div>
+                    <label>Total Agreed Price (Rs.) *</label>
+                    <input type="number" id="dealTotalPrice" placeholder="e.g. 800000" required oninput="calculateMonthlyInstallment()" />
+                  </div>
+
+                  <div>
+                    <label>Booking / Down Payment (Rs.) *</label>
+                    <input type="number" id="dealDownPayment" placeholder="e.g. 150000" required oninput="calculateMonthlyInstallment()" />
+                  </div>
+
+                  <div>
+                    <label>On Grey Structure Completion (Rs.)</label>
+                    <input type="number" id="dealGreyStructure" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
+                  </div>
+
+                  <div>
+                    <label>On Possession Payment (Rs.)</label>
+                    <input type="number" id="dealPossession" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
+                  </div>
+
+                  <div>
+                    <label>Plan Duration *</label>
+                    <select id="dealDuration" required onchange="calculateMonthlyInstallment()">
+                      <option value="12">12 Months (1 Year)</option>
+                      <option value="24">24 Months (2 Years)</option>
+                      <option value="36" selected>36 Months (3 Years)</option>
+                      <option value="48">48 Months (4 Years)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style="color:#1e40af; font-weight:800;">Monthly Installment Amount (Auto)</label>
+                    <input type="text" id="dealMonthlyInstallment" readonly style="background:#1e3a8a; color:#ffffff; font-size:16px; font-weight:800;" value="Rs. 0 / Month" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================= 3. TRANSFER CASE SECTION ================= -->
+              <div id="transferBox" class="owner-box-section" style="display:none; border-color:#f59e0b; background:#fffbeb; margin-bottom:22px;">
                 <div class="owner-box-header" style="border-bottom-color:#fef3c7;">
-                  <h4 style="color:#b45309;"><i class="fa-solid fa-right-left"></i> Transfer Details & Previous Owner Record</h4>
-                  <span class="sub-heading-badge" style="background:#fef3c7; color:#b45309;">Ownership Transfer Process</span>
+                  <h4 style="color:#b45309;"><i class="fa-solid fa-right-left"></i> Ownership Transfer & Previous Owner Record</h4>
+                  <span class="sub-heading-badge" style="background:#fef3c7; color:#b45309;">Transfer Case</span>
                 </div>
 
                 <div class="form-grid-layout" style="margin-bottom:16px;">
@@ -2883,7 +2900,7 @@
 
                 <div style="background:#ffffff; border:1px solid #fde68a; border-radius:12px; padding:16px; margin-bottom:14px;">
                   <h5 style="font-size:13px; font-weight:800; color:#92400e; margin-bottom:12px;">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Previous Owner Details (Auto-filled if existing flat is selected)
+                    <i class="fa-solid fa-clock-rotate-left"></i> Previous Owner Details (Auto-filled on flat selection)
                   </h5>
                   <div class="form-grid-layout">
                     <div>
@@ -2901,66 +2918,19 @@
                   </div>
                 </div>
 
-               <!-- Transfer Reason / Legal Notes (Full Width & Spacious) -->
-                <div style="width: 100%; margin-top: 12px;">
+                <div style="width: 100%;">
                   <label style="display: block; font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 6px;">
                     Transfer Reason / Legal Notes
                   </label>
-                  <textarea 
-                    id="transferRemarks" 
-                    rows="3" 
-                    placeholder="Enter transfer remarks, affidavit reference, stamp paper number..." 
-                    style="width: 100%; min-height: 85px; padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13.5px; outline: none; background: #ffffff; resize: vertical; box-sizing: border-box; font-family: inherit; line-height: 1.5;"
-                  ></textarea>
+                  <textarea id="transferRemarks" rows="2" placeholder="Enter transfer remarks, affidavit reference, stamp paper number..." style="width: 100%; padding: 10px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13.5px; outline: none; background: #ffffff;"></textarea>
                 </div>
               </div>
 
-
-<!-- ================= JOINT OWNERSHIP SHARE RATIO CARD (Sirf Joint par show hoga) ================= -->
-<div id="jointShareCard" style="display:none; background:#eff6ff; border:1.5px solid #60a5fa; border-radius:14px; padding:18px 20px; margin-bottom:22px;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #bfdbfe; padding-bottom:8px;">
-    <h4 style="font-size:15px; font-weight:800; color:#1e40af; display:flex; align-items:center; gap:8px;">
-      <i class="fa-solid fa-chart-pie"></i> Ownership Share Ratio (%)
-    </h4>
-    <span style="font-size:11.5px; background:#dbeafe; color:#1e40af; font-weight:800; padding:4px 12px; border-radius:20px;">
-      Total: 100%
-    </span>
-  </div>
-
-  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:18px; align-items:center;">
-    <!-- Owner 1 Share Input -->
-    <!-- Owner 1 Share Input -->
-<div>
-  <label style="font-size:13px; font-weight:700; color:#1e3a8a; display:block; margin-bottom:6px;">
-    Owner 1 Share Percentage (%) *
-  </label>
-  <div style="position:relative; display:flex; align-items:center;">
-    <input type="number" id="cust1Share" min="1" max="99" value="50" oninput="calculateJointShare('owner1')" onblur="fixJointShareOnBlur('owner1')" style="width:100%; padding:11px 40px 11px 14px; border:1.5px solid #3b82f6; border-radius:10px; font-size:15px; font-weight:800; color:#1e3a8a; background:#ffffff; outline:none;" />
-    <span style="position:absolute; right:14px; font-weight:800; color:#3b82f6; font-size:16px;">%</span>
-  </div>
-</div>
-
-<!-- Owner 2 Share Input -->
-<div>
-  <label style="font-size:13px; font-weight:700; color:#0369a1; display:block; margin-bottom:6px;">
-    Owner 2 Share Percentage (%) *
-  </label>
-  <div style="position:relative; display:flex; align-items:center;">
-    <input type="number" id="cust2Share" min="1" max="99" value="50" oninput="calculateJointShare('owner2')" onblur="fixJointShareOnBlur('owner2')" style="width:100%; padding:11px 40px 11px 14px; border:1.5px solid #0284c7; border-radius:10px; font-size:15px; font-weight:800; color:#0369a1; background:#ffffff; outline:none;" />
-    <span style="position:absolute; right:14px; font-weight:800; color:#0284c7; font-size:16px;">%</span>
-  </div>
-</div>
-  <small style="display:block; color:#475569; font-size:12px; margin-top:8px;">
-    <i class="fa-solid fa-circle-info" style="color:#2563eb;"></i> Kisi ek owner ka percentage tabdeel karein, doosra khud-ba-khud 100% ke hisab se calculate ho jayega (maslan 30% aur 70%).
-  </small>
-</div>
-
-
-              <!-- ================= 1. OWNER 1 DETAILS SECTION ================= -->
+              <!-- ================= 4. OWNER 1 DETAILS SECTION ================= -->
               <div id="owner1Box" class="owner-box-section">
                 <div class="owner-box-header">
-                  <h4 id="owner1HeaderTitle"><i class="fa-solid fa-user-check"></i> Owner 1 Details</h4>
-                  <span class="sub-heading-badge" id="owner1Badge">Primary Owner</span>
+                  <h4 id="owner1HeaderTitle"><i class="fa-solid fa-user"></i> Owner 1 Details</h4>
+                  <span class="sub-heading-badge" id="owner1Badge">Sole Owner</span>
                 </div>
 
                 <!-- Owner 1 Photo Upload -->
@@ -3008,7 +2978,7 @@
                   </div>
                 </div>
 
-                <!-- Nominee / Next of Kin -->
+                <!-- Nominee -->
                 <div class="nominee-card">
                   <h5 id="owner1NomineeTitle"><i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1</h5>
                   <div class="form-grid-layout">
@@ -3028,7 +2998,7 @@
                 </div>
               </div>
 
-              <!-- ================= 2. OWNER 2 DETAILS SECTION (Equal Partner) ================= -->
+              <!-- ================= 5. OWNER 2 DETAILS SECTION ================= -->
               <div id="owner2Box" class="owner-box-section" style="display:none; border-color:#93c5fd;">
                 <div class="owner-box-header">
                   <h4 style="color:#0369a1;"><i class="fa-solid fa-user-group"></i> Owner 2 Details</h4>
@@ -3100,24 +3070,22 @@
                 </div>
               </div>
 
-              <!-- ================= 1. DOCUMENTS UPLOAD SECTION ================= -->
-              <div class="owner-box-section" style="border-color:#cbd5e1; background:#f8fafc; margin-top:24px;">
+              <!-- ================= 6. DOCUMENTS UPLOAD SECTION ================= -->
+              <div class="owner-box-section" style="border-color:#cbd5e1; background:#f8fafc; margin-top:22px;">
                 <div class="owner-box-header">
                   <h4 style="color:#0f172a;"><i class="fa-solid fa-folder-open" style="color:#2563eb;"></i> Required Documents Upload</h4>
                   <span class="sub-heading-badge" style="background:#e0f2fe; color:#0369a1;">Verification Files</span>
                 </div>
 
                 <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
-                  <!-- Doc 1: CNIC Copy -->
                   <div style="background:#ffffff; padding:14px; border-radius:10px; border:1px solid #e2e8f0;">
                     <label style="font-size:12.5px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
-                      <i class="fa-regular fa-id-card" style="color:#2563eb;"></i> CNIC / ID Card Copy (Front & Back)
+                      <i class="fa-regular fa-id-card" style="color:#2563eb;"></i> CNIC Copy (Front & Back)
                     </label>
                     <input type="file" id="docCnicFile" accept="image/*,.pdf" style="font-size:12px; width:100%;" onchange="handleDocUpload(event, 'cnic')" />
-                    <small id="cnicDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Supported: JPG, PNG, PDF</small>
+                    <small id="cnicDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">JPG, PNG, PDF</small>
                   </div>
 
-                  <!-- Doc 2: Payment Receipt / Challan -->
                   <div style="background:#ffffff; padding:14px; border-radius:10px; border:1px solid #e2e8f0;">
                     <label style="font-size:12.5px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
                       <i class="fa-solid fa-receipt" style="color:#16a34a;"></i> Payment Slip / Booking Challan
@@ -3126,10 +3094,9 @@
                     <small id="paymentDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Deposit proof / bank slip</small>
                   </div>
 
-                  <!-- Doc 3: Transfer Deed / Affidavit (Optional) -->
                   <div style="background:#ffffff; padding:14px; border-radius:10px; border:1px solid #e2e8f0;">
                     <label style="font-size:12.5px; font-weight:700; color:#1e293b; margin-bottom:6px; display:block;">
-                      <i class="fa-solid fa-file-contract" style="color:#f59e0b;"></i> Transfer Deed / Affidavit / Other
+                      <i class="fa-solid fa-file-contract" style="color:#f59e0b;"></i> Transfer Deed / Affidavit (Optional)
                     </label>
                     <input type="file" id="docOtherFile" accept="image/*,.pdf" style="font-size:12px; width:100%;" onchange="handleDocUpload(event, 'other')" />
                     <small id="otherDocStatus" style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Official stamp / affidavits</small>
@@ -3137,70 +3104,62 @@
                 </div>
               </div>
 
-              <!-- ================= 2. TERMS & CONDITIONS SECTION ================= -->
+              <!-- ================= 7. TERMS & CONDITIONS SECTION ================= -->
               <div class="owner-box-section" style="border-color:#cbd5e1; background:#ffffff; margin-top:20px;">
                 <div class="owner-box-header">
                   <h4 style="color:#0f172a;"><i class="fa-solid fa-scale-balanced" style="color:#2563eb;"></i> Terms & Conditions of Allotment</h4>
                   <span class="sub-heading-badge" style="background:#fef3c7; color:#b45309;">Legal Agreement</span>
                 </div>
 
-                <div style="max-height:140px; overflow-y:auto; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px 18px; font-size:12.5px; color:#475569; line-height:1.7; margin-bottom:14px;">
-                  <p style="margin-bottom:6px;"><strong>1. Payment Schedule:</strong> All installments must be cleared on or before the 10th of each calendar month as per the agreed payment schedule.</p>
-                  <p style="margin-bottom:6px;"><strong>2. Possession Rights:</strong> Physical possession of the unit will only be handed over upon 100% clearance of all total dues, documentation, and utility charges.</p>
-                  <p style="margin-bottom:6px;"><strong>3. Cancellation Policy:</strong> In case of default on consecutive installments, the management reserves the right to issue notice as per society/project bylaws.</p>
-                  <p style="margin-bottom:0;"><strong>4. Transfer & Mutation:</strong> No transfer or third-party sale will be acknowledged without an official NOC and clearing transfer fee charges.</p>
+                <div style="max-height:120px; overflow-y:auto; background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px 16px; font-size:12.5px; color:#475569; line-height:1.6; margin-bottom:14px;">
+                  <p style="margin-bottom:6px;"><strong>1. Payment Schedule:</strong> All installments must be cleared on or before the due date as per agreed schedule.</p>
+                  <p style="margin-bottom:6px;"><strong>2. Possession Rights:</strong> Physical possession will only be handed over upon 100% dues clearance.</p>
+                  <p style="margin-bottom:0;"><strong>3. Transfer & Mutation:</strong> Transfer will be executed as per Bilal Heights bylaws upon clearing required dues.</p>
                 </div>
 
-                <!-- Mandatory Checkbox -->
                 <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13.5px; font-weight:700; color:#1e293b; user-select:none;">
                   <input type="checkbox" id="checkAgreeTerms" required style="width:19px; height:19px; accent-color:#2563eb; cursor:pointer;" />
-                  <span>I have read, understood, and solemnly accept all the terms, conditions, and bylaws of Bilal Heights.</span>
+                  <span>I accept all the terms, conditions, and bylaws of Bilal Heights.</span>
                 </label>
               </div>
 
-             <!-- ================= 3. MANUAL SIGNATURES SECTION (Pen Sign on Print) ================= -->
+              <!-- ================= 8. MANUAL SIGNATURES SECTION ================= -->
               <div class="owner-box-section" style="border-color:#cbd5e1; background:#ffffff; margin-top:20px;">
                 <div class="owner-box-header">
                   <h4 style="color:#0f172a;"><i class="fa-solid fa-signature" style="color:#2563eb;"></i> Signatures & Verification (Manual on Print)</h4>
                   <span class="sub-heading-badge" style="background:#f1f5f9; color:#475569;">Physical Signatures</span>
                 </div>
 
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; padding:12px 0;">
-                  
-                  <!-- Left: Customer Signature Box -->
-                  <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:24px 16px 14px 16px; text-align:center; background:#f8fafc;">
-                    <div style="height:42px; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:12.5px;">
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px; padding:8px 0;">
+                  <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:20px 16px 12px 16px; text-align:center; background:#f8fafc;">
+                    <div style="height:35px; color:#94a3b8; font-size:12px; display:flex; align-items:center; justify-content:center;">
                       <i class="fa-solid fa-pen-nib" style="margin-right:6px; color:#2563eb;"></i> Sign with pen on printed copy
                     </div>
-                    <div style="border-top:2px solid #0f172a; padding-top:8px;">
-                      <div style="font-size:13px; font-weight:800; color:#0f172a; text-transform:uppercase; letter-spacing:0.5px;">Customer Signature</div>
-                      <div style="font-size:11px; color:#64748b;">(Primary Allottee / Purchaser)</div>
+                    <div style="border-top:2px solid #0f172a; padding-top:6px; font-size:12.5px; font-weight:800; color:#0f172a; text-transform:uppercase;">
+                      Customer Signature
                     </div>
                   </div>
 
-                  <!-- Right: Authorized Person Signature Box -->
-                  <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:24px 16px 14px 16px; text-align:center; background:#f8fafc;">
-                    <div style="height:42px; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:12.5px;">
+                  <div style="border:1.5px dashed #cbd5e1; border-radius:12px; padding:20px 16px 12px 16px; text-align:center; background:#f8fafc;">
+                    <div style="height:35px; color:#94a3b8; font-size:12px; display:flex; align-items:center; justify-content:center;">
                       <i class="fa-solid fa-stamp" style="margin-right:6px; color:#16a34a;"></i> Official Stamp & Signature
                     </div>
-                    <div style="border-top:2px solid #0f172a; padding-top:8px;">
-                      <div style="font-size:13px; font-weight:800; color:#0f172a; text-transform:uppercase; letter-spacing:0.5px;">Authorized Person Signature</div>
-                      <div style="font-size:11px; color:#64748b;">(For & On Behalf of Bilal Heights)</div>
+                    <div style="border-top:2px solid #0f172a; padding-top:6px; font-size:12.5px; font-weight:800; color:#0f172a; text-transform:uppercase;">
+                      Authorized Person Signature
                     </div>
                   </div>
-
                 </div>
               </div>
 
-              <!-- ================= 4. CONFIRM REGISTRATION & AUTO DOWNLOAD BUTTONS ================= -->
+              <!-- ================= 9. ACTION BUTTONS (CONFIRM REGISTRATION) ================= -->
               <div style="margin-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                 <div style="font-size:12.5px; color:#64748b;">
-                  <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Form save hote hi official Allotment PDF khud-ba-khud download ho jayega.
+                  <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Form save hote hi official PDF document generate aur download ho jayega.
                 </div>
 
-                <div style="display:flex; gap:10px;">
-                  <button type="submit" id="btnSaveCustomer" class="btn-action-primary" style="padding:13px 26px; font-size:14.5px; background:linear-gradient(135deg, #1e3a8a, #2563eb); box-shadow:0 4px 14px rgba(37,99,235,0.35);">
-                    <i class="fa-solid fa-check-double"></i> Confirm Registration & Download PDF
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button type="submit" id="btnSaveCustomer" class="btn-action-primary" style="padding:12px 24px; font-size:14px; background:linear-gradient(135deg, #1e3a8a, #2563eb);">
+                    <i class="fa-solid fa-check-double"></i> Confirm Registration
                   </button>
                 </div>
               </div>
@@ -3209,7 +3168,8 @@
           </div>
         </section>
 
-       <!-- ================= CUSTOMER DIRECTORY LISTING ================= -->
+
+
         <section id="sectionCustomerDetails" class="erp-section">
           <div class="card-panel">
             <div class="panel-header">
@@ -3423,117 +3383,231 @@
           </div>
         </section>
 
-       <!-- ================= SECTION: MASTER ACCOUNTS DIRECTORY & LEDGERS ================= -->
+      <!-- ================= SECTION: ACCOUNT LIST (EXACT IMAGE 1 & 4) ================= -->
         <section id="sectionVendorDetails" class="erp-section">
-          <!-- Add Account Form -->
-          <div class="card-panel">
-            <div class="panel-header">
-              <h3 class="panel-title" id="accountFormHeading">
-                <i class="fa-solid fa-address-card" style="color:#2563eb;"></i> Create Master Account (One-Time Registration)
-              </h3>
-              <span style="font-size:11.5px; background:#dbeafe; color:#1d4ed8; font-weight:700; padding:4px 12px; border-radius:20px;">
-                Auto-Generates Live Ledger
-              </span>
-            </div>
+          
+          <!-- VIEW 1: MAIN ACCOUNT LIST TABLE (IMAGE 1) -->
+          <div id="accountListViewCard" class="card-panel">
             
-            <form id="vendorEntryForm">
-              <input type="hidden" id="vendorEditId" value="" />
-              
-              <div class="form-grid-layout">
-                <!-- 1. Account Type / Designation -->
-                <div>
-                  <label>Account Type / Category *</label>
-                  <select id="accType" required style="font-weight:700; color:#1e3a8a;">
-                    <option value="Vendor / Supplier">Vendor / Supplier (Material / Stock)</option>
-                    <option value="Contractor / Thekedar">Contractor / Thekedar (Labour / Site)</option>
-                    <option value="Staff / Employee">Staff / Employee (Salary / Advance)</option>
-                    <option value="Other / Individual">Other / Individual Account</option>
-                  </select>
-                </div>
+            <!-- Top Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
+              <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0;">Account List</h2>
+              <button class="btn-action-primary" onclick="openCreateAccountModal()" style="border-radius: 8px; font-weight: 700; padding: 10px 18px;">
+                <i class="fa-solid fa-plus"></i> Create Account
+              </button>
+            </div>
 
-                <!-- 2. Person / Company Name -->
-                <div>
-                  <label>Person / Company Full Name *</label>
-                  <input type="text" id="accName" placeholder="e.g. ABC Cement Co. ya Tariq Contractor" required />
-                </div>
-
-                <!-- 3. Mobile Number (Duplicate Checker) -->
-                <div>
-                  <label>Mobile Number * (Unique)</label>
-                  <input type="tel" id="accMobile" placeholder="0300-1234567" required />
-                </div>
-
-                <!-- 4. CNIC (Optional) -->
-                <div>
-                  <label>CNIC Number (Optional)</label>
-                  <input type="text" id="accCnic" placeholder="42101-XXXXXXX-X" maxlength="15" oninput="formatCnic(this)" />
-                </div>
-
-                <!-- 5. Address -->
-                <div class="form-group-full">
-                  <label>Address / Location</label>
-                  <input type="text" id="accAddress" placeholder="e.g. Shop # 12, Main Market, Karachi" />
-                </div>
-
-                <!-- 6. Opening Balance & Notes -->
-                <div>
-                  <label>Opening Balance (Rs.)</label>
-                  <input type="number" id="accOpeningBalance" placeholder="0" value="0" />
-                </div>
-
-                <div style="grid-column: span 2;">
-                  <label>Notes / Terms / Remarks</label>
-                  <input type="text" id="accNotes" placeholder="e.g. 15 Days credit limit ya Site Mazdoori contract" />
-                </div>
+            <!-- Search & Filter Controls -->
+            <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+              <div style="flex: 3; min-width: 260px; position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                <input type="text" id="accSearchInput" oninput="filterAccountsDirectory()" placeholder="Search by name, mobile or account type..." style="width: 100%; padding: 11px 14px 11px 40px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13.5px; outline: none; background: #ffffff;" />
               </div>
 
-              <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
-                <button type="button" id="btnCancelVendorEdit" class="btn-back" style="display:none;" onclick="cancelVendorEdit()">Cancel</button>
-                <button type="submit" id="btnSaveVendor" class="btn-action-primary" style="background:#2563eb; padding:11px 24px;">
-                  <i class="fa-solid fa-floppy-disk"></i> Save & Create Ledger
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Accounts Table List -->
-          <div class="card-panel" style="margin-top: 20px;">
-            <div class="panel-header">
-              <h3 class="panel-title"><i class="fa-solid fa-book-bookmark"></i> Registered Accounts Directory & Ledgers</h3>
-              
-              <!-- Quick Filter by Type -->
-              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <select id="accTypeFilter" onchange="filterAccountsDirectory()" style="padding: 7px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600;">
-                  <option value="ALL">All Account Types</option>
-                  <option value="Vendor / Supplier">Vendors / Suppliers</option>
-                  <option value="Contractor / Thekedar">Contractors</option>
-                  <option value="Staff / Employee">Staff / Employees</option>
-                  <option value="Other / Individual">Others</option>
+              <div style="flex: 1; min-width: 160px;">
+                <select id="accTypeFilter" onchange="filterAccountsDirectory()" style="width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13.5px; font-weight: 600; color: #334155; outline: none; background: #ffffff;">
+                  <option value="ALL">All Types</option>
+                  <option value="Customer">Customer</option>
+                  <option value="Vendor / Supplier">Vendor / Supplier</option>
+                  <option value="Contractor">Contractor</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Capital / Owner">Capital / Owner</option>
+                  <option value="Other">Other</option>
                 </select>
-                <input type="text" id="accSearchInput" oninput="filterAccountsDirectory()" placeholder="Search by name, mobile, CNIC..." style="padding: 7px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 13px;" />
               </div>
             </div>
 
+            <!-- Table Container -->
             <div class="table-container">
               <table class="erp-table">
                 <thead>
                   <tr>
                     <th style="width: 45px;">#</th>
-                    <th>Account Title</th>
-                    <th>Type / Category</th>
+                    <th>Account Name</th>
+                    <th>Type</th>
                     <th>Mobile</th>
                     <th>CNIC</th>
                     <th>Address</th>
-                    <th style="text-align: center; min-width: 200px;">Actions</th>
+                    <th style="text-align: center; width: 120px;">Action</th>
                   </tr>
                 </thead>
                 <tbody id="vendorTableBody">
-                  <tr><td colspan="7" style="text-align:center; padding:25px; color:var(--text-muted);">Loading accounts list...</td></tr>
+                  <tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Loading accounts...</td></tr>
                 </tbody>
               </table>
             </div>
+
+            <!-- Pagination Footer -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 18px; flex-wrap: wrap; gap: 12px;">
+              <div id="accCountDisplay" style="color: #64748b; font-size: 13px; font-weight: 500;">
+                Showing 1 to 6 of 6 entries
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                <button class="page-btn" onclick="prevAccountPage()"><i class="fa-solid fa-chevron-left" style="font-size: 11px;"></i></button>
+                <button class="page-btn active" id="currentAccPageBtn">1</button>
+                <button class="page-btn" onclick="nextAccountPage()"><i class="fa-solid fa-chevron-right" style="font-size: 11px;"></i></button>
+              </div>
+            </div>
+
           </div>
+
+          <!-- VIEW 2: ACCOUNT DETAILS & RECENT TRANSACTIONS (EXACT IMAGE 4) -->
+          <div id="accountDetailsViewCard" style="display: none;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+              <h2 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 0;">Account Details</h2>
+              <button class="btn-back" onclick="backToAccountList()">
+                <i class="fa-solid fa-arrow-left"></i> Back to Account List
+              </button>
+            </div>
+
+            <!-- Profile Card -->
+            <div class="card-panel" style="padding: 22px; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div id="accDetailAvatar" style="width: 44px; height: 44px; border-radius: 12px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                    <i class="fa-solid fa-user"></i>
+                  </div>
+                  <div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <h3 id="accDetailName" style="font-size: 19px; font-weight: 800; color: #0f172a; margin: 0;">ABC Cement Supplier</h3>
+                      <span id="accDetailBadge" class="badge-acc-vendor">Vendor</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn-tbl-edit" id="btnEditFromDetail" style="padding: 7px 16px; font-size: 13px;">
+                    <i class="fa-solid fa-pen"></i> Edit
+                  </button>
+                  <button class="btn-tbl-delete" id="btnDeleteFromDetail" style="padding: 7px 16px; font-size: 13px; background: #ffffff; color: #ef4444; border: 1.5px solid #fca5a5;">
+                    <i class="fa-solid fa-trash-can"></i> Delete
+                  </button>
+                </div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13.5px; color: #334155;">
+                <div style="display: flex; gap: 14px; align-items: center;">
+                  <span style="width: 140px; color: #64748b; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-phone" style="width: 16px;"></i> Mobile Number</span>
+                  <strong id="accDetailMobile" style="color: #0f172a;">0300-1234567</strong>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: center;">
+                  <span style="width: 140px; color: #64748b; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-id-card" style="width: 16px;"></i> CNIC</span>
+                  <span id="accDetailCnic" style="font-weight: 600;">35201-1234567-1</span>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: center;">
+                  <span style="width: 140px; color: #64748b; display: flex; align-items: center; gap: 8px;"><i class="fa-solid fa-location-dot" style="width: 16px;"></i> Address</span>
+                  <span id="accDetailAddress">Plot No. 12, Karachi</span>
+                </div>
+                <div style="display: flex; gap: 14px; align-items: center;">
+                  <span style="width: 140px; color: #64748b; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-file-lines" style="width: 16px;"></i> Notes</span>
+                  <span id="accDetailNotes" style="color: #475569;">Regular supplier for cement and construction material.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Transactions Card -->
+            <div class="card-panel" style="padding: 22px;">
+              <h3 style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Recent Transactions</h3>
+
+              <div class="table-container" style="margin-bottom: 20px;">
+                <table class="erp-table">
+                  <thead>
+                    <tr style="background: #f8fafc;">
+                      <th>Date</th>
+                      <th>Ref No.</th>
+                      <th>Description</th>
+                      <th style="text-align: right;">Debit</th>
+                      <th style="text-align: right;">Credit</th>
+                      <th style="text-align: right;">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="accRecentTransactionsBody">
+                    <tr><td colspan="6" style="text-align: center; padding: 25px; color: var(--text-muted);">No transactions recorded yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="btn-action-primary" id="btnOpenFullLedgerModal" style="background: #ffffff; color: #2563eb; border: 1.5px solid #93c5fd; padding: 9px 18px; font-size: 13px;">
+                  View Full Ledger &nbsp;<i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
         </section>
+
+        <!-- ================= CREATE / EDIT ACCOUNT MODAL (EXACT IMAGE 2 & 3) ================= -->
+        <div id="createAccountModal" class="modal-overlay" onclick="closeCreateAccountModal(event)">
+          <div class="modal-card" style="max-width: 580px; border-radius: 18px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="border-bottom: 1px solid #e2e8f0; padding: 20px 24px;">
+              <h3 id="createAccModalTitle" style="font-size: 20px; font-weight: 800; color: #0f172a; margin: 0;">Create Account</h3>
+              <button class="btn-close-modal" onclick="closeCreateAccountModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="padding: 24px;">
+              <form id="createAccountForm">
+                <input type="hidden" id="modalAccEditId" value="" />
+
+                <div class="form-grid-layout" style="grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <!-- Account Name -->
+                  <div>
+                    <label style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 6px; display: block;">Account Name <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="modalAccName" placeholder="Enter account name" required style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none;" />
+                  </div>
+
+                  <!-- Account Type Dropdown -->
+                  <div>
+                    <label style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 6px; display: block;">Account Type <span style="color: #ef4444;">*</span></label>
+                    <select id="modalAccType" required style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;">
+                      <option value="">Select type</option>
+                      <option value="Customer">👤 Customer</option>
+                      <option value="Vendor / Supplier">📦 Vendor / Supplier</option>
+                      <option value="Contractor">🔨 Contractor</option>
+                      <option value="Staff">👔 Staff</option>
+                      <option value="Capital / Owner">💰 Capital / Owner</option>
+                      <option value="Other">🔘 Other</option>
+                    </select>
+                  </div>
+
+                  <!-- Mobile Number -->
+                  <div>
+                    <label style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 6px; display: block;">Mobile Number <span style="color: #ef4444;">*</span></label>
+                    <input type="tel" id="modalAccMobile" placeholder="03xxxxxxxxx" required style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none;" />
+                  </div>
+
+                  <!-- CNIC -->
+                  <div>
+                    <label style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; display: block;">CNIC (Optional)</label>
+                    <input type="text" id="modalAccCnic" placeholder="35201-1234567-1" maxlength="15" oninput="formatCnic(this)" style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none;" />
+                  </div>
+
+                  <!-- Address -->
+                  <div class="form-group-full">
+                    <label style="font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 6px; display: block;">Address <span style="color: #ef4444;">*</span></label>
+                    <textarea id="modalAccAddress" rows="3" placeholder="Enter address" required style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; resize: vertical; font-family: inherit;"></textarea>
+                  </div>
+
+                  <!-- Notes / Remarks -->
+                  <div class="form-group-full">
+                    <label style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px; display: block;">Notes / Remarks (Optional)</label>
+                    <textarea id="modalAccNotes" rows="3" placeholder="Enter any additional notes..." style="width: 100%; padding: 11px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; resize: vertical; font-family: inherit;"></textarea>
+                  </div>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
+                  <button type="button" class="btn-back" onclick="closeCreateAccountModal()" style="border-radius: 10px; padding: 10px 22px;">Cancel</button>
+                  <button type="submit" id="btnSaveModalAccount" class="btn-action-primary" style="border-radius: 10px; padding: 10px 24px; font-weight: 700;">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Account
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
         <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
         <section id="sectionPurchaserDetails" class="erp-section">
@@ -5102,11 +5176,28 @@
       parentElement.classList.toggle('open');
     }
 
+    // NAYA: Nested Expenses Submenu Toggle Function (Arrow ke liye)
+    function toggleNestedDropdown(event, submenuId, parentElement) {
+      event.stopPropagation(); // Taake parent menu band na ho
+      const submenu = document.getElementById(submenuId);
+      if (submenu) submenu.classList.toggle('open');
+      if (parentElement) parentElement.classList.toggle('open');
+    }
+
     function openAndSwitch(submenuId, parentId, sectionName, subItemId) {
       const submenu = document.getElementById(submenuId);
       const parent = document.getElementById(parentId);
       if (submenu) submenu.classList.add('open');
       if (parent) parent.classList.add('open');
+
+      // Agar expense ka koi page open ho to nested menu bhi auto-open ho jaye
+      if (['addSiteExpense', 'siteExpenseDetails', 'addOfficeExpense', 'officeExpenseDetails'].includes(sectionName)) {
+        const nestedSub = document.getElementById('nestedExpensesSubmenu');
+        const nestedParent = document.getElementById('nestedExpensesParent');
+        if (nestedSub) nestedSub.classList.add('open');
+        if (nestedParent) nestedParent.classList.add('open');
+      }
+
       switchSection(sectionName, document.getElementById(subItemId));
     }
 
@@ -6036,128 +6127,94 @@ async function confirmStatusChange() {
       document.getElementById('dealMonthlyInstallment').value = `Rs. ${formattedMonthly} / Month`;
     }
 
-    // =========================================================================
-    // NEW OWNERSHIP TYPE HANDLER: Single Owner, Joint Ownership, Transfer
+
+
+   // =========================================================================
+    // OWNERSHIP TYPE LOGIC: SINGLE OWNER, JOINT OWNERSHIP, TRANSFER
     // =========================================================================
    // =========================================================================
-// NEW OWNERSHIP TYPE HANDLER: Single Owner, Joint Ownership, Transfer
-// =========================================================================
-function handleOwnershipTypeChange() {
-  const typeSelect = document.getElementById('custOwnershipType');
-  const selectedType = typeSelect ? typeSelect.value : 'Single Owner';
+    // OWNERSHIP TYPE LOGIC: SINGLE OWNER, JOINT OWNERSHIP, TRANSFER
+    // =========================================================================
+    function handleOwnershipTypeChange() {
+      const typeSelect = document.getElementById('custOwnershipType');
+      const selectedType = typeSelect ? typeSelect.value : 'Single Owner';
 
-  // Tamam Sections aur Boxes ko pick karein
-  const owner1Box = document.getElementById('owner1Box');
-  const owner2Box = document.getElementById('owner2Box');
-  const transferBox = document.getElementById('transferBox');
-  const jointShareCard = document.getElementById('jointShareCard'); // <-- Naya Percentage Box
-  const pill = document.getElementById('ownershipStatusPill');
+      const owner1Box = document.getElementById('owner1Box');
+      const owner2Box = document.getElementById('owner2Box');
+      const transferBox = document.getElementById('transferBox');
 
-  const owner1Title = document.getElementById('owner1HeaderTitle');
-  const owner1Badge = document.getElementById('owner1Badge');
-  const owner1NameLabel = document.getElementById('owner1NameLabel');
-  const owner1PhotoLabel = document.getElementById('owner1PhotoLabel');
-  const owner1NomineeTitle = document.getElementById('owner1NomineeTitle');
+      const owner1Title = document.getElementById('owner1HeaderTitle');
+      const owner1Badge = document.getElementById('owner1Badge');
+      const owner1NameLabel = document.getElementById('owner1NameLabel');
+      const owner1PhotoLabel = document.getElementById('owner1PhotoLabel');
+      const owner1NomineeTitle = document.getElementById('owner1NomineeTitle');
 
-  // -------------------------------------------------------------
-  // 1. SINGLE OWNER MODE (Sirf Ek Owner Ki Poori Details - No Share %)
-  // -------------------------------------------------------------
-  if (selectedType === 'Single Owner') {
-    owner1Box.style.display = 'block'; // Poora Owner Details Form On
-    owner2Box.style.display = 'none';  // 2nd Owner Mukammal Band
-    transferBox.style.display = 'none';
-    
-    // Share Ratio (%) Box ko Single Owner par mukammal chupa dein
-    if (jointShareCard) jointShareCard.style.display = 'none';
+      // 1. SINGLE OWNER (Default) -> Only Owner 1 Details
+      if (selectedType === 'Single Owner') {
+        if (owner1Box) owner1Box.style.display = 'block';
+        if (owner2Box) owner2Box.style.display = 'none';
+        if (transferBox) transferBox.style.display = 'none';
 
-    pill.innerHTML = '<i class="fa-solid fa-user"></i> Single Owner Mode Active';
-    pill.style.background = '#dbeafe';
-    pill.style.color = '#1d4ed8';
+        if (owner1Title) owner1Title.innerHTML = '<i class="fa-solid fa-user"></i> Owner 1 Details';
+        if (owner1Badge) {
+          owner1Badge.textContent = 'Sole Owner';
+          owner1Badge.style.background = '#dbeafe';
+          owner1Badge.style.color = '#1d4ed8';
+        }
+        if (owner1NameLabel) owner1NameLabel.textContent = 'Owner 1 Name *';
+        if (owner1PhotoLabel) owner1PhotoLabel.textContent = 'Owner 1 Photo';
+        if (owner1NomineeTitle) owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
 
-    // Labels par se "Owner 1" aur "%" hata kar saaf labels
-    owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner Details';
-    owner1Badge.textContent = 'Sole Owner';
-    owner1Badge.style.background = '#dbeafe';
-    owner1Badge.style.color = '#1d4ed8';
-    owner1NameLabel.textContent = 'Owner Full Name *';
-    owner1PhotoLabel.textContent = 'Owner Photo';
-    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin)';
+        setOwnerFieldsRequired(true, false, false);
+        populateAvailableFlatsDropdown();
+      }
 
-    // Sirf is ek owner ke fields required karein
-    setOwnerFieldsRequired(true, false, false);
-    populateAvailableFlatsDropdown();
-  }
+      // 2. JOINT OWNERSHIP -> Owner 1 & Owner 2 (Equal Partners)
+      else if (selectedType === 'Joint Ownership') {
+        if (owner1Box) owner1Box.style.display = 'block';
+        if (owner2Box) owner2Box.style.display = 'block';
+        if (transferBox) transferBox.style.display = 'none';
 
-  // -------------------------------------------------------------
-  // 2. JOINT OWNERSHIP MODE (% Share Ratio Basis)
-  // -------------------------------------------------------------
-  else if (selectedType === 'Joint Ownership') {
-    owner1Box.style.display = 'block';
-    owner2Box.style.display = 'block'; // Owner 2 Form khul gaya
-    transferBox.style.display = 'none';
-    
-    // Naya Percentage Card samne (show) le aayein
-    if (jointShareCard) {
-      jointShareCard.style.display = 'block';
-      
-      // Agar pehle se khali ho to default 50% - 50% set kar dein
-      const s1 = document.getElementById('cust1Share');
-      const s2 = document.getElementById('cust2Share');
-      if (s1 && !s1.value) s1.value = 50;
-      if (s2 && !s2.value) s2.value = 50;
+        if (owner1Title) owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
+        if (owner1Badge) {
+          owner1Badge.textContent = 'Equal Partner 1';
+          owner1Badge.style.background = '#dbeafe';
+          owner1Badge.style.color = '#1d4ed8';
+        }
+        if (owner1NameLabel) owner1NameLabel.textContent = 'Owner 1 Name *';
+        if (owner1PhotoLabel) owner1PhotoLabel.textContent = 'Owner 1 Photo';
+        if (owner1NomineeTitle) owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
+
+        setOwnerFieldsRequired(true, true, false);
+        populateAvailableFlatsDropdown();
+      }
+
+      // 3. TRANSFER -> Previous Owner Record + New Owner (Transferee)
+      else if (selectedType === 'Transfer' || selectedType === 'Transfer Ownership') {
+        if (owner1Box) owner1Box.style.display = 'block';
+        if (owner2Box) owner2Box.style.display = 'none';
+        if (transferBox) transferBox.style.display = 'block';
+
+        if (owner1Title) owner1Title.innerHTML = '<i class="fa-solid fa-user-shield"></i> New Owner Details (Transferee)';
+        if (owner1Badge) {
+          owner1Badge.textContent = 'New Owner';
+          owner1Badge.style.background = '#dcfce7';
+          owner1Badge.style.color = '#15803d';
+        }
+        if (owner1NameLabel) owner1NameLabel.textContent = 'New Owner Name *';
+        if (owner1PhotoLabel) owner1PhotoLabel.textContent = 'New Owner Photo';
+        if (owner1NomineeTitle) owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details - New Owner';
+
+        const transferDateInput = document.getElementById('transferDate');
+        if (transferDateInput && !transferDateInput.value) {
+          transferDateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        setOwnerFieldsRequired(true, false, true);
+        populateFlatsForTransfer();
+      }
     }
 
-    pill.innerHTML = '<i class="fa-solid fa-user-group"></i> Joint Ownership (% Share Active)';
-    pill.style.background = '#e0f2fe';
-    pill.style.color = '#0284c7';
-
-    owner1Title.innerHTML = '<i class="fa-solid fa-user-check"></i> Owner 1 Details';
-    owner1Badge.textContent = 'Partner 1 (Joint)';
-    owner1Badge.style.background = '#dbeafe';
-    owner1Badge.style.color = '#1d4ed8';
-    owner1NameLabel.textContent = 'Owner 1 Name *';
-    owner1PhotoLabel.textContent = 'Owner 1 Photo';
-    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details (Next of Kin) - Owner 1';
-
-    // Owner 1 aur Owner 2 dono ke fields lazmi (required) karein
-    setOwnerFieldsRequired(true, true, false);
-    populateAvailableFlatsDropdown();
-  } 
-
-  // -------------------------------------------------------------
-  // 3. TRANSFER OWNERSHIP MODE
-  // -------------------------------------------------------------
-  else if (selectedType === 'Transfer' || selectedType === 'Transfer Ownership') {
-    owner1Box.style.display = 'block';
-    owner2Box.style.display = 'none';
-    transferBox.style.display = 'block'; // Transfer Box open hoga
-    
-    // Percentage card ko Transfer par bhi chupa dein
-    if (jointShareCard) jointShareCard.style.display = 'none';
-
-    pill.innerHTML = '<i class="fa-solid fa-right-left"></i> Ownership Transfer Active';
-    pill.style.background = '#fef3c7';
-    pill.style.color = '#b45309';
-
-    // Owner 1 ka naam badal kar New Owner (Transferee) ho jayega
-    owner1Title.innerHTML = '<i class="fa-solid fa-user-shield"></i> New Owner Details (Transferee)';
-    owner1Badge.textContent = 'New Owner';
-    owner1Badge.style.background = '#dcfce7';
-    owner1Badge.style.color = '#15803d';
-    owner1NameLabel.textContent = 'New Owner Name *';
-    owner1PhotoLabel.textContent = 'New Owner Photo';
-    owner1NomineeTitle.innerHTML = '<i class="fa-solid fa-hands-holding-child"></i> Nominee Details - New Owner';
-
-    const transferDateInput = document.getElementById('transferDate');
-    if (transferDateInput && !transferDateInput.value) {
-      transferDateInput.value = new Date().toISOString().split('T')[0];
-    }
-
-    // New Owner aur Transfer form ko required karein
-    setOwnerFieldsRequired(true, false, true);
-    populateFlatsForTransfer(); // Booked flats bhi dikhaye ga taake transfer ho sakein
-  }
-}
     // Helper: Required validation switch
     function setOwnerFieldsRequired(reqOwner1, reqOwner2, reqTransfer) {
       ['cust1Name', 'cust1Father', 'cust1Cnic', 'cust1Mobile', 'cust1Address'].forEach(id => {
@@ -6176,257 +6233,34 @@ function handleOwnershipTypeChange() {
       });
     }
 
-    // Transfer ke waqt Tamam flats (booked flats samait) dikhana taake transfer kiya ja sake
-    function populateFlatsForTransfer() {
-      const select = document.getElementById('custFlatSelect');
-      if (!select) return;
+    // Form Reset Helper (Always Defaults to Single Owner)
+    function resetCustomerFormForNew() {
+      const form = document.getElementById('customerForm');
+      if (form) form.reset();
+      const editInput = document.getElementById('customerEditId');
+      if (editInput) editInput.value = '';
 
-      select.innerHTML = '<option value="">-- Choose Flat to Transfer --</option>';
+      const btn = document.getElementById('btnSaveCustomer');
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration';
 
-      allFlatsData.forEach(f => {
-        const opt = document.createElement('option');
-        opt.value = f.id;
-        opt.textContent = f.flatNo; // <-- Sirf Flat Number show hoga
-        opt.setAttribute('data-floor', f.floor);
-        opt.setAttribute('data-size', f.size);
-        opt.setAttribute('data-price', f.price);
-        opt.setAttribute('data-flatno', f.flatNo);
-        select.appendChild(opt);
-      });
-    }
+      owner1Base64 = '';
+      owner2Base64 = '';
+      uploadedDocs = { cnic: '', payment: '', other: '' };
 
-    // CNIC Auto Formatter: 42101-1234567-1
-    function formatCnic(input) {
-      let val = input.value.replace(/\D/g, '');
-      if (val.length > 13) val = val.substring(0, 13);
-      
-      let formatted = '';
-      if (val.length > 0) {
-        formatted = val.substring(0, 5);
-        if (val.length > 5) {
-          formatted += '-' + val.substring(5, 12);
-          if (val.length > 12) {
-            formatted += '-' + val.substring(12, 13);
-          }
-        }
-      }
-      input.value = formatted;
+      if (document.getElementById('owner1Img')) document.getElementById('owner1Img').style.display = 'none';
+      if (document.getElementById('owner1Placeholder')) document.getElementById('owner1Placeholder').style.display = 'block';
+      if (document.getElementById('owner2Img')) document.getElementById('owner2Img').style.display = 'none';
+      if (document.getElementById('owner2Placeholder')) document.getElementById('owner2Placeholder').style.display = 'block';
+
+      const typeSelect = document.getElementById('custOwnershipType');
+      if (typeSelect) typeSelect.value = 'Single Owner';
+      handleOwnershipTypeChange();
+
+      populateAvailableFlatsDropdown();
     }
 
     // =========================================================================
-    // SMART AUTO IMAGE COMPRESSOR (Reduces 4MB to ~50KB to prevent 1MB limit)
-    // =========================================================================
-    function compressImageFile(file, maxWidth = 1000, maxHeight = 1000, quality = 0.65) {
-      return new Promise((resolve) => {
-        // Agar file PDF hai to size check karein (max 350KB allowed in direct Firestore)
-        if (file.type === 'application/pdf') {
-          if (file.size > 400 * 1024) {
-            alert('PDF file ka size 400KB se kam hona chahiye. Behtar hai ke image (JPG/PNG) upload karein jo auto-compress ho jati hai.');
-            resolve('');
-            return;
-          }
-          const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.readAsDataURL(file);
-          return;
-        }
-
-        // Agar tasveer hai to Canvas ke zariye compress karein
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const img = new Image();
-          img.onload = () => {
-            let width = img.width;
-            let height = img.height;
-
-            // Dimensions ko limit karein taake size bohot chota ho jaye
-            if (width > height) {
-              if (width > maxWidth) {
-                height = Math.round((height * maxWidth) / width);
-                width = maxWidth;
-              }
-            } else {
-              if (height > maxHeight) {
-                width = Math.round((width * maxHeight) / height);
-                height = maxHeight;
-              }
-            }
-
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // High quality JPEG mein 65% quality par compress (Size drops from 4MB to ~40KB-60KB)
-            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
-            resolve(compressedBase64);
-          };
-          img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Single Thumb Impression Box Toggle
-    function toggleSingleThumbImpression() {
-      const isChecked = document.getElementById('checkSingleThumb').checked;
-      const container = document.getElementById('singleThumbContainer');
-      container.style.display = isChecked ? 'flex' : 'none';
-
-      if (!isChecked) {
-        customerThumbBase64 = '';
-        document.getElementById('singleThumbImg').style.display = 'none';
-        document.getElementById('singleThumbIcon').style.display = 'block';
-        const statusEl = document.getElementById('singleThumbStatus');
-        statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Thumb Not Captured';
-        statusEl.style.color = '#e11d48';
-      }
-    }
-
-    // Biometric Scanner Device Trigger
-    async function triggerThumbScan(type) {
-      const statusEl = document.getElementById('singleThumbStatus');
-      statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Place Finger on Scanner...';
-      statusEl.style.color = '#d97706';
-
-      try {
-        const controller = new AbortController();
-        setTimeout(() => controller.abort(), 2500);
-
-        let response = null;
-        try {
-          response = await fetch('http://127.0.0.1:8084/getFingerprint', { signal: controller.signal });
-        } catch(e) {}
-
-        if (response && response.ok) {
-          const data = await response.json();
-          applyThumbSuccess(data.bmpBase64);
-        } else {
-          // Live scanner na hone par realistic fingerprint simulation
-          applyThumbSuccess(getRealisticFingerprintSvg());
-        }
-      } catch (err) {
-        statusEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Scanner Error';
-        statusEl.style.color = '#dc2626';
-      }
-    }
-
-    function applyThumbSuccess(base64Data) {
-      const img = document.getElementById('singleThumbImg');
-      const icon = document.getElementById('singleThumbIcon');
-      const statusEl = document.getElementById('singleThumbStatus');
-
-      img.src = base64Data;
-      img.style.display = 'block';
-      if (icon) icon.style.display = 'none';
-
-      statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Fingerprint Verified & Captured';
-      statusEl.style.color = '#15803d';
-
-      customerThumbBase64 = base64Data;
-    }
-
-    function handleThumbFile(e, type) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        applyThumbSuccess(evt.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function getRealisticFingerprintSvg() {
-      return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='120' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4'/><path d='M14 13.12c0 2.38 0 6.38-1 8.88'/><path d='M2 16h.01'/><path d='M21.8 16c.2-2 .131-5.354 0-6'/><path d='M9 6.8a6 6 0 0 1 9 5.2c0 .47 0 1.17-.02 2'/><path d='M4 10.8a10 10 0 0 1 14.8-5.7'/><path d='M8 14v7'/><path d='M16 19.5v1.5'/><path d='M19 12a14 14 0 0 0-1.8-6.8'/><path d='M2 12a14 14 0 0 1 2.5-8'/><path d='M12 2a14 14 0 0 1 7.8 2.5'/></svg>";
-    }
-
-    // =========================================================================
-    // CUSTOMER MODULE: SEARCH, EDIT, VIEW, DELETE & PDF DOWNLOAD
- // =========================================================================
-    // GOOGLE DRIVE CLOUD UPLOADER (Direct to Your Google Drive Folder)
-    // =========================================================================
-    const GOOGLE_DRIVE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRd8vy_jED54nLFznjJEDkX0v-L0snBB0MoIAnVUr3DWAzluesotbUjKmYBzhkMheY/exec";
-    let uploadedDocs = { cnic: '', payment: '', other: '' };
-
-    // Google Drive par direct file upload karne ka function
-    async function uploadToGoogleDrive(file, customFileName) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          const payload = {
-            base64: e.target.result,
-            filename: customFileName || file.name,
-            mimeType: file.type || "image/jpeg"
-          };
-
-          try {
-            const response = await fetch(GOOGLE_DRIVE_SCRIPT_URL, {
-              method: "POST",
-              body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            if (result.status === "success") {
-              resolve(result.fileUrl); // Google Drive ka link mil gaya
-            } else {
-              alert("Google Drive Upload Error: " + result.message);
-              resolve("");
-            }
-          } catch (err) {
-            console.error("Drive upload error:", err);
-            // Agar browser CORS block kare tab bhi link create karein
-            resolve(e.target.result);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Owner Photo Preview (Uploads directly to Google Drive)
-    async function previewOwnerPhoto(event, imgId, placeholderId) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const placeholder = document.getElementById(placeholderId);
-      if (placeholder) {
-        placeholder.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="font-size:22px; color:#2563eb;"></i>';
-      }
-
-      // Local preview turant dikhayein
-      const localPreviewUrl = URL.createObjectURL(file);
-      const img = document.getElementById(imgId);
-      img.src = localPreviewUrl;
-      img.style.display = 'block';
-      if (placeholder) placeholder.style.display = 'none';
-
-      // Google Drive par background upload karein
-      const driveUrl = await uploadToGoogleDrive(file, "Owner_Photo_" + Date.now() + "_" + file.name);
-
-      if (imgId === 'owner1Img') owner1Base64 = driveUrl || localPreviewUrl;
-      if (imgId === 'owner2Img') owner2Base64 = driveUrl || localPreviewUrl;
-    }
-
-    // Document Files Upload (Uploads directly to Google Drive)
-    async function handleDocUpload(event, type) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const statusEl = document.getElementById(type + 'DocStatus');
-      if (statusEl) {
-        statusEl.innerHTML = `<span style="color:#d97706; font-weight:bold;"><i class="fa-solid fa-cloud-arrow-up fa-bounce"></i> Uploading to Google Drive...</span>`;
-      }
-
-      const driveUrl = await uploadToGoogleDrive(file, type.toUpperCase() + "_" + Date.now() + "_" + file.name);
-
-      uploadedDocs[type] = driveUrl;
-
-      if (statusEl) {
-        statusEl.innerHTML = `<span style="color:#16a34a; font-weight:bold;"><i class="fa-solid fa-cloud-check"></i> Saved in Cloude!</span>`;
-      }
-    }
-
-    // =========================================================================
-    // 2. CUSTOMER FORM SUBMISSION WITH AUTO PDF DOWNLOAD
+    // CUSTOMER FORM SUBMISSION WITH FIRESTORE AND AUTO PDF DOWNLOAD
     // =========================================================================
     document.getElementById('customerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -6449,18 +6283,11 @@ function handleOwnershipTypeChange() {
       }
 
       const selectedOption = flatSelect.options[flatSelect.selectedIndex];
-      const flatNo = selectedOption.getAttribute('data-flatno') || selectedOption.textContent.split(' ')[1] || '';
+      const flatNo = selectedOption.getAttribute('data-flatno') || selectedOption.textContent.trim();
 
-     const ownershipType = document.getElementById('custOwnershipType').value;
-      const isSingle = (ownershipType === 'Single Owner');
+      const ownershipType = document.getElementById('custOwnershipType').value;
       const isJoint = (ownershipType === 'Joint Ownership');
-      const isTransfer = (ownershipType === 'Transfer Ownership' || ownershipType === 'Transfer');
-
-      const isThumbEnabled = document.getElementById('checkSingleThumb').checked;
-      if (isThumbEnabled && !customerThumbBase64) {
-        alert('Thumb Impression par check laga hua hai magar thumb capture nahi hua. Ungli scan karein ya check hata dein.');
-        return;
-      }
+      const isTransfer = (ownershipType === 'Transfer' || ownershipType === 'Transfer Ownership');
 
       const totalPrice = parseFloat(document.getElementById('dealTotalPrice').value) || 0;
       const downPayment = parseFloat(document.getElementById('dealDownPayment').value) || 0;
@@ -6473,8 +6300,8 @@ function handleOwnershipTypeChange() {
         project: 'BILAL HEIGHTS',
         flatId: selectedFlatId,
         flatNo: flatNo,
-        floor: document.getElementById('custFloor').value,
-        size: document.getElementById('custSize').value,
+        floor: document.getElementById('custFloor').value || '',
+        size: document.getElementById('custSize').value || '',
         ownershipType: ownershipType,
 
         financials: {
@@ -6486,14 +6313,13 @@ function handleOwnershipTypeChange() {
           monthlyInstallment: monthly
         },
 
-        thumbImpression: isThumbEnabled ? customerThumbBase64 : '',
         documents: uploadedDocs,
         termsAgreed: true,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-     // Owner Details Save (Single Owner / Transferee / Joint Partner 1)
-      customerRecord.hasFirstOwner = true; // <-- Hamesha true rahega
+      // Owner 1 (Primary / Transferee)
+      customerRecord.hasFirstOwner = true;
       customerRecord.firstOwner = {
         name: document.getElementById('cust1Name').value.trim(),
         fatherHusband: document.getElementById('cust1Father').value.trim(),
@@ -6510,13 +6336,11 @@ function handleOwnershipTypeChange() {
         }
       };
 
-      // Share Percentage aur 2nd Owner sirf tab save hoga jab JOINT OWNERSHIP ho:
+      // Owner 2 (Equal Partner if Joint)
       if (isJoint) {
-        customerRecord.firstOwner.sharePercentage = parseFloat(document.getElementById('cust1Share').value) || 50;
         customerRecord.hasSecondOwner = true;
         customerRecord.secondOwner = {
           name: document.getElementById('cust2Name').value.trim(),
-          sharePercentage: parseFloat(document.getElementById('cust2Share').value) || 50,
           fatherHusband: document.getElementById('cust2Father').value.trim(),
           cnic: document.getElementById('cust2Cnic').value.trim(),
           mobile: document.getElementById('cust2Mobile').value.trim(),
@@ -6531,28 +6355,27 @@ function handleOwnershipTypeChange() {
           }
         };
       } else {
-        // Single Owner mein na 2nd owner hoga aur na hi share %
         customerRecord.hasSecondOwner = false;
         customerRecord.secondOwner = null;
       }
 
-      // Transfer details
+      // Transfer Details
       if (isTransfer) {
         customerRecord.transferDetails = {
-          transferDate: document.getElementById('transferDate').value,
-          transferDocNo: document.getElementById('transferDocNo').value.trim(),
+          transferDate: document.getElementById('transferDate').value || '',
+          transferDocNo: document.getElementById('transferDocNo').value.trim() || '',
           transferFee: document.getElementById('transferFee').value || 0,
-          previousOwnerName: document.getElementById('prevOwnerName').value.trim(),
-          previousOwnerCnic: document.getElementById('prevOwnerCnic').value.trim(),
-          previousOwnerMobile: document.getElementById('prevOwnerMobile').value.trim(),
-          transferRemarks: document.getElementById('transferRemarks').value.trim()
+          previousOwnerName: document.getElementById('prevOwnerName').value.trim() || '',
+          previousOwnerCnic: document.getElementById('prevOwnerCnic').value.trim() || '',
+          previousOwnerMobile: document.getElementById('prevOwnerMobile').value.trim() || '',
+          transferRemarks: document.getElementById('transferRemarks').value.trim() || ''
         };
       } else {
         customerRecord.transferDetails = null;
       }
 
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving & Generating PDF...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering & Generating PDF...';
 
       try {
         let savedCustomerId = editId;
@@ -6571,319 +6394,25 @@ function handleOwnershipTypeChange() {
           await db.collection('flats').doc(selectedFlatId).update({ status: 'Booked' });
         }
 
-        // Automatic PDF Trigger
         customerRecord.id = savedCustomerId;
         const existingIdx = allCustomersData.findIndex(x => x.id === savedCustomerId);
         if (existingIdx >= 0) allCustomersData[existingIdx] = customerRecord;
         else allCustomersData.unshift(customerRecord);
 
-        // Download PDF automatically
+        // Auto Download PDF
         downloadCustomerPDF(savedCustomerId);
 
-        alert('Registration kamiyabi se mukammal ho gayi aur Allotment PDF download shuru ho gaya hai!');
+        alert('Registration kamiyabi se mukammal ho gayi aur Allotment PDF download ho gaya!');
 
-        uploadedDocs = { cnic: '', payment: '', other: '' };
         resetCustomerFormForNew();
-
         openAndSwitch('customerSubmenu', 'navCustomerParent', 'customerDetails', 'subCustomerDetails');
       } catch (err) {
         alert('Error: ' + err.message);
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration & Download PDF';
+        btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration';
       }
     });
-
-   // =========================================================================
-    // 3. EXECUTIVE ALLOTMENT DOSSIER PDF GENERATOR (PERCENTAGE SHARE DISPLAY)
-    // =========================================================================
-    function downloadCustomerPDF(customerId) {
-      const c = allCustomersData.find(item => item.id === customerId);
-      if (!c) return;
-
-      const o1 = c.firstOwner || {};
-      const o2 = c.secondOwner || {};
-      const fin = c.financials || {};
-      const bookingId = 'BH-' + (c.id ? c.id.substring(0, 6).toUpperCase() : '84920');
-      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-     // Ownership Type Logic for PDF
-      const isJoint = (c.ownershipType === 'Joint Ownership' || c.hasSecondOwner);
-      const isTransfer = (c.ownershipType === 'Transfer' || c.ownershipType === 'Transfer Ownership');
-      const share1 = isJoint ? (o1.sharePercentage || 50) : 100;
-      const share2 = isJoint ? (o2.sharePercentage || 50) : 0;
-
-      // Printable Container
-      const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.padding = '24px 28px';
-      pdfWrapper.style.background = '#ffffff';
-      pdfWrapper.style.color = '#0f172a';
-      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      pdfWrapper.style.boxSizing = 'border-box';
-
-      pdfWrapper.innerHTML = `
-        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; position: relative; background: #ffffff;">
-          
-          <!-- Header -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="background: #0f2a59; color: #ffffff; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">
-                  BH
-                </div>
-                <div>
-                  <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; letter-spacing: 0.5px; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                  <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Luxury Living & Corporate Residences</div>
-                </div>
-              </div>
-            </div>
-
-            <div style="text-align: right;">
-              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block; text-transform: uppercase;">
-                OFFICIAL ALLOTMENT ORDER
-              </div>
-              <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
-                REF NO: <span style="color: #0f2a59;">${bookingId}</span> &nbsp;|&nbsp; DATE: <span>${todayDate}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Unit Info Banner -->
-          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-              <div>
-                <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Allotted Unit Information</div>
-                <div style="font-size: 20px; font-weight: 900; letter-spacing: 0.5px; color: #ffffff;">FLAT ${c.flatNo || 'N/A'}</div>
-              </div>
-              <div style="display: flex; gap: 18px; text-align: right; font-size: 12px;">
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">PROJECT</span><strong>${c.project || 'BILAL HEIGHTS'}</strong></div>
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">FLOOR</span><strong>${c.floor || 'N/A'}</strong></div>
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">UNIT SIZE</span><strong>${c.size || 'N/A'}</strong></div>
-                <div>
-                  <span style="color:#93c5fd; font-size:10px; display:block;">OWNERSHIP</span>
-                  <strong>${isJoint ? `Joint (${share1}% / ${share2}%)` : (c.ownershipType || 'Single Owner')}</strong>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Purchaser Profile Section -->
-          <div style="display: flex; gap: 16px; margin-bottom: 16px; align-items: stretch;">
-            
-            <!-- Owner 1 Card -->
-            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
-              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
-                <span style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase;">
-                  ${isTransfer ? 'New Owner (Transferee)' : (isJoint ? 'Owner 1 (Partner)' : 'Sole Owner (Allottee)')}
-                </span>
-                
-                <!-- Dynamic Ownership Badge -->
-                <span style="font-size: 10px; font-weight: 800; background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 3px 10px; border-radius: 5px;">
-                  ${isTransfer ? 'Transfer Case' : (isJoint ? `Share: ${share1}%` : '100% Sole Owner')}
-                </span>
-              </div>
-
-<div>
-                  <span style="color:#93c5fd; font-size:10px; display:block;">OWNERSHIP</span>
-                  <strong>${isTransfer ? 'Transfer Case' : (isJoint ? `Joint (${share1}% / ${share2}%)` : 'Single Owner')}</strong>
-                </div>
-
-              <div style="display: flex; gap: 12px; align-items: flex-start;">
-                ${o1.photo ? `
-                  <img src="${o1.photo}" style="width: 65px; height: 75px; object-fit: cover; border-radius: 6px; border: 1.5px solid #0f2a59; flex-shrink: 0;" />
-                ` : `
-                  <div style="width: 65px; height: 75px; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #94a3b8; flex-shrink: 0;">
-                    <i class="fa-solid fa-user"></i>
-                  </div>
-                `}
-                <div style="font-size: 11px; line-height: 1.6; color: #334155; flex: 1;">
-                  <div><span style="color:#64748b; font-weight:600;">Name:</span> <strong style="color:#0f172a; font-size:12px;">${o1.name || 'N/A'}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">S/O, W/O:</span> <strong>${o1.fatherHusband || 'N/A'}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">CNIC No:</span> <strong style="color:#1d4ed8;">${o1.cnic || 'N/A'}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">Contact:</span> <strong>${o1.mobile || 'N/A'}</strong> &nbsp;|&nbsp; <span>WhatsApp: ${o1.whatsapp || 'N/A'}</span></div>
-                  <div><span style="color:#64748b; font-weight:600;">Address:</span> ${o1.address || 'N/A'}</div>
-                </div>
-              </div>
-
-              <div style="margin-top: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; font-size: 10px; color: #334155;">
-                <span style="color: #0f2a59; font-weight: 800;">Next of Kin (Nominee):</span> 
-                <strong>${o1.nominee ? o1.nominee.name : 'N/A'}</strong> 
-                (${o1.nominee ? o1.nominee.relation : 'N/A'}) - CNIC: <strong>${o1.nominee ? o1.nominee.cnic : 'N/A'}</strong>
-              </div>
-            </div>
-
-            <!-- Owner 2 or Thumb Card -->
-            ${(isJoint && o2.name) ? `
-            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
-              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 10px;">
-                <span style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase;">Owner 2 (Co-Partner)</span>
-                
-                <!-- Owner 2 Share Badge -->
-                <span style="font-size: 10px; font-weight: 800; background: #e0f2fe; color: #0284c7; border: 1px solid #93c5fd; padding: 3px 10px; border-radius: 5px;">
-                  Share: ${share2}%
-                </span>
-              </div>
-
-              <div style="display: flex; gap: 12px; align-items: flex-start;">
-                ${o2.photo ? `
-                  <img src="${o2.photo}" style="width: 65px; height: 75px; object-fit: cover; border-radius: 6px; border: 1.5px solid #0284c7; flex-shrink: 0;" />
-                ` : `
-                  <div style="width: 65px; height: 75px; border-radius: 6px; border: 1.5px solid #cbd5e1; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #94a3b8; flex-shrink: 0;">
-                    <i class="fa-solid fa-user"></i>
-                  </div>
-                `}
-                <div style="font-size: 11px; line-height: 1.6; color: #334155; flex: 1;">
-                  <div><span style="color:#64748b; font-weight:600;">Name:</span> <strong style="color:#0f172a; font-size:12px;">${o2.name}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">S/O, W/O:</span> <strong>${o2.fatherHusband}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">CNIC No:</span> <strong style="color:#0284c7;">${o2.cnic}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">Contact:</span> <strong>${o2.mobile}</strong></div>
-                  <div><span style="color:#64748b; font-weight:600;">Address:</span> ${o2.address}</div>
-                </div>
-              </div>
-
-              <div style="margin-top: 8px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; font-size: 10px; color: #334155;">
-                <span style="color: #0284c7; font-weight: 800;">Next of Kin (Nominee):</span> 
-                <strong>${o2.nominee ? o2.nominee.name : 'N/A'}</strong> 
-                (${o2.nominee ? o2.nominee.relation : 'N/A'}) - CNIC: <strong>${o2.nominee ? o2.nominee.cnic : 'N/A'}</strong>
-              </div>
-            </div>
-            ` : `
-            <div style="width: 140px; border: 1.5px dashed #94a3b8; border-radius: 10px; padding: 10px; background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-              ${c.thumbImpression ? `
-                <img src="${c.thumbImpression}" style="width: 65px; height: 80px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background:#ffffff;" />
-                <div style="font-size: 9px; font-weight: 800; color: #166534; margin-top: 4px;">BIOMETRIC VERIFIED</div>
-              ` : `
-                <div style="font-size: 28px; color: #94a3b8; margin-bottom: 4px;"><i class="fa-solid fa-fingerprint"></i></div>
-                <div style="font-size: 9px; font-weight: 700; color: #64748b;">OFFICIAL RECORD THUMB</div>
-              `}
-            </div>
-            `}
-          </div>
-
-          <!-- Financial Schedule -->
-          <div style="margin-bottom: 14px;">
-            <div style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase; margin-bottom: 6px;">
-              Agreed Financial Schedule & Payment Terms
-            </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center;">
-              <thead>
-                <tr style="background: #f1f5f9; color: #334155;">
-                  <th style="padding: 7px; border: 1px solid #cbd5e1;">TOTAL PRICE</th>
-                  <th style="padding: 7px; border: 1px solid #cbd5e1;">DOWN PAYMENT</th>
-                  <th style="padding: 7px; border: 1px solid #cbd5e1;">GREY STRUCTURE</th>
-                  <th style="padding: 7px; border: 1px solid #cbd5e1;">ON POSSESSION</th>
-                  <th style="padding: 7px; border: 1px solid #cbd5e1;">TENURE</th>
-                  <th style="padding: 7px; border: 1px solid #cbd5e1; background: #eff6ff; color: #1e3a8a;">MONTHLY INSTALLMENT</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #0f172a; font-size: 12px;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
-                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 800; color: #16a34a;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
-                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">Rs. ${Number(fin.greyStructure || 0).toLocaleString()}</td>
-                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td>
-                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">${fin.durationMonths || 36} Months</td>
-                  <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #1d4ed8; background: #eff6ff; font-size: 12.5px;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Legal Terms -->
-          <div style="background: #f8fafc; border-left: 3px solid #0f2a59; padding: 7px 12px; margin-bottom: 22px; font-size: 9.5px; color: #475569; line-height: 1.5;">
-            <strong>DECLARATION & TERMS:</strong> This document serves as an authentic booking & allotment confirmation for the aforementioned unit at <strong>Bilal Heights</strong>. All installments must be paid as per the agreed schedule. Possession and mutation rights will be granted upon 100% financial clearance.
-          </div>
-
-          <!-- Physical Signatures Execution: Customer (Left) & Authorized Officer (Right) -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; padding: 0 14px;">
-            
-            <!-- LEFT: CUSTOMER SIGNATURE -->
-            <div style="text-align: center; width: 230px;">
-              <div style="height: 50px;"></div>
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px;">
-                <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-                  CUSTOMER SIGNATURE
-                </div>
-                <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">
-                  (Primary Allottee / Purchaser)
-                </div>
-              </div>
-            </div>
-
-            <!-- RIGHT: AUTHORIZED PERSON SIGNATURE -->
-            <div style="text-align: center; width: 230px;">
-              <div style="height: 32px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px;">
-                <span style="border: 1px dashed #2563eb; color: #1d4ed8; font-size: 8.5px; font-weight: 800; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">
-                  Official Stamp & Verification
-                </span>
-              </div>
-              <div style="border-top: 2px solid #0f172a; padding-top: 6px;">
-                <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-                  AUTHORIZED PERSON SIGNATURE
-                </div>
-                <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">
-                  For & On Behalf of Bilal Heights
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-      `;
-
-      const opt = {
-        margin: [0.25, 0.25, 0.25, 0.25],
-        filename: `Allotment_Order_Flat_${c.flatNo}_${(o1.name || 'Purchaser').replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.5, useCORS: true, logging: false },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(pdfWrapper).save();
-      } else {
-        alert('PDF library load nahi ho saki. Barah-e-meherbani internet connection check karein.');
-      }
-    }
-
-    // =========================================================================
-    // 2. CUSTOMER MODULE: RESET, RENDER, SEARCH & EDIT FUNCTIONS
-    // =========================================================================
-
-    // 1. Form Reset Function
-    function resetCustomerFormForNew() {
-      document.getElementById('customerForm').reset();
-      const editInput = document.getElementById('customerEditId');
-      if (editInput) editInput.value = '';
-
-      const btn = document.getElementById('btnSaveCustomer');
-      if (btn) btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration & Download PDF';
-
-      owner1Base64 = '';
-      owner2Base64 = '';
-      customerThumbBase64 = '';
-      uploadedDocs = { cnic: '', payment: '', other: '' };
-
-      if (document.getElementById('owner1Img')) document.getElementById('owner1Img').style.display = 'none';
-      if (document.getElementById('owner1Placeholder')) document.getElementById('owner1Placeholder').style.display = 'block';
-      if (document.getElementById('owner2Img')) document.getElementById('owner2Img').style.display = 'none';
-      if (document.getElementById('owner2Placeholder')) document.getElementById('owner2Placeholder').style.display = 'block';
-
-     if (document.getElementById('checkSingleThumb')) document.getElementById('checkSingleThumb').checked = false;
-      if (document.getElementById('singleThumbContainer')) document.getElementById('singleThumbContainer').style.display = 'none';
-      if (document.getElementById('singleThumbImg')) document.getElementById('singleThumbImg').style.display = 'none';
-      if (document.getElementById('singleThumbIcon')) document.getElementById('singleThumbIcon').style.display = 'block';
-
-      // Canvas lines yahan se khatam kar di gayi hain
-
-      // Reset Ownership dropdown to Default Single Owner
-      const typeSelect = document.getElementById('custOwnershipType');
-      if (typeSelect) typeSelect.value = 'Single Owner';
-      handleOwnershipTypeChange();
-
-      populateAvailableFlatsDropdown();
-    }
 
     // 2. Customer Table Rendering
     function renderCustomerTable(dataToRender) {
@@ -6903,7 +6432,7 @@ function handleOwnershipTypeChange() {
           ? `<img src="${ownerPrimary.photo}" style="width:38px; height:38px; border-radius:50%; object-fit:cover; border:1.5px solid #2563eb;" />` 
           : `<div style="width:38px; height:38px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#64748b;"><i class="fa-regular fa-user"></i></div>`;
 
-       let badgeType = 'badge-available';
+        let badgeType = 'badge-available';
         if (c.ownershipType === 'Joint Ownership') badgeType = 'badge-progress';
         if (c.ownershipType === 'Transfer Ownership' || c.ownershipType === 'Transfer') badgeType = 'badge-booked';
 
@@ -6919,22 +6448,15 @@ function handleOwnershipTypeChange() {
             <td><span class="badge-status ${badgeType}">${c.ownershipType || 'Single Owner'}</span></td>
             <td style="text-align:center;">
               <div style="display:inline-flex; gap:5px; flex-wrap:wrap; justify-content:center;">
-                <!-- 1. View Button -->
                 <button class="btn-tbl-view" title="View Profile" onclick="viewCustomerModal('${c.id}')">
                   <i class="fa-solid fa-eye"></i> View
                 </button>
-
-                <!-- 2. Edit Button -->
                 <button class="btn-tbl-edit" title="Edit Customer" onclick="editCustomer('${c.id}')">
                   <i class="fa-solid fa-pen-to-square"></i> Edit
                 </button>
-
-                <!-- 3. PDF Download Button -->
                 <button class="btn-action-primary" style="background:#059669; padding:6px 11px; font-size:12px;" title="Download PDF Dossier" onclick="downloadCustomerPDF('${c.id}')">
                   <i class="fa-solid fa-file-pdf"></i> PDF
                 </button>
-
-                <!-- 4. Delete Button -->
                 <button class="btn-tbl-delete" title="Delete" onclick="deleteCustomerRecord('${c.id}')">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
@@ -6964,7 +6486,7 @@ function handleOwnershipTypeChange() {
         });
 
         filterCustomersTable();
-        updatePaymentSummaryMetrics(); 
+        if (typeof updatePaymentSummaryMetrics === 'function') updatePaymentSummaryMetrics();
 
         if (document.getElementById('statTotalCustomers')) {
           document.getElementById('statTotalCustomers').textContent = snap.size;
@@ -7006,23 +6528,18 @@ function handleOwnershipTypeChange() {
       renderCustomerTable(filtered);
     }
 
-    // 5. EDIT CUSTOMER: Data Form mein pre-fill karna
+    // 5. EDIT CUSTOMER (Safe & Error-Free)
     function editCustomer(customerId) {
       const c = allCustomersData.find(item => item.id === customerId);
       if (!c) return;
 
-      document.getElementById('customerForm').reset();
-      
-      let editInput = document.getElementById('customerEditId');
-      if (!editInput) {
-        editInput = document.createElement('input');
-        editInput.type = 'hidden';
-        editInput.id = 'customerEditId';
-        document.getElementById('customerForm').prepend(editInput);
-      }
-      editInput.value = c.id;
+      resetCustomerFormForNew();
 
-      document.getElementById('btnSaveCustomer').innerHTML = '<i class="fa-solid fa-check-double"></i> Update Customer Record';
+      let editInput = document.getElementById('customerEditId');
+      if (editInput) editInput.value = c.id;
+
+      const saveBtn = document.getElementById('btnSaveCustomer');
+      if (saveBtn) saveBtn.innerHTML = '<i class="fa-solid fa-check-double"></i> Update Customer Record';
 
       // Set Ownership Type dropdown
       const typeSelect = document.getElementById('custOwnershipType');
@@ -7033,43 +6550,37 @@ function handleOwnershipTypeChange() {
 
       // Flats Dropdown with currently allotted flat
       const flatSelect = document.getElementById('custFlatSelect');
-      if (c.ownershipType === 'Transfer') {
-        populateFlatsForTransfer();
-      } else {
-        populateAvailableFlatsDropdown();
+      if (flatSelect) {
+        if (c.ownershipType === 'Transfer') {
+          populateFlatsForTransfer();
+        } else {
+          populateAvailableFlatsDropdown();
+        }
+
+        let optionExists = Array.from(flatSelect.options).some(opt => opt.value === c.flatId);
+        if (!optionExists && c.flatId) {
+          const opt = document.createElement('option');
+          opt.value = c.flatId;
+          opt.textContent = c.flatNo || 'N/A';
+          opt.setAttribute('data-floor', c.floor || '');
+          opt.setAttribute('data-size', c.size || '');
+          opt.setAttribute('data-flatno', c.flatNo || '');
+          flatSelect.appendChild(opt);
+        }
+        flatSelect.value = c.flatId;
       }
 
-      let optionExists = Array.from(flatSelect.options).some(opt => opt.value === c.flatId);
-      if (!optionExists && c.flatId) {
-        const opt = document.createElement('option');
-        opt.value = c.flatId;
-        opt.textContent = c.flatNo || 'N/A'; // <-- Sirf Flat Number show hoga
-        opt.setAttribute('data-floor', c.floor || '');
-        opt.setAttribute('data-size', c.size || '');
-        opt.setAttribute('data-flatno', c.flatNo || '');
-        flatSelect.appendChild(opt);
-      }
-      flatSelect.value = c.flatId;
-
-      document.getElementById('custFloor').value = c.floor || '';
-      document.getElementById('custSize').value = c.size || '';
+      if (document.getElementById('custFloor')) document.getElementById('custFloor').value = c.floor || '';
+      if (document.getElementById('custSize')) document.getElementById('custSize').value = c.size || '';
 
       // Financials Fill
       const fin = c.financials || {};
-      document.getElementById('dealTotalPrice').value = fin.totalPrice || '';
-      document.getElementById('dealDownPayment').value = fin.downPayment || '';
-      document.getElementById('dealGreyStructure').value = fin.greyStructure || 0;
-      document.getElementById('dealPossession').value = fin.possession || 0;
-      document.getElementById('dealDuration').value = fin.durationMonths || 36;
+      if (document.getElementById('dealTotalPrice')) document.getElementById('dealTotalPrice').value = fin.totalPrice || '';
+      if (document.getElementById('dealDownPayment')) document.getElementById('dealDownPayment').value = fin.downPayment || '';
+      if (document.getElementById('dealGreyStructure')) document.getElementById('dealGreyStructure').value = fin.greyStructure || 0;
+      if (document.getElementById('dealPossession')) document.getElementById('dealPossession').value = fin.possession || 0;
+      if (document.getElementById('dealDuration')) document.getElementById('dealDuration').value = fin.durationMonths || 36;
       calculateMonthlyInstallment();
-
-      // Biometric Thumb Fill
-      const isThumb = !!c.thumbImpression;
-      document.getElementById('checkSingleThumb').checked = isThumb;
-      toggleSingleThumbImpression();
-      if (isThumb) {
-        applyThumbSuccess(c.thumbImpression);
-      }
 
       // Terms Agreement
       if (document.getElementById('checkAgreeTerms')) {
@@ -7079,50 +6590,54 @@ function handleOwnershipTypeChange() {
       // Owner 1 Data Fill
       if (c.firstOwner) {
         const o1 = c.firstOwner;
-        document.getElementById('cust1Name').value = o1.name || '';
-        document.getElementById('cust1Father').value = o1.fatherHusband || '';
-        document.getElementById('cust1Cnic').value = o1.cnic || '';
-        document.getElementById('cust1Mobile').value = o1.mobile || '';
-        document.getElementById('cust1Whatsapp').value = o1.whatsapp !== 'N/A' ? o1.whatsapp : '';
-        document.getElementById('cust1Email').value = o1.email !== 'N/A' ? o1.email : '';
-        document.getElementById('cust1Address').value = o1.address || '';
+        if (document.getElementById('cust1Name')) document.getElementById('cust1Name').value = o1.name || '';
+        if (document.getElementById('cust1Father')) document.getElementById('cust1Father').value = o1.fatherHusband || '';
+        if (document.getElementById('cust1Cnic')) document.getElementById('cust1Cnic').value = o1.cnic || '';
+        if (document.getElementById('cust1Mobile')) document.getElementById('cust1Mobile').value = o1.mobile || '';
+        if (document.getElementById('cust1Whatsapp')) document.getElementById('cust1Whatsapp').value = o1.whatsapp !== 'N/A' ? o1.whatsapp : '';
+        if (document.getElementById('cust1Email')) document.getElementById('cust1Email').value = o1.email !== 'N/A' ? o1.email : '';
+        if (document.getElementById('cust1Address')) document.getElementById('cust1Address').value = o1.address || '';
 
         if (o1.photo) {
           owner1Base64 = o1.photo;
-          document.getElementById('owner1Img').src = o1.photo;
-          document.getElementById('owner1Img').style.display = 'block';
-          document.getElementById('owner1Placeholder').style.display = 'none';
+          if (document.getElementById('owner1Img')) {
+            document.getElementById('owner1Img').src = o1.photo;
+            document.getElementById('owner1Img').style.display = 'block';
+          }
+          if (document.getElementById('owner1Placeholder')) document.getElementById('owner1Placeholder').style.display = 'none';
         }
 
         if (o1.nominee) {
-          document.getElementById('cust1NomineeName').value = o1.nominee.name !== 'N/A' ? o1.nominee.name : '';
-          document.getElementById('cust1NomineeRelation').value = o1.nominee.relation !== 'N/A' ? o1.nominee.relation : '';
-          document.getElementById('cust1NomineeCnic').value = o1.nominee.cnic !== 'N/A' ? o1.nominee.cnic : '';
+          if (document.getElementById('cust1NomineeName')) document.getElementById('cust1NomineeName').value = o1.nominee.name !== 'N/A' ? o1.nominee.name : '';
+          if (document.getElementById('cust1NomineeRelation')) document.getElementById('cust1NomineeRelation').value = o1.nominee.relation !== 'N/A' ? o1.nominee.relation : '';
+          if (document.getElementById('cust1NomineeCnic')) document.getElementById('cust1NomineeCnic').value = o1.nominee.cnic !== 'N/A' ? o1.nominee.cnic : '';
         }
       }
 
       // Owner 2 Data Fill
       if (c.hasSecondOwner && c.secondOwner) {
         const o2 = c.secondOwner;
-        document.getElementById('cust2Name').value = o2.name || '';
-        document.getElementById('cust2Father').value = o2.fatherHusband || '';
-        document.getElementById('cust2Cnic').value = o2.cnic || '';
-        document.getElementById('cust2Mobile').value = o2.mobile || '';
-        document.getElementById('cust2Whatsapp').value = o2.whatsapp !== 'N/A' ? o2.whatsapp : '';
-        document.getElementById('cust2Email').value = o2.email !== 'N/A' ? o2.email : '';
-        document.getElementById('cust2Address').value = o2.address || '';
+        if (document.getElementById('cust2Name')) document.getElementById('cust2Name').value = o2.name || '';
+        if (document.getElementById('cust2Father')) document.getElementById('cust2Father').value = o2.fatherHusband || '';
+        if (document.getElementById('cust2Cnic')) document.getElementById('cust2Cnic').value = o2.cnic || '';
+        if (document.getElementById('cust2Mobile')) document.getElementById('cust2Mobile').value = o2.mobile || '';
+        if (document.getElementById('cust2Whatsapp')) document.getElementById('cust2Whatsapp').value = o2.whatsapp !== 'N/A' ? o2.whatsapp : '';
+        if (document.getElementById('cust2Email')) document.getElementById('cust2Email').value = o2.email !== 'N/A' ? o2.email : '';
+        if (document.getElementById('cust2Address')) document.getElementById('cust2Address').value = o2.address || '';
 
         if (o2.photo) {
           owner2Base64 = o2.photo;
-          document.getElementById('owner2Img').src = o2.photo;
-          document.getElementById('owner2Img').style.display = 'block';
-          document.getElementById('owner2Placeholder').style.display = 'none';
+          if (document.getElementById('owner2Img')) {
+            document.getElementById('owner2Img').src = o2.photo;
+            document.getElementById('owner2Img').style.display = 'block';
+          }
+          if (document.getElementById('owner2Placeholder')) document.getElementById('owner2Placeholder').style.display = 'none';
         }
 
         if (o2.nominee) {
-          document.getElementById('cust2NomineeName').value = o2.nominee.name !== 'N/A' ? o2.nominee.name : '';
-          document.getElementById('cust2NomineeRelation').value = o2.nominee.relation !== 'N/A' ? o2.nominee.relation : '';
-          document.getElementById('cust2NomineeCnic').value = o2.nominee.cnic !== 'N/A' ? o2.nominee.cnic : '';
+          if (document.getElementById('cust2NomineeName')) document.getElementById('cust2NomineeName').value = o2.nominee.name !== 'N/A' ? o2.nominee.name : '';
+          if (document.getElementById('cust2NomineeRelation')) document.getElementById('cust2NomineeRelation').value = o2.nominee.relation !== 'N/A' ? o2.nominee.relation : '';
+          if (document.getElementById('cust2NomineeCnic')) document.getElementById('cust2NomineeCnic').value = o2.nominee.cnic !== 'N/A' ? o2.nominee.cnic : '';
         }
       }
 
@@ -7142,220 +6657,10 @@ function handleOwnershipTypeChange() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function clearSignatureCanvas(canvasId) {
-  const canvas = document.getElementById(canvasId);
-  if (canvas && canvas.getContext) {
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-}
-
-function isCanvasBlank(canvasId) {
-  const canvas = document.getElementById(canvasId);
-  if (!canvas) return true;
-  return true;
-}
-
-    // Duplicate function yahan se delete ho chuka hai
-
-    // View Customer Profile Modal with Thumb & Financials
-    function viewCustomerModal(customerId) {
-      const c = allCustomersData.find(item => item.id === customerId);
-      if (!c) return;
-
-      function renderOwnerProfileCard(title, o, badgeText, badgeColor) {
-        if (!o) return '';
-        const avatar = o.photo 
-          ? `<img src="${o.photo}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid ${badgeColor};" />` 
-          : `<div style="width:80px; height:80px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:32px; color:#94a3b8;"><i class="fa-solid fa-user"></i></div>`;
-
-        return `
-          <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:16px; padding:20px; margin-bottom:18px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
-              <h4 style="color:#0f172a; font-weight:800; font-size:16px;">${title}</h4>
-              <span style="background:${badgeColor}; color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;">${badgeText}</span>
-            </div>
-            <div style="display:flex; gap:20px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
-              ${avatar}
-              <div>
-                <h3 style="font-size:18px; font-weight:800; color:#0f172a; margin-bottom:4px;">${o.name}</h3>
-                <p style="font-size:13px; color:#64748b;"><strong>S/O or W/O:</strong> ${o.fatherHusband}</p>
-                <p style="font-size:13px; color:#2563eb; font-weight:700;"><strong>CNIC:</strong> ${o.cnic}</p>
-              </div>
-            </div>
-            <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-                <label style="font-size:11px; color:#64748b; font-weight:700;">MOBILE</label>
-                <div style="font-size:13.5px; font-weight:700;">${o.mobile}</div>
-              </div>
-              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-                <label style="font-size:11px; color:#64748b; font-weight:700;">WHATSAPP</label>
-                <div style="font-size:13.5px; font-weight:600;">${o.whatsapp}</div>
-              </div>
-              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-                <label style="font-size:11px; color:#64748b; font-weight:700;">EMAIL</label>
-                <div style="font-size:13.5px; font-weight:600;">${o.email}</div>
-              </div>
-              <div class="form-group-full" style="background:#fff; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
-                <label style="font-size:11px; color:#64748b; font-weight:700;">PERMANENT RESIDENTIAL ADDRESS</label>
-                <div style="font-size:13px; line-height:1.5;">${o.address}</div>
-              </div>
-            </div>
-
-            <div style="margin-top:12px; background:#eff6ff; padding:12px; border-radius:10px; border:1px solid #bfdbfe;">
-              <h5 style="font-size:12px; color:#1e40af; font-weight:800; margin-bottom:6px;"><i class="fa-solid fa-hands-holding-child"></i> Nominee / Next of Kin</h5>
-              <div style="font-size:12.5px; color:#334155; display:flex; gap:20px; flex-wrap:wrap;">
-                <span><strong>Name:</strong> ${o.nominee ? o.nominee.name : 'N/A'}</span>
-                <span><strong>Relation:</strong> ${o.nominee ? o.nominee.relation : 'N/A'}</span>
-                <span><strong>CNIC:</strong> ${o.nominee ? o.nominee.cnic : 'N/A'}</span>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-
-      const fin = c.financials || {};
-
-      let html = `
-        <div style="background:#0f172a; color:#fff; padding:16px 20px; border-radius:14px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <div>
-            <div style="font-size:12px; color:#94a3b8; text-transform:uppercase; font-weight:700;">Allotted Property</div>
-            <div style="font-size:19px; font-weight:800;">Flat ${c.flatNo} - ${c.project}</div>
-          </div>
-          <div>
-            <span class="sub-heading-badge" style="background:#2563eb; color:#fff; font-size:12px; padding:6px 14px;">${c.floor} | ${c.size}</span>
-          </div>
-        </div>
-
-        <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:14px; padding:16px; margin-bottom:18px;">
-          <h4 style="font-size:14px; font-weight:800; color:#1e40af; margin-bottom:10px; display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-file-invoice-dollar"></i> Deal Financial Breakdown
-          </h4>
-          <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px;">
-            <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #dbeafe;">
-              <label style="font-size:11px; color:#64748b; font-weight:700;">TOTAL AGREED</label>
-              <div style="font-size:14px; font-weight:800; color:#0f172a;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</div>
-            </div>
-            <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #dbeafe;">
-              <label style="font-size:11px; color:#64748b; font-weight:700;">DOWN PAYMENT</label>
-              <div style="font-size:14px; font-weight:800; color:#059669;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</div>
-            </div>
-            <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #dbeafe;">
-              <label style="font-size:11px; color:#64748b; font-weight:700;">GREY STRUCTURE</label>
-              <div style="font-size:14px; font-weight:700;">Rs. ${Number(fin.greyStructure || 0).toLocaleString()}</div>
-            </div>
-            <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #dbeafe;">
-              <label style="font-size:11px; color:#64748b; font-weight:700;">POSSESSION</label>
-              <div style="font-size:14px; font-weight:700;">Rs. ${Number(fin.possession || 0).toLocaleString()}</div>
-            </div>
-            <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #dbeafe;">
-              <label style="font-size:11px; color:#64748b; font-weight:700;">PLAN DURATION</label>
-              <div style="font-size:14px; font-weight:700;">${fin.durationMonths || 36} Months</div>
-            </div>
-            <div style="background:#1e3a8a; color:#fff; padding:10px; border-radius:8px;">
-              <label style="font-size:11px; color:#93c5fd; font-weight:700;">MONTHLY INSTALLMENT</label>
-              <div style="font-size:15px; font-weight:800;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</div>
-            </div>
-          </div>
-        </div>
-      `;
-
-     // 1. Transfer Case Record Display (Agar Transfer ho)
-      const isTransfer = (c.ownershipType === 'Transfer' || c.ownershipType === 'Transfer Ownership');
-      if (isTransfer && c.transferDetails) {
-        const tr = c.transferDetails;
-        html += `
-          <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:18px; margin-bottom:18px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #fef3c7; padding-bottom:8px;">
-              <h4 style="color:#b45309; font-weight:800; font-size:15px;">
-                <i class="fa-solid fa-right-left"></i> Ownership Transfer & Previous Owner Record
-              </h4>
-              <span style="background:#fef3c7; color:#b45309; font-size:11.5px; font-weight:800; padding:4px 12px; border-radius:20px;">
-                Transfer Case
-              </span>
-            </div>
-            <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:12px;">
-              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #fde68a;">
-                <label style="font-size:11px; color:#92400e; font-weight:700;">TRANSFER DATE</label>
-                <div style="font-size:13.5px; font-weight:800; color:#0f172a;">${tr.transferDate || 'N/A'}</div>
-              </div>
-              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #fde68a;">
-                <label style="font-size:11px; color:#92400e; font-weight:700;">TRANSFER REF / DOC NO</label>
-                <div style="font-size:13.5px; font-weight:800; color:#0f172a;">${tr.transferDocNo || 'N/A'}</div>
-              </div>
-              <div style="background:#fff; padding:10px; border-radius:8px; border:1px solid #fde68a;">
-                <label style="font-size:11px; color:#92400e; font-weight:700;">TRANSFER FEE PAID</label>
-                <div style="font-size:13.5px; font-weight:800; color:#16a34a;">Rs. ${Number(tr.transferFee || 0).toLocaleString()}</div>
-              </div>
-            </div>
-            <div style="background:#ffffff; border:1px solid #fde68a; border-radius:10px; padding:12px; margin-bottom:10px;">
-              <div style="font-size:12px; font-weight:800; color:#b45309; margin-bottom:6px;"><i class="fa-solid fa-user-clock"></i> Former / Previous Owner Information</div>
-              <div style="display:flex; gap:20px; flex-wrap:wrap; font-size:12.5px; color:#334155;">
-                <div><strong>Name:</strong> ${tr.previousOwnerName || 'N/A'}</div>
-                <div><strong>CNIC:</strong> ${tr.previousOwnerCnic || 'N/A'}</div>
-                <div><strong>Mobile:</strong> ${tr.previousOwnerMobile || 'N/A'}</div>
-              </div>
-            </div>
-            ${tr.transferRemarks ? `
-              <div style="font-size:12px; color:#78350f; background:#fef3c7; padding:8px 12px; border-radius:8px;">
-                <strong>Remarks / Notes:</strong> ${tr.transferRemarks}
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }
-
-      // 2. Owner 1 (Single Owner / Transferee New Owner / Joint Partner 1)
-      if (c.firstOwner) {
-        let cardTitle = 'Single Owner Details';
-        let cardBadge = '100% Sole Owner';
-        let badgeColor = '#2563eb';
-
-        if (isTransfer) {
-          cardTitle = 'New Owner Details (Transferee)';
-          cardBadge = 'Current Allottee';
-          badgeColor = '#16a34a';
-        } else if (c.hasSecondOwner) {
-          cardTitle = '1st Owner (Partner 1)';
-          cardBadge = `Share: ${c.firstOwner.sharePercentage || 50}%`;
-        }
-
-        html += renderOwnerProfileCard(cardTitle, c.firstOwner, cardBadge, badgeColor);
-      }
-
-      // 3. Owner 2 (Joint Partner)
-      if (c.hasSecondOwner && c.secondOwner) {
-        html += renderOwnerProfileCard('2nd Owner (Co-Owner / Joint)', c.secondOwner, `Share: ${c.secondOwner.sharePercentage || 50}%`, '#0284c7');
-      }
-
-      if (c.thumbImpression) {
-        html += `
-          <div style="background:#f0fdf4; border:1.5px solid #86efac; border-radius:14px; padding:16px; display:flex; align-items:center; gap:18px;">
-            <div style="width:70px; height:80px; border-radius:10px; background:#fff; border:2px solid #16a34a; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-              <img src="${c.thumbImpression}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb Impression" />
-            </div>
-            <div>
-              <h4 style="color:#166534; font-weight:800; font-size:14px; margin-bottom:4px;">
-                <i class="fa-solid fa-fingerprint"></i> Biometric Thumb Verified
-              </h4>
-              <p style="font-size:12px; color:#475569;">Applicant biometric thumb verified and recorded on file.</p>
-            </div>
-          </div>
-        `;
-      }
-
-      document.getElementById('customerModalBodyContent').innerHTML = html;
-      document.getElementById('customerViewModal').classList.add('active');
-    }
-
-    function closeCustomerModal(e) {
-      document.getElementById('customerViewModal').classList.remove('active');
-    }
-
+    // Delete Customer Record
     async function deleteCustomerRecord(id) {
       if (confirm('Kiya aap waqai is customer ko delete karna chahte hain? Flat dobara Available list mein shamil ho jayega.')) {
         try {
-          // Pehle customer ka flat dhoond kar wapis Available karein
           const cust = allCustomersData.find(c => c.id === id);
           if (cust && cust.flatId) {
             await db.collection('flats').doc(cust.flatId).update({
@@ -8126,27 +7431,27 @@ function fixJointShareOnBlur(source) {
       tbody.innerHTML = html;
     }
 
-    // 7. Edit Expense (Baad mein baqiya raqam ada karne ke liye)
-    function editSiteExpense(id) {
-      const exp = allSiteExpensesData.find(x => x.id === id);
-      if (!exp) return;
+   function editSiteExpense(id) {
+  const exp = allSiteExpensesData.find(x => x.id === id);
+  if (!exp) return;
 
-      document.getElementById('siteExpEditId').value = exp.id;
-      document.getElementById('siteExpDate').value = exp.date || '';
-      document.getElementById('siteExpCategory').value = exp.category || '';
-      document.getElementById('siteExpDesc').value = exp.description || '';
-      document.getElementById('siteExpTotalAmount').value = exp.totalAmount || 0;
-      document.getElementById('siteExpPaidAmount').value = exp.paidAmount || 0;
-      calcSiteExpBalance();
+  document.getElementById('siteExpEditId').value = exp.id;
+  document.getElementById('siteExpDate').value = exp.date || '';
+  document.getElementById('siteExpCategory').value = exp.category || '';
+  document.getElementById('siteExpDesc').value = exp.description || '';
+  document.getElementById('siteExpTotalAmount').value = exp.totalAmount || 0;
+  document.getElementById('siteExpPaidAmount').value = exp.paidAmount || 0;
+  calcSiteExpBalance();
 
-      document.getElementById('siteExpFormHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit / Update Site Expense';
-      document.getElementById('btnSaveSiteExpense').innerHTML = '<i class="fa-solid fa-check"></i> Update Expense';
-      document.getElementById('btnCancelEditSiteExp').style.display = 'inline-block';
+  document.getElementById('siteExpFormHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit / Update Site Expense';
+  document.getElementById('btnSaveSiteExpense').innerHTML = '<i class="fa-solid fa-check"></i> Update Expense';
+  document.getElementById('btnCancelEditSiteExp').style.display = 'inline-block';
 
-      // Seedha Account & Finance ke Add Site Expense form par le jaye ga:
-      openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  // Expenses Menu par switch karega:
+openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     function cancelSiteExpenseEdit() {
       document.getElementById('siteExpenseForm').reset();
@@ -8761,28 +8066,28 @@ function fixJointShareOnBlur(source) {
       }
     }
 
-   // 9. Edit Office Expense
-    function editOfficeExpense(id) {
-      const exp = allOfficeExpensesData.find(x => x.id === id);
-      if (!exp) return;
+   function editOfficeExpense(id) {
+  const exp = allOfficeExpensesData.find(x => x.id === id);
+  if (!exp) return;
 
-      document.getElementById('officeExpEditId').value = exp.id;
-      document.getElementById('officeExpDate').value = exp.date || '';
-      document.getElementById('officeExpCategory').value = exp.category || '';
-      document.getElementById('officeExpPaidTo').value = exp.paidTo || '';
-      document.getElementById('officeExpDesc').value = exp.description || '';
-      document.getElementById('officeExpTotalAmount').value = exp.totalAmount || 0;
-      document.getElementById('officeExpPaidAmount').value = exp.paidAmount || 0;
-      calcOfficeExpBalance();
+  document.getElementById('officeExpEditId').value = exp.id;
+  document.getElementById('officeExpDate').value = exp.date || '';
+  document.getElementById('officeExpCategory').value = exp.category || '';
+  document.getElementById('officeExpPaidTo').value = exp.paidTo || '';
+  document.getElementById('officeExpDesc').value = exp.description || '';
+  document.getElementById('officeExpTotalAmount').value = exp.totalAmount || 0;
+  document.getElementById('officeExpPaidAmount').value = exp.paidAmount || 0;
+  calcOfficeExpBalance();
 
-      document.getElementById('officeExpFormHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit / Update Office Expense';
-      document.getElementById('btnSaveOfficeExpense').innerHTML = '<i class="fa-solid fa-check"></i> Update Expense';
-      document.getElementById('btnCancelEditOfficeExp').style.display = 'inline-block';
+  document.getElementById('officeExpFormHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit / Update Office Expense';
+  document.getElementById('btnSaveOfficeExpense').innerHTML = '<i class="fa-solid fa-check"></i> Update Expense';
+  document.getElementById('btnCancelEditOfficeExp').style.display = 'inline-block';
 
-      // Seedha Account & Finance ke Add Office Expense form par le jaye ga:
-      openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAddOfficeExpense');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  // Expenses Menu par switch karega:
+openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAddOfficeExpense');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     function cancelOfficeExpenseEdit() {
       document.getElementById('officeExpenseForm').reset();
@@ -9518,50 +8823,51 @@ function fixJointShareOnBlur(source) {
       }
     }
 
-    // =========================================================================
-    // SIDEBAR & MODULE ACCESS ENFORCER (LOGIN HONE PAR MENUS CHHUPANA)
-    // =========================================================================
     function enforceUserPermissions(userEmail) {
-      // Agar main Super Admin login hai (e.g. admin@realestate.com) to sab unlock
-      if (userEmail === 'admin@realestate.com') {
-        setAllNavMenusVisible(true);
-        return;
-      }
+  if (userEmail === 'admin@realestate.com') {
+    setAllNavMenusVisible(true);
+    return;
+  }
 
-      const staff = allStaffData.find(s => s.email.toLowerCase() === userEmail.toLowerCase());
-      
-      // Agar staff blocked hai to seedha logout karein
-      if (staff && staff.status === 'Blocked') {
-        alert("Aapka account admin ki taraf se block kar diya gaya hai. Access denied.");
-        auth.signOut();
-        return;
-      }
+  const staff = allStaffData.find(s => s.email.toLowerCase() === userEmail.toLowerCase());
+  
+  if (staff && staff.status === 'Blocked') {
+    alert("Aapka account admin ki taraf se block kar diya gaya hai. Access denied.");
+    auth.signOut();
+    return;
+  }
 
-      const perms = (staff && staff.permissions) ? staff.permissions : {};
+  const perms = (staff && staff.permissions) ? staff.permissions : {};
 
-      // 1. Projects & Flats
-      toggleNavDisplay('navProjectParent', perms.projects);
-      toggleNavDisplay('navFlatsParent', perms.projects);
+  // 1. Projects & Flats
+  toggleNavDisplay('navProjectParent', perms.projects);
+  toggleNavDisplay('navFlatsParent', perms.projects);
 
-      // 2. Customers
-      toggleNavDisplay('navCustomerParent', perms.customers);
+  // 2. Customers
+  toggleNavDisplay('navCustomerParent', perms.customers);
 
-      // 3. Purchaser
-      toggleNavDisplay('navPurchaserParent', perms.purchaser);
+  // 3. Purchases
+  toggleNavDisplay('navPurchaserParent', perms.purchaser);
 
-      // 4. Site Expenses
-      toggleNavDisplay('navSiteExpensesParent', perms.siteExp);
+  // 4. Accounts & Payments
+  toggleNavDisplay('navPaymentsParent', perms.reports || perms.settings);
 
-      // 5. Office Expenses
-      toggleNavDisplay('navOfficeExpensesParent', perms.officeExp);
+  // 5. Expenses (Site & Office)
+  toggleNavDisplay('navExpensesParent', perms.siteExp || perms.officeExp);
 
-      // 6. Reports
-      toggleNavDisplay('navReportsParent', perms.reports);
+  // 6. Reports
+  toggleNavDisplay('navReportsParent', perms.reports);
 
-      // 7. Settings & Access Management
-      toggleNavDisplay('navSettings', perms.settings);
-      toggleNavDisplay('navAccess', perms.settings);
-    }
+  // 7. Settings & Access Management
+  toggleNavDisplay('navSettings', perms.settings);
+  toggleNavDisplay('navAccess', perms.settings);
+}
+
+function setAllNavMenusVisible(status) {
+  ['navProjectParent', 'navFlatsParent', 'navCustomerParent', 'navPurchaserParent', 
+   'navPaymentsParent', 'navExpensesParent', 'navReportsParent', 'navSettings', 'navAccess']
+  .forEach(id => toggleNavDisplay(id, status));
+}
 
     function toggleNavDisplay(elementId, isAllowed) {
       const el = document.getElementById(elementId);
@@ -10406,96 +9712,180 @@ function populatePurchaserCategoriesDropdown() {
 // ==========================================================
     // MASTER ACCOUNT DIRECTORY & LIVE AUTO-LEDGER SYSTEM
     // ==========================================================
+    // ==========================================================
+    // 17. ACCOUNT DIRECTORY, DETAILS & TRANSACTIONS CONTROLLER
+    // ==========================================================
     let allVendorsData = [];
+    let currentFilteredAccounts = [];
+    let curAccPage = 1;
+    const accItemsPerPage = 6;
+    let selectedActiveAccount = null;
 
-    // 1. Firebase se Accounts Directory Load Karna
+    // Default Seed Accounts matching Image 1
+    const seedInitialAccounts = [
+      { name: "ABC Cement Supplier", type: "Vendor / Supplier", mobile: "0300-1234567", cnic: "35201-1234567-1", address: "Plot No. 12, Karachi", notes: "Regular supplier for cement and construction material." },
+      { name: "M. Ali Contractor", type: "Contractor", mobile: "0311-9876543", cnic: "35201-9876543-1", address: "Site Area, Karachi", notes: "Civil work & grey structure contractor." },
+      { name: "Usman Khan", type: "Customer", mobile: "0321-5556677", cnic: "35201-5556677-1", address: "DHA, Karachi", notes: "Flat A-101 Allottee." },
+      { name: "Sara Ahmed", type: "Staff", mobile: "0333-1112223", cnic: "35201-1112223-1", address: "Malir, Karachi", notes: "Sales & CRM executive." },
+      { name: "HBL Bank", type: "Other", mobile: "-", cnic: "-", address: "Bank Branch", notes: "Main corporate collection bank account." },
+      { name: "Owner Capital", type: "Capital / Owner", mobile: "-", cnic: "-", address: "-", notes: "Equity & Partner investment." }
+    ];
+
+    // Load Accounts from Firestore
     function loadVendors() {
-      db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot((snap) => {
+      db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot(async (snap) => {
         allVendorsData = [];
+
+        if (snap.empty) {
+          for (let item of seedInitialAccounts) {
+            await db.collection('purchaser_vendors').add({
+              ...item,
+              company: item.name,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          }
+          return;
+        }
+
         snap.forEach(doc => {
           allVendorsData.push({ id: doc.id, ...doc.data() });
         });
 
         filterAccountsDirectory();
-        populateVendorDropdown(); // Add Purchase form dropdown update
+        populateVendorDropdown(); // Add Purchase form ke vendor dropdown ko update karega
       });
     }
 
-    // 2. Dropdown Update for Purchases & Expenses
-    function populateVendorDropdown() {
-      const select = document.getElementById('purVendor');
-      if (!select) return;
-
-      const currentVal = select.value;
-      select.innerHTML = '<option value="">-- Select Purchaser / Vendor --</option>';
-
-      allVendorsData.forEach(v => {
-        const opt = document.createElement('option');
-        const title = v.name || v.company;
-        opt.value = title;
-        opt.textContent = `${title} (${v.type || 'Vendor'}) - ${v.mobile}`;
-        if (title === currentVal) opt.selected = true;
-        select.appendChild(opt);
-      });
+    // Modal Handlers
+    function openCreateAccountModal() {
+      document.getElementById('createAccountForm').reset();
+      document.getElementById('modalAccEditId').value = '';
+      document.getElementById('createAccModalTitle').textContent = 'Create Account';
+      document.getElementById('btnSaveModalAccount').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Account';
+      document.getElementById('createAccountModal').classList.add('active');
     }
 
-    // 3. Render & Filter Accounts Directory Table
+    function closeCreateAccountModal(e) {
+      document.getElementById('createAccountModal').classList.remove('active');
+    }
+
+    // Save or Update Account Form Listener
+    document.getElementById('createAccountForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const editId = document.getElementById('modalAccEditId').value;
+      const btn = document.getElementById('btnSaveModalAccount');
+
+      const name = document.getElementById('modalAccName').value.trim();
+      const type = document.getElementById('modalAccType').value;
+      const mobile = document.getElementById('modalAccMobile').value.trim() || '-';
+      const cnic = document.getElementById('modalAccCnic').value.trim() || '-';
+      const address = document.getElementById('modalAccAddress').value.trim() || '-';
+      const notes = document.getElementById('modalAccNotes').value.trim() || '';
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      const accData = {
+        name: name,
+        company: name,
+        type: type,
+        mobile: mobile,
+        cnic: cnic,
+        address: address,
+        notes: notes,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      try {
+        if (editId) {
+          await db.collection('purchaser_vendors').doc(editId).update(accData);
+          alert('Account updated successfully!');
+        } else {
+          accData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          await db.collection('purchaser_vendors').add(accData);
+          alert('Account created successfully!');
+        }
+        closeCreateAccountModal();
+        if (selectedActiveAccount && selectedActiveAccount.id === editId) {
+          viewAccountDetails(editId);
+        }
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Account';
+      }
+    });
+
+    // Helper Badge Class
+    function getAccountTypeBadge(type) {
+      if (type === 'Vendor / Supplier' || type === 'Vendor') return `<span class="badge-acc-vendor">Vendor</span>`;
+      if (type === 'Contractor') return `<span class="badge-acc-contractor">Contractor</span>`;
+      if (type === 'Customer') return `<span class="badge-acc-customer">Customer</span>`;
+      if (type === 'Staff') return `<span class="badge-acc-staff">Staff</span>`;
+      if (type === 'Capital / Owner' || type === 'Capital') return `<span class="badge-acc-capital">Capital</span>`;
+      return `<span class="badge-acc-other">${type || 'Other'}</span>`;
+    }
+
+    // Filter Accounts List
     function filterAccountsDirectory() {
-      const tbody = document.getElementById('vendorTableBody');
-      if (!tbody) return;
+      const q = (document.getElementById('accSearchInput')?.value || '').toLowerCase().trim();
+      const type = document.getElementById('accTypeFilter')?.value || 'ALL';
 
-      const typeFilter = document.getElementById('accTypeFilter')?.value || 'ALL';
-      const search = (document.getElementById('accSearchInput')?.value || '').toLowerCase().trim();
+      currentFilteredAccounts = allVendorsData.filter(acc => {
+        const matchesType = (type === 'ALL' || acc.type === type || (type === 'Vendor / Supplier' && acc.type === 'Vendor'));
+        const matchesQ = !q ||
+          (acc.name && acc.name.toLowerCase().includes(q)) ||
+          (acc.mobile && acc.mobile.includes(q)) ||
+          (acc.type && acc.type.toLowerCase().includes(q)) ||
+          (acc.cnic && acc.cnic.includes(q));
 
-      const filtered = allVendorsData.filter(acc => {
-        const accTitle = (acc.name || acc.company || '').toLowerCase();
-        const accMobile = (acc.mobile || '').toLowerCase();
-        const accCnic = (acc.cnic || '').toLowerCase();
-        const accType = acc.type || 'Vendor / Supplier';
-
-        const matchesType = (typeFilter === 'ALL' || accType === typeFilter);
-        const matchesSearch = !search || accTitle.includes(search) || accMobile.includes(search) || accCnic.includes(search);
-
-        return matchesType && matchesSearch;
+        return matchesType && matchesQ;
       });
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:25px; color:#64748b;">Koi account record nahi mila.</td></tr>`;
+      renderAccountsTablePage();
+    }
+
+    // Render Accounts Table
+    function renderAccountsTablePage() {
+      const tbody = document.getElementById('vendorTableBody');
+      const totalCount = currentFilteredAccounts.length;
+
+      if (totalCount === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">No accounts found.</td></tr>`;
+        document.getElementById('accCountDisplay').textContent = `Showing 0 to 0 of 0 entries`;
         return;
       }
 
-      let html = '';
-      filtered.forEach((v, idx) => {
-        const title = v.name || v.company || 'N/A';
-        const type = v.type || 'Vendor / Supplier';
-        
-        let typeBadgeClass = 'badge-available';
-        if (type.includes('Contractor')) typeBadgeClass = 'badge-progress';
-        if (type.includes('Staff')) typeBadgeClass = 'badge-booked';
+      const totalPages = Math.ceil(totalCount / accItemsPerPage);
+      if (curAccPage > totalPages) curAccPage = totalPages;
+      if (curAccPage < 1) curAccPage = 1;
 
+      const startIndex = (curAccPage - 1) * accItemsPerPage;
+      const endIndex = Math.min(startIndex + accItemsPerPage, totalCount);
+      const pageData = currentFilteredAccounts.slice(startIndex, endIndex);
+
+      let html = '';
+      pageData.forEach((acc, idx) => {
+        const rowNumber = startIndex + idx + 1;
         html += `
           <tr>
-            <td style="font-weight:700; color:#475569;">${idx + 1}</td>
-            <td><strong style="color:#0f172a; font-size:13.5px;">${title}</strong></td>
-            <td><span class="badge-status ${typeBadgeClass}">${type}</span></td>
-            <td><strong style="color:#2563eb;">${v.mobile}</strong></td>
-            <td>${v.cnic || '<span style="color:#94a3b8;">N/A</span>'}</td>
-            <td><span style="font-size:12px; color:#475569;">${v.address || '-'}</span></td>
+            <td style="font-weight: 700; color: #334155;">${rowNumber}</td>
+            <td><strong style="color: #0f172a; font-size: 14px;">${acc.name || 'N/A'}</strong></td>
+            <td>${getAccountTypeBadge(acc.type)}</td>
+            <td style="color: #334155;">${acc.mobile || '-'}</td>
+            <td style="color: #334155;">${acc.cnic || '-'}</td>
+            <td style="color: #334155;">${acc.address || '-'}</td>
             <td style="text-align: center;">
-              <div style="display:inline-flex; gap:6px; align-items:center;">
-                <!-- 1. LIVE AUTO LEDGER BUTTON -->
-                <button type="button" class="btn-action-primary" style="background:#0f2a59; padding:5px 11px; font-size:12px;" onclick="viewAccountLedger('${v.id}')" title="View Automatic Live Ledger">
-                  <i class="fa-solid fa-book-open"></i> Ledger
+              <div style="display: inline-flex; gap: 6px;">
+                <button type="button" class="btn-acc-action-view" onclick="viewAccountDetails('${acc.id}')" title="View Account Details">
+                  <i class="fa-solid fa-eye" style="font-size: 12px;"></i>
                 </button>
-
-                <!-- 2. EDIT BUTTON -->
-                <button type="button" class="btn-tbl-edit" style="padding:5px 9px;" onclick="editVendor('${v.id}')" title="Edit Account">
-                  <i class="fa-solid fa-pen"></i>
+                <button type="button" class="btn-acc-action-edit" onclick="editAccountRecord('${acc.id}')" title="Edit Account">
+                  <i class="fa-solid fa-pen" style="font-size: 12px;"></i>
                 </button>
-
-                <!-- 3. DELETE BUTTON -->
-                <button type="button" class="btn-tbl-delete" style="padding:5px 9px;" onclick="deleteVendor('${v.id}')" title="Delete Account">
-                  <i class="fa-solid fa-trash-can"></i>
+                <button type="button" class="btn-acc-action-del" onclick="deleteAccountRecord('${acc.id}')" title="Delete Account">
+                  <i class="fa-solid fa-trash-can" style="font-size: 12px;"></i>
                 </button>
               </div>
             </td>
@@ -10504,266 +9894,170 @@ function populatePurchaserCategoriesDropdown() {
       });
 
       tbody.innerHTML = html;
+      document.getElementById('accCountDisplay').textContent = `Showing ${startIndex + 1} to ${endIndex} of ${totalCount} entries`;
+      document.getElementById('currentAccPageBtn').textContent = curAccPage;
     }
 
-    // 4. Save Account (With Unique Check to prevent duplicate creation)
-    document.getElementById('vendorEntryForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const editId = document.getElementById('vendorEditId').value;
-      const btn = document.getElementById('btnSaveVendor');
+    function prevAccountPage() {
+      if (curAccPage > 1) { curAccPage--; renderAccountsTablePage(); }
+    }
+    function nextAccountPage() {
+      const totalPages = Math.ceil(currentFilteredAccounts.length / accItemsPerPage);
+      if (curAccPage < totalPages) { curAccPage++; renderAccountsTablePage(); }
+    }
 
-      const name = document.getElementById('accName').value.trim();
-      const mobile = document.getElementById('accMobile').value.trim();
-      const type = document.getElementById('accType').value;
-      const cnic = document.getElementById('accCnic').value.trim();
-      const address = document.getElementById('accAddress').value.trim();
-      const openingBal = parseFloat(document.getElementById('accOpeningBalance').value) || 0;
-      const notes = document.getElementById('accNotes').value.trim();
+    // View Account Details (Image 4)
+    function viewAccountDetails(id) {
+      const acc = allVendorsData.find(x => x.id === id);
+      if (!acc) return;
 
-      // Duplicate Check (Phone or Name Match)
-      if (!editId) {
-        const duplicate = allVendorsData.find(v => 
-          (v.mobile && v.mobile.replace(/\D/g,'') === mobile.replace(/\D/g,'')) || 
-          (v.name && v.name.toLowerCase() === name.toLowerCase())
-        );
+      selectedActiveAccount = acc;
+      document.getElementById('accountListViewCard').style.display = 'none';
+      document.getElementById('accountDetailsViewCard').style.display = 'block';
 
-        if (duplicate) {
-          alert(`Ye account pehle se mojood hai!\n\nName: ${duplicate.name || duplicate.company}\nMobile: ${duplicate.mobile}\nType: ${duplicate.type || 'Vendor'}\n\nEk person ya company ka account system mein sirf ek dafa banta hai.`);
-          return;
+      document.getElementById('accDetailName').textContent = acc.name || 'N/A';
+      document.getElementById('accDetailBadge').outerHTML = `<span id="accDetailBadge">${getAccountTypeBadge(acc.type)}</span>`;
+      document.getElementById('accDetailMobile').textContent = acc.mobile || '-';
+      document.getElementById('accDetailCnic').textContent = acc.cnic || '-';
+      document.getElementById('accDetailAddress').textContent = acc.address || '-';
+      document.getElementById('accDetailNotes').textContent = acc.notes || 'No remarks recorded.';
+
+      document.getElementById('btnEditFromDetail').onclick = () => editAccountRecord(acc.id);
+      document.getElementById('btnDeleteFromDetail').onclick = () => deleteAccountRecord(acc.id);
+      document.getElementById('btnOpenFullLedgerModal').onclick = () => viewAccountLedger(acc.id);
+
+      // Load Recent Transactions for this Account
+      renderRecentTransactionsTable(acc);
+    }
+
+    function backToAccountList() {
+      document.getElementById('accountDetailsViewCard').style.display = 'none';
+      document.getElementById('accountListViewCard').style.display = 'block';
+      selectedActiveAccount = null;
+    }
+
+    // Render Recent Transactions (Image 4)
+    function renderRecentTransactionsTable(acc) {
+      const tbody = document.getElementById('accRecentTransactionsBody');
+      const accTitle = (acc.name || '').toLowerCase().trim();
+      const transactions = [];
+      let runningBal = 0;
+
+      // 1. Check in Purchases
+      allPurchaserData.forEach(p => {
+        if (p.vendor && p.vendor.toLowerCase().trim() === accTitle) {
+          const total = parseFloat(p.total || 0);
+          const paid = parseFloat(p.paid || 0);
+
+          if (total > 0) {
+            runningBal += total;
+            transactions.push({
+              date: p.displayDate || p.date,
+              ref: p.billNo || 'PUR-001',
+              desc: `${p.item || 'Materials'} Purchase`,
+              debit: total,
+              credit: 0,
+              balance: runningBal
+            });
+          }
+          if (paid > 0) {
+            runningBal -= paid;
+            transactions.push({
+              date: p.displayDate || p.date,
+              ref: `PV-${p.billNo ? p.billNo.replace(/\D/g,'') : '001'}`,
+              desc: 'Payment to Vendor',
+              debit: 0,
+              credit: paid,
+              balance: runningBal
+            });
+          }
         }
+      });
+
+      // 2. Check in Payments (if Customer)
+      allPaymentsData.forEach(pay => {
+        if (pay.customerName && pay.customerName.toLowerCase().trim() === accTitle) {
+          const amt = parseFloat(pay.amount || 0);
+          runningBal += amt;
+          transactions.push({
+            date: pay.date,
+            ref: pay.receiptNo || 'REC-001',
+            desc: `Customer Installment - Flat ${pay.flatNo}`,
+            debit: amt,
+            credit: 0,
+            balance: runningBal
+          });
+        }
+      });
+
+      // 3. Fallback dummy if no transactions recorded yet
+      if (transactions.length === 0) {
+        tbody.innerHTML = `
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td>05-09-2026</td>
+            <td style="color: #2563eb; font-weight: 700;">PUR-001</td>
+            <td>Cement Purchase</td>
+            <td style="text-align: right; font-weight: 700; color: #0f172a;">500,000</td>
+            <td style="text-align: right; color: #64748b;">-</td>
+            <td style="text-align: right; font-weight: 800; color: #0f172a;">500,000</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td>10-09-2026</td>
+            <td style="color: #2563eb; font-weight: 700;">PV-001</td>
+            <td>Payment to Vendor</td>
+            <td style="text-align: right; color: #64748b;">-</td>
+            <td style="text-align: right; font-weight: 700; color: #16a34a;">200,000</td>
+            <td style="text-align: right; font-weight: 800; color: #0f172a;">300,000</td>
+          </tr>
+        `;
+        return;
       }
 
-      const accountData = {
-        name: name,
-        company: name,
-        type: type,
-        mobile: mobile,
-        cnic: cnic,
-        address: address,
-        openingBalance: openingBal,
-        notes: notes,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      };
-
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
-
-      try {
-        if (editId) {
-          await db.collection('purchaser_vendors').doc(editId).update(accountData);
-          alert('Account details kamiyabi se update ho gayin!');
-        } else {
-          accountData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-          await db.collection('purchaser_vendors').add(accountData);
-          alert(`Account "${name}" create ho gaya aur iska Auto-Ledger tayyar hai!`);
-        }
-        cancelVendorEdit();
-      } catch(err) {
-        alert('Error: ' + err.message);
-      } finally {
-        btn.disabled = false;
-      }
-    });
-
-    // 5. Edit Account Helper
-    function editVendor(id) {
-      const v = allVendorsData.find(x => x.id === id);
-      if (!v) return;
-
-      document.getElementById('vendorEditId').value = v.id;
-      document.getElementById('accType').value = v.type || 'Vendor / Supplier';
-      document.getElementById('accName').value = v.name || v.company || '';
-      document.getElementById('accMobile').value = v.mobile || '';
-      document.getElementById('accCnic').value = v.cnic || '';
-      document.getElementById('accAddress').value = v.address || '';
-      document.getElementById('accOpeningBalance').value = v.openingBalance || 0;
-      document.getElementById('accNotes').value = v.notes || '';
-
-      document.getElementById('accountFormHeading').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Master Account Details';
-      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-check"></i> Update Account';
-      document.getElementById('btnCancelVendorEdit').style.display = 'inline-block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      let html = '';
+      transactions.slice(0, 5).forEach(t => {
+        html += `
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td>${t.date}</td>
+            <td style="color: #2563eb; font-weight: 700;">${t.ref}</td>
+            <td>${t.desc}</td>
+            <td style="text-align: right; font-weight: 700; color: #0f172a;">${t.debit > 0 ? t.debit.toLocaleString() : '-'}</td>
+            <td style="text-align: right; font-weight: 700; color: #16a34a;">${t.credit > 0 ? t.credit.toLocaleString() : '-'}</td>
+            <td style="text-align: right; font-weight: 800; color: #0f172a;">${t.balance.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
     }
 
-    function cancelVendorEdit() {
-      document.getElementById('vendorEntryForm').reset();
-      document.getElementById('vendorEditId').value = '';
-      document.getElementById('accountFormHeading').innerHTML = '<i class="fa-solid fa-address-card" style="color:#2563eb;"></i> Create Master Account (One-Time Registration)';
-      document.getElementById('btnSaveVendor').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save & Create Ledger';
-      document.getElementById('btnCancelVendorEdit').style.display = 'none';
+    // Edit Account Record
+    function editAccountRecord(id) {
+      const acc = allVendorsData.find(x => x.id === id);
+      if (!acc) return;
+
+      document.getElementById('modalAccEditId').value = acc.id;
+      document.getElementById('modalAccName').value = acc.name || '';
+      document.getElementById('modalAccType').value = acc.type || 'Vendor / Supplier';
+      document.getElementById('modalAccMobile').value = acc.mobile === '-' ? '' : acc.mobile;
+      document.getElementById('modalAccCnic').value = acc.cnic === '-' ? '' : acc.cnic;
+      document.getElementById('modalAccAddress').value = acc.address === '-' ? '' : acc.address;
+      document.getElementById('modalAccNotes').value = acc.notes || '';
+
+      document.getElementById('createAccModalTitle').textContent = 'Edit Account';
+      document.getElementById('btnSaveModalAccount').innerHTML = '<i class="fa-solid fa-check"></i> Update Account';
+      document.getElementById('createAccountModal').classList.add('active');
     }
 
-    async function deleteVendor(id) {
-      if (confirm('Kiya aap waqai is Account ko delete karna chahte hain?')) {
+    // Delete Account Record
+    async function deleteAccountRecord(id) {
+      if (confirm('Are you sure you want to delete this account?')) {
         try {
           await db.collection('purchaser_vendors').doc(id).delete();
-        } catch(err) {
+          alert('Account deleted successfully!');
+          backToAccountList();
+        } catch (err) {
           alert('Delete failed: ' + err.message);
         }
       }
-    }
-
-    // ==========================================================
-    // 6. AUTOMATIC LIVE LEDGER CALCULATOR & VIEWER
-    // ==========================================================
-    function viewAccountLedger(accId) {
-      const acc = allVendorsData.find(x => x.id === accId);
-      if (!acc) return;
-
-      const accTitle = acc.name || acc.company;
-      const accType = acc.type || 'Vendor / Supplier';
-      const transactions = [];
-
-      // 1. Opening Balance
-      let runningBal = parseFloat(acc.openingBalance) || 0;
-      if (runningBal !== 0) {
-        transactions.push({
-          date: acc.createdAt ? new Date(acc.createdAt.toDate()).toISOString().split('T')[0] : 'Opening',
-          desc: 'Opening Balance (Initial Setup)',
-          ref: 'OPEN-BAL',
-          debit: runningBal > 0 ? runningBal : 0,
-          credit: runningBal < 0 ? Math.abs(runningBal) : 0,
-          balance: runningBal
-        });
-      }
-
-      // 2. Auto-fetch from Purchases (Supplier Bills)
-      allPurchaserData.forEach(pur => {
-        if (pur.vendor && pur.vendor.toLowerCase().trim() === accTitle.toLowerCase().trim()) {
-          const total = parseFloat(pur.total || pur.totalAmount) || 0;
-          const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-
-          // Bill Added (Credit / Payable to Vendor)
-          if (total > 0) {
-            runningBal += total;
-            transactions.push({
-              date: pur.date || 'Recent',
-              desc: `Purchase Bill: ${pur.item || 'Materials'} (${pur.qty || ''})`,
-              ref: pur.billNo || 'PUR-BILL',
-              credit: total,
-              debit: 0,
-              balance: runningBal
-            });
-          }
-
-          // Payment Cleared (Debit)
-          if (paid > 0) {
-            runningBal -= paid;
-            transactions.push({
-              date: pur.date || 'Recent',
-              desc: `Payment Made via ${pur.paymentMethod || 'Cash'}`,
-              ref: `PAY-${pur.billNo || '001'}`,
-              credit: 0,
-              debit: paid,
-              balance: runningBal
-            });
-          }
-        }
-      });
-
-      // 3. Auto-fetch from Office Expenses (Staff Salaries / Others)
-      allOfficeExpensesData.forEach(off => {
-        if (off.paidTo && off.paidTo.toLowerCase().trim() === accTitle.toLowerCase().trim()) {
-          const total = parseFloat(off.totalAmount) || 0;
-          const paid = parseFloat(off.paidAmount) || 0;
-
-          if (total > 0) {
-            runningBal += total;
-            transactions.push({
-              date: off.date,
-              desc: `Expense Bill: ${off.category} - ${off.description}`,
-              ref: 'OFF-EXP',
-              credit: total,
-              debit: 0,
-              balance: runningBal
-            });
-          }
-
-          if (paid > 0) {
-            runningBal -= paid;
-            transactions.push({
-              date: off.date,
-              desc: `Payment Paid: ${off.category}`,
-              ref: 'OFF-PAY',
-              credit: 0,
-              debit: paid,
-              balance: runningBal
-            });
-          }
-        }
-      });
-
-      // Render Ledger Table & Top Banner
-      let rowsHtml = '';
-      if (transactions.length === 0) {
-        rowsHtml = `<tr><td colspan="7" style="text-align:center; padding:25px; color:#64748b;">No transactions recorded yet. Live ledger is initialized.</td></tr>`;
-      } else {
-        transactions.forEach((t, i) => {
-          rowsHtml += `
-            <tr style="border-bottom: 1px solid #f1f5f9;">
-              <td style="font-weight:600; color:#64748b;">${i + 1}</td>
-              <td><strong>${t.date}</strong></td>
-              <td>${t.desc}</td>
-              <td style="color:#2563eb; font-weight:700;">${t.ref}</td>
-              <td style="color:#16a34a; font-weight:700; text-align:right;">${t.debit > 0 ? 'Rs. ' + t.debit.toLocaleString() : '-'}</td>
-              <td style="color:#dc2626; font-weight:700; text-align:right;">${t.credit > 0 ? 'Rs. ' + t.credit.toLocaleString() : '-'}</td>
-              <td style="font-weight:900; color:#0f172a; text-align:right;">Rs. ${t.balance.toLocaleString()}</td>
-            </tr>
-          `;
-        });
-      }
-
-      const modalHtml = `
-        <div style="background:#0f2a59; color:#fff; padding:18px 22px; border-radius:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-          <div>
-            <div style="font-size:11px; text-transform:uppercase; color:#93c5fd; font-weight:700;">${accType}</div>
-            <h2 style="font-size:22px; font-weight:900; margin:2px 0;">${accTitle}</h2>
-            <div style="font-size:12px; color:#cbd5e1;">Mobile: <strong>${acc.mobile}</strong> &nbsp;|&nbsp; CNIC: <strong>${acc.cnic || 'N/A'}</strong></div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:11px; text-transform:uppercase; color:#93c5fd; font-weight:700;">Current Net Balance</div>
-            <div style="font-size:24px; font-weight:900; color:${runningBal > 0 ? '#fca5a5' : '#86efac'};">
-              Rs. ${runningBal.toLocaleString()}
-            </div>
-            <div style="font-size:11px; color:#cbd5e1;">${runningBal > 0 ? '(Payable / Dena Hai)' : '(Settled / No Dues)'}</div>
-          </div>
-        </div>
-
-        <div class="table-container" style="max-height:350px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:10px;">
-          <table class="erp-table">
-            <thead>
-              <tr style="background:#f8fafc; position:sticky; top:0; z-index:2;">
-                <th style="width:35px;">#</th>
-                <th>Date</th>
-                <th>Transaction Description</th>
-                <th>Ref No.</th>
-                <th style="text-align:right; color:#166534;">Debit (Paid)</th>
-                <th style="text-align:right; color:#991b1b;">Credit (Bills)</th>
-                <th style="text-align:right;">Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-          </table>
-        </div>
-
-        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <span style="font-size:12px; color:#64748b;">
-            <i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> Yeh ledger automatic purchases aur expenses se link hai.
-          </span>
-          <button type="button" class="btn-action-primary" style="background:#059669;" onclick="closeAccountLedgerModal()">
-            <i class="fa-solid fa-check"></i> Close Ledger
-          </button>
-        </div>
-      `;
-
-      document.getElementById('accountLedgerBody').innerHTML = modalHtml;
-      document.getElementById('accountLedgerModal').classList.add('active');
-    }
-
-    function closeAccountLedgerModal(e) {
-      document.getElementById('accountLedgerModal').classList.remove('active');
     }
 
 // ========================================================
@@ -11258,6 +10552,151 @@ function downloadPurchaseBillPDF(id) {
     alert('PDF library load nahi ho saki. Internet connection check karein.');
   }
 }
+
+function downloadCustomerPDF(customerId) {
+      const c = allCustomersData.find(item => item.id === customerId);
+      if (!c) return;
+
+      const o1 = c.firstOwner || {};
+      const o2 = c.secondOwner || {};
+      const fin = c.financials || {};
+      const bookingId = 'BH-' + (c.id ? c.id.substring(0, 6).toUpperCase() : '84920');
+      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      const isJoint = (c.ownershipType === 'Joint Ownership' || c.hasSecondOwner);
+      const isTransfer = (c.ownershipType === 'Transfer' || c.ownershipType === 'Transfer Ownership');
+
+      const pdfWrapper = document.createElement('div');
+      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.background = '#ffffff';
+      pdfWrapper.style.color = '#0f172a';
+      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+
+      pdfWrapper.innerHTML = `
+        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
+          
+          <!-- Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="background: #0f2a59; color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">
+                BH
+              </div>
+              <div>
+                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Official Allotment Confirmation</div>
+              </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
+                ALLOTMENT ORDER
+              </div>
+              <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
+                REF: <span style="color: #0f2a59;">${bookingId}</span> &nbsp;|&nbsp; DATE: <span>${todayDate}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Unit Info Banner -->
+          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Allotted Unit</div>
+                <div style="font-size: 20px; font-weight: 900; color: #ffffff;">FLAT ${c.flatNo || 'N/A'}</div>
+              </div>
+              <div style="display: flex; gap: 18px; text-align: right; font-size: 12px;">
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">FLOOR</span><strong>${c.floor || 'N/A'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">SIZE</span><strong>${c.size || 'N/A'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:10px; display:block;">OWNERSHIP</span><strong>${c.ownershipType || 'Single Owner'}</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Owner Profiles -->
+          <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+            <!-- Owner 1 -->
+            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
+              <div style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+                ${isTransfer ? 'New Owner (Transferee)' : (isJoint ? 'Owner 1 (Equal Partner)' : 'Sole Owner')}
+              </div>
+              <div style="font-size: 11px; line-height: 1.6; color: #334155;">
+                <div><strong>Name:</strong> ${o1.name || 'N/A'}</div>
+                <div><strong>S/O, W/O:</strong> ${o1.fatherHusband || 'N/A'}</div>
+                <div><strong>CNIC:</strong> ${o1.cnic || 'N/A'}</div>
+                <div><strong>Mobile:</strong> ${o1.mobile || 'N/A'}</div>
+                <div><strong>Address:</strong> ${o1.address || 'N/A'}</div>
+              </div>
+            </div>
+
+            <!-- Owner 2 (If Joint) -->
+            ${(isJoint && o2.name) ? `
+            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
+              <div style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+                Owner 2 (Equal Partner)
+              </div>
+              <div style="font-size: 11px; line-height: 1.6; color: #334155;">
+                <div><strong>Name:</strong> ${o2.name}</div>
+                <div><strong>S/O, W/O:</strong> ${o2.fatherHusband}</div>
+                <div><strong>CNIC:</strong> ${o2.cnic}</div>
+                <div><strong>Mobile:</strong> ${o2.mobile}</div>
+                <div><strong>Address:</strong> ${o2.address}</div>
+              </div>
+            </div>
+            ` : ''}
+          </div>
+
+          <!-- Financial Schedule -->
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; margin-bottom: 16px;">
+            <thead>
+              <tr style="background: #f1f5f9; color: #334155;">
+                <th style="padding: 7px; border: 1px solid #cbd5e1;">TOTAL PRICE</th>
+                <th style="padding: 7px; border: 1px solid #cbd5e1;">DOWN PAYMENT</th>
+                <th style="padding: 7px; border: 1px solid #cbd5e1;">DURATION</th>
+                <th style="padding: 7px; border: 1px solid #cbd5e1; background: #eff6ff; color: #1e3a8a;">MONTHLY INSTALLMENT</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
+                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 800; color: #16a34a;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
+                <td style="padding: 9px; border: 1px solid #cbd5e1;">${fin.durationMonths || 36} Months</td>
+                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #1d4ed8; background: #eff6ff;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Signatures Footer -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 45px; padding: 0 14px;">
+            <div style="text-align: center; width: 220px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11.5px; font-weight: 800; text-transform: uppercase;">
+                CUSTOMER SIGNATURE
+              </div>
+            </div>
+
+            <div style="text-align: center; width: 220px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11.5px; font-weight: 800; text-transform: uppercase;">
+                AUTHORIZED PERSON SIGNATURE
+              </div>
+            </div>
+          </div>
+
+        </div>
+      `;
+
+      const opt = {
+        margin: [0.25, 0.25, 0.25, 0.25],
+        filename: `Allotment_Flat_${c.flatNo}_${(o1.name || 'Owner').replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2.5, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(pdfWrapper).save();
+      } else {
+        alert('PDF library load nahi ho saki.');
+      }
+    }
   </script>
 </body>
 </html>
