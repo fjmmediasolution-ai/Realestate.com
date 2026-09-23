@@ -3315,12 +3315,11 @@
                   </select>
                 </div>
 
-                <!-- Supplier / Vendor Name Dropdown -->
+                <!-- Supplier / Vendor Name Autocomplete Input -->
                 <div>
                   <label>Supplier / Vendor Company *</label>
-                  <select id="purVendor" required style="width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 600; background: #ffffff; color: #334155; outline:none;">
-                    <option value="">-- Select Purchaser / Vendor --</option>
-                  </select>
+                  <input type="text" id="purVendor" list="purVendorDatalist" placeholder="Type or search vendor name..." required autocomplete="off" style="width: 100%; padding: 11px 13px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 600; background: #ffffff; color: #334155; outline:none;" />
+                  <datalist id="purVendorDatalist"></datalist>
                 </div>
 
                 <!-- DYNAMIC MULTIPLE ITEMS CONTAINER -->
@@ -9873,12 +9872,13 @@ function populatePurchaserCategoriesDropdown() {
       });
     }
 
-    // Account List ke All Types ke accounts ko Add Purchase Dropdown mein load karne ka function
+    // Account List ke All Types ke accounts ko Datalist Autocomplete mein load karne ka function
     function populateVendorDropdown(selectedVal = '') {
-      const select = document.getElementById('purVendor');
-      if (!select) return;
+      const datalist = document.getElementById('purVendorDatalist');
+      const input = document.getElementById('purVendor');
+      if (!datalist) return;
 
-      select.innerHTML = '<option value="">-- Select Purchaser / Vendor --</option>';
+      datalist.innerHTML = '';
 
       if (!allVendorsData || allVendorsData.length === 0) return;
 
@@ -9888,22 +9888,12 @@ function populatePurchaserCategoriesDropdown() {
 
         const opt = document.createElement('option');
         opt.value = accName;
-        // Account ka naam aur sath bracket mein uski Type show hogi (e.g. Vendor, Contractor, Customer wagaira)
-        opt.textContent = `${accName} (${acc.type || 'Account'})`;
-
-        if (selectedVal && (selectedVal === accName || selectedVal === opt.textContent)) {
-          opt.selected = true;
-        }
-        select.appendChild(opt);
+        opt.label = `${accName} (${acc.type || 'Account'})`;
+        datalist.appendChild(opt);
       });
 
-      // Agar edit mode mein purana vendor list mein mojood na ho to add karein
-      if (selectedVal && !Array.from(select.options).some(o => o.value === selectedVal)) {
-        const opt = document.createElement('option');
-        opt.value = selectedVal;
-        opt.textContent = selectedVal;
-        opt.selected = true;
-        select.appendChild(opt);
+      if (selectedVal && input) {
+        input.value = selectedVal;
       }
     }
 
