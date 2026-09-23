@@ -2106,37 +2106,13 @@
             </div>
             
            <div class="submenu" id="reportsSubmenu">
-              <!-- 1. Project Detail Report -->
-              <a class="submenu-item" id="subReportProjects" onclick="switchSection('projectDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Project Details Report</span>
-              </a>
-
-              <!-- 2. Client Detail Report -->
-              <a class="submenu-item" id="subReportClients" onclick="switchSection('customerDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Client Details Report</span>
-              </a>
-
-              <!-- 3. Customer Document Download -->
-              <a class="submenu-item" id="subReportDocuments" onclick="switchSection('customerDocuments', this)">
-                <span class="dot-bullet">•</span>
-                <span>Customer Documents Download</span>
-              </a>
-
-              <!-- 4. Purchaser Details Report -->
-              <a class="submenu-item" id="subReportPurchaser" onclick="switchSection('purchaserDetails', this)">
-                <span class="dot-bullet">•</span>
-                <span>Purchaser Details Report</span>
-              </a>
-
-              <!-- 5. Site Expense Report -->
+              <!-- 1. Site Expense Report -->
               <a class="submenu-item" id="subReportSiteExpenses" onclick="switchSection('siteExpenseDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Site Expense Report</span>
               </a>
 
-              <!-- 6. Office Expense Report -->
+              <!-- 2. Office Expense Report -->
               <a class="submenu-item" id="subReportOfficeExpenses" onclick="switchSection('officeExpenseDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Office Expense Report</span>
@@ -3175,6 +3151,66 @@
               <button class="btn-action-primary" onclick="resetCustomerFormForNew(); openAndSwitch('customerSubmenu', 'navCustomerParent', 'addCustomer', 'subAddCustomer')">
                 <i class="fa-solid fa-user-plus"></i> Add New Customer
               </button>
+            </div>
+
+            <!-- 1. TOP FILTER BAR (EXACT AS IMAGE 1) -->
+            <div style="background:#ffffff; border:1.5px solid #dbeafe; border-radius:12px; padding:16px 20px; display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap; box-shadow:0 4px 15px rgba(0,102,255,0.03); margin-bottom:18px;">
+              <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:150px;">
+                <label style="font-size:0.85rem; font-weight:800; color:#0f2d59;">Customer</label>
+                <select id="custFilterCustomerSelect" onchange="filterCustomersTable()" style="width:100%; padding:9px 12px; border-radius:9px; border:1.5px solid #cbd5e1; font-size:0.88rem; font-weight:600; background:#fff; outline:none; color:#1e293b;">
+                  <option value="ALL">All Customers</option>
+                </select>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:140px;">
+                <label style="font-size:0.85rem; font-weight:800; color:#0f2d59;">Flat No.</label>
+                <select id="custFilterFlatSelect" onchange="filterCustomersTable()" style="width:100%; padding:9px 12px; border-radius:9px; border:1.5px solid #cbd5e1; font-size:0.88rem; font-weight:600; background:#fff; outline:none; color:#1e293b;">
+                  <option value="ALL">All Flats</option>
+                </select>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:140px;">
+                <label style="font-size:0.85rem; font-weight:800; color:#0f2d59;">Date From</label>
+                <input type="date" id="custFilterDateFrom" onchange="filterCustomersTable()" style="width:100%; padding:9px 12px; border-radius:9px; border:1.5px solid #cbd5e1; font-size:0.88rem; font-weight:600; background:#fff; outline:none; color:#1e293b;">
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:140px;">
+                <label style="font-size:0.85rem; font-weight:800; color:#0f2d59;">Date To</label>
+                <input type="date" id="custFilterDateTo" onchange="filterCustomersTable()" style="width:100%; padding:9px 12px; border-radius:9px; border:1.5px solid #cbd5e1; font-size:0.88rem; font-weight:600; background:#fff; outline:none; color:#1e293b;">
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" onclick="filterCustomersTable()" style="background:linear-gradient(135deg, #0056e0 0%, #0080ff 100%); color:#fff; border:none; padding:10px 18px; border-radius:9px; font-size:0.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer;"><i class="fa-solid fa-magnifying-glass"></i> View Report</button>
+                <button type="button" onclick="window.print()" style="background:#fff; color:#334155; border:1.5px solid #cbd5e1; padding:9px 15px; border-radius:9px; font-size:0.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer;"><i class="fa-solid fa-print"></i> Print</button>
+                <button type="button" onclick="downloadCustomerDirectoryReportPDF()" style="background:#fff; color:#334155; border:1.5px solid #cbd5e1; padding:9px 15px; border-radius:9px; font-size:0.88rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; cursor:pointer;"><i class="fa-solid fa-download"></i> Download PDF</button>
+              </div>
+            </div>
+
+            <!-- 2. FOUR KPI CARDS (EXACT AS IMAGE 2) -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:22px;">
+              <!-- Total Customers -->
+              <div style="background:#f0f7ff; border:1px solid #dbeafe; border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+                <div style="width:44px; height:44px; border-radius:50%; background:#dbeafe; color:#0066ff; display:flex; align-items:center; justify-content:center; font-size:1.35rem; flex-shrink:0;"><i class="fa-solid fa-users"></i></div>
+                <div><span style="font-size:0.8rem; font-weight:700; color:#475569;">Total Customers</span><div style="font-size:1.45rem; font-weight:900; color:#0047ba;" id="cdKpiTotalCustomers">0</div></div>
+              </div>
+
+              <!-- Total Flats Booked -->
+              <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+                <div style="width:44px; height:44px; border-radius:50%; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; font-size:1.35rem; flex-shrink:0;"><i class="fa-solid fa-house"></i></div>
+                <div><span style="font-size:0.8rem; font-weight:700; color:#475569;">Total Flats Booked</span><div style="font-size:1.45rem; font-weight:900; color:#15803d;" id="cdKpiTotalFlatsBooked">0</div></div>
+              </div>
+
+              <!-- Total Amount Received -->
+              <div style="background:#f0f9ff; border:1px solid #bae6fd; border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+                <div style="width:44px; height:44px; border-radius:50%; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:1.35rem; flex-shrink:0;"><i class="fa-solid fa-dollar-sign"></i></div>
+                <div><span style="font-size:0.8rem; font-weight:700; color:#475569;">Total Amount Received</span><div style="font-size:1.45rem; font-weight:900; color:#0369a1;" id="cdKpiTotalReceived">Rs. 0</div></div>
+              </div>
+
+              <!-- Total Remaining Balance -->
+              <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:14px;">
+                <div style="width:44px; height:44px; border-radius:50%; background:#fee2e2; color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:1.35rem; flex-shrink:0;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div><span style="font-size:0.8rem; font-weight:700; color:#475569;">Total Remaining Balance</span><div style="font-size:1.45rem; font-weight:900; color:#b91c1c;" id="cdKpiTotalBalance">Rs. 0</div></div>
+              </div>
             </div>
 
             <!-- Smart Multi-Search Bar -->
@@ -6492,15 +6528,46 @@ async function confirmStatusChange() {
       });
     }
 
-    // 4. Multi-Search Bar Function
+    // 4. Customer Directory Filter & 4 KPI Calculation Function
+    function populateCustomerDirectoryDropdowns() {
+      const custSel = document.getElementById('custFilterCustomerSelect');
+      const flatSel = document.getElementById('custFilterFlatSelect');
+      if (!custSel || !flatSel) return;
+
+      const currentCust = custSel.value || 'ALL';
+      const currentFlat = flatSel.value || 'ALL';
+
+      custSel.innerHTML = '<option value="ALL">All Customers</option>';
+      flatSel.innerHTML = '<option value="ALL">All Flats</option>';
+
+      const customersSet = new Set();
+      const flatsSet = new Set();
+
+      allCustomersData.forEach(c => {
+        const o1 = c.firstOwner || c.secondOwner || {};
+        if (o1.name) customersSet.add(o1.name.trim());
+        if (c.flatNo) flatsSet.add(c.flatNo.trim());
+      });
+
+      customersSet.forEach(name => {
+        custSel.innerHTML += `<option value="${name}" ${name === currentCust ? 'selected' : ''}>${name}</option>`;
+      });
+
+      flatsSet.forEach(flat => {
+        flatSel.innerHTML += `<option value="${flat}" ${flat === currentFlat ? 'selected' : ''}>${flat}</option>`;
+      });
+    }
+
     function filterCustomersTable() {
+      populateCustomerDirectoryDropdowns();
+
       const searchInput = document.getElementById('customerSearchInput');
       const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
 
-      if (!query) {
-        renderCustomerTable(allCustomersData);
-        return;
-      }
+      const filterCust = document.getElementById('custFilterCustomerSelect')?.value || 'ALL';
+      const filterFlat = document.getElementById('custFilterFlatSelect')?.value || 'ALL';
+      const dateFrom = document.getElementById('custFilterDateFrom')?.value;
+      const dateTo = document.getElementById('custFilterDateTo')?.value;
 
       const filtered = allCustomersData.filter((c, index) => {
         const serialStr = `${index + 1}`;
@@ -6509,23 +6576,83 @@ async function confirmStatusChange() {
         const o1 = c.firstOwner || {};
         const o2 = c.secondOwner || {};
 
-        const cnic1 = (o1.cnic || '').replace(/\D/g, '');
-        const cnic2 = (o2.cnic || '').replace(/\D/g, '');
-        const rawQuery = query.replace(/\D/g, '');
+        // Dropdowns filter
+        const cName = o1.name || '';
+        if (filterCust !== 'ALL' && cName !== filterCust) return false;
+        if (filterFlat !== 'ALL' && (c.flatNo || '') !== filterFlat) return false;
 
-        const matchesSerial = (query === serialStr || query === serialHash);
-        const matchesName = (o1.name && o1.name.toLowerCase().includes(query)) || (o2.name && o2.name.toLowerCase().includes(query));
-        const matchesMobile = (o1.mobile && o1.mobile.includes(query)) || (o2.mobile && o2.mobile.includes(query));
-        const matchesWhatsapp = (o1.whatsapp && o1.whatsapp.includes(query)) || (o2.whatsapp && o2.whatsapp.includes(query));
-        const matchesCnic = (o1.cnic && o1.cnic.includes(query)) || (o2.cnic && o2.cnic.includes(query)) || (rawQuery && (cnic1.includes(rawQuery) || cnic2.includes(rawQuery)));
-        const matchesFlat = (c.flatNo && c.flatNo.toLowerCase().includes(query));
+        // Date filter
+        const createdDate = c.createdAt ? (c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : (typeof c.createdAt === 'string' ? c.createdAt.substring(0,10) : '')) : '';
+        if (dateFrom && createdDate && createdDate < dateFrom) return false;
+        if (dateTo && createdDate && createdDate > dateTo) return false;
 
-        return matchesSerial || matchesName || matchesMobile || matchesWhatsapp || matchesCnic || matchesFlat;
+        // Text Search
+        if (query) {
+          const cnic1 = (o1.cnic || '').replace(/\D/g, '');
+          const cnic2 = (o2.cnic || '').replace(/\D/g, '');
+          const rawQuery = query.replace(/\D/g, '');
+
+          const matchesSerial = (query === serialStr || query === serialHash);
+          const matchesName = (o1.name && o1.name.toLowerCase().includes(query)) || (o2.name && o2.name.toLowerCase().includes(query));
+          const matchesMobile = (o1.mobile && o1.mobile.includes(query)) || (o2.mobile && o2.mobile.includes(query));
+          const matchesWhatsapp = (o1.whatsapp && o1.whatsapp.includes(query)) || (o2.whatsapp && o2.whatsapp.includes(query));
+          const matchesCnic = (o1.cnic && o1.cnic.includes(query)) || (o2.cnic && o2.cnic.includes(query)) || (rawQuery && (cnic1.includes(rawQuery) || cnic2.includes(rawQuery)));
+          const matchesFlat = (c.flatNo && c.flatNo.toLowerCase().includes(query));
+
+          return matchesSerial || matchesName || matchesMobile || matchesWhatsapp || matchesCnic || matchesFlat;
+        }
+
+        return true;
       });
+
+      // Calculate 4 KPI Cards for Filtered Results
+      let totalFlatsBooked = 0;
+      let totalReceived = 0;
+      let totalRemaining = 0;
+
+      filtered.forEach(c => {
+        if (c.flatNo) totalFlatsBooked++;
+        const fin = c.financials || {};
+        const totPrice = parseFloat(fin.totalPrice) || 0;
+
+        // Collect payment from allPaymentsData
+        const pastPaid = (allPaymentsData || [])
+          .filter(p => p.customerId === c.id)
+          .reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+
+        const downPayment = parseFloat(fin.downPayment) || 0;
+        const totalPaid = Math.max(pastPaid, downPayment);
+        const rem = Math.max(0, totPrice - totalPaid);
+
+        totalReceived += totalPaid;
+        totalRemaining += rem;
+      });
+
+      if (document.getElementById('cdKpiTotalCustomers')) {
+        document.getElementById('cdKpiTotalCustomers').textContent = filtered.length;
+        document.getElementById('cdKpiTotalFlatsBooked').textContent = totalFlatsBooked;
+        document.getElementById('cdKpiTotalReceived').textContent = `Rs. ${totalReceived.toLocaleString()}`;
+        document.getElementById('cdKpiTotalBalance').textContent = `Rs. ${totalRemaining.toLocaleString()}`;
+      }
 
       renderCustomerTable(filtered);
     }
 
+    function downloadCustomerDirectoryReportPDF() {
+      const element = document.getElementById('sectionCustomerDetails');
+      const opt = {
+        margin: [0.2, 0.2, 0.2, 0.2],
+        filename: `Customer_Directory_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+      };
+      if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(element).save();
+      } else {
+        alert('PDF library load nahi ho saki.');
+      }
+    }
     // Missing Helper: Flats for Transfer dropdown
     function populateFlatsForTransfer() {
       const select = document.getElementById('custFlatSelect');
@@ -11009,6 +11136,9 @@ function downloadCustomerPDF(customerId) {
         alert('PDF library load nahi ho saki.');
       }
     }
+
+
+    
   </script>
 </body>
 </html>
