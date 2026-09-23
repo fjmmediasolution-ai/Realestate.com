@@ -9767,6 +9767,7 @@ function addPurchaseItemRow() {
           <option value="Pcs">Pcs</option>
           <option value="Box">Box</option>
           <option value="Cft">Cft</option>
+          <option value="Tan">Tan</option>
           <option value="Sq.Ft">Sq.Ft</option>
           <option value="Kg">Kg</option>
           <option value="Liter">Liter</option>
@@ -10428,7 +10429,7 @@ function addPurchaseItemRowWithValue(itemVal, qtyVal, unitVal, rateVal, amountVa
   }
 
   // Unit Options
-  const unitsList = ["Bags", "Qty", "Pcs", "Box", "Cft", "Sq.Ft", "Kg", "Liter", "Feet", "Rft", "Nos"];
+  const unitsList = ["Bags", "Qty", "Pcs", "Box", "Cft", "Tan", "Sq.Ft", "Kg", "Liter", "Feet", "Rft", "Nos"];
   let unitOptionsHtml = '';
   unitsList.forEach(u => {
     const isUnitSelected = (u === unitVal) ? 'selected' : '';
