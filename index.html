@@ -2049,7 +2049,7 @@
               <!-- Payments -->
               <a class="submenu-item" id="subAddPayment" onclick="switchSection('addPayment', this)">
                 <span class="dot-bullet">•</span>
-                <span>Collect New Payment</span>
+                <span>Collect Customer Payment</span>
               </a>
               <a class="submenu-item" id="subPaymentDetails" onclick="switchSection('paymentDetails', this)">
                 <span class="dot-bullet">•</span>
@@ -3931,7 +3931,7 @@
             </div>
 
             <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addPayment', 'subAddPayment')" style="background:#16a34a; padding:10px 18px;">
-              <i class="fa-solid fa-plus"></i> Collect New Payment
+              <i class="fa-solid fa-plus"></i> Collect Customer Payment 
             </button>
           </div>
 
@@ -5268,7 +5268,7 @@
           break;
         case 'addPayment':
           document.getElementById('sectionAddPayment').classList.add('active');
-          pageHeading.textContent = 'Collect New Payment';
+          pageHeading.textContent = 'Collect Customer Payment';
           populatePaymentFlatsDropdown();
           if (document.getElementById('payDate')) {
             document.getElementById('payDate').value = new Date().toISOString().split('T')[0];
