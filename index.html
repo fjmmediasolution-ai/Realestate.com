@@ -5246,17 +5246,17 @@
           document.getElementById('sectionVendorDetails').classList.add('active');
           pageHeading.textContent = 'Account List';
           break;
-       case 'addPurchaser':
-          document.getElementById('sectionAddPurchaser').classList.add('active');
-          pageHeading.textContent = 'Add Purchase';
-          populatePurchaserCategoriesDropdown(); 
-          generatePurchaseBillNo(); // <-- Yeh Auto Bill Number generate karega
-          
-          // Aaj ki date bhi khud auto-fill kar dega
-          if (document.getElementById('purDate') && !document.getElementById('purEditId').value) {
-            document.getElementById('purDate').value = new Date().toISOString().split('T')[0];
-          }
-          break;
+      case 'addPurchaser':
+  document.getElementById('sectionAddPurchaser').classList.add('active');
+  pageHeading.textContent = 'Add Purchase';
+  populatePurchaserCategoriesDropdown(); 
+  generatePurchaseBillNo();
+  populateVendorDropdown(); // <-- YEH NAYI LINE ADD KAREIN (Taki accounts list foran refresh ho)
+  
+  if (document.getElementById('purDate') && !document.getElementById('purEditId').value) {
+    document.getElementById('purDate').value = new Date().toISOString().split('T')[0];
+  }
+  break;
         case 'purchaserDetails':
           document.getElementById('sectionPurchaserDetails').classList.add('active');
           pageHeading.textContent = 'Purchaser Details & Ledger';
@@ -9873,30 +9873,200 @@ function populatePurchaserCategoriesDropdown() {
       });
     }
 
-    // Account List ke All Types ke accounts ko Datalist Autocomplete mein load karne ka function
-    function populateVendorDropdown(selectedVal = '') {
-      const datalist = document.getElementById('purVendorDatalist');
-      const input = document.getElementById('purVendor');
-      if (!datalist) return;
 
-      datalist.innerHTML = '';
 
-      if (!allVendorsData || allVendorsData.length === 0) return;
+// 1. Datalist Dropdown Population Function (Name + Type Format)
+function populateVendorDropdown(selectedVal = '') {
+  const datalist = document.getElementById('purVendorDatalist');
+  const input = document.getElementById('purVendor');
+  if (!datalist) return;
 
-      allVendorsData.forEach(acc => {
-        const accName = acc.name || acc.company;
-        if (!accName) return;
+  datalist.innerHTML = '';
+  if (!allVendorsData || allVendorsData.length === 0) return;
 
-        const opt = document.createElement('option');
-        opt.value = accName;
-        opt.label = `${accName} (${acc.type || 'Account'})`;
-        datalist.appendChild(opt);
-      });
+  allVendorsData.forEach(acc => {
+    const accName = acc.name || acc.company;
+    if (!accName) return;
 
-      if (selectedVal && input) {
-        input.value = selectedVal;
+    const accType = acc.type || 'Vendor / Supplier';
+    const formattedDisplay = `${accName} (${accType})`;
+
+    const opt = document.createElement('option');
+    opt.value = formattedDisplay;
+    datalist.appendChild(opt);
+  });
+
+  if (selectedVal && input) {
+    input.value = selectedVal;
+  }
+}
+
+// 2. Full Account Ledger Modal Functions (Jo pehle missing the)
+function viewAccountLedger(accId) {
+  const acc = allVendorsData.find(x => x.id === accId);
+  if (!acc) return;
+
+  const accTitle = (acc.name || '').toLowerCase().trim();
+  document.getElementById('ledgerModalTitle').innerHTML = `<i class="fa-solid fa-book-open-reader" style="color:#2563eb;"></i> Ledger: ${acc.name} (${acc.type || 'Account'})`;
+  
+  const transactions = [];
+  let runningBal = 0;
+
+  // Purchases Transactions
+  allPurchaserData.forEach(p => {
+    const v = (p.vendor || '').toLowerCase().trim();
+    if (v === accTitle || v.startsWith(accTitle + ' (') || v.includes(accTitle)) {
+      const tot = parseFloat(p.total || 0);
+      const pd = parseFloat(p.paid || 0);
+      if (tot > 0) {
+        runningBal += tot;
+        transactions.push({ date: p.displayDate || p.date, ref: p.billNo || 'PUR', desc: `${p.item || 'Material'} Bill`, debit: tot, credit: 0, bal: runningBal });
+      }
+      if (pd > 0) {
+        runningBal -= pd;
+        transactions.push({ date: p.displayDate || p.date, ref: 'PV-' + (p.billNo || '').replace(/\D/g,''), desc: 'Payment Made', debit: 0, credit: pd, bal: runningBal });
       }
     }
+  });
+
+  // Customer Receipts Transactions
+  allPaymentsData.forEach(pay => {
+    const c = (pay.customerName || '').toLowerCase().trim();
+    if (c === accTitle || c.startsWith(accTitle + ' (') || c.includes(accTitle)) {
+      const amt = parseFloat(pay.amount || 0);
+      runningBal += amt;
+      transactions.push({ date: pay.date, ref: pay.receiptNo || 'REC', desc: `Installment Flat ${pay.flatNo}`, debit: amt, credit: 0, bal: runningBal });
+    }
+  });
+
+  let rowsHtml = '';
+  if (transactions.length === 0) {
+    rowsHtml = `<tr><td colspan="6" style="text-align:center; padding:25px; color:#64748b;">No ledger transactions recorded yet.</td></tr>`;
+  } else {
+    transactions.forEach(t => {
+      rowsHtml += `
+        <tr>
+          <td>${t.date}</td>
+          <td style="color:#2563eb; font-weight:700;">${t.ref}</td>
+          <td>${t.desc}</td>
+          <td style="text-align:right; font-weight:700;">${t.debit > 0 ? t.debit.toLocaleString() : '-'}</td>
+          <td style="text-align:right; font-weight:700; color:#16a34a;">${t.credit > 0 ? t.credit.toLocaleString() : '-'}</td>
+          <td style="text-align:right; font-weight:800;">${t.bal.toLocaleString()}</td>
+        </tr>
+      `;
+    });
+  }
+
+  document.getElementById('accountLedgerBody').innerHTML = `
+    <div style="margin-bottom:15px; background:#f8fafc; padding:12px 16px; border-radius:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+      <div><strong>Account:</strong> ${acc.name}</div>
+      <div><strong>Type:</strong> ${acc.type}</div>
+      <div><strong>Net Balance:</strong> <span style="color:#2563eb; font-weight:800;">Rs. ${runningBal.toLocaleString()}</span></div>
+    </div>
+    <div class="table-container">
+      <table class="erp-table">
+        <thead>
+          <tr>
+            <th>Date</th><th>Ref No.</th><th>Description</th>
+            <th style="text-align:right;">Debit (Rs.)</th>
+            <th style="text-align:right;">Credit (Rs.)</th>
+            <th style="text-align:right;">Balance (Rs.)</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    </div>
+  `;
+  document.getElementById('accountLedgerModal').classList.add('active');
+}
+
+function closeAccountLedgerModal(e) {
+  document.getElementById('accountLedgerModal').classList.remove('active');
+}
+
+    // Render Recent Transactions (Image 4)
+function renderRecentTransactionsTable(acc) {
+  const tbody = document.getElementById('accRecentTransactionsBody');
+  const accTitle = (acc.name || '').toLowerCase().trim();
+  const transactions = [];
+  let runningBal = 0;
+
+  // 1. Check in Purchases (Matches both "Ali" and "Ali (Vendor)")
+  allPurchaserData.forEach(p => {
+    const vendorVal = (p.vendor || '').toLowerCase().trim();
+    if (vendorVal === accTitle || vendorVal.startsWith(accTitle + ' (') || vendorVal.includes(accTitle)) {
+      const total = parseFloat(p.total || 0);
+      const paid = parseFloat(p.paid || 0);
+
+      if (total > 0) {
+        runningBal += total;
+        transactions.push({
+          date: p.displayDate || p.date,
+          ref: p.billNo || 'PUR-001',
+          desc: `${p.item || 'Materials'} Purchase`,
+          debit: total,
+          credit: 0,
+          balance: runningBal
+        });
+      }
+      if (paid > 0) {
+        runningBal -= paid;
+        transactions.push({
+          date: p.displayDate || p.date,
+          ref: `PV-${p.billNo ? p.billNo.replace(/\D/g,'') : '001'}`,
+          desc: 'Payment to Vendor',
+          debit: 0,
+          credit: paid,
+          balance: runningBal
+        });
+      }
+    }
+  });
+
+  // 2. Check in Payments (if Customer)
+  allPaymentsData.forEach(pay => {
+    const custVal = (pay.customerName || '').toLowerCase().trim();
+    if (custVal === accTitle || custVal.startsWith(accTitle + ' (') || custVal.includes(accTitle)) {
+      const amt = parseFloat(pay.amount || 0);
+      runningBal += amt;
+      transactions.push({
+        date: pay.date,
+        ref: pay.receiptNo || 'REC-001',
+        desc: `Customer Installment - Flat ${pay.flatNo}`,
+        debit: amt,
+        credit: 0,
+        balance: runningBal
+      });
+    }
+  });
+
+  // 3. Fallback dummy if no transactions recorded yet
+  if (transactions.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align: center; padding: 25px; color: var(--text-muted);">
+          No transactions recorded yet for this account.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  let html = '';
+  transactions.slice(0, 5).forEach(t => {
+    html += `
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td>${t.date}</td>
+        <td style="color: #2563eb; font-weight: 700;">${t.ref}</td>
+        <td>${t.desc}</td>
+        <td style="text-align: right; font-weight: 700; color: #0f172a;">${t.debit > 0 ? t.debit.toLocaleString() : '-'}</td>
+        <td style="text-align: right; font-weight: 700; color: #16a34a;">${t.credit > 0 ? t.credit.toLocaleString() : '-'}</td>
+        <td style="text-align: right; font-weight: 800; color: #0f172a;">${t.balance.toLocaleString()}</td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = html;
+}
 
     // Modal Handlers
     function openCreateAccountModal() {
