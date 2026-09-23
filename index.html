@@ -2077,17 +2077,9 @@
                   <span class="dot-bullet">•</span>
                   <span>Add Site Expense</span>
                 </a>
-                <a class="submenu-item" id="subSiteExpenseDetails" onclick="switchSection('siteExpenseDetails', this)">
-                  <span class="dot-bullet">•</span>
-                  <span>Site Expense Details</span>
-                </a>
                 <a class="submenu-item" id="subAddOfficeExpense" onclick="switchSection('addOfficeExpense', this)">
                   <span class="dot-bullet">•</span>
                   <span>Add Office Expense</span>
-                </a>
-                <a class="submenu-item" id="subOfficeExpenseDetails" onclick="switchSection('officeExpenseDetails', this)">
-                  <span class="dot-bullet">•</span>
-                  <span>Office Expense Details</span>
                 </a>
               </div>
 
@@ -4213,24 +4205,38 @@
             </div>
           </div>
 
-          <!-- Filter Search & Category Bar -->
+          <!-- Filter Search, Datewise & Category Bar -->
           <div class="card-panel" style="padding:14px 18px; margin-bottom:18px;">
-            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-              <div style="flex:2; min-width:220px; position:relative;">
-                <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
-                <input type="text" id="siteExpSearchInput" oninput="filterSiteExpenses()" placeholder="Search by description or category..." style="width:100%; padding:9px 12px 9px 36px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; outline:none;" />
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+              <div style="flex:2; min-width:200px; position:relative;">
+                <label style="font-size:11.5px; font-weight:700; color:#475569; display:block; margin-bottom:4px;">Search</label>
+                <div style="position:relative;">
+                  <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
+                  <input type="text" id="siteExpSearchInput" oninput="filterSiteExpenses()" placeholder="Search description..." style="width:100%; padding:9px 12px 9px 36px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; outline:none;" />
+                </div>
               </div>
 
-              <div style="flex:1; min-width:170px;">
+              <!-- Datewise Options -->
+              <div style="flex:1; min-width:135px;">
+                <label style="font-size:11.5px; font-weight:700; color:#0f2d59; display:block; margin-bottom:4px;">Date From</label>
+                <input type="date" id="siteExpDateFrom" onchange="filterSiteExpenses()" style="width:100%; padding:8.5px 10px; border:1.5px solid var(--border); border-radius:10px; font-size:12.5px; outline:none; font-weight:600;" />
+              </div>
+
+              <div style="flex:1; min-width:135px;">
+                <label style="font-size:11.5px; font-weight:700; color:#0f2d59; display:block; margin-bottom:4px;">Date To</label>
+                <input type="date" id="siteExpDateTo" onchange="filterSiteExpenses()" style="width:100%; padding:8.5px 10px; border:1.5px solid var(--border); border-radius:10px; font-size:12.5px; outline:none; font-weight:600;" />
+              </div>
+
+              <div style="flex:1; min-width:150px;">
+                <label style="font-size:11.5px; font-weight:700; color:#475569; display:block; margin-bottom:4px;">Category</label>
                 <select id="siteExpCategoryFilter" onchange="filterSiteExpenses()" style="width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-weight:600; outline:none;"></select>
               </div>
 
-              <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense')" style="background:#2563eb; padding:9px 16px;">
+              <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddSiteExpense')" style="background:#2563eb; padding:9px 16px; height:40px;">
                 <i class="fa-solid fa-plus"></i> Add Expense
               </button>
             </div>
           </div>
-
           <!-- Expense Ledger Table -->
           <div class="table-container">
             <table class="erp-table">
@@ -4402,19 +4408,34 @@
             </div>
           </div>
 
-          <!-- Search & Filter Controls -->
+          <!-- Search, Datewise & Filter Controls -->
           <div class="card-panel" style="padding:14px 18px; margin-bottom:18px;">
-            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
-              <div style="flex:2; min-width:240px; position:relative;">
-                <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
-                <input type="text" id="officeExpSearchInput" oninput="filterOfficeExpenses()" placeholder="Search by description, person/staff or category..." style="width:100%; padding:9px 12px 9px 36px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; outline:none;" />
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;">
+              <div style="flex:2; min-width:200px; position:relative;">
+                <label style="font-size:11.5px; font-weight:700; color:#475569; display:block; margin-bottom:4px;">Search</label>
+                <div style="position:relative;">
+                  <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
+                  <input type="text" id="officeExpSearchInput" oninput="filterOfficeExpenses()" placeholder="Search description, staff..." style="width:100%; padding:9px 12px 9px 36px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; outline:none;" />
+                </div>
               </div>
 
-              <div style="flex:1; min-width:180px;">
+              <!-- Datewise Options -->
+              <div style="flex:1; min-width:135px;">
+                <label style="font-size:11.5px; font-weight:700; color:#0f2d59; display:block; margin-bottom:4px;">Date From</label>
+                <input type="date" id="officeExpDateFrom" onchange="filterOfficeExpenses()" style="width:100%; padding:8.5px 10px; border:1.5px solid var(--border); border-radius:10px; font-size:12.5px; outline:none; font-weight:600;" />
+              </div>
+
+              <div style="flex:1; min-width:135px;">
+                <label style="font-size:11.5px; font-weight:700; color:#0f2d59; display:block; margin-bottom:4px;">Date To</label>
+                <input type="date" id="officeExpDateTo" onchange="filterOfficeExpenses()" style="width:100%; padding:8.5px 10px; border:1.5px solid var(--border); border-radius:10px; font-size:12.5px; outline:none; font-weight:600;" />
+              </div>
+
+              <div style="flex:1; min-width:150px;">
+                <label style="font-size:11.5px; font-weight:700; color:#475569; display:block; margin-bottom:4px;">Category</label>
                 <select id="officeExpCategoryFilter" onchange="filterOfficeExpenses()" style="width:100%; padding:9px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13px; font-weight:600; outline:none;"></select>
               </div>
 
-              <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAddOfficeExpense')" style="background:#2563eb; padding:9px 16px;">
+              <button class="btn-action-primary" onclick="openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAddOfficeExpense')" style="background:#2563eb; padding:9px 16px; height:40px;">
                 <i class="fa-solid fa-plus"></i> Add Office Expense
               </button>
             </div>
@@ -7555,29 +7576,36 @@ function fixJointShareOnBlur(source) {
       filterSiteExpenses();
     }
 
-    // 5. Filters & Summary Cards Calculation
+   // 5. Filters & Summary Cards Calculation (With Datewise Support)
     function filterSiteExpenses() {
       const query = (document.getElementById('siteExpSearchInput')?.value || '').toLowerCase().trim();
       const cat = document.getElementById('siteExpCategoryFilter')?.value || 'ALL';
+      const dateFrom = document.getElementById('siteExpDateFrom')?.value;
+      const dateTo = document.getElementById('siteExpDateTo')?.value;
 
       const now = new Date();
       const todayStr = now.toISOString().split('T')[0];
       const currentMonthPrefix = todayStr.substring(0, 7); // "YYYY-MM"
 
-      // 7 din pehle ki tareekh
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(now.getDate() - 7);
       const sevenDaysStr = sevenDaysAgo.toISOString().split('T')[0];
 
       const filtered = allSiteExpensesData.filter(exp => {
-        // Period Filter
+        // Datewise Filter (Agar user ne tareekh chuni ho)
+        if (dateFrom && exp.date && exp.date < dateFrom) return false;
+        if (dateTo && exp.date && exp.date > dateTo) return false;
+
+        // Period Tab Filter (Agar custom date na dali ho tab tabs chalenge)
         let matchesPeriod = true;
-        if (currentSitePeriod === 'daily') {
-          matchesPeriod = (exp.date === todayStr);
-        } else if (currentSitePeriod === 'weekly') {
-          matchesPeriod = (exp.date >= sevenDaysStr && exp.date <= todayStr);
-        } else if (currentSitePeriod === 'monthly') {
-          matchesPeriod = (exp.date && exp.date.startsWith(currentMonthPrefix));
+        if (!dateFrom && !dateTo) {
+          if (currentSitePeriod === 'daily') {
+            matchesPeriod = (exp.date === todayStr);
+          } else if (currentSitePeriod === 'weekly') {
+            matchesPeriod = (exp.date >= sevenDaysStr && exp.date <= todayStr);
+          } else if (currentSitePeriod === 'monthly') {
+            matchesPeriod = (exp.date && exp.date.startsWith(currentMonthPrefix));
+          }
         }
 
         // Search Query & Category Filter
@@ -8132,10 +8160,12 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       filterOfficeExpenses();
     }
 
-    // 6. Filter Logic & Top KPI Cards Recalculation
+    // 6. Filter Logic & Top KPI Cards Recalculation (With Datewise Support)
     function filterOfficeExpenses() {
       const query = (document.getElementById('officeExpSearchInput')?.value || '').toLowerCase().trim();
       const cat = document.getElementById('officeExpCategoryFilter')?.value || 'ALL';
+      const dateFrom = document.getElementById('officeExpDateFrom')?.value;
+      const dateTo = document.getElementById('officeExpDateTo')?.value;
 
       const now = new Date();
       const todayStr = now.toISOString().split('T')[0];
@@ -8146,14 +8176,20 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       const sevenDaysStr = sevenDaysAgo.toISOString().split('T')[0];
 
       const filtered = allOfficeExpensesData.filter(exp => {
-        // Period Filter
+        // Datewise Filter (Agar user ne tareekh chuni ho)
+        if (dateFrom && exp.date && exp.date < dateFrom) return false;
+        if (dateTo && exp.date && exp.date > dateTo) return false;
+
+        // Period Tab Filter (Agar custom date na dali ho tab tabs chalenge)
         let matchesPeriod = true;
-        if (currentOfficePeriod === 'daily') {
-          matchesPeriod = (exp.date === todayStr);
-        } else if (currentOfficePeriod === 'weekly') {
-          matchesPeriod = (exp.date >= sevenDaysStr && exp.date <= todayStr);
-        } else if (currentOfficePeriod === 'monthly') {
-          matchesPeriod = (exp.date && exp.date.startsWith(currentMonthPrefix));
+        if (!dateFrom && !dateTo) {
+          if (currentOfficePeriod === 'daily') {
+            matchesPeriod = (exp.date === todayStr);
+          } else if (currentOfficePeriod === 'weekly') {
+            matchesPeriod = (exp.date >= sevenDaysStr && exp.date <= todayStr);
+          } else if (currentOfficePeriod === 'monthly') {
+            matchesPeriod = (exp.date && exp.date.startsWith(currentMonthPrefix));
+          }
         }
 
         // Search Query & Category Filter
