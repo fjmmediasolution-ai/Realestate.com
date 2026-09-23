@@ -9848,7 +9848,7 @@ function populatePurchaserCategoriesDropdown() {
       { name: "Owner Capital", type: "Capital / Owner", mobile: "-", cnic: "-", address: "-", notes: "Equity & Partner investment." }
     ];
 
-    // Load Accounts from Firestore
+   // Load Accounts from Firestore
     function loadVendors() {
       db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot(async (snap) => {
         allVendorsData = [];
@@ -9871,6 +9871,40 @@ function populatePurchaserCategoriesDropdown() {
         filterAccountsDirectory();
         populateVendorDropdown(); // Add Purchase form ke vendor dropdown ko update karega
       });
+    }
+
+    // Account List ke All Types ke accounts ko Add Purchase Dropdown mein load karne ka function
+    function populateVendorDropdown(selectedVal = '') {
+      const select = document.getElementById('purVendor');
+      if (!select) return;
+
+      select.innerHTML = '<option value="">-- Select Purchaser / Vendor --</option>';
+
+      if (!allVendorsData || allVendorsData.length === 0) return;
+
+      allVendorsData.forEach(acc => {
+        const accName = acc.name || acc.company;
+        if (!accName) return;
+
+        const opt = document.createElement('option');
+        opt.value = accName;
+        // Account ka naam aur sath bracket mein uski Type show hogi (e.g. Vendor, Contractor, Customer wagaira)
+        opt.textContent = `${accName} (${acc.type || 'Account'})`;
+
+        if (selectedVal && (selectedVal === accName || selectedVal === opt.textContent)) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      });
+
+      // Agar edit mode mein purana vendor list mein mojood na ho to add karein
+      if (selectedVal && !Array.from(select.options).some(o => o.value === selectedVal)) {
+        const opt = document.createElement('option');
+        opt.value = selectedVal;
+        opt.textContent = selectedVal;
+        opt.selected = true;
+        select.appendChild(opt);
+      }
     }
 
     // Modal Handlers
