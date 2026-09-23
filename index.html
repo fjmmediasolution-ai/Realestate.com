@@ -5029,6 +5029,7 @@
     let owner1Base64 = '';
     let owner2Base64 = '';
     let customerThumbBase64 = '';
+    let uploadedDocs = { cnic: '', payment: '', other: '' };
 
     // ==========================================
     // 2. AUTHENTICATION
@@ -6528,6 +6529,68 @@ async function confirmStatusChange() {
       renderCustomerTable(filtered);
     }
 
+    // Missing Helper: Flats for Transfer dropdown
+    function populateFlatsForTransfer() {
+      const select = document.getElementById('custFlatSelect');
+      if (!select) return;
+      select.innerHTML = '<option value="">-- Choose Flat for Transfer --</option>';
+      if (!allFlatsData || allFlatsData.length === 0) {
+        select.innerHTML = '<option value="">No Flats Found</option>';
+        return;
+      }
+      allFlatsData.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.id;
+        opt.textContent = `${f.flatNo} (${f.floor || ''}) - ${f.status}`;
+        opt.setAttribute('data-floor', f.floor || '');
+        opt.setAttribute('data-size', f.size || '');
+        opt.setAttribute('data-price', f.price || '');
+        opt.setAttribute('data-flatno', f.flatNo || '');
+        select.appendChild(opt);
+      });
+    }
+
+    // Missing Helper: CNIC Auto Formatter
+    function formatCnic(input) {
+      if (!input) return;
+      let val = input.value.replace(/\D/g, '');
+      if (val.length > 5 && val.length <= 12) {
+        val = val.substring(0, 5) + '-' + val.substring(5);
+      } else if (val.length > 12) {
+        val = val.substring(0, 5) + '-' + val.substring(5, 12) + '-' + val.substring(12, 13);
+      }
+      input.value = val;
+    }
+
+    // Missing Helper: Photo Preview
+    function previewOwnerPhoto(event, imgId, placeholderId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        if (imgId === 'owner1Img') owner1Base64 = e.target.result;
+        if (imgId === 'owner2Img') owner2Base64 = e.target.result;
+        const img = document.getElementById(imgId);
+        const placeholder = document.getElementById(placeholderId);
+        if (img) { img.src = e.target.result; img.style.display = 'block'; }
+        if (placeholder) placeholder.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Missing Helper: Document Upload
+    function handleDocUpload(event, type) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        uploadedDocs[type] = e.target.result;
+        const statusEl = document.getElementById(type + 'DocStatus');
+        if (statusEl) statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-check"></i> Uploaded</span>';
+      };
+      reader.readAsDataURL(file);
+    }
+
     // 5. EDIT CUSTOMER (Safe & Error-Free)
     function editCustomer(customerId) {
       const c = allCustomersData.find(item => item.id === customerId);
@@ -6541,17 +6604,22 @@ async function confirmStatusChange() {
       const saveBtn = document.getElementById('btnSaveCustomer');
       if (saveBtn) saveBtn.innerHTML = '<i class="fa-solid fa-check-double"></i> Update Customer Record';
 
-      // Set Ownership Type dropdown
+      // Normalize Ownership Type
+      let cleanType = c.ownershipType || 'Single Owner';
+      if (cleanType.includes('Transfer')) cleanType = 'Transfer';
+      else if (cleanType.includes('Joint')) cleanType = 'Joint Ownership';
+      else cleanType = 'Single Owner';
+
       const typeSelect = document.getElementById('custOwnershipType');
       if (typeSelect) {
-        typeSelect.value = c.ownershipType || 'Single Owner';
+        typeSelect.value = cleanType;
         handleOwnershipTypeChange();
       }
 
       // Flats Dropdown with currently allotted flat
       const flatSelect = document.getElementById('custFlatSelect');
       if (flatSelect) {
-        if (c.ownershipType === 'Transfer') {
+        if (cleanType === 'Transfer') {
           populateFlatsForTransfer();
         } else {
           populateAvailableFlatsDropdown();
@@ -6567,7 +6635,7 @@ async function confirmStatusChange() {
           opt.setAttribute('data-flatno', c.flatNo || '');
           flatSelect.appendChild(opt);
         }
-        flatSelect.value = c.flatId;
+        if (c.flatId) flatSelect.value = c.flatId;
       }
 
       if (document.getElementById('custFloor')) document.getElementById('custFloor').value = c.floor || '';
@@ -6657,22 +6725,73 @@ async function confirmStatusChange() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Delete Customer Record
+    // Delete Customer Record (Protected & Instant Local UI Update)
     async function deleteCustomerRecord(id) {
-      if (confirm('Kiya aap waqai is customer ko delete karna chahte hain? Flat dobara Available list mein shamil ho jayega.')) {
-        try {
-          const cust = allCustomersData.find(c => c.id === id);
-          if (cust && cust.flatId) {
-            await db.collection('flats').doc(cust.flatId).update({
-              status: 'Available'
-            });
+      if (!confirm('Kiya aap waqai is customer ko delete karna chahte hain? Flat dobara Available list mein shamil ho jayega.')) return;
+      try {
+        const cust = allCustomersData.find(c => c.id === id);
+        
+        // Flat status update (Safe execution)
+        if (cust) {
+          try {
+            if (cust.flatId) {
+              await db.collection('flats').doc(cust.flatId).update({ status: 'Available' });
+            } else if (cust.flatNo) {
+              const flatSnap = await db.collection('flats').where('flatNo', '==', cust.flatNo).get();
+              flatSnap.forEach(doc => doc.ref.update({ status: 'Available' }));
+            }
+          } catch (flatErr) {
+            console.warn("Flat update skip (Document might not exist):", flatErr);
           }
-          await db.collection('customers').doc(id).delete();
-          alert('Customer record deleted and flat is now Available again!');
-        } catch (err) {
-          alert('Delete failed: ' + err.message);
         }
+
+        // Delete from Firestore
+        await db.collection('customers').doc(id).delete();
+
+        // Local array update taake table foran refresh ho jaye
+        allCustomersData = allCustomersData.filter(c => c.id !== id);
+        filterCustomersTable();
+
+        alert('Customer record kamiyabi se delete ho gaya!');
+      } catch (err) {
+        alert('Delete failed: ' + err.message);
       }
+    }
+
+    // Missing Helper: View Customer Modal
+    function viewCustomerModal(customerId) {
+      const c = allCustomersData.find(item => item.id === customerId);
+      if (!c) return;
+      const o1 = c.firstOwner || c.secondOwner || {};
+      const fin = c.financials || {};
+
+      document.getElementById('custModalTitle').innerHTML = `<i class="fa-solid fa-id-card"></i> Profile: ${o1.name || 'Customer'}`;
+      document.getElementById('customerModalBodyContent').innerHTML = `
+        <div style="display:flex; gap:16px; align-items:center; margin-bottom:20px; border-bottom:1px solid #e2e8f0; padding-bottom:14px;">
+          ${o1.photo ? `<img src="${o1.photo}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border:2px solid #2563eb;" />` : `<div style="width:70px; height:70px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:28px; color:#64748b;"><i class="fa-solid fa-user"></i></div>`}
+          <div>
+            <h3 style="margin:0; color:#0f172a; font-size:18px;">${o1.name || 'N/A'}</h3>
+            <div style="font-size:13px; color:#64748b;">S/O, W/O: <strong>${o1.fatherHusband || 'N/A'}</strong></div>
+            <div style="font-size:12px; color:#2563eb; font-weight:700;">Flat: ${c.flatNo || 'N/A'} (${c.floor || 'N/A'}) - ${c.ownershipType || 'Single Owner'}</div>
+          </div>
+        </div>
+        <div class="form-grid-layout" style="grid-template-columns:1fr 1fr; gap:14px; font-size:13px;">
+          <div><strong>CNIC:</strong> ${o1.cnic || 'N/A'}</div>
+          <div><strong>Mobile:</strong> ${o1.mobile || 'N/A'}</div>
+          <div><strong>WhatsApp:</strong> ${o1.whatsapp || 'N/A'}</div>
+          <div><strong>Email:</strong> ${o1.email || 'N/A'}</div>
+          <div class="form-group-full"><strong>Address:</strong> ${o1.address || 'N/A'}</div>
+          <div><strong>Total Agreed Price:</strong> Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</div>
+          <div><strong>Down Payment:</strong> Rs. ${Number(fin.downPayment || 0).toLocaleString()}</div>
+          <div><strong>Duration:</strong> ${fin.durationMonths || 36} Months</div>
+          <div><strong>Monthly Installment:</strong> Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</div>
+        </div>
+      `;
+      document.getElementById('customerViewModal').classList.add('active');
+    }
+
+    function closeCustomerModal() {
+      document.getElementById('customerViewModal').classList.remove('active');
     }
 
     // ==========================================================================
