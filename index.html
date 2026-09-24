@@ -2056,7 +2056,13 @@
                 <span>Payment Details & Ledger</span>
               </a>
 
-              <!-- Account List -->
+              <!-- Cash Vouchers (CPV / CRV) -->
+              <a class="submenu-item" id="subCashVouchers" onclick="switchSection('cashVouchers', this)">
+                <span class="dot-bullet">•</span>
+                <span>Cash Vouchers (CPV / CRV)</span>
+              </a>
+
+             <!-- Account List -->
               <a class="submenu-item" id="subVendorDetails" onclick="switchSection('vendorDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Account List</span>
@@ -2098,13 +2104,31 @@
             </div>
             
            <div class="submenu" id="reportsSubmenu">
-              <!-- 1. Site Expense Report -->
+              <!-- 1. Account Ledger Report -->
+              <a class="submenu-item" id="subAccountLedger" onclick="switchSection('accountLedger', this)">
+                <span class="dot-bullet">•</span>
+                <span>Account Ledger</span>
+              </a>
+
+              <!-- 2. Cash Book Report -->
+              <a class="submenu-item" id="subReportCashBook" onclick="switchSection('cashBookReport', this)">
+                <span class="dot-bullet">•</span>
+                <span>Cash Book Report</span>
+              </a>
+
+              <!-- 3. Profit & Loss Report -->
+              <a class="submenu-item" id="subReportProfitLoss" onclick="switchSection('profitLossReport', this)">
+                <span class="dot-bullet">•</span>
+                <span>Profit & Loss Report</span>
+              </a>
+
+              <!-- 4. Site Expense Report -->
               <a class="submenu-item" id="subReportSiteExpenses" onclick="switchSection('siteExpenseDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Site Expense Report</span>
               </a>
 
-              <!-- 2. Office Expense Report -->
+              <!-- 5. Office Expense Report -->
               <a class="submenu-item" id="subReportOfficeExpenses" onclick="switchSection('officeExpenseDetails', this)">
                 <span class="dot-bullet">•</span>
                 <span>Office Expense Report</span>
@@ -2866,11 +2890,11 @@
                   </div>
                 </div>
 
-                <div style="background:#ffffff; border:1px solid #fde68a; border-radius:12px; padding:16px; margin-bottom:14px;">
+               <div style="background:#ffffff; border:1px solid #fde68a; border-radius:12px; padding:16px; margin-bottom:14px;">
                   <h5 style="font-size:13px; font-weight:800; color:#92400e; margin-bottom:12px;">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Previous Owner Details (Auto-filled on flat selection)
+                    <i class="fa-solid fa-clock-rotate-left"></i> Previous Owner Details & Verification Thumb (Transferor)
                   </h5>
-                  <div class="form-grid-layout">
+                  <div class="form-grid-layout" style="margin-bottom:12px;">
                     <div>
                       <label>Previous Owner Name</label>
                       <input type="text" id="prevOwnerName" placeholder="Former Owner Name" />
@@ -2882,6 +2906,29 @@
                     <div>
                       <label>Previous Owner Mobile</label>
                       <input type="tel" id="prevOwnerMobile" placeholder="0300-XXXXXXX" />
+                    </div>
+                  </div>
+
+                  <!-- Previous Owner Thumb Impression -->
+                  <div class="thumb-scanner-card" style="border-color:#f59e0b; background:#fffbeb;">
+                    <div class="thumb-preview-box" id="prevOwnerThumbPreviewBox" style="border-color:#d97706;">
+                      <i class="fa-solid fa-fingerprint" id="prevOwnerThumbPlaceholder" style="color:#d97706;"></i>
+                      <img id="prevOwnerThumbImg" src="" style="display:none;" alt="Previous Owner Thumb" />
+                    </div>
+                    <div style="flex:1;">
+                      <label style="font-size:13px; font-weight:700; color:#92400e; margin-bottom:4px; display:block;">
+                        Previous Owner Fingerprint / Thumb (Bechne Wale Ka Angootha)
+                      </label>
+                      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                        <button type="button" class="btn-scan-thumb" style="background:#d97706;" onclick="scanThumbFromDevice('prevOwner')">
+                          <i class="fa-solid fa-fingerprint"></i> Scan Machine (V408)
+                        </button>
+                        <button type="button" class="btn-scan-manual" onclick="document.getElementById('prevOwnerThumbFile').click()">
+                          <i class="fa-solid fa-upload"></i> Upload
+                        </button>
+                        <input type="file" id="prevOwnerThumbFile" accept="image/*" style="display:none;" onchange="previewThumbManual(event, 'prevOwner')" />
+                      </div>
+                      <small id="prevOwnerThumbStatus" style="display:block; color:#b45309; font-size:11px; margin-top:4px;">Transfer affidavit tasdeeq ke liye angootha lazmi hai</small>
                     </div>
                   </div>
                 </div>
@@ -2901,16 +2948,42 @@
                   <span class="sub-heading-badge" id="owner1Badge">Sole Owner</span>
                 </div>
 
-                <!-- Owner 1 Photo Upload -->
-                <div class="photo-upload-container" style="margin-bottom:18px;">
-                  <div class="owner-photo-preview" id="owner1PreviewBox">
-                    <i class="fa-regular fa-user" id="owner1Placeholder"></i>
-                    <img id="owner1Img" src="" style="display:none;" alt="Owner 1 Photo" />
+                <!-- Owner 1 Photo & Thumb Scanner Grid -->
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:18px;">
+                  <!-- Photo Upload -->
+                  <div class="photo-upload-container">
+                    <div class="owner-photo-preview" id="owner1PreviewBox">
+                      <i class="fa-regular fa-user" id="owner1Placeholder"></i>
+                      <img id="owner1Img" src="" style="display:none;" alt="Owner 1 Photo" />
+                    </div>
+                    <div style="flex:1;">
+                      <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;" id="owner1PhotoLabel">Owner 1 Photo</label>
+                      <input type="file" id="owner1PhotoInput" accept="image/*" onchange="previewOwnerPhoto(event, 'owner1Img', 'owner1Placeholder')" style="font-size:12px;" />
+                      <small style="display:block; color:#64748b; font-size:11px; margin-top:3px;">Passport size photo (PNG, JPG)</small>
+                    </div>
                   </div>
-                  <div style="flex:1;">
-                    <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;" id="owner1PhotoLabel">Owner 1 Photo</label>
-                    <input type="file" id="owner1PhotoInput" accept="image/*" onchange="previewOwnerPhoto(event, 'owner1Img', 'owner1Placeholder')" style="font-size:12px;" />
-                    <small style="display:block; color:#64748b; font-size:11px; margin-top:3px;">Passport size portrait photo (PNG, JPG up to 2MB)</small>
+
+                  <!-- Biometric Thumb Scanner (V408) -->
+                  <div class="thumb-scanner-card">
+                    <div class="thumb-preview-box" id="owner1ThumbPreviewBox">
+                      <i class="fa-solid fa-fingerprint" id="owner1ThumbPlaceholder"></i>
+                      <img id="owner1ThumbImg" src="" style="display:none;" alt="Owner 1 Thumb" />
+                    </div>
+                    <div style="flex:1;">
+                      <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">
+                        Owner 1 Fingerprint / Thumb
+                      </label>
+                      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                        <button type="button" class="btn-scan-thumb" onclick="scanThumbFromDevice('owner1')">
+                          <i class="fa-solid fa-fingerprint"></i> Scan Machine (V408)
+                        </button>
+                        <button type="button" class="btn-scan-manual" onclick="document.getElementById('owner1ThumbFile').click()">
+                          <i class="fa-solid fa-upload"></i> Upload
+                        </button>
+                        <input type="file" id="owner1ThumbFile" accept="image/*" style="display:none;" onchange="previewThumbManual(event, 'owner1')" />
+                      </div>
+                      <small id="owner1ThumbStatus" style="display:block; color:#64748b; font-size:11px; margin-top:4px;">Machine par ungli rakh kar scan dabayein</small>
+                    </div>
                   </div>
                 </div>
 
@@ -2973,16 +3046,42 @@
                   <span class="sub-heading-badge" style="background:#e0f2fe; color:#0369a1;">Equal Partner</span>
                 </div>
 
-                <!-- Owner 2 Photo Upload -->
-                <div class="photo-upload-container" style="margin-bottom:18px; border-color:#60a5fa;">
-                  <div class="owner-photo-preview" id="owner2PreviewBox" style="border-color:#0284c7;">
-                    <i class="fa-regular fa-user" id="owner2Placeholder"></i>
-                    <img id="owner2Img" src="" style="display:none;" alt="Owner 2 Photo" />
+<!-- Owner 2 Photo & Thumb Scanner Grid -->
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:18px;">
+                  <!-- Photo Upload -->
+                  <div class="photo-upload-container" style="border-color:#60a5fa;">
+                    <div class="owner-photo-preview" id="owner2PreviewBox" style="border-color:#0284c7;">
+                      <i class="fa-regular fa-user" id="owner2Placeholder"></i>
+                      <img id="owner2Img" src="" style="display:none;" alt="Owner 2 Photo" />
+                    </div>
+                    <div style="flex:1;">
+                      <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">Owner 2 Photo</label>
+                      <input type="file" id="owner2PhotoInput" accept="image/*" onchange="previewOwnerPhoto(event, 'owner2Img', 'owner2Placeholder')" style="font-size:12px;" />
+                      <small style="display:block; color:#64748b; font-size:11px; margin-top:3px;">Passport size photo (PNG, JPG)</small>
+                    </div>
                   </div>
-                  <div style="flex:1;">
-                    <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">Owner 2 Photo</label>
-                    <input type="file" id="owner2PhotoInput" accept="image/*" onchange="previewOwnerPhoto(event, 'owner2Img', 'owner2Placeholder')" style="font-size:12px;" />
-                    <small style="display:block; color:#64748b; font-size:11px; margin-top:3px;">Passport size portrait photo (PNG, JPG up to 2MB)</small>
+
+                  <!-- Biometric Thumb Scanner (Owner 2) -->
+                  <div class="thumb-scanner-card" style="border-color:#93c5fd;">
+                    <div class="thumb-preview-box" id="owner2ThumbPreviewBox" style="border-color:#0284c7;">
+                      <i class="fa-solid fa-fingerprint" id="owner2ThumbPlaceholder" style="color:#0284c7;"></i>
+                      <img id="owner2ThumbImg" src="" style="display:none;" alt="Owner 2 Thumb" />
+                    </div>
+                    <div style="flex:1;">
+                      <label style="font-size:13px; font-weight:700; color:#1e293b; margin-bottom:4px; display:block;">
+                        Owner 2 Fingerprint / Thumb
+                      </label>
+                      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+                        <button type="button" class="btn-scan-thumb" style="background:#0284c7;" onclick="scanThumbFromDevice('owner2')">
+                          <i class="fa-solid fa-fingerprint"></i> Scan Machine (V408)
+                        </button>
+                        <button type="button" class="btn-scan-manual" onclick="document.getElementById('owner2ThumbFile').click()">
+                          <i class="fa-solid fa-upload"></i> Upload
+                        </button>
+                        <input type="file" id="owner2ThumbFile" accept="image/*" style="display:none;" onchange="previewThumbManual(event, 'owner2')" />
+                      </div>
+                      <small id="owner2ThumbStatus" style="display:block; color:#64748b; font-size:11px; margin-top:4px;">Machine par ungli rakh kar scan dabayein</small>
+                    </div>
                   </div>
                 </div>
 
@@ -3634,6 +3733,399 @@
           </div>
         </div>
 
+</section>
+
+        <!-- ================= SECTION: ACCOUNT LEDGER (EXACT AS IMAGE) ================= -->
+        <section id="sectionAccountLedger" class="erp-section">
+          
+          <!-- Top Title & Filter Bar -->
+          <div class="card-panel" style="margin-bottom: 20px;">
+            <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Account Ledger</h2>
+            
+            <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+              <!-- 1. Account Dropdown -->
+              <div style="flex: 2; min-width: 180px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Account</label>
+                <select id="alFilterAccount" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13.5px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;">
+                </select>
+              </div>
+
+              <!-- 2. Date From -->
+              <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date From</label>
+                <input type="date" id="alFilterDateFrom" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 8.5px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;" />
+              </div>
+
+              <!-- 3. Date To -->
+              <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date To</label>
+                <input type="date" id="alFilterDateTo" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 8.5px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;" />
+              </div>
+
+              <!-- 4. Transaction Type -->
+              <div style="flex: 1; min-width: 130px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Transaction Type</label>
+                <select id="alFilterType" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13.5px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;">
+                  <option value="ALL">All</option>
+                  <option value="Debit">Debit Only</option>
+                  <option value="Credit">Credit Only</option>
+                </select>
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button type="button" class="btn-action-primary" onclick="renderAccountLedgerReport()" style="padding: 10px 18px; font-size: 13px; border-radius: 9px; background: #0066ff;">
+                  <i class="fa-solid fa-magnifying-glass"></i> View Report
+                </button>
+                <button type="button" onclick="window.print()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-print"></i> Print
+                </button>
+                <button type="button" onclick="downloadAccountLedgerPDF()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-download"></i> Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ledger Table Card (Exact as image) -->
+          <div class="card-panel" id="accountLedgerPrintArea" style="padding: 22px; margin-bottom: 20px;">
+            <div style="background: #f0f7ff; border: 1px solid #dbeafe; padding: 12px 18px; border-radius: 10px; margin-bottom: 16px;">
+              <h3 id="alReportHeading" style="font-size: 15px; font-weight: 800; color: #1e40af; margin: 0;">
+                Account Ledger - Loading...
+              </h3>
+            </div>
+
+            <div class="table-container">
+              <table class="erp-table">
+                <thead>
+                  <tr style="background: #f8fafc;">
+                    <th>Date</th>
+                    <th>Ref / Voucher No.</th>
+                    <th>Description</th>
+                    <th style="text-align: right;">Debit (Rs.)</th>
+                    <th style="text-align: right;">Credit (Rs.)</th>
+                    <th style="text-align: right;">Balance (Rs.)</th>
+                  </tr>
+                </thead>
+                <tbody id="alTableBody">
+                  <tr><td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">No ledger entries found.</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr style="background: #f8fafc; font-weight: 800; border-top: 2px solid #cbd5e1;">
+                    <td colspan="3" style="text-align: right; padding: 12px 16px; font-size: 14px;">Total</td>
+                    <td id="alFootDebit" style="text-align: right; padding: 12px 16px; font-size: 14px; color: #0f172a;">0</td>
+                    <td id="alFootCredit" style="text-align: right; padding: 12px 16px; font-size: 14px; color: #0f172a;">0</td>
+                    <td id="alFootBalance" style="text-align: right; padding: 12px 16px; font-size: 14.5px; color: #0066ff;">0</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+          <!-- Bottom 4 Summary Cards (Exact as Image) -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #64748b;">Opening Balance</div>
+              <div id="alCardOpening" style="font-size: 22px; font-weight: 900; color: #0f172a; margin-top: 4px;">0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #64748b;">Total Debit</div>
+              <div id="alCardDebit" style="font-size: 22px; font-weight: 900; color: #0f172a; margin-top: 4px;">0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #64748b;">Total Credit</div>
+              <div id="alCardCredit" style="font-size: 22px; font-weight: 900; color: #0f172a; margin-top: 4px;">0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #64748b;">Closing Balance</div>
+              <div id="alCardClosing" style="font-size: 22px; font-weight: 900; color: #0066ff; margin-top: 4px;">0</div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================= SECTION: CASH BOOK REPORT (EXACT REPORT MODULE) ================= -->
+        <section id="sectionCashBookReport" class="erp-section">
+          
+          <!-- Top Title & Filter Bar -->
+          <div class="card-panel" style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin:0;">
+                  <i class="fa-solid fa-book-bookmark" style="color:#16a34a;"></i> Comprehensive Cash Book Report
+                </h2>
+                <p style="font-size: 13px; color: #64748b; margin-top: 3px;" id="cbPeriodInfoText">Galle ka rozana aur tareekhwar naqad aamad o kharch ka hisab.</p>
+              </div>
+
+              <!-- Quick Entry Buttons: Cash In / Handover -->
+              <div style="display:flex; gap:8px;">
+                <button type="button" onclick="openCashDrawerModal('IN')" style="background:#16a34a; color:#fff; border:none; padding:9px 15px; border-radius:9px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-plus-circle"></i> Add Cash In
+                </button>
+                <button type="button" onclick="openCashDrawerModal('OUT')" style="background:#dc2626; color:#fff; border:none; padding:9px 15px; border-radius:9px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-hand-holding-dollar"></i> Cash Handover (Out)
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter Controls Row -->
+            <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+              
+              <!-- Daily, Weekly, Monthly, All Filter Tabs -->
+              <div>
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Quick Filter</label>
+                <div style="display:flex; background:#e2e8f0; padding:4px; border-radius:10px; gap:4px;">
+                  <button type="button" class="page-btn active" id="btnCbPresetDaily" onclick="setCashBookPreset('daily', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">Daily (Today)</button>
+                  <button type="button" class="page-btn" id="btnCbPresetWeekly" onclick="setCashBookPreset('weekly', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">Weekly</button>
+                  <button type="button" class="page-btn" id="btnCbPresetMonthly" onclick="setCashBookPreset('monthly', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">Monthly</button>
+                  <button type="button" class="page-btn" id="btnCbPresetAll" onclick="setCashBookPreset('all', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">All Time</button>
+                </div>
+              </div>
+
+              <!-- Datewise: Date From -->
+              <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date From</label>
+                <input type="date" id="cbFilterDateFrom" onchange="renderCashBookReport()" style="width: 100%; padding: 8px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff;" />
+              </div>
+
+              <!-- Datewise: Date To -->
+              <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date To</label>
+                <input type="date" id="cbFilterDateTo" onchange="renderCashBookReport()" style="width: 100%; padding: 8px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff;" />
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button type="button" class="btn-action-primary" onclick="renderCashBookReport()" style="padding: 9px 18px; font-size: 13px; border-radius: 9px; background: #16a34a;">
+                  <i class="fa-solid fa-magnifying-glass"></i> View Report
+                </button>
+                <button type="button" onclick="window.print()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-print"></i> Print
+                </button>
+                <button type="button" onclick="downloadCashBookPDF()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-download"></i> Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 KPI Summary Cards -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #64748b; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #64748b;">Opening Cash Balance</div>
+              <div id="cbCardOpening" style="font-size: 22px; font-weight: 900; color: #0f172a; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #16a34a; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #166534;">Total Cash In (Aamad)</div>
+              <div id="cbCardTotalIn" style="font-size: 22px; font-weight: 900; color: #16a34a; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #dc2626; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #991b1b;">Total Cash Out (Kharcha)</div>
+              <div id="cbCardTotalOut" style="font-size: 22px; font-weight: 900; color: #dc2626; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #0066ff; border-radius: 14px; padding: 18px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+              <div style="font-size: 12px; font-weight: 700; color: #0066ff;">Net Cash in Hand (Galla)</div>
+              <div id="cbCardNetBalance" style="font-size: 22px; font-weight: 900; color: #0066ff; margin-top: 4px;">Rs. 0</div>
+            </div>
+          </div>
+
+          <!-- Cash Book Ledger Table -->
+          <div class="card-panel" id="cashBookPrintArea" style="padding: 22px; margin-bottom: 20px;">
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px 18px; border-radius: 10px; margin-bottom: 16px;">
+              <h3 id="cbReportTableHeading" style="font-size: 15px; font-weight: 800; color: #166534; margin: 0;">
+                Cash Transaction Ledger - Bilal Heights
+              </h3>
+            </div>
+
+            <div class="table-container">
+              <table class="erp-table">
+                <thead>
+                  <tr style="background: #f8fafc;">
+                    <th>Date</th>
+                    <th>Ref / Voucher No.</th>
+                    <th>Description / Details</th>
+                    <th>Head / Category</th>
+                    <th style="text-align: right; color:#16a34a;">Cash In (Rs.)</th>
+                    <th style="text-align: right; color:#dc2626;">Cash Out (Rs.)</th>
+                    <th style="text-align: right;">Balance (Rs.)</th>
+                  </tr>
+                </thead>
+                <tbody id="cbTableBody">
+                  <tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">No cash transactions found.</td></tr>
+                </tbody>
+                <tfoot>
+                  <tr style="background: #f8fafc; font-weight: 800; border-top: 2px solid #cbd5e1;">
+                    <td colspan="4" style="text-align: right; padding: 12px 16px; font-size: 14px;">Total</td>
+                    <td id="cbFootIn" style="text-align: right; padding: 12px 16px; font-size: 14px; color: #16a34a;">Rs. 0</td>
+                    <td id="cbFootOut" style="text-align: right; padding: 12px 16px; font-size: 14px; color: #dc2626;">Rs. 0</td>
+                    <td id="cbFootBalance" style="text-align: right; padding: 12px 16px; font-size: 14.5px; color: #0066ff;">Rs. 0</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ================= SECTION: PROFIT & LOSS REPORT ================= -->
+        <section id="sectionProfitLossReport" class="erp-section">
+          
+          <!-- Top Title & Filter Bar -->
+          <div class="card-panel" style="margin-bottom: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+              <div>
+                <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin:0;">
+                  <i class="fa-solid fa-chart-pie" style="color:#2563eb;"></i> Profit & Loss Financial Statement
+                </h2>
+                <p style="font-size: 13px; color: #64748b; margin-top: 3px;" id="plPeriodInfoText">Project revenue, construction costs, aur khalis munafay ka hisab.</p>
+              </div>
+            </div>
+
+            <!-- Filters Row (Daily, Weekly, Monthly, All & Datewise) -->
+            <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+              
+              <!-- Quick Filter Tabs -->
+              <div>
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Quick Filter</label>
+                <div style="display:flex; background:#e2e8f0; padding:4px; border-radius:10px; gap:4px;">
+                  <button type="button" class="page-btn active" id="btnPlPresetDaily" onclick="setProfitLossPreset('daily', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">Daily (Today)</button>
+                  <button type="button" class="page-btn" id="btnPlPresetWeekly" onclick="setProfitLossPreset('weekly', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">Weekly</button>
+                  <button type="button" class="page-btn" id="btnPlPresetMonthly" onclick="setProfitLossPreset('monthly', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">Monthly</button>
+                  <button type="button" class="page-btn" id="btnPlPresetAll" onclick="setProfitLossPreset('all', this)" style="padding:6px 12px; width:auto; border-radius:7px; font-size:12px;">All Time</button>
+                </div>
+              </div>
+
+              <!-- Datewise: Date From -->
+              <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date From</label>
+                <input type="date" id="plFilterDateFrom" onchange="renderProfitLossReport()" style="width: 100%; padding: 8px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff;" />
+              </div>
+
+              <!-- Datewise: Date To -->
+              <div style="flex: 1; min-width: 140px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date To</label>
+                <input type="date" id="plFilterDateTo" onchange="renderProfitLossReport()" style="width: 100%; padding: 8px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff;" />
+              </div>
+
+              <!-- Action Buttons -->
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <button type="button" class="btn-action-primary" onclick="renderProfitLossReport()" style="padding: 9px 18px; font-size: 13px; border-radius: 9px; background: #2563eb;">
+                  <i class="fa-solid fa-magnifying-glass"></i> View Report
+                </button>
+                <button type="button" onclick="window.print()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-print"></i> Print
+                </button>
+                <button type="button" onclick="downloadProfitLossPDF()" style="background: #ffffff; color: #334155; border: 1.5px solid #cbd5e1; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-download"></i> Download PDF
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Summary KPI Cards -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #2563eb; border-radius: 14px; padding: 16px 18px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: #1e40af;">Total Revenue (Sales)</div>
+              <div id="plCardRevenue" style="font-size: 20px; font-weight: 900; color: #0f172a; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #ea580c; border-radius: 14px; padding: 16px 18px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: #9a3412;">Construction Costs</div>
+              <div id="plCardCost" style="font-size: 20px; font-weight: 900; color: #ea580c; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #16a34a; border-radius: 14px; padding: 16px 18px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: #166534;">Gross Profit</div>
+              <div id="plCardGross" style="font-size: 20px; font-weight: 900; color: #16a34a; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #dc2626; border-radius: 14px; padding: 16px 18px;">
+              <div style="font-size: 11.5px; font-weight: 700; color: #991b1b;">Operating Expenses</div>
+              <div id="plCardOperating" style="font-size: 20px; font-weight: 900; color: #dc2626; margin-top: 4px;">Rs. 0</div>
+            </div>
+
+            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-top: 4px solid #059669; border-radius: 14px; padding: 16px 18px;" id="plCardNetWrap">
+              <div style="font-size: 11.5px; font-weight: 700; color: #059669;">Net Profit / Loss</div>
+              <div id="plCardNet" style="font-size: 20px; font-weight: 900; color: #059669; margin-top: 4px;">Rs. 0</div>
+            </div>
+          </div>
+
+          <!-- Formal P&L Statement Card -->
+          <div class="card-panel" id="profitLossPrintArea" style="padding: 24px; margin-bottom: 20px;">
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; padding: 14px 18px; border-radius: 10px; margin-bottom: 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div>
+                <h3 id="plReportHeading" style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">
+                  Income & Expense Statement - Bilal Heights
+                </h3>
+                <small style="color:#64748b;" id="plStatementSub">Statement of Financial Performance</small>
+              </div>
+              <span id="plNetMarginBadge" style="background:#dcfce7; color:#15803d; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:800;">Net Margin: 0%</span>
+            </div>
+
+            <div class="table-container">
+              <table class="erp-table">
+                <thead>
+                  <tr style="background: #0f172a; color: #ffffff;">
+                    <th style="color:#ffffff; width:60%;">Account Head / Financial Category</th>
+                    <th style="color:#ffffff; text-align: right; width:20%;">Item Total (Rs.)</th>
+                    <th style="color:#ffffff; text-align: right; width:20%;">Net Amount (Rs.)</th>
+                  </tr>
+                </thead>
+                <tbody id="plTableBody">
+                  <tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Generating Financial Statement...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================= MODAL: QUICK CASH DRAWER ENTRY (CASH IN / HANDOVER) ================= -->
+        <div id="cashDrawerModal" class="modal-overlay" onclick="closeCashDrawerModal(event)">
+          <div class="modal-card" style="max-width: 450px;" onclick="event.stopPropagation()">
+            <div class="modal-header">
+              <h3 id="cashDrawerModalTitle"><i class="fa-solid fa-vault"></i> Cash Drawer Entry</h3>
+              <button class="btn-close-modal" onclick="closeCashDrawerModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+              <form id="cashDrawerEntryForm" onsubmit="saveCashDrawerEntry(event)">
+                <input type="hidden" id="cdEntryType" value="IN" />
+                
+                <div style="margin-bottom:14px;">
+                  <label id="cdLabelPerson" style="font-size:12.5px; font-weight:700; color:#334155; display:block; margin-bottom:5px;">Person / Source *</label>
+                  <input type="text" id="cdPerson" placeholder="e.g. Owner / Bank / Manager" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-size:13.5px; outline:none;" />
+                </div>
+
+                <div style="margin-bottom:14px;">
+                  <label style="font-size:12.5px; font-weight:700; color:#334155; display:block; margin-bottom:5px;">Amount (Rs.) *</label>
+                  <input type="number" id="cdAmount" min="1" placeholder="Enter amount" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-size:14px; font-weight:800; outline:none;" />
+                </div>
+
+                <div style="margin-bottom:18px;">
+                  <label style="font-size:12.5px; font-weight:700; color:#334155; display:block; margin-bottom:5px;">Description / Note</label>
+                  <input type="text" id="cdNote" placeholder="e.g. Daily Closing Handover ya Office Petty Cash" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-size:13.5px; outline:none;" />
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                  <button type="button" class="btn-back" onclick="closeCashDrawerModal()">Cancel</button>
+                  <button type="submit" id="btnSaveCashDrawer" class="btn-action-primary" style="background:#16a34a;">
+                    <i class="fa-solid fa-check"></i> Save Entry
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
+        
         <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
         <section id="sectionPurchaserDetails" class="erp-section">
           <!-- Top Header with Date Filter & Add Button -->
@@ -4018,6 +4510,205 @@
           </div>
 
         </section>
+
+ <!-- ================= SECTION: CASH VOUCHERS (CPV & CRV) ================= -->
+        <section id="sectionCashVouchers" class="erp-section">
+          
+          <!-- Top Header with Toggle Buttons -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+            <div>
+              <h2 style="font-size:22px; font-weight:800; color:#0f172a; margin:0;">
+                <i class="fa-solid fa-receipt" style="color:#2563eb;"></i> Cash Vouchers Management
+              </h2>
+              <p style="font-size:13px; color:#64748b; margin-top:2px;">Naqad adaigi (CPV) aur naqad wasooli (CRV) ke official vouchers banayein.</p>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button type="button" class="btn-action-primary" onclick="openCreateVoucherModal('PAYMENT')" style="background:#dc2626; padding:10px 18px;">
+                <i class="fa-solid fa-minus-circle"></i> + Cash Payment Voucher (CPV)
+              </button>
+              <button type="button" class="btn-action-primary" onclick="openCreateVoucherModal('RECEIPT')" style="background:#16a34a; padding:10px 18px;">
+                <i class="fa-solid fa-plus-circle"></i> + Cash Receipt Voucher (CRV)
+              </button>
+            </div>
+          </div>
+
+          <!-- 3 KPI Cards -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px; margin-bottom:22px;">
+            <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:#fee2e2; color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#991b1b;">Total Cash Paid (CPV)</div>
+                <div id="cvKpiTotalPaid" style="font-size:22px; font-weight:800; color:#dc2626;">Rs. 0</div>
+                <div style="font-size:11px; color:#64748b;">Ada Ki Gayi Raqam</div>
+              </div>
+            </div>
+
+            <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                <i class="fa-solid fa-arrow-down-left-and-up-right-to-center"></i>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#166534;">Total Cash Received (CRV)</div>
+                <div id="cvKpiTotalReceived" style="font-size:22px; font-weight:800; color:#16a34a;">Rs. 0</div>
+                <div style="font-size:11px; color:#16a34a; font-weight:600;">Wasool Shuda Raqam</div>
+              </div>
+            </div>
+
+            <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:#dbeafe; color:#2563eb; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                <i class="fa-solid fa-file-invoice"></i>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#1e40af;">Total Vouchers Count</div>
+                <div id="cvKpiTotalCount" style="font-size:22px; font-weight:800; color:#0f172a;">0 Vouchers</div>
+                <div style="font-size:11px; color:#64748b;">Issued Documents</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Panel -->
+          <div class="card-panel">
+            <div class="filters-row" style="margin-bottom:18px;">
+              <div class="search-filter-box" style="flex:2; min-width:240px;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="cvSearchInput" oninput="filterCashVouchersTable()" placeholder="Search Voucher #, Party Name, Description..." />
+              </div>
+
+              <div class="filter-select-group" style="flex:1; min-width:150px;">
+                <label>Voucher Type</label>
+                <select id="cvTypeFilter" onchange="filterCashVouchersTable()">
+                  <option value="ALL">All Types</option>
+                  <option value="PAYMENT">Payment Voucher (CPV)</option>
+                  <option value="RECEIPT">Receipt Voucher (CRV)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="erp-table">
+                <thead>
+                  <tr>
+                    <th style="width:40px;">#</th>
+                    <th>Voucher No</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Party / Account Name</th>
+                    <th>Head / Purpose</th>
+                    <th>Description</th>
+                    <th style="text-align:right;">Amount (Rs.)</th>
+                    <th style="text-align:center; min-width:140px;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="cashVouchersTableBody">
+                  <tr>
+                    <td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">
+                      Loading cash vouchers...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ================= MODAL: ISSUE NEW CASH VOUCHER (CPV / CRV) ================= -->
+        <div id="cashVoucherModal" class="modal-overlay" onclick="closeCashVoucherModal(event)">
+          <div class="modal-card" style="max-width: 650px;" onclick="event.stopPropagation()">
+            <div class="modal-header" style="border-bottom: 1.5px solid #e2e8f0;">
+              <h3 id="cvModalHeading" style="font-size: 19px; font-weight: 800; color: #0f172a; margin: 0;">
+                <i class="fa-solid fa-file-invoice"></i> Issue Cash Voucher
+              </h3>
+              <button class="btn-close-modal" onclick="closeCashVoucherModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="modal-body" style="padding: 22px;">
+              <form id="cashVoucherForm" onsubmit="saveCashVoucherRecord(event)">
+                <input type="hidden" id="cvFormType" value="PAYMENT" />
+
+                <!-- Type Selector Pills -->
+                <div style="display:flex; gap:10px; margin-bottom:16px;">
+                  <button type="button" id="btnTypeCPV" onclick="switchVoucherFormType('PAYMENT')" style="flex:1; padding:10px; border-radius:9px; border:2px solid #dc2626; background:#fef2f2; color:#dc2626; font-weight:800; cursor:pointer;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Cash Payment (CPV)
+                  </button>
+                  <button type="button" id="btnTypeCRV" onclick="switchVoucherFormType('RECEIPT')" style="flex:1; padding:10px; border-radius:9px; border:1.5px solid #cbd5e1; background:#ffffff; color:#475569; font-weight:700; cursor:pointer;">
+                    <i class="fa-solid fa-arrow-down-left-and-up-right-to-center"></i> Cash Receipt (CRV)
+                  </button>
+                </div>
+
+                <div class="form-grid-layout" style="grid-template-columns: 1fr 1fr; gap: 14px;">
+                  <!-- Voucher No -->
+                  <div>
+                    <label>Voucher No. *</label>
+                    <input type="text" id="cvVoucherNo" readonly style="background:#f1f5f9; font-weight:800; color:#2563eb;" />
+                  </div>
+
+                  <!-- Date -->
+                  <div>
+                    <label>Voucher Date *</label>
+                    <input type="date" id="cvDate" required />
+                  </div>
+
+                  <!-- Party / Account Selection -->
+                  <div class="form-group-full">
+                    <label id="cvLabelParty">Paid To / Account Name *</label>
+                    <input type="text" id="cvPartyInput" list="cvAccountsDatalist" placeholder="Search party from Account List..." required autocomplete="off" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-weight:600;" />
+                    <datalist id="cvAccountsDatalist"></datalist>
+                  </div>
+
+                  <!-- Account Head / Category -->
+                  <div>
+                    <label>Account Head / Purpose *</label>
+                    <select id="cvHeadSelect" required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-weight:600;">
+                      <option value="Contractor Payment">Contractor Payment</option>
+                      <option value="Vendor / Material Bill">Vendor / Material Bill</option>
+                      <option value="Labour Wages">Labour Wages</option>
+                      <option value="Site Expense">Site Expense</option>
+                      <option value="Office Expense">Office Expense</option>
+                      <option value="Owner Drawing">Owner Drawing / Handover</option>
+                      <option value="Customer Booking / Token">Customer Booking / Token</option>
+                      <option value="Partner Capital Fund">Partner Capital Fund</option>
+                      <option value="Advance Return">Advance Return</option>
+                      <option value="Miscellaneous">Miscellaneous</option>
+                    </select>
+                  </div>
+
+                  <!-- Amount -->
+                  <div>
+                    <label>Amount (Rs.) *</label>
+                    <input type="number" id="cvAmount" min="1" placeholder="e.g. 50000" required oninput="calcVoucherAmountInWords()" style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-weight:800; color:#0f172a;" />
+                  </div>
+
+                  <!-- Amount in Words -->
+                  <div class="form-group-full">
+                    <label>Amount in Words (Auto)</label>
+                    <input type="text" id="cvAmountWords" readonly style="background:#f8fafc; font-weight:700; color:#475569;" value="Zero Rupees Only" />
+                  </div>
+
+                  <!-- Narration / Description -->
+                  <div class="form-group-full">
+                    <label>Description / Narration *</label>
+                    <textarea id="cvNarration" rows="2" placeholder="Enter complete details / remarks..." required style="width:100%; padding:10px; border:1.5px solid var(--border); border-radius:9px; font-size:13.5px;"></textarea>
+                  </div>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div style="margin-top:22px; display:flex; justify-content:flex-end; gap:10px;">
+                  <button type="button" class="btn-back" onclick="closeCashVoucherModal()">Cancel</button>
+                  <button type="submit" id="btnSaveCashVoucher" class="btn-action-primary" style="background:#dc2626;">
+                    <i class="fa-solid fa-check-double"></i> Save & Generate A4 Voucher
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+
       <!-- ================= 1. ADD SITE EXPENSE SECTION ================= -->
         <section id="sectionAddSiteExpense" class="erp-section">
           <div class="card-panel">
@@ -5040,15 +5731,97 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-   let allProjectsData = [];
+  let allProjectsData = [];
     let allFlatsData = [];
     let allCustomersData = [];
     let allPurchaserData = [];
     let projectBase64Image = '';
     let owner1Base64 = '';
     let owner2Base64 = '';
+    let owner1ThumbBase64 = '';
+    let owner2ThumbBase64 = '';
+    let prevOwnerThumbBase64 = '';
     let customerThumbBase64 = '';
     let uploadedDocs = { cnic: '', payment: '', other: '' };
+
+    // =========================================================================
+    // BIOMETRIC SCANNER V408 CONTROLLER (LIVE USB SCAN + MANUAL UPLOAD)
+    // =========================================================================
+    async function scanThumbFromDevice(targetKey) {
+      const statusEl = document.getElementById(targetKey + 'ThumbStatus');
+      if (statusEl) {
+        statusEl.innerHTML = '<span style="color:#2563eb; font-weight:700;"><i class="fa-solid fa-spinner fa-spin"></i> Scanner V408 connect ho raha hai... Ungli rakhein</span>';
+      }
+
+      // 1. Device Driver / Local Service Ports Check
+      const possibleEndpoints = [
+        "http://127.0.0.1:8080/capture",
+        "http://127.0.0.1:11100/getFingerprintImage",
+        "http://localhost:8080/api/capture"
+      ];
+
+      let scanSuccess = false;
+
+      for (let url of possibleEndpoints) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+          const response = await fetch(url, { method: 'GET', signal: controller.signal });
+          clearTimeout(timeoutId);
+
+          if (response.ok) {
+            const data = await response.json();
+            const base64Data = data.image || data.base64 || data.bmpBase64;
+            if (base64Data) {
+              applyThumbImageToBox(targetKey, base64Data.startsWith('data:') ? base64Data : 'data:image/png;base64,' + base64Data);
+              scanSuccess = true;
+              break;
+            }
+          }
+        } catch(e) {}
+      }
+
+      // 2. Agar Device Service offline ho to Manual Upload Fallback
+      if (!scanSuccess) {
+        if (statusEl) {
+          statusEl.innerHTML = '<span style="color:#d97706; font-weight:600;"><i class="fa-solid fa-circle-exclamation"></i> V408 Driver offline hai. Image select karein ya Upload dabayein.</span>';
+        }
+        // Manual file dialog open karein taake user ka kaam na ruke
+        const fileInput = document.getElementById(targetKey + 'ThumbFile');
+        if (fileInput) fileInput.click();
+      }
+    }
+
+    function previewThumbManual(event, targetKey) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        applyThumbImageToBox(targetKey, e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyThumbImageToBox(targetKey, base64String) {
+      if (targetKey === 'owner1') owner1ThumbBase64 = base64String;
+      if (targetKey === 'owner2') owner2ThumbBase64 = base64String;
+      if (targetKey === 'prevOwner') prevOwnerThumbBase64 = base64String;
+
+      const img = document.getElementById(targetKey + 'ThumbImg');
+      const placeholder = document.getElementById(targetKey + 'ThumbPlaceholder');
+      const statusEl = document.getElementById(targetKey + 'ThumbStatus');
+
+      if (img) {
+        img.src = base64String;
+        img.style.display = 'block';
+      }
+      if (placeholder) placeholder.style.display = 'none';
+      if (statusEl) {
+        statusEl.innerHTML = '<span style="color:#16a34a; font-weight:800;"><i class="fa-solid fa-circle-check"></i> Fingerprint Verified & Captured</span>';
+      }
+    }
 
     // ==========================================
     // 2. AUTHENTICATION
@@ -5264,11 +6037,26 @@
           document.getElementById('sectionAddCustomer').classList.add('active');
           pageHeading.textContent = 'Add Customer';
           break;
-        case 'vendorDetails':
+       case 'vendorDetails':
           document.getElementById('sectionVendorDetails').classList.add('active');
           pageHeading.textContent = 'Account List';
           break;
-      case 'addPurchaser':
+        case 'accountLedger':
+          document.getElementById('sectionAccountLedger').classList.add('active');
+          pageHeading.textContent = 'Account Ledger';
+          initAccountLedgerView();
+          break;
+        case 'cashBookReport':
+          document.getElementById('sectionCashBookReport').classList.add('active');
+          pageHeading.textContent = 'Cash Book Report';
+          initCashBookView();
+          break;
+        case 'profitLossReport':
+          document.getElementById('sectionProfitLossReport').classList.add('active');
+          pageHeading.textContent = 'Profit & Loss Report';
+          initProfitLossView();
+          break;
+        case 'addPurchaser':
   document.getElementById('sectionAddPurchaser').classList.add('active');
   pageHeading.textContent = 'Add Purchase';
   populatePurchaserCategoriesDropdown(); 
@@ -5296,10 +6084,15 @@
             document.getElementById('payDate').value = new Date().toISOString().split('T')[0];
           }
           break;
-        case 'paymentDetails':
+      case 'paymentDetails':
           document.getElementById('sectionPaymentDetails').classList.add('active');
           pageHeading.textContent = 'Payment Details & Ledger';
           filterPaymentsTable();
+          break;
+        case 'cashVouchers':
+          document.getElementById('sectionCashVouchers').classList.add('active');
+          pageHeading.textContent = 'Cash Vouchers (CPV & CRV)';
+          initCashVouchersView();
           break;
         case 'addSiteExpense':
           document.getElementById('sectionAddSiteExpense').classList.add('active');
@@ -6263,14 +7056,27 @@ async function confirmStatusChange() {
       const btn = document.getElementById('btnSaveCustomer');
       if (btn) btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Confirm Registration';
 
-      owner1Base64 = '';
+    owner1Base64 = '';
       owner2Base64 = '';
+      owner1ThumbBase64 = '';
+      owner2ThumbBase64 = '';
+      prevOwnerThumbBase64 = '';
       uploadedDocs = { cnic: '', payment: '', other: '' };
 
       if (document.getElementById('owner1Img')) document.getElementById('owner1Img').style.display = 'none';
       if (document.getElementById('owner1Placeholder')) document.getElementById('owner1Placeholder').style.display = 'block';
       if (document.getElementById('owner2Img')) document.getElementById('owner2Img').style.display = 'none';
       if (document.getElementById('owner2Placeholder')) document.getElementById('owner2Placeholder').style.display = 'block';
+
+      // Reset Thumbs Previews
+      ['owner1', 'owner2', 'prevOwner'].forEach(k => {
+        const img = document.getElementById(k + 'ThumbImg');
+        const ph = document.getElementById(k + 'ThumbPlaceholder');
+        const st = document.getElementById(k + 'ThumbStatus');
+        if (img) img.style.display = 'none';
+        if (ph) ph.style.display = 'block';
+        if (st) st.textContent = 'Machine par ungli rakh kar scan dabayein';
+      });
 
       const typeSelect = document.getElementById('custOwnershipType');
       if (typeSelect) typeSelect.value = 'Single Owner';
@@ -6349,6 +7155,7 @@ async function confirmStatusChange() {
         email: document.getElementById('cust1Email').value.trim() || 'N/A',
         address: document.getElementById('cust1Address').value.trim(),
         photo: owner1Base64 || '',
+        thumb: owner1ThumbBase64 || '', // <-- Owner 1 Fingerprint
         nominee: {
           name: document.getElementById('cust1NomineeName').value.trim() || 'N/A',
           relation: document.getElementById('cust1NomineeRelation').value.trim() || 'N/A',
@@ -6368,6 +7175,7 @@ async function confirmStatusChange() {
           email: document.getElementById('cust2Email').value.trim() || 'N/A',
           address: document.getElementById('cust2Address').value.trim(),
           photo: owner2Base64 || '',
+          thumb: owner2ThumbBase64 || '', // <-- Owner 2 Fingerprint
           nominee: {
             name: document.getElementById('cust2NomineeName').value.trim() || 'N/A',
             relation: document.getElementById('cust2NomineeRelation').value.trim() || 'N/A',
@@ -6388,6 +7196,7 @@ async function confirmStatusChange() {
           previousOwnerName: document.getElementById('prevOwnerName').value.trim() || '',
           previousOwnerCnic: document.getElementById('prevOwnerCnic').value.trim() || '',
           previousOwnerMobile: document.getElementById('prevOwnerMobile').value.trim() || '',
+          previousOwnerThumb: prevOwnerThumbBase64 || '', // <-- Previous Owner Fingerprint
           transferRemarks: document.getElementById('transferRemarks').value.trim() || ''
         };
       } else {
@@ -6624,14 +7433,14 @@ async function confirmStatusChange() {
       renderCustomerTable(filtered);
     }
 
-    function downloadCustomerDirectoryReportPDF() {
+  function downloadCustomerDirectoryReportPDF() {
       const element = document.getElementById('sectionCustomerDetails');
       const opt = {
-        margin: [0.2, 0.2, 0.2, 0.2],
+        margin: [8, 8, 8, 8],
         filename: `Customer_Directory_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
       };
       if (typeof html2pdf !== 'undefined') {
         html2pdf().set(opt).from(element).save();
@@ -7757,98 +8566,117 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.maxWidth = '190mm';
+      pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.padding = '10px 12px';
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.color = '#0f172a';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+        <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
+          
+          <!-- Standard Corporate Header -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">BH</div>
+              <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
               <div>
-                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Official Site Expense Voucher</div>
+                <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+                <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Official Construction Site Payment Voucher</div>
+                <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Clifton Boulevard, Karachi &nbsp;|&nbsp; Project: BILAL HEIGHTS</div>
               </div>
+            </div>
+
+            <div style="text-align: right;">
+              <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
+                SITE VOUCHER
+              </div>
+              <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+                VOUCHER: <span style="color:#2563eb;">${voucherNo}</span>
+              </div>
+              <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${exp.date || todayDate}</b></div>
+            </div>
+          </div>
+
+          <!-- Category Banner -->
+          <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Expense Head / Category</div>
+              <div style="font-size: 16px; font-weight: 900;">${exp.category || 'General Site Expense'}</div>
             </div>
             <div style="text-align: right;">
-              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
-                PAYMENT VOUCHER
-              </div>
-              <div style="font-size: 10px; color: #334155; margin-top: 4px; font-weight: 700;">
-                VOUCHER: <span style="color:#0f2a59;">${voucherNo}</span> &nbsp;|&nbsp; DATE: <span>${exp.date || todayDate}</span>
-              </div>
+              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Paid To / Beneficiary</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${exp.paidTo || 'Site Worker / Contractor'}</div>
             </div>
           </div>
 
-          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
-            <div style="font-size: 10px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Expense Head / Category</div>
-            <div style="font-size: 20px; font-weight: 900;">${exp.category}</div>
-            <div style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">Project: <strong>BILAL HEIGHTS</strong></div>
-          </div>
-
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
-            <tr style="background:#f8fafc; border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700; width:35%;">Description / Item:</td>
-              <td style="padding:10px; font-weight:800; color:#0f172a;">${exp.description}</td>
-            </tr>
-            <tr style="border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700;">Total Amount:</td>
-              <td style="padding:10px; font-weight:800; font-size:14px; color:#0f172a;">Rs. ${Number(exp.totalAmount || 0).toLocaleString()}</td>
-            </tr>
-            <tr style="border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700; color:#166534;">Paid / Advance:</td>
-              <td style="padding:10px; font-weight:800; font-size:14px; color:#16a34a;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</td>
-            </tr>
-            <tr style="border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700; color:#dc2626;">Remaining Payable:</td>
-              <td style="padding:10px; font-weight:800; font-size:14px; color:#dc2626;">Rs. ${Number(exp.remainingAmount || 0).toLocaleString()}</td>
-            </tr>
-            <tr style="background:#f8fafc; border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700;">Payment Status:</td>
-              <td style="padding:10px; font-weight:800; text-transform:uppercase;">${exp.status || 'Paid'}</td>
-            </tr>
+          <!-- Particulars Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
+            <thead>
+              <tr style="background: #0f2a59; color: #ffffff;">
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">EXPENSE DESCRIPTION</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">TOTAL BILL (RS.)</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 24%; background:#166534;">PAID NOW (RS.)</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">REMAINING (RS.)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${exp.description || 'N/A'}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 700; color: #0f172a;">Rs. ${Number(exp.totalAmount || 0).toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #166534; font-size: 12px; background:#f0fdf4;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 11.5px;">Rs. ${Number(exp.remainingAmount || 0).toLocaleString()}</td>
+              </tr>
+            </tbody>
           </table>
 
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 60px; padding: 0 14px;">
-            <div style="text-align: center; width: 200px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800;">
+          <!-- Status Strip -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 12px; margin-bottom: 14px; display: flex; justify-content: space-between; font-size: 9.5px;">
+            <div><b>Project:</b> BILAL HEIGHTS</div>
+            <div><b>Payment Status:</b> <span style="font-weight: 800; color: ${exp.status === 'Paid' ? '#166534' : '#dc2626'}; text-transform: uppercase;">${exp.status || 'Paid'}</span></div>
+          </div>
+
+          <!-- Dual Signatures & Verification Stamp Footer -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding: 0 10px;">
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9.5px; font-weight: 800; color: #334155; text-transform: uppercase;">
                 SITE SUPERVISOR / MUNSHI
               </div>
+              <div style="font-size: 8px; color: #94a3b8;">(Expense Verified on Site)</div>
             </div>
-            <div style="text-align: center; width: 200px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800;">
-                AUTHORIZED APPROVAL
+
+            <div style="text-align: center; width: 120px;">
+              <div style="border: 1.5px dashed #166534; color: #166534; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
+                Site Approved
               </div>
+              <div style="font-size: 8px; color: #64748b; font-weight: 600;">Verified Voucher</div>
+            </div>
+
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
+                PROJECT DIRECTOR
+              </div>
+              <div style="font-size: 8px; color: #64748b;">Bilal Heights Management</div>
             </div>
           </div>
+
         </div>
       `;
 
       const opt = {
-        margin: [0.25, 0.25, 0.25, 0.25],
+        margin: [8, 8, 8, 8],
         filename: `Site_Expense_Voucher_${voucherNo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.5, useCORS: true },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       if (typeof html2pdf !== 'undefined') {
         html2pdf().set(opt).from(pdfWrapper).save();
       } else {
         alert('PDF library load nahi ho saki.');
-      }
-    }
-
-    // 10. Delete Expense
-    async function deleteSiteExpense(id) {
-      if (confirm('Kiya aap waqai is expense record ko delete karna chahte hain?')) {
-        try {
-          await db.collection('site_expenses').doc(id).delete();
-        } catch(err) {
-          alert('Delete failed: ' + err.message);
-        }
       }
     }
 
@@ -8393,7 +9221,6 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
       }
     });
 
-    // 11. PDF Voucher Generator for Office Expense
     function downloadOfficeExpensePDF(id) {
       const exp = allOfficeExpensesData.find(x => x.id === id);
       if (!exp) return;
@@ -8402,99 +9229,117 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.maxWidth = '190mm';
+      pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.padding = '10px 12px';
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.color = '#0f172a';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+        <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
+          
+          <!-- Standard Corporate Header -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">BH</div>
+              <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
               <div>
-                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Official Office Expense Voucher</div>
+                <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+                <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Head Office Administrative Expense Voucher</div>
+                <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Block 5, Clifton, Karachi</div>
               </div>
             </div>
+
             <div style="text-align: right;">
-              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
+              <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
                 OFFICE VOUCHER
               </div>
-              <div style="font-size: 10px; color: #334155; margin-top: 4px; font-weight: 700;">
-                VOUCHER: <span style="color:#0f2a59;">${voucherNo}</span> &nbsp;|&nbsp; DATE: <span>${exp.date || todayDate}</span>
+              <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+                VOUCHER: <span style="color:#2563eb;">${voucherNo}</span>
               </div>
+              <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${exp.date || todayDate}</b></div>
             </div>
           </div>
 
-          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
-            <div style="font-size: 10px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Expense Head / Category</div>
-            <div style="font-size: 20px; font-weight: 900;">${exp.category}</div>
-            <div style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">Paid To: <strong>${exp.paidTo || 'N/A'}</strong></div>
+          <!-- Category Banner -->
+          <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Expense Category / Account Head</div>
+              <div style="font-size: 16px; font-weight: 900;">${exp.category || 'Office General Expense'}</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Paid To / Staff Member</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${exp.paidTo || 'N/A'}</div>
+            </div>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
-            <tr style="background:#f8fafc; border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700; width:35%;">Description / Purpose:</td>
-              <td style="padding:10px; font-weight:800; color:#0f172a;">${exp.description}</td>
-            </tr>
-            <tr style="border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700;">Total Amount:</td>
-              <td style="padding:10px; font-weight:800; font-size:14px; color:#0f172a;">Rs. ${Number(exp.totalAmount || 0).toLocaleString()}</td>
-            </tr>
-            <tr style="border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700; color:#16a34a;">Paid / Advance Amount:</td>
-              <td style="padding:10px; font-weight:800; font-size:14px; color:#16a34a;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</td>
-            </tr>
-            <tr style="border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700; color:#dc2626;">Remaining Payable:</td>
-              <td style="padding:10px; font-weight:800; font-size:14px; color:#dc2626;">Rs. ${Number(exp.remainingAmount || 0).toLocaleString()}</td>
-            </tr>
-            <tr style="background:#f8fafc; border:1px solid #cbd5e1;">
-              <td style="padding:10px; font-weight:700;">Payment Status:</td>
-              <td style="padding:10px; font-weight:800; text-transform:uppercase;">${exp.status || 'Paid'}</td>
-            </tr>
+          <!-- Particulars Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
+            <thead>
+              <tr style="background: #0f2a59; color: #ffffff;">
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">PURPOSE / EXPENSE DETAILS</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">TOTAL BILL (RS.)</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 24%; background:#166534;">PAID AMOUNT (RS.)</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">REMAINING (RS.)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${exp.description || 'N/A'}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 700; color: #0f172a;">Rs. ${Number(exp.totalAmount || 0).toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #166534; font-size: 12px; background:#f0fdf4;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 11.5px;">Rs. ${Number(exp.remainingAmount || 0).toLocaleString()}</td>
+              </tr>
+            </tbody>
           </table>
 
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 60px; padding: 0 14px;">
-            <div style="text-align: center; width: 200px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800;">
+          <!-- Status Strip -->
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 12px; margin-bottom: 14px; display: flex; justify-content: space-between; font-size: 9.5px;">
+            <div><b>Branch:</b> Head Office - Bilal Heights</div>
+            <div><b>Payment Status:</b> <span style="font-weight: 800; color: ${exp.status === 'Paid' ? '#166534' : '#dc2626'}; text-transform: uppercase;">${exp.status || 'Paid'}</span></div>
+          </div>
+
+          <!-- Dual Signatures & Verification Stamp Footer -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding: 0 10px;">
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9.5px; font-weight: 800; color: #334155; text-transform: uppercase;">
                 ACCOUNTANT / CASHIER
               </div>
+              <div style="font-size: 8px; color: #94a3b8;">(Voucher Entered in Accounts)</div>
             </div>
-            <div style="text-align: center; width: 200px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800;">
-                MANAGING DIRECTOR APPROVAL
+
+            <div style="text-align: center; width: 120px;">
+              <div style="border: 1.5px dashed #0f2a59; color: #0f2a59; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
+                Office Approved
               </div>
+              <div style="font-size: 8px; color: #64748b; font-weight: 600;">Verified Voucher</div>
+            </div>
+
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
+                MANAGING DIRECTOR
+              </div>
+              <div style="font-size: 8px; color: #64748b;">Bilal Heights Executive</div>
             </div>
           </div>
+
         </div>
       `;
 
       const opt = {
-        margin: [0.25, 0.25, 0.25, 0.25],
+        margin: [8, 8, 8, 8],
         filename: `Office_Expense_Voucher_${voucherNo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.5, useCORS: true },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       if (typeof html2pdf !== 'undefined') {
         html2pdf().set(opt).from(pdfWrapper).save();
       } else {
         alert('PDF library load nahi ho saki.');
-      }
-    }
-
-    // 12. Delete Office Expense
-    async function deleteOfficeExpense(id) {
-      if (confirm('Kiya aap waqai is office expense record ko delete karna chahte hain?')) {
-        try {
-          await db.collection('office_expenses').doc(id).delete();
-          alert('Record delete ho gaya.');
-        } catch(err) {
-          alert('Delete failed: ' + err.message);
-        }
       }
     }
 
@@ -9431,99 +10276,131 @@ function setAllNavMenusVisible(status) {
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.maxWidth = '190mm';
+      pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.padding = '10px 12px';
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.color = '#0f172a';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+        <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
+          
+          <!-- Standard Corporate Header -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px;">BH</div>
+              <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; letter-spacing: 1px;">BH</div>
               <div>
-                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Official Computerized Payment Receipt</div>
+                <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; letter-spacing: 0.5px; text-transform: uppercase;">BILAL HEIGHTS</h1>
+                <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Corporate Real Estate & Construction ERP</div>
+                <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Karachi &nbsp;|&nbsp; Tel: 021-35890000</div>
               </div>
             </div>
+
             <div style="text-align: right;">
-              <div style="background: #f0fdf4; border: 1.5px solid #86efac; color: #166534; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
-                OFFICIAL PAYMENT SLIP
+              <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; letter-spacing: 0.8px; text-transform: uppercase;">
+                OFFICIAL PAYMENT RECEIPT
               </div>
-              <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
-                RECEIPT NO: <span style="color:#0f2a59;">${p.receiptNo}</span> &nbsp;|&nbsp; DATE: <span>${p.date || todayDate}</span>
+              <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+                RECEIPT NO: <span style="color: #2563eb;">${p.receiptNo || 'BH-REC'}</span>
               </div>
+              <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${p.date || todayDate}</b></div>
             </div>
           </div>
 
-          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+          <!-- Highlight Unit Banner -->
+          <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Allotted Unit</div>
-              <div style="font-size: 20px; font-weight: 900;">FLAT ${p.flatNo} (${p.floor || 'Standard Floor'})</div>
+              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Allotted Apartment Unit</div>
+              <div style="font-size: 17px; font-weight: 900;">FLAT ${p.flatNo} <span style="font-size: 11px; font-weight: 600; color: #e2e8f0;">(${p.floor || 'Standard Floor'})</span></div>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Payment Purpose</div>
-              <div style="font-size: 15px; font-weight: 800;">${p.head}</div>
+              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Payment Purpose</div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${p.head}</div>
             </div>
           </div>
 
-          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; font-size: 11.5px;">
-            <div><span style="color:#64748b; font-weight:600;">Customer Name:</span> <strong style="color:#0f172a; font-size:12.5px;">${p.customerName}</strong></div>
-            <div><span style="color:#64748b; font-weight:600;">CNIC No:</span> <strong>${p.customerCnic}</strong></div>
-            <div><span style="color:#64748b; font-weight:600;">Mobile:</span> <strong>${p.customerMobile}</strong></div>
-            <div><span style="color:#64748b; font-weight:600;">Payment Mode:</span> <strong style="color:#1d4ed8;">${p.mode}</strong> ${(p.reference && p.reference !== 'N/A') ? `(${p.reference})` : ''}</div>
+          <!-- 4-Box Structured Meta Grid -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px;">
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+              <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">Customer Name</div>
+              <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 2px;">${p.customerName || 'N/A'}</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+              <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">CNIC / ID</div>
+              <div style="font-size: 10.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">${p.customerCnic || 'N/A'}</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+              <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">Mobile Number</div>
+              <div style="font-size: 10.5px; font-weight: 700; color: #0f172a; margin-top: 2px;">${p.customerMobile || 'N/A'}</div>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+              <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">Payment Mode</div>
+              <div style="font-size: 10.5px; font-weight: 800; color: #1d4ed8; margin-top: 2px;">${p.mode} ${(p.reference && p.reference !== 'N/A') ? `<small style="font-weight:600;">(${p.reference})</small>` : ''}</div>
+            </div>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 12px;">
+          <!-- Standard Ledger Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
             <thead>
-              <tr style="background: #f1f5f9; color: #334155;">
-                <th style="padding: 8px; border: 1px solid #cbd5e1; text-align: left;">DESCRIPTION</th>
-                <th style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">PREVIOUS DUES</th>
-                <th style="padding: 8px; border: 1px solid #cbd5e1; text-align: right; background: #dcfce7; color: #166534;">AMOUNT RECEIVED</th>
-                <th style="padding: 8px; border: 1px solid #cbd5e1; text-align: right;">BALANCE OUTSTANDING</th>
+              <tr style="background: #0f2a59; color: #ffffff;">
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">PARTICULARS / DESCRIPTION</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">PREVIOUS DUES (RS.)</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 24%; background: #166534;">AMOUNT RECEIVED (RS.)</th>
+                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">BALANCE OUTSTANDING (RS.)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: 700;">${p.head} - Flat ${p.flatNo}</td>
-                <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 600;">Rs. ${pPrev.toLocaleString()}</td>
-                <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #16a34a; font-size: 14px; background: #f0fdf4;">Rs. ${pAmount.toLocaleString()}</td>
-                <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 13.5px;">Rs. ${pRem.toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${p.head} &mdash; Flat ${p.flatNo}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 600; color: #475569;">Rs. ${pPrev.toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #166534; font-size: 12px; background: #f0fdf4;">Rs. ${pAmount.toLocaleString()}</td>
+                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 11.5px;">Rs. ${pRem.toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
 
-          <div style="background: #f8fafc; border-left: 3px solid #16a34a; padding: 10px 14px; margin-bottom: 22px; font-size: 11.5px;">
-            <span style="color:#64748b; font-weight:700;">Amount in Words:</span>
-            <strong style="color:#0f172a; text-transform:uppercase;"> ${amountInWords}</strong>
+          <!-- Amount In Words Strip -->
+          <div style="background: #f8fafc; border-left: 3.5px solid #166534; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; margin-bottom: 14px; font-size: 9.5px;">
+            <span style="color: #64748b; font-weight: 800; text-transform: uppercase;">Amount in Words:</span>
+            <strong style="color: #0f172a; text-transform: uppercase;"> ${amountInWords}</strong>
           </div>
 
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 50px; padding: 0 14px;">
-            <div style="text-align: center; width: 200px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800;">
-                CUSTOMER / DEPOSITOR
+          <!-- Dual Signatures & Verification Stamp Footer -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 32px; padding: 0 10px;">
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9.5px; font-weight: 800; color: #334155; text-transform: uppercase;">
+                DEPOSITOR SIGNATURE
               </div>
+              <div style="font-size: 8px; color: #94a3b8;">(Client / Representative)</div>
             </div>
-            <div style="text-align: center; width: 200px;">
-              <div style="height: 30px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                <span style="border: 1px dashed #16a34a; color: #166534; font-size: 8.5px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
-                  Verified Computerized Entry
-                </span>
+
+            <div style="text-align: center; width: 120px;">
+              <div style="border: 1.5px dashed #166534; color: #166534; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
+                Verified &bull; Paid
               </div>
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800;">
-                AUTHORIZED ACCOUNTS OFFICER
+              <div style="font-size: 8px; color: #64748b; font-weight: 600;">System Generated Slip</div>
+            </div>
+
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
+                AUTHORIZED OFFICER
               </div>
+              <div style="font-size: 8px; color: #64748b;">Bilal Heights Finance Dept</div>
             </div>
           </div>
+
         </div>
       `;
 
       const opt = {
-        margin: [0.25, 0.25, 0.25, 0.25],
-        filename: `Receipt_${p.receiptNo}_Flat_${p.flatNo}.pdf`,
+        margin: [8, 8, 8, 8],
+        filename: `Receipt_${p.receiptNo || 'BH'}_Flat_${p.flatNo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.5, useCORS: true },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       if (typeof html2pdf !== 'undefined') {
@@ -10113,89 +10990,6 @@ function closeAccountLedgerModal(e) {
   document.getElementById('accountLedgerModal').classList.remove('active');
 }
 
-    // Render Recent Transactions (Image 4)
-function renderRecentTransactionsTable(acc) {
-  const tbody = document.getElementById('accRecentTransactionsBody');
-  const accTitle = (acc.name || '').toLowerCase().trim();
-  const transactions = [];
-  let runningBal = 0;
-
-  // 1. Check in Purchases (Matches both "Ali" and "Ali (Vendor)")
-  allPurchaserData.forEach(p => {
-    const vendorVal = (p.vendor || '').toLowerCase().trim();
-    if (vendorVal === accTitle || vendorVal.startsWith(accTitle + ' (') || vendorVal.includes(accTitle)) {
-      const total = parseFloat(p.total || 0);
-      const paid = parseFloat(p.paid || 0);
-
-      if (total > 0) {
-        runningBal += total;
-        transactions.push({
-          date: p.displayDate || p.date,
-          ref: p.billNo || 'PUR-001',
-          desc: `${p.item || 'Materials'} Purchase`,
-          debit: total,
-          credit: 0,
-          balance: runningBal
-        });
-      }
-      if (paid > 0) {
-        runningBal -= paid;
-        transactions.push({
-          date: p.displayDate || p.date,
-          ref: `PV-${p.billNo ? p.billNo.replace(/\D/g,'') : '001'}`,
-          desc: 'Payment to Vendor',
-          debit: 0,
-          credit: paid,
-          balance: runningBal
-        });
-      }
-    }
-  });
-
-  // 2. Check in Payments (if Customer)
-  allPaymentsData.forEach(pay => {
-    const custVal = (pay.customerName || '').toLowerCase().trim();
-    if (custVal === accTitle || custVal.startsWith(accTitle + ' (') || custVal.includes(accTitle)) {
-      const amt = parseFloat(pay.amount || 0);
-      runningBal += amt;
-      transactions.push({
-        date: pay.date,
-        ref: pay.receiptNo || 'REC-001',
-        desc: `Customer Installment - Flat ${pay.flatNo}`,
-        debit: amt,
-        credit: 0,
-        balance: runningBal
-      });
-    }
-  });
-
-  // 3. Fallback dummy if no transactions recorded yet
-  if (transactions.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="6" style="text-align: center; padding: 25px; color: var(--text-muted);">
-          No transactions recorded yet for this account.
-        </td>
-      </tr>
-    `;
-    return;
-  }
-
-  let html = '';
-  transactions.slice(0, 5).forEach(t => {
-    html += `
-      <tr style="border-bottom: 1px solid #f1f5f9;">
-        <td>${t.date}</td>
-        <td style="color: #2563eb; font-weight: 700;">${t.ref}</td>
-        <td>${t.desc}</td>
-        <td style="text-align: right; font-weight: 700; color: #0f172a;">${t.debit > 0 ? t.debit.toLocaleString() : '-'}</td>
-        <td style="text-align: right; font-weight: 700; color: #16a34a;">${t.credit > 0 ? t.credit.toLocaleString() : '-'}</td>
-        <td style="text-align: right; font-weight: 800; color: #0f172a;">${t.balance.toLocaleString()}</td>
-      </tr>
-    `;
-  });
-  tbody.innerHTML = html;
-}
 
     // Modal Handlers
     function openCreateAccountModal() {
@@ -10832,147 +11626,145 @@ async function confirmQuickPayPurchase() {
   }
 }
 
-// ========================================================
-// DOWNLOAD PURCHASE BILL PDF (With Unit included)
-// ========================================================
 function downloadPurchaseBillPDF(id) {
   const p = allPurchaserData.find(x => x.id === id);
   if (!p) return;
 
   const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   const billNo = p.billNo || 'PUR-000';
-  const total = Number(p.total || 0);
-  const paid = Number(p.paid || 0);
-  const remaining = Number(p.remaining || 0);
-
-  const isPaid = (p.status === 'Paid');
-  const badgeBg = isPaid ? '#dcfce7' : (p.status === 'Partial' ? '#fef3c7' : '#fee2e2');
-  const badgeColor = isPaid ? '#15803d' : (p.status === 'Partial' ? '#b45309' : '#dc2626');
+  const total = Number(p.total || p.totalAmount || 0);
+  const paid = Number(p.paid || p.paidAmount || 0);
+  const remaining = Number(p.remaining || p.remainingAmount || 0);
 
   let itemsRowsHtml = '';
   if (p.itemsList && p.itemsList.length > 0) {
     p.itemsList.forEach((itm, idx) => {
       itemsRowsHtml += `
-        <tr style="border-bottom: 1px solid #cbd5e1;">
-          <td style="padding: 8px 10px; text-align: center; color: #64748b; font-weight: 700;">${idx + 1}</td>
-          <td style="padding: 8px 12px; font-weight: 700; color: #0f172a;">${itm.item || 'N/A'}</td>
-          <td style="padding: 8px 12px; text-align: center; font-weight: 700;">${itm.qty || '-'} ${itm.unit || ''}</td>
-          <td style="padding: 8px 12px; text-align: right;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
-          <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #0f172a;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
+        <tr style="border-bottom: 1px solid #cbd5e1; background: ${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+          <td style="padding: 7px 10px; text-align: center; color: #64748b; font-weight: 700; border: 1px solid #cbd5e1;">${idx + 1}</td>
+          <td style="padding: 7px 12px; font-weight: 700; color: #0f172a; border: 1px solid #cbd5e1;">${itm.item || 'N/A'}</td>
+          <td style="padding: 7px 12px; text-align: center; font-weight: 700; color: #1e293b; border: 1px solid #cbd5e1;">${itm.qty || '-'} ${itm.unit || ''}</td>
+          <td style="padding: 7px 12px; text-align: right; font-weight: 600; color: #334155; border: 1px solid #cbd5e1;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
+          <td style="padding: 7px 12px; text-align: right; font-weight: 800; color: #0f172a; border: 1px solid #cbd5e1;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
         </tr>
       `;
     });
   } else {
     itemsRowsHtml = `
       <tr style="border-bottom: 1px solid #cbd5e1;">
-        <td style="padding: 8px 10px; text-align: center; color: #64748b; font-weight: 700;">1</td>
-        <td style="padding: 8px 12px; font-weight: 700; color: #0f172a;">${p.item || 'General Material'}</td>
-        <td style="padding: 8px 12px; text-align: center; font-weight: 700;">${p.qty || '-'}</td>
-        <td style="padding: 8px 12px; text-align: right;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
-        <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #0f172a;">Rs. ${total.toLocaleString()}</td>
+        <td style="padding: 7px 10px; text-align: center; color: #64748b; font-weight: 700; border: 1px solid #cbd5e1;">1</td>
+        <td style="padding: 7px 12px; font-weight: 700; color: #0f172a; border: 1px solid #cbd5e1;">${p.item || 'General Material'}</td>
+        <td style="padding: 7px 12px; text-align: center; font-weight: 700; border: 1px solid #cbd5e1;">${p.qty || '-'}</td>
+        <td style="padding: 7px 12px; text-align: right; border: 1px solid #cbd5e1;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
+        <td style="padding: 7px 12px; text-align: right; font-weight: 800; color: #0f172a; border: 1px solid #cbd5e1;">Rs. ${total.toLocaleString()}</td>
       </tr>
     `;
   }
 
   const pdfWrapper = document.createElement('div');
-  pdfWrapper.style.padding = '24px 28px';
+  pdfWrapper.style.width = '100%';
+  pdfWrapper.style.maxWidth = '190mm';
+  pdfWrapper.style.margin = '0 auto';
+  pdfWrapper.style.padding = '10px 12px';
   pdfWrapper.style.background = '#ffffff';
   pdfWrapper.style.color = '#0f172a';
   pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+  pdfWrapper.style.boxSizing = 'border-box';
 
   pdfWrapper.innerHTML = `
-    <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
+    <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
+      
+      <!-- Standard Corporate Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="background: #0f2a59; color: #ffffff; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px;">BH</div>
+          <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
           <div>
-            <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-            <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Procurement & Material Purchase Invoice</div>
+            <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+            <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Material Procurement & Inventory Control</div>
+            <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Karachi &nbsp;|&nbsp; Tel: 021-35890000</div>
           </div>
         </div>
+
         <div style="text-align: right;">
-          <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
+          <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
             PURCHASE BILL
           </div>
-          <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
-            BILL NO: <span style="color:#0f2a59;">${billNo}</span> &nbsp;|&nbsp; DATE: <span>${p.displayDate || p.date || todayDate}</span>
+          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+            BILL NO: <span style="color: #2563eb;">${billNo}</span>
           </div>
+          <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${p.displayDate || p.date || todayDate}</b></div>
         </div>
       </div>
 
-      <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <div>
-          <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Supplier / Vendor Company</div>
-          <div style="font-size: 18px; font-weight: 900;">${p.vendor || 'N/A'}</div>
+      <!-- Supplier / Project Meta Grid -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+          <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">Supplier / Vendor</div>
+          <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 2px;">${p.vendor || 'N/A'}</div>
         </div>
-        <div style="text-align: right;">
-          <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Assigned Project</div>
-          <div style="font-size: 14px; font-weight: 800;">${p.project || 'BILAL HEIGHTS'}</div>
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+          <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">Project</div>
+          <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-top: 2px;">${p.project || 'BILAL HEIGHTS'}</div>
+        </div>
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px;">
+          <div style="font-size: 8px; color: #64748b; font-weight: 800; text-transform: uppercase;">Payment Method / Status</div>
+          <div style="font-size: 10.5px; font-weight: 800; color: #16a34a; margin-top: 2px;">${p.paymentMethod || 'Cash'} &bull; ${p.status || 'Paid'}</div>
         </div>
       </div>
 
-      <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; display: flex; justify-content: space-between; font-size: 11.5px;">
-        <div><strong>Payment Method:</strong> ${p.paymentMethod || 'Cash'}</div>
-        <div><strong>Payment Status:</strong> <span style="background:${badgeBg}; color:${badgeColor}; padding:2px 8px; border-radius:12px; font-weight:800; font-size:10.5px;">${p.status || 'Paid'}</span></div>
-      </div>
-
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 18px; font-size: 11.5px;">
+      <!-- Items Table -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
         <thead>
-          <tr style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;">
-            <th style="padding: 8px 10px; width: 40px; text-align: center;">#</th>
-            <th style="padding: 8px 12px; text-align: left;">ITEM / MATERIAL DESCRIPTION</th>
-            <th style="padding: 8px 12px; text-align: center;">QUANTITY & UNIT</th>
-            <th style="padding: 8px 12px; text-align: right;">RATE (Rs.)</th>
-            <th style="padding: 8px 12px; text-align: right;">AMOUNT (Rs.)</th>
+          <tr style="background: #0f2a59; color: #ffffff;">
+            <th style="padding: 7px 10px; width: 35px; text-align: center; border: 1px solid #0f2a59;">#</th>
+            <th style="padding: 7px 10px; text-align: left; border: 1px solid #0f2a59;">MATERIAL DESCRIPTION</th>
+            <th style="padding: 7px 10px; text-align: center; border: 1px solid #0f2a59; width: 20%;">QTY & UNIT</th>
+            <th style="padding: 7px 10px; text-align: right; border: 1px solid #0f2a59; width: 18%;">RATE (RS.)</th>
+            <th style="padding: 7px 10px; text-align: right; border: 1px solid #0f2a59; width: 22%;">AMOUNT (RS.)</th>
           </tr>
         </thead>
-        <tbody style="border: 1px solid #cbd5e1;">
+        <tbody>
           ${itemsRowsHtml}
         </tbody>
       </table>
 
-      <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <div style="font-size: 10.5px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Bill Amount</div>
-          <div style="font-size: 18px; font-weight: 900; color: #0f172a;">Rs. ${total.toLocaleString()}</div>
+      <!-- 3 Total Summary Cards in Strip -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;">
+        <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 8px 12px;">
+          <div style="font-size: 8.5px; color: #64748b; font-weight: 800; text-transform: uppercase;">Total Bill Amount</div>
+          <div style="font-size: 14px; font-weight: 900; color: #0f172a; margin-top: 2px;">Rs. ${total.toLocaleString()}</div>
         </div>
-        <div>
-          <div style="font-size: 10.5px; color: #166534; font-weight: 700; text-transform: uppercase;">Paid Amount</div>
-          <div style="font-size: 18px; font-weight: 900; color: #16a34a;">Rs. ${paid.toLocaleString()}</div>
+        <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 8px 12px;">
+          <div style="font-size: 8.5px; color: #166534; font-weight: 800; text-transform: uppercase;">Paid Amount</div>
+          <div style="font-size: 14px; font-weight: 900; color: #166534; margin-top: 2px;">Rs. ${paid.toLocaleString()}</div>
         </div>
-        <div>
-          <div style="font-size: 10.5px; color: #991b1b; font-weight: 700; text-transform: uppercase;">Remaining Payable</div>
-          <div style="font-size: 18px; font-weight: 900; color: ${remaining > 0 ? '#dc2626' : '#16a34a'};">
-            Rs. ${remaining.toLocaleString()}
-          </div>
+        <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 6px; padding: 8px 12px;">
+          <div style="font-size: 8.5px; color: #991b1b; font-weight: 800; text-transform: uppercase;">Remaining Payable</div>
+          <div style="font-size: 14px; font-weight: 900; color: ${remaining > 0 ? '#dc2626' : '#16a34a'}; margin-top: 2px;">Rs. ${remaining.toLocaleString()}</div>
         </div>
       </div>
 
-      ${p.notes ? `
-      <div style="background: #fffbeb; border-left: 3px solid #f59e0b; padding: 8px 12px; margin-bottom: 20px; font-size: 11px;">
-        <strong style="color: #92400e;">Notes / Remarks / Delivery Info:</strong>
-        <span style="color: #451a03;"> ${p.notes}</span>
-      </div>
-      ` : ''}
-
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 55px; padding: 0 14px;">
-        <div style="text-align: center; width: 210px;">
-          <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
-            SUPPLIER / VENDOR SIGNATURE
+      <!-- Dual Signatures & Verification Stamp Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding: 0 10px;">
+        <div style="text-align: center; width: 170px;">
+          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9.5px; font-weight: 800; color: #334155; text-transform: uppercase;">
+            SUPPLIER SIGNATURE
           </div>
-          <div style="font-size: 9px; color: #64748b;">(Goods Received / Account Acknowledged)</div>
+          <div style="font-size: 8px; color: #94a3b8;">(Goods Delivered / Acknowledged)</div>
         </div>
 
-        <div style="text-align: center; width: 210px;">
-          <div style="height: 28px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
-            <span style="border: 1px dashed #059669; color: #059669; font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 4px; text-transform: uppercase;">
-              Verified Material Entry
-            </span>
+        <div style="text-align: center; width: 120px;">
+          <div style="border: 1.5px dashed #059669; color: #059669; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
+            Material Verified
           </div>
-          <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase;">
-            PURCHASE / SITE MANAGER
+          <div style="font-size: 8px; color: #64748b; font-weight: 600;">Store Entry Verified</div>
+        </div>
+
+        <div style="text-align: center; width: 170px;">
+          <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
+            PURCHASE MANAGER
           </div>
-          <div style="font-size: 9px; color: #64748b;">For & On Behalf of Bilal Heights</div>
+          <div style="font-size: 8px; color: #64748b;">Bilal Heights Procurement</div>
         </div>
       </div>
 
@@ -10980,17 +11772,17 @@ function downloadPurchaseBillPDF(id) {
   `;
 
   const opt = {
-    margin: [0.25, 0.25, 0.25, 0.25],
+    margin: [8, 8, 8, 8],
     filename: `Purchase_Bill_${billNo}_${(p.vendor || 'Supplier').replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.5, useCORS: true },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   if (typeof html2pdf !== 'undefined') {
     html2pdf().set(opt).from(pdfWrapper).save();
   } else {
-    alert('PDF library load nahi ho saki. Internet connection check karein.');
+    alert('PDF library load nahi ho saki.');
   }
 }
 
@@ -11008,116 +11800,142 @@ function downloadCustomerPDF(customerId) {
       const isTransfer = (c.ownershipType === 'Transfer' || c.ownershipType === 'Transfer Ownership');
 
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.maxWidth = '190mm';
+      pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.padding = '10px 12px';
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.color = '#0f172a';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
+        <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
           
-          <!-- Header -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">
-                BH
-              </div>
+          <!-- Standard Corporate Header -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
               <div>
-                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase;">Official Allotment Confirmation</div>
+                <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+                <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Official Allotment Order & Dossier</div>
+                <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Karachi &nbsp;|&nbsp; Tel: 021-35890000</div>
               </div>
             </div>
 
             <div style="text-align: right;">
-              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block;">
+              <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
                 ALLOTMENT ORDER
               </div>
-              <div style="font-size: 10.5px; color: #334155; margin-top: 4px; font-weight: 700;">
-                REF: <span style="color: #0f2a59;">${bookingId}</span> &nbsp;|&nbsp; DATE: <span>${todayDate}</span>
+              <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+                REF: <span style="color: #2563eb;">${bookingId}</span>
               </div>
+              <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${todayDate}</b></div>
             </div>
           </div>
 
           <!-- Unit Info Banner -->
-          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
-                <div style="font-size: 9.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Allotted Unit</div>
-                <div style="font-size: 20px; font-weight: 900; color: #ffffff;">FLAT ${c.flatNo || 'N/A'}</div>
+                <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Allotted Residential Unit</div>
+                <div style="font-size: 18px; font-weight: 900;">FLAT ${c.flatNo || 'N/A'}</div>
               </div>
-              <div style="display: flex; gap: 18px; text-align: right; font-size: 12px;">
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">FLOOR</span><strong>${c.floor || 'N/A'}</strong></div>
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">SIZE</span><strong>${c.size || 'N/A'}</strong></div>
-                <div><span style="color:#93c5fd; font-size:10px; display:block;">OWNERSHIP</span><strong>${c.ownershipType || 'Single Owner'}</strong></div>
+              <div style="display: flex; gap: 16px; text-align: right; font-size: 11px;">
+                <div><span style="color:#93c5fd; font-size:9px; display:block;">FLOOR</span><strong>${c.floor || 'N/A'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:9px; display:block;">SIZE</span><strong>${c.size || 'N/A'}</strong></div>
+                <div><span style="color:#93c5fd; font-size:9px; display:block;">OWNERSHIP</span><strong>${c.ownershipType || 'Single Owner'}</strong></div>
               </div>
             </div>
           </div>
 
-          <!-- Owner Profiles -->
-          <div style="display: flex; gap: 16px; margin-bottom: 16px;">
-            <!-- Owner 1 -->
-            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
-              <div style="font-size: 11px; font-weight: 800; color: #0f2a59; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
-                ${isTransfer ? 'New Owner (Transferee)' : (isJoint ? 'Owner 1 (Equal Partner)' : 'Sole Owner')}
+          <!-- Owner Profiles Grid -->
+          <div style="display: grid; grid-template-columns: ${isJoint ? '1fr 1fr' : '1fr'}; gap: 10px; margin-bottom: 12px;">
+            <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; background: #f8fafc;">
+              <div style="font-size: 9px; font-weight: 800; color: #0f2a59; text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px;">
+                ${isTransfer ? 'New Owner (Transferee)' : (isJoint ? 'Owner 1 (Equal Partner)' : 'Sole Allottee Details')}
               </div>
-              <div style="font-size: 11px; line-height: 1.6; color: #334155;">
-                <div><strong>Name:</strong> ${o1.name || 'N/A'}</div>
-                <div><strong>S/O, W/O:</strong> ${o1.fatherHusband || 'N/A'}</div>
-                <div><strong>CNIC:</strong> ${o1.cnic || 'N/A'}</div>
-                <div><strong>Mobile:</strong> ${o1.mobile || 'N/A'}</div>
+              <div style="font-size: 9.5px; line-height: 1.5; color: #334155;">
+                <div><strong>Name:</strong> ${o1.name || 'N/A'} &nbsp;|&nbsp; <strong>S/O:</strong> ${o1.fatherHusband || 'N/A'}</div>
+                <div><strong>CNIC:</strong> ${o1.cnic || 'N/A'} &nbsp;|&nbsp; <strong>Mobile:</strong> ${o1.mobile || 'N/A'}</div>
                 <div><strong>Address:</strong> ${o1.address || 'N/A'}</div>
               </div>
             </div>
 
-            <!-- Owner 2 (If Joint) -->
             ${(isJoint && o2.name) ? `
-            <div style="flex: 1; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; background: #f8fafc;">
-              <div style="font-size: 11px; font-weight: 800; color: #0284c7; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+            <div style="border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; background: #f8fafc;">
+              <div style="font-size: 9px; font-weight: 800; color: #0284c7; text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #e2e8f0; padding-bottom: 3px;">
                 Owner 2 (Equal Partner)
               </div>
-              <div style="font-size: 11px; line-height: 1.6; color: #334155;">
-                <div><strong>Name:</strong> ${o2.name}</div>
-                <div><strong>S/O, W/O:</strong> ${o2.fatherHusband}</div>
-                <div><strong>CNIC:</strong> ${o2.cnic}</div>
-                <div><strong>Mobile:</strong> ${o2.mobile}</div>
+              <div style="font-size: 9.5px; line-height: 1.5; color: #334155;">
+                <div><strong>Name:</strong> ${o2.name} &nbsp;|&nbsp; <strong>S/O:</strong> ${o2.fatherHusband}</div>
+                <div><strong>CNIC:</strong> ${o2.cnic} &nbsp;|&nbsp; <strong>Mobile:</strong> ${o2.mobile}</div>
                 <div><strong>Address:</strong> ${o2.address}</div>
               </div>
             </div>
             ` : ''}
           </div>
 
-          <!-- Financial Schedule -->
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; margin-bottom: 16px;">
+          <!-- Financial Schedule Table -->
+          <table style="width: 100%; border-collapse: collapse; font-size: 10px; text-align: center; margin-bottom: 12px;">
             <thead>
-              <tr style="background: #f1f5f9; color: #334155;">
-                <th style="padding: 7px; border: 1px solid #cbd5e1;">TOTAL PRICE</th>
-                <th style="padding: 7px; border: 1px solid #cbd5e1;">DOWN PAYMENT</th>
-                <th style="padding: 7px; border: 1px solid #cbd5e1;">DURATION</th>
-                <th style="padding: 7px; border: 1px solid #cbd5e1; background: #eff6ff; color: #1e3a8a;">MONTHLY INSTALLMENT</th>
+              <tr style="background: #0f2a59; color: #ffffff;">
+                <th style="padding: 7px; border: 1px solid #0f2a59;">TOTAL AGREED PRICE</th>
+                <th style="padding: 7px; border: 1px solid #0f2a59;">BOOKING / DOWN PAYMENT</th>
+                <th style="padding: 7px; border: 1px solid #0f2a59;">PLAN DURATION</th>
+                <th style="padding: 7px; border: 1px solid #0f2a59; background: #166534;">MONTHLY INSTALLMENT</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
+                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #0f172a;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
                 <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 800; color: #16a34a;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
-                <td style="padding: 9px; border: 1px solid #cbd5e1;">${fin.durationMonths || 36} Months</td>
-                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #1d4ed8; background: #eff6ff;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
+                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 700;">${fin.durationMonths || 36} Months</td>
+                <td style="padding: 9px; border: 1px solid #cbd5e1; font-weight: 900; color: #166534; font-size: 11.5px; background: #f0fdf4;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
 
-          <!-- Signatures Footer -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 45px; padding: 0 14px;">
-            <div style="text-align: center; width: 220px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11.5px; font-weight: 800; text-transform: uppercase;">
-                CUSTOMER SIGNATURE
+          <!-- Bylaws Note -->
+          <div style="background: #f8fafc; border-left: 3px solid #2563eb; border-radius: 4px; padding: 6px 10px; margin-bottom: 16px; font-size: 8.5px; color: #475569; line-height: 1.4;">
+            <strong>Important Bylaws:</strong> Possession will be handed over upon 100% dues clearance. All installments must be cleared on or before the due date. Any transfer must be processed through official Bilal Heights NOC.
+          </div>
+
+         <!-- Biometric Thumbs & Official Signatures Footer -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 25px; padding: 0 10px; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+            
+            <!-- Customer Signature & Thumb Impression -->
+            <div style="display: flex; gap: 14px; align-items: flex-end;">
+              <!-- Thumb Impression Box on A4 PDF -->
+              <div style="text-align: center;">
+                <div style="width: 52px; height: 60px; border: 1.5px solid #0f2a59; border-radius: 5px; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 3px;">
+                  ${o1.thumb ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" />` : `<i class="fa-solid fa-fingerprint" style="font-size:24px; color:#cbd5e1;"></i>`}
+                </div>
+                <div style="font-size: 7.5px; font-weight: 800; color: #0f2a59; text-transform: uppercase;">THUMB IMPRESSION</div>
+              </div>
+
+              <div style="text-align: center; width: 140px;">
+                <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">
+                  CUSTOMER SIGNATURE
+                </div>
+                <div style="font-size: 7.5px; color: #94a3b8;">(Allottee / Transferee)</div>
               </div>
             </div>
 
-            <div style="text-align: center; width: 220px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 6px; font-size: 11.5px; font-weight: 800; text-transform: uppercase;">
-                AUTHORIZED PERSON SIGNATURE
+            <!-- Official Seal -->
+            <div style="text-align: center; width: 110px;">
+              <div style="border: 1.5px dashed #0f2a59; color: #0f2a59; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
+                Official Allotment
               </div>
+              <div style="font-size: 8px; color: #64748b; font-weight: 600;">Authorized Seal</div>
+            </div>
+
+            <!-- Authority Signature -->
+            <div style="text-align: center; width: 160px;">
+              <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
+                MANAGING DIRECTOR
+              </div>
+              <div style="font-size: 8px; color: #64748b;">Bilal Heights Executive</div>
             </div>
           </div>
 
@@ -11125,11 +11943,11 @@ function downloadCustomerPDF(customerId) {
       `;
 
       const opt = {
-        margin: [0.25, 0.25, 0.25, 0.25],
+        margin: [8, 8, 8, 8],
         filename: `Allotment_Flat_${c.flatNo}_${(o1.name || 'Owner').replace(/\s+/g, '_')}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.5, useCORS: true },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       if (typeof html2pdf !== 'undefined') {
@@ -11139,8 +11957,1199 @@ function downloadCustomerPDF(customerId) {
       }
     }
 
+// =========================================================================
+// ACCOUNT LEDGER REPORT & CALCULATION ENGINE
+// =========================================================================
+function initAccountLedgerView() {
+  const accSelect = document.getElementById('alFilterAccount');
+  const fromInput = document.getElementById('alFilterDateFrom');
+  const toInput = document.getElementById('alFilterDateTo');
 
+  if (!accSelect) return;
+
+  // Dropdown populate karein
+  const currentVal = accSelect.value;
+  accSelect.innerHTML = '';
+
+  const uniqueAccs = new Set();
+  (allVendorsData || []).forEach(v => {
+    if (v.name) uniqueAccs.add(v.name.trim());
+  });
+
+  // Agar vendors data khali ho to fallback
+  if (uniqueAccs.size === 0) {
+    uniqueAccs.add("ABC Cement Supplier");
+    uniqueAccs.add("M. Ali Contractor");
+    uniqueAccs.add("ABC Contractor");
+  }
+
+  uniqueAccs.forEach(acc => {
+    accSelect.innerHTML += `<option value="${acc}">${acc}</option>`;
+  });
+
+  if (currentVal && uniqueAccs.has(currentVal)) {
+    accSelect.value = currentVal;
+  }
+
+  // Current month ki default dates
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+
+  if (fromInput && !fromInput.value) fromInput.value = firstDay;
+  if (toInput && !toInput.value) toInput.value = lastDay;
+
+  renderAccountLedgerReport();
+}
+
+function renderAccountLedgerReport() {
+  const selectedAccount = document.getElementById('alFilterAccount')?.value;
+  const dateFrom = document.getElementById('alFilterDateFrom')?.value;
+  const dateTo = document.getElementById('alFilterDateTo')?.value;
+  const filterType = document.getElementById('alFilterType')?.value || 'ALL';
+  const tbody = document.getElementById('alTableBody');
+
+  if (!selectedAccount || !tbody) return;
+
+  // Header Title update
+  const formatDateFmt = (dStr) => {
+    if (!dStr) return '';
+    const p = dStr.split('-');
+    return p.length === 3 ? `${p[2]}-${p[1]}-${p[0]}` : dStr;
+  };
+
+  const headEl = document.getElementById('alReportHeading');
+  if (headEl) {
+    headEl.textContent = `Account Ledger - ${selectedAccount} (${formatDateFmt(dateFrom)} to ${formatDateFmt(dateTo)})`;
+  }
+
+  const accNorm = selectedAccount.toLowerCase().trim();
+  const allTxns = [];
+
+  // 1. Purchases data se transactions
+  (allPurchaserData || []).forEach(p => {
+    const vName = (p.vendor || '').toLowerCase().trim();
+    if (vName === accNorm || vName.startsWith(accNorm + ' (') || vName.includes(accNorm)) {
+      const tot = parseFloat(p.total || p.totalAmount || 0);
+      const pd = parseFloat(p.paid || p.paidAmount || 0);
+      const d = p.date || (p.displayDate ? new Date(p.displayDate).toISOString().split('T')[0] : '');
+
+      if (tot > 0) {
+        allTxns.push({
+          date: d,
+          ref: p.billNo || 'PV-001',
+          desc: `${p.item || 'Material'} Purchase`,
+          debit: tot,
+          credit: 0
+        });
+      }
+      if (pd > 0) {
+        allTxns.push({
+          date: d,
+          ref: 'RV-' + (p.billNo ? p.billNo.replace(/\D/g, '') : '002'),
+          desc: 'Payment Received',
+          debit: 0,
+          credit: pd
+        });
+      }
+    }
+  });
+
+  // 2. Customer Payments data
+  (allPaymentsData || []).forEach(pay => {
+    const cName = (pay.customerName || '').toLowerCase().trim();
+    if (cName === accNorm || cName.startsWith(accNorm + ' (') || cName.includes(accNorm)) {
+      const amt = parseFloat(pay.amount || 0);
+      if (amt > 0) {
+        allTxns.push({
+          date: pay.date,
+          ref: pay.receiptNo || 'RV-002',
+          desc: `Payment Received (Flat ${pay.flatNo})`,
+          debit: 0,
+          credit: amt
+        });
+      }
+    }
+  });
+
+  // 3. Site Expenses data
+  (allSiteExpensesData || []).forEach(se => {
+    const pTo = (se.paidTo || se.description || '').toLowerCase().trim();
+    if (pTo.includes(accNorm)) {
+      const tot = parseFloat(se.totalAmount || 0);
+      const pd = parseFloat(se.paidAmount || 0);
+      if (tot > 0) {
+        allTxns.push({
+          date: se.date,
+          ref: 'SE-001',
+          desc: se.description || 'Site Work Bill',
+          debit: tot,
+          credit: 0
+        });
+      }
+      if (pd > 0) {
+        allTxns.push({
+          date: se.date,
+          ref: 'RV-SE',
+          desc: 'Payment Received',
+          debit: 0,
+          credit: pd
+        });
+      }
+    }
+  });
+
+  // 4. Office Expenses data
+  (allOfficeExpensesData || []).forEach(oe => {
+    const pTo = (oe.paidTo || '').toLowerCase().trim();
+    if (pTo === accNorm || pTo.includes(accNorm)) {
+      const tot = parseFloat(oe.totalAmount || 0);
+      const pd = parseFloat(oe.paidAmount || 0);
+      if (tot > 0) {
+        allTxns.push({
+          date: oe.date,
+          ref: 'OE-001',
+          desc: oe.description || 'Office Service Bill',
+          debit: tot,
+          credit: 0
+        });
+      }
+      if (pd > 0) {
+        allTxns.push({
+          date: oe.date,
+          ref: 'RV-OE',
+          desc: 'Payment Received',
+          debit: 0,
+          credit: pd
+        });
+      }
+    }
+  });
+
+  // Tareekh ke hisab se sort karein
+  allTxns.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+  // Opening balance calculation (selected Date From se pehle ka hisab)
+  let openingBalance = 0;
+  const periodTxns = [];
+
+  allTxns.forEach(t => {
+    if (dateFrom && t.date && t.date < dateFrom) {
+      openingBalance += (t.debit - t.credit);
+    } else if (!dateTo || (t.date && t.date <= dateTo)) {
+      periodTxns.push(t);
+    }
+  });
+
+  let runningBalance = openingBalance;
+  let totalDebitPeriod = 0;
+  let totalCreditPeriod = 0;
+  let rowsHtml = '';
+
+  periodTxns.forEach(t => {
+    runningBalance += (t.debit - t.credit);
+    totalDebitPeriod += t.debit;
+    totalCreditPeriod += t.credit;
+
+    if (filterType === 'Debit' && t.debit === 0) return;
+    if (filterType === 'Credit' && t.credit === 0) return;
+
+    rowsHtml += `
+      <tr>
+        <td>${formatDateFmt(t.date)}</td>
+        <td style="font-weight:700; color:#2563eb;">${t.ref}</td>
+        <td>${t.desc}</td>
+        <td style="text-align:right; font-weight:700;">${t.debit > 0 ? t.debit.toLocaleString() : '0'}</td>
+        <td style="text-align:right; font-weight:700;">${t.credit > 0 ? t.credit.toLocaleString() : '0'}</td>
+        <td style="text-align:right; font-weight:800; color:#0f172a;">${runningBalance.toLocaleString()}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = rowsHtml || `<tr><td colspan="6" style="text-align:center; padding:30px; color:#64748b;">No transactions recorded for this period.</td></tr>`;
+
+  // Footers Update
+  document.getElementById('alFootDebit').textContent = totalDebitPeriod.toLocaleString();
+  document.getElementById('alFootCredit').textContent = totalCreditPeriod.toLocaleString();
+  document.getElementById('alFootBalance').textContent = runningBalance.toLocaleString();
+
+  // Bottom 4 Cards Update
+  document.getElementById('alCardOpening').textContent = openingBalance.toLocaleString();
+  document.getElementById('alCardDebit').textContent = totalDebitPeriod.toLocaleString();
+  document.getElementById('alCardCredit').textContent = totalCreditPeriod.toLocaleString();
+  document.getElementById('alCardClosing').textContent = runningBalance.toLocaleString();
+}
+
+function downloadAccountLedgerPDF() {
+  const el = document.getElementById('accountLedgerPrintArea');
+  const acc = document.getElementById('alFilterAccount')?.value || 'Account';
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: `Account_Ledger_${acc.replace(/\s+/g, '_')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  };
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(el).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
     
+// =========================================================================
+// CASH BOOK REPORT ENGINE (AUTO SYNC, DAILY/WEEKLY/MONTHLY/DATEWISE)
+// =========================================================================
+let currentCashBookPreset = 'daily';
+let allManualCashEntries = [];
+
+// 1. Initial Load
+function initCashBookView() {
+  const fromInput = document.getElementById('cbFilterDateFrom');
+  const toInput = document.getElementById('cbFilterDateTo');
+
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  if (fromInput && !fromInput.value) fromInput.value = todayStr;
+  if (toInput && !toInput.value) toInput.value = todayStr;
+
+  // Firebase se manual cash in/handover load karein
+  if (db && allManualCashEntries.length === 0) {
+    db.collection('cash_drawer_entries').orderBy('date', 'desc').onSnapshot(snap => {
+      allManualCashEntries = [];
+      snap.forEach(doc => {
+        allManualCashEntries.push({ id: doc.id, ...doc.data() });
+      });
+      renderCashBookReport();
+    });
+  } else {
+    renderCashBookReport();
+  }
+}
+
+// 2. Preset Tab Switcher (Daily, Weekly, Monthly, All)
+function setCashBookPreset(preset, btn) {
+  currentCashBookPreset = preset;
+  document.querySelectorAll('#btnCbPresetDaily, #btnCbPresetWeekly, #btnCbPresetMonthly, #btnCbPresetAll').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const fromInput = document.getElementById('cbFilterDateFrom');
+  const toInput = document.getElementById('cbFilterDateTo');
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  if (preset === 'daily') {
+    fromInput.value = todayStr;
+    toInput.value = todayStr;
+  } else if (preset === 'weekly') {
+    const weekAgo = new Date();
+    weekAgo.setDate(now.getDate() - 7);
+    fromInput.value = weekAgo.toISOString().split('T')[0];
+    toInput.value = todayStr;
+  } else if (preset === 'monthly') {
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+    fromInput.value = firstDay;
+    toInput.value = lastDay;
+  } else if (preset === 'all') {
+    fromInput.value = '';
+    toInput.value = '';
+  }
+
+  renderCashBookReport();
+}
+
+// 3. Main Cash Book Calculation & Render
+function renderCashBookReport() {
+  const fromDate = document.getElementById('cbFilterDateFrom')?.value;
+  const toDate = document.getElementById('cbFilterDateTo')?.value;
+  const tbody = document.getElementById('cbTableBody');
+
+  if (!tbody) return;
+
+  const formatDateFmt = (dStr) => {
+    if (!dStr) return '';
+    const p = dStr.split('-');
+    return p.length === 3 ? `${p[2]}-${p[1]}-${p[0]}` : dStr;
+  };
+
+  const infoEl = document.getElementById('cbPeriodInfoText');
+  const tableHeadEl = document.getElementById('cbReportTableHeading');
+  const pLabel = (fromDate && toDate) ? `${formatDateFmt(fromDate)} to ${formatDateFmt(toDate)}` : 'All Time Records';
+  if (infoEl) infoEl.textContent = `Showing cash flow records for: ${pLabel}`;
+  if (tableHeadEl) tableHeadEl.textContent = `Cash Transaction Ledger (${pLabel})`;
+
+  const allCashTxns = [];
+
+  // A. Customer Cash Inflow (Sirf Cash Mode Wale Receipts)
+  (allPaymentsData || []).forEach(p => {
+    const isCash = (p.mode || '').toLowerCase().includes('cash');
+    const amt = parseFloat(p.amount || 0);
+    if (isCash && amt > 0) {
+      allCashTxns.push({
+        date: p.date,
+        ref: p.receiptNo || 'BH-REC',
+        desc: `Installment Flat ${p.flatNo} (${p.customerName || 'Customer'})`,
+        head: 'Customer Receipt',
+        cashIn: amt,
+        cashOut: 0
+      });
+    }
+  });
+
+  // B. Material Purchases Paid in Cash
+  (allPurchaserData || []).forEach(pur => {
+    const isCash = (pur.paymentMethod || '').toLowerCase().includes('cash');
+    const pd = parseFloat(pur.paid || pur.paidAmount || 0);
+    if (isCash && pd > 0) {
+      allCashTxns.push({
+        date: pur.date || (pur.displayDate ? new Date(pur.displayDate).toISOString().split('T')[0] : ''),
+        ref: pur.billNo || 'PUR-BILL',
+        desc: `${pur.item || 'Material'} Payment to ${pur.vendor || 'Supplier'}`,
+        head: 'Material Purchase',
+        cashIn: 0,
+        cashOut: pd
+      });
+    }
+  });
+
+  // C. Site Expenses Paid in Cash
+  (allSiteExpensesData || []).forEach(se => {
+    const pd = parseFloat(se.paidAmount || 0);
+    if (pd > 0) {
+      allCashTxns.push({
+        date: se.date,
+        ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'VOUCH'),
+        desc: `${se.description || 'Site Expense'} (${se.paidTo || se.category})`,
+        head: `Site: ${se.category || 'General'}`,
+        cashIn: 0,
+        cashOut: pd
+      });
+    }
+  });
+
+  // D. Office Expenses Paid in Cash
+  (allOfficeExpensesData || []).forEach(oe => {
+    const pd = parseFloat(oe.paidAmount || 0);
+    if (pd > 0) {
+      allCashTxns.push({
+        date: oe.date,
+        ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'VOUCH'),
+        desc: `${oe.description || 'Office Expense'} (Paid to: ${oe.paidTo || 'N/A'})`,
+        head: `Office: ${oe.category || 'General'}`,
+        cashIn: 0,
+        cashOut: pd
+      });
+    }
+  });
+
+  // E. Direct Drawer Entries (Cash In / Handover Out)
+  (allManualCashEntries || []).forEach(cd => {
+    const amt = parseFloat(cd.amount || 0);
+    const isOut = (cd.type === 'OUT');
+    if (amt > 0) {
+      allCashTxns.push({
+        date: cd.date,
+        ref: isOut ? 'CASH-OUT' : 'CASH-IN',
+        desc: cd.note ? `${cd.person} - ${cd.note}` : cd.person,
+        head: isOut ? 'Cash Handover / Bank Deposit' : 'Drawer Cash Fund',
+        cashIn: isOut ? 0 : amt,
+        cashOut: isOut ? amt : 0
+      });
+    }
+  });
+
+  // Tareekh ke mutabiq sort karein
+  allCashTxns.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+
+  // Opening Balance (Date From se pehle ka bacha hua naqad cash)
+  let openingBalance = 0;
+  const filteredPeriodTxns = [];
+
+  allCashTxns.forEach(t => {
+    if (fromDate && t.date && t.date < fromDate) {
+      openingBalance += (t.cashIn - t.cashOut);
+    } else if (!toDate || (t.date && t.date <= toDate)) {
+      filteredPeriodTxns.push(t);
+    }
+  });
+
+  let runningBalance = openingBalance;
+  let totalCashInPeriod = 0;
+  let totalCashOutPeriod = 0;
+  let rowsHtml = '';
+
+  filteredPeriodTxns.forEach(t => {
+    runningBalance += (t.cashIn - t.cashOut);
+    totalCashInPeriod += t.cashIn;
+    totalCashOutPeriod += t.cashOut;
+
+    rowsHtml += `
+      <tr>
+        <td>${formatDateFmt(t.date)}</td>
+        <td style="font-weight:700; color:#2563eb;">${t.ref}</td>
+        <td>${t.desc}</td>
+        <td><span class="badge-project-pill">${t.head}</span></td>
+        <td style="text-align:right; font-weight:700; color:#16a34a;">${t.cashIn > 0 ? t.cashIn.toLocaleString() : '-'}</td>
+        <td style="text-align:right; font-weight:700; color:#dc2626;">${t.cashOut > 0 ? t.cashOut.toLocaleString() : '-'}</td>
+        <td style="text-align:right; font-weight:800; color:#0f172a;">Rs. ${runningBalance.toLocaleString()}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = rowsHtml || `<tr><td colspan="7" style="text-align:center; padding:30px; color:#64748b;">Is duration ka koi cash transaction record nahi mila.</td></tr>`;
+
+  // Footers Update
+  document.getElementById('cbFootIn').textContent = `Rs. ${totalCashInPeriod.toLocaleString()}`;
+  document.getElementById('cbFootOut').textContent = `Rs. ${totalCashOutPeriod.toLocaleString()}`;
+  document.getElementById('cbFootBalance').textContent = `Rs. ${runningBalance.toLocaleString()}`;
+
+  // 4 Top KPI Cards Update
+  document.getElementById('cbCardOpening').textContent = `Rs. ${openingBalance.toLocaleString()}`;
+  document.getElementById('cbCardTotalIn').textContent = `Rs. ${totalCashInPeriod.toLocaleString()}`;
+  document.getElementById('cbCardTotalOut').textContent = `Rs. ${totalCashOutPeriod.toLocaleString()}`;
+  document.getElementById('cbCardNetBalance').textContent = `Rs. ${runningBalance.toLocaleString()}`;
+}
+
+// 4. Modal Handlers: Cash In / Handover Out
+function openCashDrawerModal(type) {
+  document.getElementById('cdEntryType').value = type;
+  document.getElementById('cdPerson').value = '';
+  document.getElementById('cdAmount').value = '';
+  document.getElementById('cdNote').value = '';
+
+  const title = document.getElementById('cashDrawerModalTitle');
+  const label = document.getElementById('cdLabelPerson');
+  const btn = document.getElementById('btnSaveCashDrawer');
+
+  if (type === 'OUT') {
+    title.innerHTML = '<i class="fa-solid fa-hand-holding-dollar" style="color:#dc2626;"></i> Cash Handover / Out';
+    label.textContent = 'Kisko Cash Diya? (e.g. Malik / Bank / Director) *';
+    btn.style.background = '#dc2626';
+  } else {
+    title.innerHTML = '<i class="fa-solid fa-plus-circle" style="color:#16a34a;"></i> Add Cash In (Drawer Fund)';
+    label.textContent = 'Cash Kahan Se Aaya? (e.g. Malik ne diya / Bank se nikala) *';
+    btn.style.background = '#16a34a';
+  }
+
+  document.getElementById('cashDrawerModal').classList.add('active');
+}
+
+function closeCashDrawerModal() {
+  document.getElementById('cashDrawerModal').classList.remove('active');
+}
+
+async function saveCashDrawerEntry(e) {
+  e.preventDefault();
+  const type = document.getElementById('cdEntryType').value;
+  const person = document.getElementById('cdPerson').value.trim();
+  const amount = parseFloat(document.getElementById('cdAmount').value) || 0;
+  const note = document.getElementById('cdNote').value.trim();
+  const btn = document.getElementById('btnSaveCashDrawer');
+
+  if (amount <= 0) {
+    alert("Bara-e-meherbani durust raqam darj karein.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+  try {
+    const todayStr = new Date().toISOString().split('T')[0];
+    await db.collection('cash_drawer_entries').add({
+      type: type,
+      person: person,
+      amount: amount,
+      note: note,
+      date: todayStr,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    closeCashDrawerModal();
+    alert(`Cash ${type === 'OUT' ? 'Handover' : 'In'} entry kamiyabi se save ho gayi!`);
+  } catch(err) {
+    alert("Error: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Save Entry';
+  }
+}
+
+function downloadProfitLossPDF() {
+  const el = document.getElementById('profitLossPrintArea');
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: `Profit_Loss_Statement_${new Date().toISOString().slice(0, 10)}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(el).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
+
+// =========================================================================
+// PROFIT & LOSS REPORT ENGINE (DAILY, WEEKLY, MONTHLY, DATEWISE & PDF)
+// =========================================================================
+let currentPlPreset = 'daily';
+
+function initProfitLossView() {
+  const fromInput = document.getElementById('plFilterDateFrom');
+  const toInput = document.getElementById('plFilterDateTo');
+
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  if (fromInput && !fromInput.value) fromInput.value = todayStr;
+  if (toInput && !toInput.value) toInput.value = todayStr;
+
+  renderProfitLossReport();
+}
+
+function setProfitLossPreset(preset, btn) {
+  currentPlPreset = preset;
+  document.querySelectorAll('#btnPlPresetDaily, #btnPlPresetWeekly, #btnPlPresetMonthly, #btnPlPresetAll').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const fromInput = document.getElementById('plFilterDateFrom');
+  const toInput = document.getElementById('plFilterDateTo');
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  if (preset === 'daily') {
+    fromInput.value = todayStr;
+    toInput.value = todayStr;
+  } else if (preset === 'weekly') {
+    const weekAgo = new Date();
+    weekAgo.setDate(now.getDate() - 7);
+    fromInput.value = weekAgo.toISOString().split('T')[0];
+    toInput.value = todayStr;
+  } else if (preset === 'monthly') {
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+    fromInput.value = firstDay;
+    toInput.value = lastDay;
+  } else if (preset === 'all') {
+    fromInput.value = '';
+    toInput.value = '';
+  }
+
+  renderProfitLossReport();
+}
+
+function renderProfitLossReport() {
+  const fromDate = document.getElementById('plFilterDateFrom')?.value;
+  const toDate = document.getElementById('plFilterDateTo')?.value;
+  const tbody = document.getElementById('plTableBody');
+
+  if (!tbody) return;
+
+  const formatDateFmt = (dStr) => {
+    if (!dStr) return '';
+    const p = dStr.split('-');
+    return p.length === 3 ? `${p[2]}-${p[1]}-${p[0]}` : dStr;
+  };
+
+  const pLabel = (fromDate && toDate) ? `${formatDateFmt(fromDate)} to ${formatDateFmt(toDate)}` : 'All Time Lifetime Records';
+  const infoEl = document.getElementById('plPeriodInfoText');
+  const headEl = document.getElementById('plReportHeading');
+  const subEl = document.getElementById('plStatementSub');
+
+  if (infoEl) infoEl.textContent = `Showing Profit & Loss statement for: ${pLabel}`;
+  if (headEl) headEl.textContent = `Income & Expense Statement (${pLabel})`;
+  if (subEl) subEl.textContent = `Project Performance Statement: Bilal Heights (${pLabel})`;
+
+  // 1. REVENUE (Customers & Flat Bookings)
+  let totalRevenue = 0;
+  let revenueDetailsHtml = '';
+  
+  (allCustomersData || []).forEach(c => {
+    const cDate = c.createdAt ? (c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : (typeof c.createdAt === 'string' ? c.createdAt.substring(0,10) : '')) : '';
+    let matchesDate = true;
+    if (fromDate && cDate && cDate < fromDate) matchesDate = false;
+    if (toDate && cDate && cDate > toDate) matchesDate = false;
+
+    if (matchesDate) {
+      const price = parseFloat(c.financials?.totalPrice) || 0;
+      totalRevenue += price;
+      revenueDetailsHtml += `
+        <tr>
+          <td style="padding-left: 28px; color: #475569;">Flat ${c.flatNo} - ${c.firstOwner?.name || 'Customer'}</td>
+          <td style="text-align: right; color: #16a34a; font-weight: 600;">Rs. ${price.toLocaleString()}</td>
+          <td></td>
+        </tr>
+      `;
+    }
+  });
+
+  // Agar deal prices na milen to received payments se calculate karein
+  if (totalRevenue === 0) {
+    (allPaymentsData || []).forEach(p => {
+      let matchesDate = true;
+      if (fromDate && p.date && p.date < fromDate) matchesDate = false;
+      if (toDate && p.date && p.date > toDate) matchesDate = false;
+      if (matchesDate) {
+        totalRevenue += parseFloat(p.amount) || 0;
+      }
+    });
+  }
+
+  // 2. MATERIAL PURCHASES (Cement, Steel, Bricks, etc.)
+  let totalPurchases = 0;
+  const purCategoryMap = {};
+
+  (allPurchaserData || []).forEach(pur => {
+    const d = pur.date || (pur.displayDate ? new Date(pur.displayDate).toISOString().split('T')[0] : '');
+    let matchesDate = true;
+    if (fromDate && d && d < fromDate) matchesDate = false;
+    if (toDate && d && d > toDate) matchesDate = false;
+
+    if (matchesDate) {
+      const tot = parseFloat(pur.total || pur.totalAmount || 0);
+      totalPurchases += tot;
+      const cat = pur.item || 'General Materials';
+      purCategoryMap[cat] = (purCategoryMap[cat] || 0) + tot;
+    }
+  });
+
+  let purDetailsHtml = '';
+  Object.keys(purCategoryMap).forEach(cat => {
+    purDetailsHtml += `
+      <tr>
+        <td style="padding-left: 28px; color: #475569;">${cat}</td>
+        <td style="text-align: right; color: #dc2626; font-weight: 600;">(Rs. ${purCategoryMap[cat].toLocaleString()})</td>
+        <td></td>
+      </tr>
+    `;
+  });
+
+  // 3. DIRECT SITE EXPENSES (Labour, Water, Fuel, Machinery)
+  let totalSiteExp = 0;
+  const siteCategoryMap = {};
+
+  (allSiteExpensesData || []).forEach(se => {
+    let matchesDate = true;
+    if (fromDate && se.date && se.date < fromDate) matchesDate = false;
+    if (toDate && se.date && se.date > toDate) matchesDate = false;
+
+    if (matchesDate) {
+      const tot = parseFloat(se.totalAmount || 0);
+      totalSiteExp += tot;
+      const cat = se.category || 'Site General';
+      siteCategoryMap[cat] = (siteCategoryMap[cat] || 0) + tot;
+    }
+  });
+
+  let siteDetailsHtml = '';
+  Object.keys(siteCategoryMap).forEach(cat => {
+    siteDetailsHtml += `
+      <tr>
+        <td style="padding-left: 28px; color: #475569;">${cat}</td>
+        <td style="text-align: right; color: #dc2626; font-weight: 600;">(Rs. ${siteCategoryMap[cat].toLocaleString()})</td>
+        <td></td>
+      </tr>
+    `;
+  });
+
+  // 4. OPERATING / OFFICE EXPENSES (Rent, Staff Salaries, Bills)
+  let totalOfficeExp = 0;
+  const officeCategoryMap = {};
+
+  (allOfficeExpensesData || []).forEach(oe => {
+    let matchesDate = true;
+    if (fromDate && oe.date && oe.date < fromDate) matchesDate = false;
+    if (toDate && oe.date && oe.date > toDate) matchesDate = false;
+
+    if (matchesDate) {
+      const tot = parseFloat(oe.totalAmount || 0);
+      totalOfficeExp += tot;
+      const cat = oe.category || 'Office General';
+      officeCategoryMap[cat] = (officeCategoryMap[cat] || 0) + tot;
+    }
+  });
+
+  let officeDetailsHtml = '';
+  Object.keys(officeCategoryMap).forEach(cat => {
+    officeDetailsHtml += `
+      <tr>
+        <td style="padding-left: 28px; color: #475569;">${cat}</td>
+        <td style="text-align: right; color: #dc2626; font-weight: 600;">(Rs. ${officeCategoryMap[cat].toLocaleString()})</td>
+        <td></td>
+      </tr>
+    `;
+  });
+
+  // TOTAL CALCULATIONS
+  const totalDirectCosts = totalPurchases + totalSiteExp;
+  const grossProfit = totalRevenue - totalDirectCosts;
+  const netProfit = grossProfit - totalOfficeExp;
+
+  const netMarginPercent = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : 0;
+  const marginBadge = document.getElementById('plNetMarginBadge');
+  if (marginBadge) {
+    marginBadge.textContent = `Net Margin: ${netMarginPercent}%`;
+    marginBadge.style.background = netProfit >= 0 ? '#dcfce7' : '#fee2e2';
+    marginBadge.style.color = netProfit >= 0 ? '#15803d' : '#b91c1c';
+  }
+
+  // 5 Top Cards Update
+  document.getElementById('plCardRevenue').textContent = `Rs. ${totalRevenue.toLocaleString()}`;
+  document.getElementById('plCardCost').textContent = `Rs. ${totalDirectCosts.toLocaleString()}`;
+  document.getElementById('plCardGross').textContent = `Rs. ${grossProfit.toLocaleString()}`;
+  document.getElementById('plCardGross').style.color = grossProfit >= 0 ? '#16a34a' : '#dc2626';
+  document.getElementById('plCardOperating').textContent = `Rs. ${totalOfficeExp.toLocaleString()}`;
+
+  const netCardEl = document.getElementById('plCardNet');
+  const netWrap = document.getElementById('plCardNetWrap');
+  if (netCardEl) {
+    netCardEl.textContent = `Rs. ${netProfit.toLocaleString()}`;
+    netCardEl.style.color = netProfit >= 0 ? '#059669' : '#dc2626';
+    if (netWrap) netWrap.style.borderTopColor = netProfit >= 0 ? '#059669' : '#dc2626';
+  }
+
+  // TABLE RENDERING
+  tbody.innerHTML = `
+    <!-- 1. REVENUE SECTION -->
+    <tr style="background:#f8fafc; font-weight:800; font-size:14px;">
+      <td>1. REVENUE / PROPERTY BOOKINGS (SALES)</td>
+      <td></td>
+      <td style="text-align:right; color:#16a34a; font-weight:900;">Rs. ${totalRevenue.toLocaleString()}</td>
+    </tr>
+    ${revenueDetailsHtml || '<tr><td colspan="3" style="padding-left:28px; color:#94a3b8; font-style:italic;">No customer bookings recorded in this period.</td></tr>'}
+
+    <!-- 2. DIRECT CONSTRUCTION COSTS -->
+    <tr style="background:#fff7ed; font-weight:800; font-size:14px; border-top:2px solid #fed7aa;">
+      <td>2. DIRECT CONSTRUCTION COSTS (COGS)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td style="padding-left: 18px; font-weight:700; color:#0f172a;">A. Material Purchases:</td>
+      <td></td>
+      <td style="text-align:right; color:#dc2626; font-weight:700;">(Rs. ${totalPurchases.toLocaleString()})</td>
+    </tr>
+    ${purDetailsHtml}
+
+    <tr>
+      <td style="padding-left: 18px; font-weight:700; color:#0f172a;">B. Direct Site Expenses (Labour, Fuel, Water):</td>
+      <td></td>
+      <td style="text-align:right; color:#dc2626; font-weight:700;">(Rs. ${totalSiteExp.toLocaleString()})</td>
+    </tr>
+    ${siteDetailsHtml}
+
+    <tr style="background:#f1f5f9; font-weight:800;">
+      <td style="padding-left:18px;">Total Construction Cost (A + B):</td>
+      <td></td>
+      <td style="text-align:right; font-weight:800; color:#dc2626;">(Rs. ${totalDirectCosts.toLocaleString()})</td>
+    </tr>
+
+    <!-- 3. GROSS PROFIT -->
+    <tr style="background:#eff6ff; font-weight:900; font-size:15px; border-top:2px solid #bfdbfe; border-bottom:2px solid #bfdbfe;">
+      <td>GROSS PROFIT (Revenue - Construction Cost):</td>
+      <td></td>
+      <td style="text-align:right; color:${grossProfit >= 0 ? '#16a34a' : '#dc2626'};">Rs. ${grossProfit.toLocaleString()}</td>
+    </tr>
+
+    <!-- 4. OPERATING EXPENSES -->
+    <tr style="background:#fef2f2; font-weight:800; font-size:14px;">
+      <td>3. OPERATING / ADMINISTRATIVE EXPENSES</td>
+      <td></td>
+      <td style="text-align:right; color:#dc2626; font-weight:800;">(Rs. ${totalOfficeExp.toLocaleString()})</td>
+    </tr>
+    ${officeDetailsHtml || '<tr><td colspan="3" style="padding-left:28px; color:#94a3b8; font-style:italic;">No office expenses recorded in this period.</td></tr>'}
+
+    <!-- 5. FINAL NET PROFIT / LOSS -->
+    <tr style="background:${netProfit >= 0 ? '#dcfce7' : '#fee2e2'}; font-weight:900; font-size:17px; border-top:3px solid ${netProfit >= 0 ? '#16a34a' : '#dc2626'};">
+      <td style="color:${netProfit >= 0 ? '#15803d' : '#991b1b'};">
+        NET PROFIT / (LOSS) FOR THE PERIOD:
+      </td>
+      <td></td>
+      <td style="text-align:right; color:${netProfit >= 0 ? '#15803d' : '#991b1b'};">
+        Rs. ${netProfit.toLocaleString()}
+      </td>
+    </tr>
+  `;
+}
+
+function downloadProfitLossPDF() {
+  const el = document.getElementById('profitLossPrintArea');
+  const opt = {
+    margin: [0.25, 0.25, 0.25, 0.25],
+    filename: `Profit_Loss_Statement_${new Date().toISOString().slice(0, 10)}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(el).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
+
+// =========================================================================
+// CASH VOUCHERS (CPV & CRV) ENGINE & A4 PDF GENERATOR
+// =========================================================================
+let allCashVouchersData = [];
+
+function initCashVouchersView() {
+  populateVouchersAccountDatalist();
+  
+  if (db && allCashVouchersData.length === 0) {
+    db.collection('cash_vouchers').orderBy('date', 'desc').onSnapshot(snap => {
+      allCashVouchersData = [];
+      snap.forEach(doc => {
+        allCashVouchersData.push({ id: doc.id, ...doc.data() });
+      });
+      filterCashVouchersTable();
+    });
+  } else {
+    filterCashVouchersTable();
+  }
+}
+
+function populateVouchersAccountDatalist() {
+  const datalist = document.getElementById('cvAccountsDatalist');
+  if (!datalist) return;
+  datalist.innerHTML = '';
+  (allVendorsData || []).forEach(acc => {
+    const opt = document.createElement('option');
+    opt.value = `${acc.name || acc.company} (${acc.type || 'Account'})`;
+    datalist.appendChild(opt);
+  });
+}
+
+function openCreateVoucherModal(type = 'PAYMENT') {
+  document.getElementById('cashVoucherForm').reset();
+  populateVouchersAccountDatalist();
+  
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('cvDate').value = today;
+  
+  switchVoucherFormType(type);
+  document.getElementById('cashVoucherModal').classList.add('active');
+}
+
+function closeCashVoucherModal() {
+  document.getElementById('cashVoucherModal').classList.remove('active');
+}
+
+function switchVoucherFormType(type) {
+  document.getElementById('cvFormType').value = type;
+  const isPayment = (type === 'PAYMENT');
+
+  const btnCPV = document.getElementById('btnTypeCPV');
+  const btnCRV = document.getElementById('btnTypeCRV');
+  const labelParty = document.getElementById('cvLabelParty');
+  const modalHeading = document.getElementById('cvModalHeading');
+  const btnSave = document.getElementById('btnSaveCashVoucher');
+
+  if (isPayment) {
+    btnCPV.style.background = '#fef2f2';
+    btnCPV.style.borderColor = '#dc2626';
+    btnCPV.style.color = '#dc2626';
+
+    btnCRV.style.background = '#ffffff';
+    btnCRV.style.borderColor = '#cbd5e1';
+    btnCRV.style.color = '#475569';
+
+    labelParty.textContent = 'Paid To (Debit Account / Party) *';
+    modalHeading.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square" style="color:#dc2626;"></i> Issue Cash Payment Voucher (CPV)';
+    btnSave.style.background = '#dc2626';
+  } else {
+    btnCRV.style.background = '#f0fdf4';
+    btnCRV.style.borderColor = '#16a34a';
+    btnCRV.style.color = '#16a34a';
+
+    btnCPV.style.background = '#ffffff';
+    btnCPV.style.borderColor = '#cbd5e1';
+    btnCPV.style.color = '#475569';
+
+    labelParty.textContent = 'Received From (Credit Account / Party) *';
+    modalHeading.innerHTML = '<i class="fa-solid fa-arrow-down-left-and-up-right-to-center" style="color:#16a34a;"></i> Issue Cash Receipt Voucher (CRV)';
+    btnSave.style.background = '#16a34a';
+  }
+
+  // Generate Auto Voucher No
+  const prefix = isPayment ? 'CPV-' : 'CRV-';
+  const randNum = Math.floor(1000 + Math.random() * 9000);
+  document.getElementById('cvVoucherNo').value = prefix + randNum;
+}
+
+function calcVoucherAmountInWords() {
+  const amt = parseFloat(document.getElementById('cvAmount')?.value) || 0;
+  document.getElementById('cvAmountWords').value = numberToWordsRupees(amt);
+}
+
+// Save Voucher to Firestore (Also auto-syncs with Cash Book)
+async function saveCashVoucherRecord(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btnSaveCashVoucher');
+  const type = document.getElementById('cvFormType').value;
+  const voucherNo = document.getElementById('cvVoucherNo').value.trim();
+  const date = document.getElementById('cvDate').value;
+  const party = document.getElementById('cvPartyInput').value.trim();
+  const head = document.getElementById('cvHeadSelect').value;
+  const amount = parseFloat(document.getElementById('cvAmount').value) || 0;
+  const narration = document.getElementById('cvNarration').value.trim();
+
+  if (amount <= 0) {
+    alert("Bara-e-meherbani raqam darj karein.");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving & Generating...';
+
+  const voucherRecord = {
+    voucherNo: voucherNo,
+    type: type,
+    date: date,
+    party: party,
+    head: head,
+    amount: amount,
+    narration: narration,
+    amountInWords: numberToWordsRupees(amount),
+    project: 'BILAL HEIGHTS',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    const docRef = await db.collection('cash_vouchers').add(voucherRecord);
+    voucherRecord.id = docRef.id;
+
+    // Auto Sync with Cash Book
+    await db.collection('cash_drawer_entries').add({
+      type: (type === 'PAYMENT' ? 'OUT' : 'IN'),
+      person: party,
+      amount: amount,
+      note: `${voucherNo}: ${head} - ${narration}`,
+      date: date,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    closeCashVoucherModal();
+    alert(`${type === 'PAYMENT' ? 'Cash Payment Voucher' : 'Cash Receipt Voucher'} kamiyabi se ban gaya aur Cash Book mein update ho chuka hai!`);
+
+    // Download Official A4 Voucher PDF
+    downloadVoucherA4PDF(voucherRecord);
+
+  } catch(err) {
+    alert("Error: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-check-double"></i> Save & Generate A4 Voucher';
+  }
+}
+
+function filterCashVouchersTable() {
+  const q = (document.getElementById('cvSearchInput')?.value || '').toLowerCase().trim();
+  const type = document.getElementById('cvTypeFilter')?.value || 'ALL';
+  const tbody = document.getElementById('cashVouchersTableBody');
+
+  if (!tbody) return;
+
+  let totalPaid = 0;
+  let totalReceived = 0;
+
+  const filtered = allCashVouchersData.filter(v => {
+    const matchesType = (type === 'ALL' || v.type === type);
+    const matchesQ = !q ||
+      (v.voucherNo && v.voucherNo.toLowerCase().includes(q)) ||
+      (v.party && v.party.toLowerCase().includes(q)) ||
+      (v.head && v.head.toLowerCase().includes(q)) ||
+      (v.narration && v.narration.toLowerCase().includes(q));
+
+    return matchesType && matchesQ;
+  });
+
+  filtered.forEach(v => {
+    const amt = parseFloat(v.amount) || 0;
+    if (v.type === 'PAYMENT') totalPaid += amt;
+    else totalReceived += amt;
+  });
+
+  document.getElementById('cvKpiTotalPaid').textContent = `Rs. ${totalPaid.toLocaleString()}`;
+  document.getElementById('cvKpiTotalReceived').textContent = `Rs. ${totalReceived.toLocaleString()}`;
+  document.getElementById('cvKpiTotalCount').textContent = `${filtered.length} Vouchers`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Koi cash voucher nahi mila.</td></tr>`;
+    return;
+  }
+
+  let html = '';
+  filtered.forEach((v, idx) => {
+    const isPayment = (v.type === 'PAYMENT');
+    const badgeBg = isPayment ? '#fee2e2' : '#dcfce7';
+    const badgeColor = isPayment ? '#dc2626' : '#16a34a';
+
+    html += `
+      <tr>
+        <td style="font-weight:700; color:#475569;">${idx + 1}</td>
+        <td><strong style="color:#2563eb;">${v.voucherNo}</strong></td>
+        <td>${v.date}</td>
+        <td><span style="background:${badgeBg}; color:${badgeColor}; padding:3px 9px; border-radius:14px; font-size:11px; font-weight:800;">${isPayment ? 'CPV' : 'CRV'}</span></td>
+        <td><strong>${v.party}</strong></td>
+        <td><span class="badge-project-pill">${v.head}</span></td>
+        <td><small style="color:#475569;">${v.narration}</small></td>
+        <td style="text-align:right; font-weight:800; color:${isPayment ? '#dc2626' : '#16a34a'};">Rs. ${Number(v.amount || 0).toLocaleString()}</td>
+        <td style="text-align:center;">
+          <div style="display:inline-flex; gap:6px;">
+            <button type="button" class="btn-action-primary" style="background:#059669; padding:5px 10px; font-size:11.5px;" onclick="downloadVoucherA4PDFById('${v.id}')" title="Download A4 PDF">
+              <i class="fa-solid fa-file-pdf"></i> Voucher
+            </button>
+            <button type="button" class="btn-tbl-delete" style="padding:5px 9px;" onclick="deleteCashVoucher('${v.id}')" title="Delete">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+}
+
+function downloadVoucherA4PDFById(id) {
+  const v = allCashVouchersData.find(x => x.id === id);
+  if (v) downloadVoucherA4PDF(v);
+}
+
+// Strict A4 Standard Corporate Voucher PDF Pattern
+function downloadVoucherA4PDF(v) {
+  const isPayment = (v.type === 'PAYMENT');
+  const voucherTitle = isPayment ? 'CASH PAYMENT VOUCHER' : 'CASH RECEIPT VOUCHER';
+  const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  const pdfWrapper = document.createElement('div');
+  pdfWrapper.style.width = '100%';
+  pdfWrapper.style.maxWidth = '190mm';
+  pdfWrapper.style.margin = '0 auto';
+  pdfWrapper.style.padding = '10px 12px';
+  pdfWrapper.style.background = '#ffffff';
+  pdfWrapper.style.color = '#0f172a';
+  pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+  pdfWrapper.style.boxSizing = 'border-box';
+
+  pdfWrapper.innerHTML = `
+    <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 18px 20px; background: #ffffff;">
+      
+      <!-- Standard Corporate Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
+          <div>
+            <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
+            <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Official Financial Accounts Document</div>
+            <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Karachi &nbsp;|&nbsp; Tel: 021-35890000</div>
+          </div>
+        </div>
+
+        <div style="text-align: right;">
+          <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
+            ${voucherTitle}
+          </div>
+          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+            VOUCHER NO: <span style="color: #2563eb;">${v.voucherNo}</span>
+          </div>
+          <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${v.date || todayDate}</b></div>
+        </div>
+      </div>
+
+      <!-- Banner -->
+      <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Account / Party</div>
+          <div style="font-size: 16px; font-weight: 900;">${v.party}</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Head / Category</div>
+          <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${v.head}</div>
+        </div>
+      </div>
+
+      <!-- Particulars Table -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
+        <thead>
+          <tr style="background: #0f2a59; color: #ffffff;">
+            <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">PARTICULARS / NARRATION</th>
+            <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 25%;">DEBIT (RS.)</th>
+            <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 25%;">CREDIT (RS.)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${v.narration}</td>
+            <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 12px;">${isPayment ? 'Rs. ' + Number(v.amount).toLocaleString() : '-'}</td>
+            <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #16a34a; font-size: 12px;">${!isPayment ? 'Rs. ' + Number(v.amount).toLocaleString() : '-'}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr style="background:#f8fafc; font-weight:900;">
+            <td style="padding: 8px 10px; border: 1px solid #cbd5e1; text-align: right;">TOTAL:</td>
+            <td style="padding: 8px 10px; border: 1px solid #cbd5e1; text-align: right; color:#dc2626;">Rs. ${Number(v.amount).toLocaleString()}</td>
+            <td style="padding: 8px 10px; border: 1px solid #cbd5e1; text-align: right; color:#16a34a;">Rs. ${Number(v.amount).toLocaleString()}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <!-- Amount in Words -->
+      <div style="background: #f8fafc; border-left: 3.5px solid #0066ff; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; margin-bottom: 14px; font-size: 9.5px;">
+        <span style="color: #64748b; font-weight: 800; text-transform: uppercase;">Amount in Words:</span>
+        <strong style="color: #0f172a; text-transform: uppercase;"> ${v.amountInWords || numberToWordsRupees(v.amount)}</strong>
+      </div>
+
+      <!-- 4 Verification Signatures Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding: 0 6px;">
+        <div style="text-align: center; width: 120px;">
+          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">PREPARED BY</div>
+        </div>
+        <div style="text-align: center; width: 120px;">
+          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">CHECKED BY</div>
+        </div>
+        <div style="text-align: center; width: 120px;">
+          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">RECEIVER SIGN</div>
+        </div>
+        <div style="text-align: center; width: 140px;">
+          <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">AUTHORIZED SIGN</div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: `${v.voucherNo}_${(v.party || 'Account').replace(/\s+/g, '_')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(pdfWrapper).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
+
+async function deleteCashVoucher(id) {
+  if (confirm("Kiya aap waqai is cash voucher ko delete karna chahte hain?")) {
+    try {
+      await db.collection('cash_vouchers').doc(id).delete();
+      alert("Voucher record delete ho gaya.");
+    } catch(err) {
+      alert("Delete failed: " + err.message);
+    }
+  }
+}
+
   </script>
 </body>
 </html>
