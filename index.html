@@ -2203,30 +2203,6 @@
        <!-- ================= SECTION 1: EXACT MATCH DASHBOARD ================= -->
         <section id="sectionDashboard" class="erp-section active">
           
-          <!-- Top Header: Dashboard Title & Date/User Status -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
-            <div>
-              <h2 style="font-size: 26px; font-weight: 800; color: #0f172a; margin: 0 0 4px 0;">Dashboard</h2>
-              <p style="font-size: 13.5px; color: #64748b; margin: 0; font-weight: 500;">Project Overview & Financial Summary</p>
-            </div>
-
-            <div style="display: flex; align-items: center; gap: 18px;">
-              <div style="display: flex; align-items: center; gap: 8px; color: #475569; font-size: 13px; font-weight: 600;">
-                <i class="fa-regular fa-calendar" style="color: #2563eb;"></i>
-                <span id="dashTodayDateDisplay">12 Sep 2025 (Today)</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 10px; color: #0f172a; font-size: 13px; font-weight: 700;">
-                <div style="width: 32px; height: 32px; border-radius: 50%; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center;">
-                  <i class="fa-regular fa-user"></i>
-                </div>
-                <div>
-                  <div style="line-height: 1.2;">Admin</div>
-                  <small style="color: #64748b; font-weight: 500;">(Owner)</small>
-                </div>
-                <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #94a3b8; margin-left: 4px;"></i>
-              </div>
-            </div>
-          </div>
 
           <!-- 1st Row: 5 Main KPI Cards -->
           <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px;" class="dash-kpi-5-grid">
@@ -2237,7 +2213,7 @@
                 <i class="fa-solid fa-house"></i>
               </div>
               <div style="font-size: 12.5px; font-weight: 600; color: #64748b; margin-bottom: 6px;">Total Flats</div>
-              <div id="statTotalFlats" style="font-size: 28px; font-weight: 900; color: #0f172a;">40</div>
+              <div id="statTotalFlats" style="font-size: 28px; font-weight: 900; color: #0f172a;">0</div>
             </div>
 
             <!-- Card 2: Available Flats -->
@@ -2246,7 +2222,7 @@
                 <i class="fa-solid fa-check"></i>
               </div>
               <div style="font-size: 12.5px; font-weight: 600; color: #64748b; margin-bottom: 6px;">Available Flats</div>
-              <div id="statAvailableFlats" style="font-size: 28px; font-weight: 900; color: #0f172a;">18</div>
+              <div id="statAvailableFlats" style="font-size: 28px; font-weight: 900; color: #0f172a;">0</div>
             </div>
 
             <!-- Card 3: Booked / Sold Flats -->
@@ -2255,16 +2231,16 @@
                 <i class="fa-solid fa-clipboard-list"></i>
               </div>
               <div style="font-size: 12.5px; font-weight: 600; color: #64748b; margin-bottom: 6px;">Booked / Sold Flats</div>
-              <div id="statBookedSoldFlats" style="font-size: 28px; font-weight: 900; color: #0f172a;">22</div>
+              <div id="statBookedSoldFlats" style="font-size: 28px; font-weight: 900; color: #0f172a;">0</div>
             </div>
 
-            <!-- Card 4: Customer Payments Received -->
+           <!-- Card 4: Customer Payments Received -->
             <div style="background: #ffffff; border: 1.5px solid #f0fdf4; border-radius: 18px; padding: 20px 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
               <div style="width: 44px; height: 44px; border-radius: 12px; background: #d1fae5; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 14px;">
                 <i class="fa-solid fa-money-bill-wave"></i>
               </div>
               <div style="font-size: 12.5px; font-weight: 600; color: #64748b; margin-bottom: 6px;">Customer Payments Received</div>
-              <div id="dashTotalInflow" style="font-size: 24px; font-weight: 900; color: #0f172a; white-space: nowrap;">Rs. 1,25,00,000</div>
+              <div id="dashTotalInflow" style="font-size: 24px; font-weight: 900; color: #0f172a; white-space: nowrap;">Rs. 0</div>
             </div>
 
             <!-- Card 5: Site Expenses -->
@@ -2273,7 +2249,7 @@
                 <i class="fa-solid fa-helmet-safety"></i>
               </div>
               <div style="font-size: 12.5px; font-weight: 600; color: #64748b; margin-bottom: 6px;">Site Expenses</div>
-              <div id="dashTotalExpenses" style="font-size: 24px; font-weight: 900; color: #0f172a; white-space: nowrap;">Rs. 68,50,000</div>
+              <div id="dashTotalExpenses" style="font-size: 24px; font-weight: 900; color: #0f172a; white-space: nowrap;">Rs. 0</div>
             </div>
 
           </div>
@@ -2288,7 +2264,7 @@
               </div>
               <div>
                 <div style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Bank Balance</div>
-                <div id="dashBankBalance" style="font-size: 26px; font-weight: 900; color: #0f172a; margin-bottom: 6px;">Rs. 56,75,000</div>
+                <div id="dashBankBalance" style="font-size: 26px; font-weight: 900; color: #0f172a; margin-bottom: 6px;">Rs. 0</div>
                 <div style="font-size: 12px; color: #64748b; font-weight: 500;">Available in bank account</div>
               </div>
             </div>
@@ -2312,7 +2288,7 @@
               </div>
               <div>
                 <div style="font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Total Balance</div>
-                <div id="dashTotalBalance" style="font-size: 26px; font-weight: 900; color: #0f172a; margin-bottom: 6px;">Rs. 56,75,000</div>
+                <div id="dashTotalBalance" style="font-size: 26px; font-weight: 900; color: #0f172a; margin-bottom: 6px;">Rs. 0</div>
                 <div style="font-size: 12px; color: #64748b; font-weight: 500;">Bank + Cash</div>
               </div>
             </div>
@@ -2484,12 +2460,11 @@
         <input type="text" id="flatSearchFilter" placeholder="Search by Flat No., Floor, Size or Price..." oninput="filterFlatsTable()" style="width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13.5px; outline: none;" />
       </div>
 
-      <!-- Project Filter -->
+    <!-- Project Filter -->
       <div class="filter-select-group" style="flex: 1; min-width: 150px;">
         <label style="font-size: 12px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Project</label>
         <select id="flatProjectFilter" onchange="filterFlatsTable()" style="width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; color: #334155;">
           <option value="ALL">All Projects</option>
-          <option value="BILAL HEIGHTS" selected>BILAL HEIGHTS</option>
         </select>
       </div>
 
@@ -2580,15 +2555,15 @@
       </div>
     </div>
 
-    <!-- Flat Title Header -->
+   <!-- Flat Title Header -->
     <div class="flat-title-banner">
       <div class="flat-avatar-icon">
         <i class="fa-solid fa-house"></i>
       </div>
       <div>
         <div style="display: flex; align-items: center; gap: 12px;">
-          <h2 id="viewFlatNo">Flat A-101</h2>
-          <span id="viewFlatStatusBadge" class="badge-status badge-available">Available</span>
+          <h2 id="viewFlatNo">No Flat Selected</h2>
+          <span id="viewFlatStatusBadge" class="badge-status badge-available">-</span>
         </div>
       </div>
     </div>
@@ -2600,7 +2575,7 @@
         <i class="fa-solid fa-city spec-icon"></i>
         <div class="spec-meta">
           <label>Project</label>
-          <div class="spec-value" id="viewFlatProject">BILAL HEIGHTS</div>
+          <div class="spec-value" id="viewFlatProject">-</div>
         </div>
       </div>
 
@@ -2608,7 +2583,7 @@
         <i class="fa-solid fa-building-columns spec-icon"></i>
         <div class="spec-meta">
           <label>Floor</label>
-          <div class="spec-value" id="viewFlatFloor">1st Floor</div>
+          <div class="spec-value" id="viewFlatFloor">-</div>
         </div>
       </div>
 
@@ -2616,7 +2591,7 @@
         <i class="fa-solid fa-up-right-and-down-left-from-center spec-icon"></i>
         <div class="spec-meta">
           <label>Size (Sq. Ft)</label>
-          <div class="spec-value" id="viewFlatSize">850 Sq. Ft</div>
+          <div class="spec-value" id="viewFlatSize">-</div>
         </div>
       </div>
 
@@ -2624,7 +2599,7 @@
         <i class="fa-solid fa-tag spec-icon"></i>
         <div class="spec-meta">
           <label>Price</label>
-          <div class="spec-value" id="viewFlatPrice">Rs. 8,00,000</div>
+          <div class="spec-value" id="viewFlatPrice">-</div>
         </div>
       </div>
 
@@ -2635,14 +2610,14 @@
       <i class="fa-solid fa-tags spec-icon"></i>
       <div class="spec-meta">
         <label>Status</label>
-        <span id="viewFlatStatusTag" class="badge-status badge-available">Available</span>
+        <span id="viewFlatStatusTag" class="badge-status badge-available">-</span>
       </div>
     </div>
 
     <!-- Notes / Remarks Box -->
     <div class="notes-box">
       <label><i class="fa-regular fa-file-lines"></i> Notes / Remarks</label>
-      <p id="viewFlatNotes">Corner flat with good ventilation. Ideal for small families.</p>
+      <p id="viewFlatNotes">No notes available.</p>
     </div>
 
   </div>
@@ -5750,77 +5725,105 @@
     let customerThumbBase64 = '';
     let uploadedDocs = { cnic: '', payment: '', other: '' };
 
-    // =========================================================================
-    // DIRECT HARDWARE BIOMETRIC ENGINE (NO FILE UPLOAD - 100% SCANNER ONLY)
-    // =========================================================================
-    async function scanLiveThumbHardware(targetKey) {
-      const statusEl = document.getElementById(targetKey + 'ThumbStatus');
-      const placeholder = document.getElementById(targetKey + 'ThumbPlaceholder');
+    
 
-      // 1. Scanner Listening Indicator (Blue Active Pulse)
-      if (statusEl) {
-        statusEl.innerHTML = '<span style="color:#2563eb; font-weight:800;"><i class="fa-solid fa-circle-notch fa-spin"></i> Machine Active: Ungli Scanner V408 par rakhein...</span>';
-      }
-      if (placeholder) {
-        placeholder.style.color = '#2563eb';
-        placeholder.classList.add('fa-beat-fade');
-      }
+    
+    let currentBmsTargetKey = null;
 
-      let capturedBase64 = null;
+    // 1. Modal Kholna
+    function scanLiveThumbHardware(targetKey) {
+      currentBmsTargetKey = targetKey;
+      const modal = document.getElementById('bmsScannerModal');
+      const title = document.getElementById('bmsModalTitle');
+      const icon = document.getElementById('bmsSensorIcon');
+      const liveImg = document.getElementById('bmsSensorLiveImg');
+      const laser = document.getElementById('bmsLaserBar');
 
-      // 2. Hardware Service Scan (Supports V408, SecuGen, DigitalPersona, BioMini, Aratek & WebUSB)
-      const serviceEndpoints = [
-        "http://127.0.0.1:11100/getFingerprintImage",
-        "http://127.0.0.1:8080/capture",
-        "http://127.0.0.1:8088/api/biometric/capture",
-        "http://127.0.0.1:8000/capture",
-        "http://localhost:11100/capture"
-      ];
+      let label = "Owner 1";
+      if (targetKey === 'owner2') label = "Owner 2";
+      if (targetKey === 'prevOwner') label = "Previous Owner";
 
-      for (let url of serviceEndpoints) {
-        try {
-          const controller = new AbortController();
-          const timer = setTimeout(() => controller.abort(), 2500);
-          const res = await fetch(url, { method: 'POST', signal: timer.signal });
-          clearTimeout(timer);
+      if (title) title.textContent = `${label} - BMS-2 Scanner`;
+      if (icon) icon.style.display = 'block';
+      if (liveImg) liveImg.style.display = 'none';
+      if (laser) laser.style.display = 'none';
 
-          if (res.ok) {
-            const result = await res.json();
-            const raw = result.base64 || result.image || result.bmpBase64 || result.data;
-            if (raw) {
-              capturedBase64 = raw.startsWith('data:') ? raw : ('data:image/png;base64,' + raw);
-              break;
-            }
-          }
-        } catch(err) {}
-      }
+      document.getElementById('bmsStatusMessage').innerHTML = '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> Scanner Ready: Machine par ungli rakhein';
+      document.getElementById('bmsSubMessage').textContent = 'Sensor par ungli rakh kar "Scan Finger" dabayein';
 
-      // 3. WebUSB Direct Hardware Access Fallback (Agar browser direct USB par detect kare)
-      if (!capturedBase64 && navigator.usb) {
-        try {
-          // Direct WebUSB prompt will engage the connected USB scanner
-          const device = await navigator.usb.requestDevice({ filters: [] });
-          if (device) {
-            await device.open();
-            // Connected device verified
-          }
-        } catch(usbErr) {
-          // User closed prompt or device managed by OS driver
-        }
-      }
-
-      // 4. Biometric Capture Simulation / Fallback for Clean Capture Display
-      // (Agar hardware ne image string generate ki ho ya machine live touch ho)
-      if (!capturedBase64) {
-        capturedBase64 = generateStandardBiometricThumbPattern(targetKey);
-      }
-
-      // 5. Apply Captured Thumb & Show Bright Green "SUCCESS"
-      setTimeout(() => {
-        applyHardwareThumbResult(targetKey, capturedBase64);
-      }, 700);
+      modal.classList.add('active');
     }
 
+    function closeBMSModal() {
+      document.getElementById('bmsScannerModal').classList.remove('active');
+      currentBmsTargetKey = null;
+    }
+
+    // 2. Hardware Se Real Fingerprint Mangwana (Local Bridge Port 8082)
+    async function triggerBMS2Capture() {
+      const laser = document.getElementById('bmsLaserBar');
+      const icon = document.getElementById('bmsSensorIcon');
+      const liveImg = document.getElementById('bmsSensorLiveImg');
+      const statusMsg = document.getElementById('bmsStatusMessage');
+      const subMsg = document.getElementById('bmsSubMessage');
+      const btnScan = document.getElementById('btnTriggerBMS');
+
+      if (laser) laser.style.display = 'block';
+      if (btnScan) btnScan.disabled = true;
+
+      statusMsg.innerHTML = '<span style="color:#38bdf8;"><i class="fa-solid fa-spinner fa-spin"></i> Scanner par ungli rakhein...</span>';
+      subMsg.textContent = 'Hardware sensor ungli read kar raha hai...';
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second wait
+
+        const response = await fetch("http://localhost:8082/scan", {
+          method: "GET",
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error("Bridge server response error");
+        }
+
+        const data = await response.json();
+
+        if (data.status === "success" && data.image) {
+          const realBase64 = data.image;
+
+          if (laser) laser.style.display = 'none';
+          if (icon) icon.style.display = 'none';
+          if (liveImg) {
+            liveImg.src = realBase64;
+            liveImg.style.display = 'block';
+          }
+
+          statusMsg.innerHTML = '<span style="color:#22c55e;"><i class="fa-solid fa-circle-check"></i> Asli Scan Kamyab!</span>';
+          subMsg.textContent = 'Scanner se original fingerprint save ho gaya.';
+
+          setTimeout(() => {
+            applyHardwareThumbResult(currentBmsTargetKey, realBase64);
+            closeBMSModal();
+            if (btnScan) btnScan.disabled = false;
+          }, 800);
+
+        } else {
+          throw new Error(data.message || "Fingerprint scan nahi ho saka");
+        }
+
+      } catch (error) {
+        if (laser) laser.style.display = 'none';
+        if (btnScan) btnScan.disabled = false;
+        statusMsg.innerHTML = '<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Scanner Error!</span>';
+        subMsg.textContent = 'Local Bridge App (Port 8082) nahi chal rahi ya USB scanner disconnect hai.';
+      }
+    }
+  
+
+
+    
     function applyHardwareThumbResult(targetKey, base64Thumb) {
       if (targetKey === 'owner1') owner1ThumbBase64 = base64Thumb;
       if (targetKey === 'owner2') owner2ThumbBase64 = base64Thumb;
@@ -5866,45 +5869,7 @@
       }
     }
 
-    // High-Resolution 500 DPI Biometric Pattern Generator (Clean Vector Thumb)
-    function generateStandardBiometricThumbPattern(seedText) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 160;
-      canvas.height = 200;
-      const ctx = canvas.getContext('2d');
 
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = '#0f2a59';
-      ctx.lineWidth = 2.2;
-      ctx.lineCap = 'round';
-
-      const cx = 80;
-      const cy = 100;
-
-      for (let r = 12; r < 75; r += 5) {
-        ctx.beginPath();
-        const startAngle = Math.PI * 0.15;
-        const endAngle = Math.PI * 1.85;
-        ctx.arc(cx, cy, r, startAngle, endAngle);
-        ctx.stroke();
-      }
-
-      // Add biometric ridge curves
-      for (let y = 35; y < 165; y += 14) {
-        ctx.beginPath();
-        ctx.moveTo(cx - 38, y);
-        ctx.bezierCurveTo(cx - 18, y - 10, cx + 18, y + 10, cx + 38, y);
-        ctx.stroke();
-      }
-
-      return canvas.toDataURL('image/png');
-    }
-
-    // ==========================================
-    // 2. AUTHENTICATION
-    // ==========================================
     function togglePasswordVisibility(inputId, icon) {
       const input = document.getElementById(inputId);
       if (input.type === 'password') {
@@ -6280,17 +6245,19 @@
       }
     });
 
-    // Load Projects into Details Directory Table
+    // Load Projects into Details Directory Table (Safe & Error-Free)
     function loadProjects() {
       db.collection('projects').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
         allProjectsData = [];
         const tbody = document.getElementById('projectsTableBody');
         const expProjSelect = document.getElementById('expProject');
+        const statProjEl = document.getElementById('statTotalProjects'); // Safety check
+
         if (expProjSelect) expProjSelect.innerHTML = '<option value="General / Head Office">General / Head Office</option>';
 
         if (snapshot.empty) {
-          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Koi project darj nahi hai. Naya project shamil karein.</td></tr>`;
-          document.getElementById('statTotalProjects').textContent = 0;
+          if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:30px; color:var(--text-muted);">Koi project darj nahi hai. Naya project shamil karein.</td></tr>`;
+          if (statProjEl) statProjEl.textContent = 0;
           return;
         }
 
@@ -6317,22 +6284,15 @@
               <td><strong style="color:var(--primary);">${p.flatsCount} Flats</strong></td>
              <td style="text-align:center;">
                 <div style="display:inline-flex; gap:5px; flex-wrap:wrap; justify-content:center;">
-                  <!-- 1. View Button -->
                   <button class="btn-tbl-view" onclick="viewProjectModal('${doc.id}')" title="View Details">
                     <i class="fa-solid fa-eye"></i> View
                   </button>
-
-                  <!-- 2. Edit Button -->
                   <button class="btn-tbl-edit" onclick="editProjectRecord('${doc.id}')" title="Edit Project">
                     <i class="fa-solid fa-pen-to-square"></i> Edit
                   </button>
-
-                  <!-- 3. PDF Download Button -->
                   <button class="btn-action-primary" style="background:#059669; padding:6px 11px; font-size:12px;" onclick="downloadProjectPDF('${doc.id}')" title="Download Project PDF">
                     <i class="fa-solid fa-file-pdf"></i> PDF
                   </button>
-
-                  <!-- 4. Delete Button -->
                   <button class="btn-tbl-delete" onclick="deleteProjectRecord('${doc.id}')" title="Delete Project">
                     <i class="fa-solid fa-trash-can"></i>
                   </button>
@@ -6342,8 +6302,8 @@
           `;
         });
 
-        tbody.innerHTML = html;
-        document.getElementById('statTotalProjects').textContent = snapshot.size;
+        if (tbody) tbody.innerHTML = html;
+        if (statProjEl) statProjEl.textContent = snapshot.size;
       });
     }
 
@@ -6407,43 +6367,9 @@
 // ==========================================
 let currentSelectedFlat = null;
 
-// Initial Seed Data Matching the Image exactly
-const seedInitialFlats = [
-  { flatNo: "A-101", floor: "1st Floor", size: "850", price: "8,00,000", project: "BILAL HEIGHTS", status: "Available", notes: "Corner flat with good ventilation. Ideal for small families." },
-  { flatNo: "A-102", floor: "1st Floor", size: "900", price: "5,00,000", project: "BILAL HEIGHTS", status: "Booked", notes: "East open 2-bedroom luxury unit." },
-  { flatNo: "B-201", floor: "2nd Floor", size: "1,050", price: "7,50,000", project: "BILAL HEIGHTS", status: "Sold", notes: "Front road-facing with master balcony." },
-  { flatNo: "B-202", floor: "2nd Floor", size: "1,100", price: "4,00,000", project: "BILAL HEIGHTS", status: "Available", notes: "Spacious lounge and open American kitchen." },
-  { flatNo: "C-301", floor: "3rd Floor", size: "1,200", price: "6,50,000", project: "BILAL HEIGHTS", status: "Booked", notes: "Allocated parking included on basement 1." },
-  { flatNo: "C-302", floor: "3rd Floor", size: "1,150", price: "6,00,000", project: "BILAL HEIGHTS", status: "Available", notes: "Direct elevator access flat." },
-  { flatNo: "D-401", floor: "4th Floor", size: "1,250", price: "8,50,000", project: "BILAL HEIGHTS", status: "Sold", notes: "Penthouse category premium finish." },
-  { flatNo: "D-402", floor: "4th Floor", size: "1,100", price: "7,00,000", project: "BILAL HEIGHTS", status: "Booked", notes: "West open evening breeze." },
-  { flatNo: "E-501", floor: "5th Floor", size: "1,300", price: "9,00,000", project: "BILAL HEIGHTS", status: "Available", notes: "Top floor unobstructed skyline view." },
-  { flatNo: "E-502", floor: "5th Floor", size: "1,250", price: "8,00,000", project: "BILAL HEIGHTS", status: "Available", notes: "Duplex design with high ceilings." }
-];
-
 function loadFlats() {
-  db.collection('flats').orderBy('flatNo', 'asc').onSnapshot(async (snapshot) => {
+  db.collection('flats').orderBy('flatNo', 'asc').onSnapshot((snapshot) => {
     allFlatsData = [];
-
-    if (snapshot.empty) {
-      for (let f of seedInitialFlats) {
-        await db.collection('flats').add({
-          ...f,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          history: [{
-            date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' 10:00 AM',
-            project: f.project,
-            flatNo: f.flatNo,
-            floor: f.floor,
-            size: f.size,
-            price: f.price,
-            status: f.status,
-            updatedBy: 'Admin'
-          }]
-        });
-      }
-      return;
-    }
 
     snapshot.forEach((doc) => {
       allFlatsData.push({ id: doc.id, ...doc.data() });
@@ -6607,9 +6533,11 @@ document.getElementById('statTotalFlats').textContent = allFlatsData.length;
 function updateFlatsFilterProjects() {
   const projSelect = document.getElementById('flatProjectFilter');
   const modalSelect = document.getElementById('modalFlatProject');
-  const uniqueProjects = new Set(['BILAL HEIGHTS']);
-  allProjectsData.forEach(p => uniqueProjects.add(p.name));
-  allFlatsData.forEach(f => uniqueProjects.add(f.project));
+  const uniqueProjects = new Set();
+  
+  // Sirf wahi projects aayenge jo database mein create kiye gaye hon
+  allProjectsData.forEach(p => { if (p.name) uniqueProjects.add(p.name); });
+  allFlatsData.forEach(f => { if (f.project) uniqueProjects.add(f.project); });
 
   if (projSelect) {
     projSelect.innerHTML = '<option value="ALL">All Projects</option>';
@@ -6619,7 +6547,7 @@ function updateFlatsFilterProjects() {
   }
 
   if (modalSelect) {
-    modalSelect.innerHTML = '';
+    modalSelect.innerHTML = '<option value="">-- Select Project --</option>';
     uniqueProjects.forEach(p => {
       modalSelect.innerHTML += `<option value="${p}">${p}</option>`;
     });
@@ -7792,31 +7720,14 @@ async function confirmStatusChange() {
       document.getElementById('customerViewModal').classList.remove('active');
     }
 
-    // ==========================================================================
-    // 7. PURCHASER MODULE
-    // ==========================================================================
-    // =========================================================================
-    // 7. PURCHASE LIST, FILTERS & SUMMARY CALCULATOR (EXACT MATCH TO SCREENSHOT)
-    // =========================================================================
+    
+    
     let currentFilteredPurchases = [];
     let curPurPage = 1;
     const purItemsPerPage = 10;
 
-    // Initial Demo Seed Data (Agar Firebase mein koi purchase na ho to screenshot wala data load ho)
-    const seedPurchases = [
-      { billNo: "PUR-001", date: "2025-09-12", displayDate: "12 Sep 2025", vendor: "ABC Cement", item: "Cement", qty: "500 Bags", rate: 1500, total: 750000, paid: 300000, remaining: 450000, status: "Partial", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-002", date: "2025-09-10", displayDate: "10 Sep 2025", vendor: "XYZ Steel", item: "Steel", qty: "2 Qty", rate: 250000, total: 500000, paid: 500000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-003", date: "2025-09-08", displayDate: "08 Sep 2025", vendor: "Builders Bricks", item: "Bricks", qty: "10,000 Pcs", rate: 30, total: 300000, paid: 150000, remaining: 150000, status: "Partial", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-004", date: "2025-09-05", displayDate: "05 Sep 2025", vendor: "Pak Traders", item: "Sand", qty: "20 Qty", rate: 10000, total: 200000, paid: 200000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-005", date: "2025-09-02", displayDate: "02 Sep 2025", vendor: "ABC Cement", item: "Cement", qty: "300 Bags", rate: 1500, total: 450000, paid: 450000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-006", date: "2025-08-28", displayDate: "28 Aug 2025", vendor: "Liaqat Steel", item: "Steel", qty: "1 Qty", rate: 250000, total: 250000, paid: 250000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-007", date: "2025-08-25", displayDate: "25 Aug 2025", vendor: "Builders Bricks", item: "Bricks", qty: "5,000 Pcs", rate: 30, total: 150000, paid: 150000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" },
-      { billNo: "PUR-008", date: "2025-08-20", displayDate: "20 Aug 2025", vendor: "Sunrise Suppliers", item: "Tiles", qty: "500 Box", rate: 1200, total: 600000, paid: 600000, remaining: 0, status: "Paid", project: "BILAL HEIGHTS" }
-    ];
 
-    // ========================================================
-// PURCHASE FORM SUBMIT LISTENER (Saves Unit with each item)
-// ========================================================
+
 document.getElementById('purchaserForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const editId = document.getElementById('purEditId').value;
@@ -7914,8 +7825,8 @@ openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'sub
   }
 });
     // Load Purchases from Firestore with Date Filters
+    // Load Purchases from Firestore with Date Filters
     function loadPurchaser() {
-      // Default Date Range: Current Month (e.g. 01 Sep 2025 to End of Month)
       const now = new Date();
       const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
       const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
@@ -7925,29 +7836,16 @@ openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'purchaserDetails', 'sub
       if (sInput && !sInput.value) sInput.value = firstDay;
       if (eInput && !eInput.value) eInput.value = lastDay;
 
-      // Firestore Listener
-      db.collection('purchases').orderBy('date', 'desc').onSnapshot(async (snap) => {
+      db.collection('purchases').orderBy('date', 'desc').onSnapshot((snap) => {
         allPurchaserData = [];
-
-        // Agar database khali ho to seed data load karein
-        if (snap.empty) {
-          for (let item of seedPurchases) {
-            await db.collection('purchases').add({
-              ...item,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          }
-          return;
-        }
 
         const supplierSet = new Set();
         snap.forEach(doc => {
           const data = doc.data();
-          allPurchaserData.push({ id: doc.id, ...data });
+          allPurchaserData.push({ id: doc.id, ...doc.data() });
           if (data.vendor) supplierSet.add(data.vendor);
         });
 
-        // Supplier Filter Dropdown Populate karein
         const supFilter = document.getElementById('purSupplierFilter');
         if (supFilter) {
           supFilter.innerHTML = '<option value="ALL">All Suppliers</option>';
@@ -8409,6 +8307,7 @@ function fixJointShareOnBlur(source) {
           allSiteExpensesData.push({ id: doc.id, ...doc.data() });
         });
         filterSiteExpenses();
+        updateDashboardChartsAndStats(); // Live dashboard update
       });
     }
 
@@ -10203,8 +10102,9 @@ function setAllNavMenusVisible(status) {
 
         allPaymentsData.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-        updatePaymentSummaryMetrics();
+      updatePaymentSummaryMetrics();
         filterPaymentsTable();
+        updateDashboardChartsAndStats(); // Live dashboard update
       }, err => {
         console.error("Critical error subscribing to payments stream:", err);
       });
@@ -10506,17 +10406,10 @@ function setAllNavMenusVisible(status) {
 // =========================================================================
     // 16. DASHBOARD EXECUTIVE CONTROLLER (MATCHING SCREENSHOT UI)
     // =========================================================================
-    function updateDashboardChartsAndStats() {
-      // 1. Current Date format: "12 Sep 2025 (Today)"
-      const dateEl = document.getElementById('dashTodayDateDisplay');
-      if (dateEl) {
-        const now = new Date();
-        const dFmt = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-        dateEl.textContent = `${dFmt} (Today)`;
-      }
+   function updateDashboardChartsAndStats() {
 
-      // 2. Flats Calculation
-      let totalFlats = allFlatsData.length || 40;
+      // 2. Flats Calculation (Sirf Real Data)
+      let totalFlats = allFlatsData.length;
       let availFlats = 0;
       let bookedSoldFlats = 0;
 
@@ -10525,13 +10418,6 @@ function setAllNavMenusVisible(status) {
         else bookedSoldFlats++;
       });
 
-      // Agar database khali ho to screenshot wali default values show hongi
-      if (allFlatsData.length === 0) {
-        totalFlats = 40;
-        availFlats = 18;
-        bookedSoldFlats = 22;
-      }
-
       if (document.getElementById('statTotalFlats')) document.getElementById('statTotalFlats').textContent = totalFlats;
       if (document.getElementById('statAvailableFlats')) document.getElementById('statAvailableFlats').textContent = availFlats;
       if (document.getElementById('statBookedSoldFlats')) document.getElementById('statBookedSoldFlats').textContent = bookedSoldFlats;
@@ -10539,15 +10425,12 @@ function setAllNavMenusVisible(status) {
       // 3. Customer Payments Received
       let totalCustomerPayments = 0;
       let totalCashReceived = 0;
-      let totalBankReceived = 0;
 
       allPaymentsData.forEach(p => {
         const amt = parseFloat(p.amount) || 0;
         totalCustomerPayments += amt;
         if ((p.mode || '').toLowerCase().includes('cash')) {
           totalCashReceived += amt;
-        } else {
-          totalBankReceived += amt;
         }
       });
 
@@ -10557,10 +10440,6 @@ function setAllNavMenusVisible(status) {
         totalSiteExp += (parseFloat(s.paidAmount || s.totalAmount) || 0);
       });
 
-      // Agar payments ya expenses khali hon to default screenshot figure dikhayega
-      if (totalCustomerPayments === 0) totalCustomerPayments = 12500000; // 1,25,00,000
-      if (totalSiteExp === 0) totalSiteExp = 6850000;                    // 68,50,000
-
       if (document.getElementById('dashTotalInflow')) {
         document.getElementById('dashTotalInflow').textContent = `Rs. ${totalCustomerPayments.toLocaleString()}`;
       }
@@ -10568,17 +10447,10 @@ function setAllNavMenusVisible(status) {
         document.getElementById('dashTotalExpenses').textContent = `Rs. ${totalSiteExp.toLocaleString()}`;
       }
 
-      // 5. Balances: Bank Balance, Cash Balance, Total Balance
-      let bankBalance = Math.max(0, totalCustomerPayments - totalSiteExp);
-      let cashBalance = 0;
+      // 5. Balances
+      let cashBalance = Math.max(0, totalCashReceived);
+      let bankBalance = Math.max(0, totalCustomerPayments - totalSiteExp - cashBalance);
       let totalBalance = bankBalance + cashBalance;
-
-      // Agar real payments mojood hain to exact cashbook aur payment modes check honge
-      if (allPaymentsData.length > 0) {
-        cashBalance = Math.max(0, totalCashReceived);
-        bankBalance = Math.max(0, totalCustomerPayments - totalSiteExp - cashBalance);
-        totalBalance = bankBalance + cashBalance;
-      }
 
       if (document.getElementById('dashBankBalance')) {
         document.getElementById('dashBankBalance').textContent = `Rs. ${bankBalance.toLocaleString()}`;
@@ -10590,26 +10462,14 @@ function setAllNavMenusVisible(status) {
         document.getElementById('dashTotalBalance').textContent = `Rs. ${totalBalance.toLocaleString()}`;
       }
 
-      // 6. Customer Pending Payments Table Render
+      // 6. Pending Payments Table
       renderPendingPaymentsDashboardTable();
     }
 
-    // Pending Payments Table Builder (Tasveer ke mutabiq)
-    function renderPendingPaymentsDashboardTable() {
+   function renderPendingPaymentsDashboardTable() {
       const tbody = document.getElementById('dashPendingPaymentsTableBody');
       if (!tbody) return;
 
-      // Sample data jaisa screenshot mein nazar aa raha hai
-      const demoPendingList = [
-        { name: "Ahmed Raza", flat: "A-101", date: "15 Sep 2025", amount: 800000 },
-        { name: "Sara Khan", flat: "A-102", date: "20 Sep 2025", amount: 500000 },
-        { name: "Usman Ali", flat: "B-201", date: "25 Sep 2025", amount: 750000 },
-        { name: "Fatima Noor", flat: "B-202", date: "30 Sep 2025", amount: 400000 },
-        { name: "Zafar Iqbal", flat: "C-301", date: "05 Oct 2025", amount: 650000 },
-        { name: "Ayesha Malik", flat: "C-302", date: "10 Oct 2025", amount: 375000 }
-      ];
-
-      // Real database check: Agar real customers mein balance pending hai to unko layega
       const dynamicPending = [];
       allCustomersData.forEach(c => {
         const fin = c.financials || {};
@@ -10623,16 +10483,19 @@ function setAllNavMenusVisible(status) {
           dynamicPending.push({
             name: c.firstOwner?.name || 'Customer',
             flat: c.flatNo || 'N/A',
-            date: "15 Oct 2025",
+            date: "Pending Dues",
             amount: rem
           });
         }
       });
 
-      const listToDisplay = dynamicPending.length > 0 ? dynamicPending.slice(0, 6) : demoPendingList;
+      if (dynamicPending.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 25px; color: #64748b;">No pending payments found.</td></tr>`;
+        return;
+      }
 
       let html = '';
-      listToDisplay.forEach(item => {
+      dynamicPending.slice(0, 6).forEach(item => {
         html += `
           <tr style="border-bottom: 1px solid #f8fafc;">
             <td style="padding: 14px 16px; font-weight: 700; color: #1e293b;">${item.name}</td>
@@ -10875,41 +10738,19 @@ function populatePurchaserCategoriesDropdown() {
     const accItemsPerPage = 6;
     let selectedActiveAccount = null;
 
-    // Default Seed Accounts matching Image 1
-    const seedInitialAccounts = [
-      { name: "ABC Cement Supplier", type: "Vendor / Supplier", mobile: "0300-1234567", cnic: "35201-1234567-1", address: "Plot No. 12, Karachi", notes: "Regular supplier for cement and construction material." },
-      { name: "M. Ali Contractor", type: "Contractor", mobile: "0311-9876543", cnic: "35201-9876543-1", address: "Site Area, Karachi", notes: "Civil work & grey structure contractor." },
-      { name: "Usman Khan", type: "Customer", mobile: "0321-5556677", cnic: "35201-5556677-1", address: "DHA, Karachi", notes: "Flat A-101 Allottee." },
-      { name: "Sara Ahmed", type: "Staff", mobile: "0333-1112223", cnic: "35201-1112223-1", address: "Malir, Karachi", notes: "Sales & CRM executive." },
-      { name: "HBL Bank", type: "Other", mobile: "-", cnic: "-", address: "Bank Branch", notes: "Main corporate collection bank account." },
-      { name: "Owner Capital", type: "Capital / Owner", mobile: "-", cnic: "-", address: "-", notes: "Equity & Partner investment." }
-    ];
-
-   // Load Accounts from Firestore
+    // Load Accounts from Firestore
     function loadVendors() {
-      db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot(async (snap) => {
+      db.collection('purchaser_vendors').orderBy('createdAt', 'desc').onSnapshot((snap) => {
         allVendorsData = [];
-
-        if (snap.empty) {
-          for (let item of seedInitialAccounts) {
-            await db.collection('purchaser_vendors').add({
-              ...item,
-              company: item.name,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-          }
-          return;
-        }
 
         snap.forEach(doc => {
           allVendorsData.push({ id: doc.id, ...doc.data() });
         });
 
         filterAccountsDirectory();
-        populateVendorDropdown(); // Add Purchase form ke vendor dropdown ko update karega
+        populateVendorDropdown();
       });
     }
-
 
 
 // 1. Datalist Dropdown Population Function (Name + Type Format)
@@ -11256,26 +11097,8 @@ function closeAccountLedgerModal(e) {
         }
       });
 
-      // 3. Fallback dummy if no transactions recorded yet
-      if (transactions.length === 0) {
-        tbody.innerHTML = `
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td>05-09-2026</td>
-            <td style="color: #2563eb; font-weight: 700;">PUR-001</td>
-            <td>Cement Purchase</td>
-            <td style="text-align: right; font-weight: 700; color: #0f172a;">500,000</td>
-            <td style="text-align: right; color: #64748b;">-</td>
-            <td style="text-align: right; font-weight: 800; color: #0f172a;">500,000</td>
-          </tr>
-          <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td>10-09-2026</td>
-            <td style="color: #2563eb; font-weight: 700;">PV-001</td>
-            <td>Payment to Vendor</td>
-            <td style="text-align: right; color: #64748b;">-</td>
-            <td style="text-align: right; font-weight: 700; color: #16a34a;">200,000</td>
-            <td style="text-align: right; font-weight: 800; color: #0f172a;">300,000</td>
-          </tr>
-        `;
+    if (transactions.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 25px; color: var(--text-muted);">No transactions recorded yet.</td></tr>`;
         return;
       }
 
@@ -12007,12 +11830,7 @@ function initAccountLedgerView() {
     if (v.name) uniqueAccs.add(v.name.trim());
   });
 
-  // Agar vendors data khali ho to fallback
-  if (uniqueAccs.size === 0) {
-    uniqueAccs.add("ABC Cement Supplier");
-    uniqueAccs.add("M. Ali Contractor");
-    uniqueAccs.add("ABC Contractor");
-  }
+
 
   uniqueAccs.forEach(acc => {
     accSelect.innerHTML += `<option value="${acc}">${acc}</option>`;
@@ -13181,6 +12999,80 @@ async function deleteCashVoucher(id) {
   }
 }
 
+
+
+
   </script>
+
+<!-- ================= SUPREMA BMS-2 USB BIOMETRIC SCANNER MODAL ================= -->
+<div id="bmsScannerModal" class="modal-overlay" style="z-index: 99999;" onclick="closeBMSModal(event)">
+  <div class="modal-card" style="max-width: 440px; border-radius: 20px; overflow: hidden; background: #ffffff; box-shadow: 0 25px 60px rgba(0,0,0,0.4);" onclick="event.stopPropagation()">
+    
+    <!-- Header -->
+    <div style="background: #0f172a; color: #ffffff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(56,189,248,0.2); border: 1.5px solid #38bdf8; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-size: 18px;">
+          <i class="fa-solid fa-fingerprint"></i>
+        </div>
+        <div>
+          <h3 id="bmsModalTitle" style="font-size: 15px; font-weight: 800; margin: 0; color: #ffffff;">Suprema BioMini Slim 2 (BMS-2)</h3>
+          <small style="color: #94a3b8; font-size: 11px;">USB Optical Fingerprint Reader</small>
+        </div>
+      </div>
+      <button type="button" class="btn-close-modal" onclick="closeBMSModal()" style="color: #cbd5e1; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- Scanner Optical Platen Screen -->
+    <div style="background: #090d16; padding: 30px 20px; text-align: center;">
+      
+      <!-- Sensor Glass Graphic -->
+      <div id="bmsSensorPlaten" style="position: relative; width: 170px; height: 210px; margin: 0 auto; border-radius: 16px; border: 3px solid #2563eb; background: radial-gradient(circle, #1e3a8a 0%, #030712 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 25px rgba(37,99,235,0.35); transition: all 0.3s ease;">
+        
+        <!-- Fingerprint Image / Sensor LED -->
+        <i id="bmsSensorIcon" class="fa-solid fa-fingerprint" style="font-size: 72px; color: #38bdf8; opacity: 0.85;"></i>
+        <img id="bmsSensorLiveImg" src="" style="display: none; width: 100%; height: 100%; object-fit: contain; background: #ffffff;" alt="Scanned Fingerprint" />
+
+        <!-- Sensor Glowing Laser Effect -->
+        <div id="bmsLaserBar" style="display: none; position: absolute; left: 0; right: 0; height: 3px; background: #38bdf8; box-shadow: 0 0 14px #38bdf8; animation: bmsScanLaser 1.5s infinite ease-in-out;"></div>
+      </div>
+
+      <!-- Live Status Text -->
+      <div id="bmsStatusMessage" style="font-size: 13.5px; font-weight: 800; color: #38bdf8; margin-top: 20px;">
+        <i class="fa-solid fa-circle-check"></i> Machine Ready: Sensor par angootha rakhein
+      </div>
+      <div id="bmsSubMessage" style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">
+        BMS-2 USB scanner machine par ungli press karein
+      </div>
+    </div>
+
+   <!-- Action Buttons -->
+    <div style="padding: 16px 20px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; gap: 10px;">
+      <button type="button" class="btn-back" onclick="closeBMSModal()" style="font-weight: 700; padding: 10px 18px;">Cancel</button>
+
+      <button type="button" id="btnTriggerBMS" onclick="triggerBMS2Capture()" class="btn-action-primary" style="background: #16a34a; font-weight: 800; padding: 10px 24px; font-size: 13.5px; border-radius: 9px;">
+        <i class="fa-solid fa-fingerprint"></i> Scan Finger
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+@keyframes bmsScanLaser {
+  0% { top: 8%; opacity: 0.8; }
+  50% { top: 90%; opacity: 1; }
+  100% { top: 8%; opacity: 0.8; }
+}
+</style>
+
+<!-- Scanning Animation CSS -->
+<style>
+@keyframes scanLaserAnim {
+  0% { top: 5%; opacity: 0.9; }
+  50% { top: 92%; opacity: 1; }
+  100% { top: 5%; opacity: 0.9; }
+}
+</style>
+
 </body>
 </html>
