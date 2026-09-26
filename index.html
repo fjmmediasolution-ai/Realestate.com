@@ -2946,25 +2946,74 @@
                     </div>
                   </div>
 
-                  <!-- Biometric Thumb Scanner (Only Machine V408) -->
-                  <div class="thumb-scanner-card">
-                    <div class="thumb-preview-box" id="owner1ThumbPreviewBox">
-                      <i class="fa-solid fa-fingerprint" id="owner1ThumbPlaceholder"></i>
-                      <img id="owner1ThumbImg" src="" style="display:none;" alt="Owner 1 Thumb" />
-                    </div>
-                    <div style="flex:1;">
-                      <label style="font-size:13px; font-weight:800; color:#0f172a; margin-bottom:4px; display:block;">
-                        Owner 1 Live Fingerprint (V408)
-                      </label>
-                      <div style="display:flex; gap:8px; align-items:center; margin-top:6px;">
-                        <button type="button" class="btn-scan-thumb" onclick="scanLiveThumbHardware('owner1')">
-                          <i class="fa-solid fa-fingerprint"></i> Live Scan Machine
-                        </button>
-                        <button type="button" class="btn-scan-manual" onclick="resetSingleThumb('owner1')" title="Dobara Scan Karein">
-                          <i class="fa-solid fa-rotate-right"></i> Retake
-                        </button>
+                  <!-- Multi-Finger Biometric Scanner (All Fingers Supported) -->
+                  <div style="grid-column: 1 / -1; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px;">
+                    <label style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                      <i class="fa-solid fa-fingerprint" style="color: #2563eb;"></i> Owner 1 Biometric Fingerprints (Multiple Fingers)
+                    </label>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px;">
+                      
+                      <!-- 1. Right Thumb -->
+                      <div class="thumb-scanner-card" style="padding: 10px; gap: 10px;">
+                        <div class="thumb-preview-box" id="o1_r_thumbPreviewBox" style="width: 55px; height: 68px;">
+                          <i class="fa-solid fa-fingerprint" id="o1_r_thumbPlaceholder"></i>
+                          <img id="o1_r_thumbImg" src="" style="display:none;" alt="Right Thumb" />
+                        </div>
+                        <div style="flex:1;">
+                          <b style="font-size: 12px; color: #0f172a; display: block;">Right Thumb</b>
+                          <button type="button" class="btn-scan-thumb" style="padding: 5px 9px; font-size: 11px; margin-top: 4px;" onclick="scanLiveThumbHardware('o1_r_thumb', 'Right Thumb')">
+                            <i class="fa-solid fa-fingerprint"></i> Scan
+                          </button>
+                          <small id="o1_r_thumbStatus" style="display:block; font-size:10px; color:#64748b; margin-top:2px;">Not Scanned</small>
+                        </div>
                       </div>
-                      <small id="owner1ThumbStatus" style="display:block; color:#64748b; font-size:11px; margin-top:5px; font-weight:600;">Machine par ungli rakh kar "Live Scan Machine" dabayein</small>
+
+                      <!-- 2. Right Index -->
+                      <div class="thumb-scanner-card" style="padding: 10px; gap: 10px;">
+                        <div class="thumb-preview-box" id="o1_r_indexPreviewBox" style="width: 55px; height: 68px;">
+                          <i class="fa-solid fa-fingerprint" id="o1_r_indexPlaceholder"></i>
+                          <img id="o1_r_indexImg" src="" style="display:none;" alt="Right Index" />
+                        </div>
+                        <div style="flex:1;">
+                          <b style="font-size: 12px; color: #0f172a; display: block;">Right Index</b>
+                          <button type="button" class="btn-scan-thumb" style="padding: 5px 9px; font-size: 11px; margin-top: 4px; background:#0284c7;" onclick="scanLiveThumbHardware('o1_r_index', 'Right Index')">
+                            <i class="fa-solid fa-fingerprint"></i> Scan
+                          </button>
+                          <small id="o1_r_indexStatus" style="display:block; font-size:10px; color:#64748b; margin-top:2px;">Not Scanned</small>
+                        </div>
+                      </div>
+
+                      <!-- 3. Left Thumb -->
+                      <div class="thumb-scanner-card" style="padding: 10px; gap: 10px;">
+                        <div class="thumb-preview-box" id="o1_l_thumbPreviewBox" style="width: 55px; height: 68px;">
+                          <i class="fa-solid fa-fingerprint" id="o1_l_thumbPlaceholder"></i>
+                          <img id="o1_l_thumbImg" src="" style="display:none;" alt="Left Thumb" />
+                        </div>
+                        <div style="flex:1;">
+                          <b style="font-size: 12px; color: #0f172a; display: block;">Left Thumb</b>
+                          <button type="button" class="btn-scan-thumb" style="padding: 5px 9px; font-size: 11px; margin-top: 4px; background:#475569;" onclick="scanLiveThumbHardware('o1_l_thumb', 'Left Thumb')">
+                            <i class="fa-solid fa-fingerprint"></i> Scan
+                          </button>
+                          <small id="o1_l_thumbStatus" style="display:block; font-size:10px; color:#64748b; margin-top:2px;">Not Scanned</small>
+                        </div>
+                      </div>
+
+                      <!-- 4. Left Index -->
+                      <div class="thumb-scanner-card" style="padding: 10px; gap: 10px;">
+                        <div class="thumb-preview-box" id="o1_l_indexPreviewBox" style="width: 55px; height: 68px;">
+                          <i class="fa-solid fa-fingerprint" id="o1_l_indexPlaceholder"></i>
+                          <img id="o1_l_indexImg" src="" style="display:none;" alt="Left Index" />
+                        </div>
+                        <div style="flex:1;">
+                          <b style="font-size: 12px; color: #0f172a; display: block;">Left Index</b>
+                          <button type="button" class="btn-scan-thumb" style="padding: 5px 9px; font-size: 11px; margin-top: 4px; background:#7c3aed;" onclick="scanLiveThumbHardware('o1_l_index', 'Left Index')">
+                            <i class="fa-solid fa-fingerprint"></i> Scan
+                          </button>
+                          <small id="o1_l_indexStatus" style="display:block; font-size:10px; color:#64748b; margin-top:2px;">Not Scanned</small>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>
@@ -3220,9 +3269,14 @@
           <div class="card-panel">
             <div class="panel-header">
               <h3 class="panel-title"><i class="fa-solid fa-users"></i> Customer Directory</h3>
-              <button class="btn-action-primary" onclick="resetCustomerFormForNew(); openAndSwitch('customerSubmenu', 'navCustomerParent', 'addCustomer', 'subAddCustomer')">
-                <i class="fa-solid fa-user-plus"></i> Add New Customer
-              </button>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button type="button" onclick="searchCustomerByThumb()" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.25);">
+                  <i class="fa-solid fa-fingerprint" style="font-size: 15px;"></i> Scan Thumb to Find
+                </button>
+                <button type="button" onclick="openAndSwitch('customerSubmenu', 'navCustomerParent', 'addCustomer', 'subAddCustomer')" style="display: inline-flex; align-items: center; gap: 8px; background: #2563eb; color: #ffffff; border: none; padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);">
+                  <i class="fa-solid fa-user-plus"></i> Add New Customer
+                </button>
+              </div>
             </div>
 
             <!-- 1. TOP FILTER BAR (EXACT AS IMAGE 1) -->
@@ -5728,28 +5782,28 @@
     
 
     
-    let currentBmsTargetKey = null;
+  let currentBmsTargetKey = null;
+    let currentBmsFingerLabel = "Finger";
+    window.ownerFingersData = window.ownerFingersData || {};
 
-    // 1. Modal Kholna
-    function scanLiveThumbHardware(targetKey) {
+    // 1. Modal Kholna (Kisi bhi finger ke liye)
+    function scanLiveThumbHardware(targetKey, fingerLabel = "Finger") {
       currentBmsTargetKey = targetKey;
+      currentBmsFingerLabel = fingerLabel;
+
       const modal = document.getElementById('bmsScannerModal');
       const title = document.getElementById('bmsModalTitle');
       const icon = document.getElementById('bmsSensorIcon');
       const liveImg = document.getElementById('bmsSensorLiveImg');
       const laser = document.getElementById('bmsLaserBar');
 
-      let label = "Owner 1";
-      if (targetKey === 'owner2') label = "Owner 2";
-      if (targetKey === 'prevOwner') label = "Previous Owner";
-
-      if (title) title.textContent = `${label} - BMS-2 Scanner`;
+      if (title) title.textContent = `SecuGen HU20 - Scan ${fingerLabel}`;
       if (icon) icon.style.display = 'block';
       if (liveImg) liveImg.style.display = 'none';
       if (laser) laser.style.display = 'none';
 
-      document.getElementById('bmsStatusMessage').innerHTML = '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> Scanner Ready: Machine par ungli rakhein';
-      document.getElementById('bmsSubMessage').textContent = 'Sensor par ungli rakh kar "Scan Finger" dabayein';
+      document.getElementById('bmsStatusMessage').innerHTML = `<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> Scanner Ready: ${fingerLabel} Machine par rakhein`;
+      document.getElementById('bmsSubMessage').textContent = 'Ungli sensor par rakh kar "Scan Finger" dabayein';
 
       modal.classList.add('active');
     }
@@ -5759,7 +5813,10 @@
       currentBmsTargetKey = null;
     }
 
-    // 2. Hardware Se Real Fingerprint Mangwana (Local Bridge Port 8082)
+    // Global variable templates store karne ke liye
+    window.registeredThumbTemplates = JSON.parse(localStorage.getItem('registeredThumbTemplates') || '{}');
+
+    // SecuGen HU20 Official Integration (Enroll + Save Template)
     async function triggerBMS2Capture() {
       const laser = document.getElementById('bmsLaserBar');
       const icon = document.getElementById('bmsSensorIcon');
@@ -5771,27 +5828,25 @@
       if (laser) laser.style.display = 'block';
       if (btnScan) btnScan.disabled = true;
 
-      statusMsg.innerHTML = '<span style="color:#38bdf8;"><i class="fa-solid fa-spinner fa-spin"></i> Scanner par ungli rakhein...</span>';
-      subMsg.textContent = 'Hardware sensor ungli read kar raha hai...';
+      statusMsg.innerHTML = '<span style="color:#38bdf8;"><i class="fa-solid fa-spinner fa-spin"></i> SecuGen par angootha rakhein...</span>';
+      subMsg.textContent = 'HU20 machine scan kar rahi hai...';
+
+      const params = new URLSearchParams({
+        Timeout: "10000",
+        Quality: "50",
+        templateFormat: "ISO",
+        imageWSQRate: "0.75"
+      });
 
       try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second wait
-
-        const response = await fetch("http://localhost:8082/scan", {
-          method: "GET",
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw new Error("Bridge server response error");
-        }
+        const response = await fetch("https://localhost:8443/SGIFPCapture?" + params.toString());
+        if (!response.ok) throw new Error("HTTP error " + response.status);
 
         const data = await response.json();
 
-        if (data.status === "success" && data.image) {
-          const realBase64 = data.image;
+        if (data.ErrorCode === 0 && data.BMPBase64) {
+          const realBase64 = "data:image/bmp;base64," + data.BMPBase64;
+          const templateData = data.TemplateBase64; // Matching ke liye ISO template
 
           if (laser) laser.style.display = 'none';
           if (icon) icon.style.display = 'none';
@@ -5800,52 +5855,64 @@
             liveImg.style.display = 'block';
           }
 
-          statusMsg.innerHTML = '<span style="color:#22c55e;"><i class="fa-solid fa-circle-check"></i> Asli Scan Kamyab!</span>';
-          subMsg.textContent = 'Scanner se original fingerprint save ho gaya.';
+          statusMsg.innerHTML = '<span style="color:#22c55e;"><i class="fa-solid fa-circle-check"></i> SecuGen Scan Kamyab!</span>';
+          subMsg.textContent = 'Fingerprint aur Template mehfooz ho gaye.';
 
-          setTimeout(() => {
-            applyHardwareThumbResult(currentBmsTargetKey, realBase64);
+        setTimeout(() => {
+            // Form mein image aur template dono direct pass karein
+            applyHardwareThumbResult(currentBmsTargetKey, realBase64, templateData);
+
+            // Form mein mojood CNIC check karein
+            const cnic1Val = document.getElementById('cust1Cnic')?.value.trim();
+            const cnic2Val = document.getElementById('cust2Cnic')?.value.trim();
+            const targetCnic = (currentBmsTargetKey === 'owner2' ? cnic2Val : cnic1Val) || currentBmsTargetKey;
+
+            window.registeredThumbTemplates[targetCnic + '_' + currentBmsTargetKey] = {
+              template: templateData,
+              image: realBase64,
+              key: currentBmsTargetKey,
+              label: currentBmsFingerLabel
+            };
+            localStorage.setItem('registeredThumbTemplates', JSON.stringify(window.registeredThumbTemplates));
+
             closeBMSModal();
             if (btnScan) btnScan.disabled = false;
           }, 800);
 
         } else {
-          throw new Error(data.message || "Fingerprint scan nahi ho saka");
+          throw new Error("SecuGen Error Code: " + data.ErrorCode);
         }
-
-      } catch (error) {
+      } catch (err) {
         if (laser) laser.style.display = 'none';
         if (btnScan) btnScan.disabled = false;
-        statusMsg.innerHTML = '<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Scanner Error!</span>';
-        subMsg.textContent = 'Local Bridge App (Port 8082) nahi chal rahi ya USB scanner disconnect hai.';
+        statusMsg.innerHTML = '<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Scan Error!</span>';
+        subMsg.textContent = err.message || 'SecuGen WebAPI service connect nahi ho saki.';
       }
     }
-  
 
+    function applyHardwareThumbResult(targetKey, base64Thumb, templateData = '') {
+      // Har finger ka image aur template pakka save karein
+      window.ownerFingersData[targetKey] = {
+        image: base64Thumb,
+        template: templateData,
+        label: currentBmsFingerLabel
+      };
 
-    
-    function applyHardwareThumbResult(targetKey, base64Thumb) {
-      if (targetKey === 'owner1') owner1ThumbBase64 = base64Thumb;
-      if (targetKey === 'owner2') owner2ThumbBase64 = base64Thumb;
-      if (targetKey === 'prevOwner') prevOwnerThumbBase64 = base64Thumb;
+      // Default main thumb fallback (taake PDF aur single views khali na hon)
+      owner1ThumbBase64 = base64Thumb;
 
-      const img = document.getElementById(targetKey + 'ThumbImg');
-      const placeholder = document.getElementById(targetKey + 'ThumbPlaceholder');
-      const statusEl = document.getElementById(targetKey + 'ThumbStatus');
+      const img = document.getElementById(targetKey + 'Img') || document.getElementById(targetKey + 'ThumbImg');
+      const placeholder = document.getElementById(targetKey + 'Placeholder') || document.getElementById(targetKey + 'ThumbPlaceholder');
+      const statusEl = document.getElementById(targetKey + 'Status') || document.getElementById(targetKey + 'ThumbStatus');
 
-      if (placeholder) {
-        placeholder.style.display = 'none';
-        placeholder.classList.remove('fa-beat-fade');
-      }
-
+      if (placeholder) placeholder.style.display = 'none';
       if (img) {
         img.src = base64Thumb;
         img.style.display = 'block';
       }
 
-      // Live "SUCCESS" Notification
       if (statusEl) {
-        statusEl.innerHTML = '<span style="color:#16a34a; font-weight:900; font-size:12px;"><i class="fa-solid fa-circle-check"></i> Success! Live Thumb Scanned</span>';
+        statusEl.innerHTML = '<span style="color:#16a34a; font-weight:800; font-size:10.5px;"><i class="fa-solid fa-circle-check"></i> Scanned</span>';
       }
     }
 
@@ -7075,14 +7142,15 @@ async function confirmStatusChange() {
       if (document.getElementById('owner2Img')) document.getElementById('owner2Img').style.display = 'none';
       if (document.getElementById('owner2Placeholder')) document.getElementById('owner2Placeholder').style.display = 'block';
 
-      // Reset Thumbs Previews
-      ['owner1', 'owner2', 'prevOwner'].forEach(k => {
-        const img = document.getElementById(k + 'ThumbImg');
-        const ph = document.getElementById(k + 'ThumbPlaceholder');
-        const st = document.getElementById(k + 'ThumbStatus');
+     // Reset All Multi-Fingers Previews & Global Store
+      window.ownerFingersData = {};
+      ['o1_r_thumb', 'o1_r_index', 'o1_l_thumb', 'o1_l_index', 'owner1', 'owner2', 'prevOwner'].forEach(k => {
+        const img = document.getElementById(k + 'Img') || document.getElementById(k + 'ThumbImg');
+        const ph = document.getElementById(k + 'Placeholder') || document.getElementById(k + 'ThumbPlaceholder');
+        const st = document.getElementById(k + 'Status') || document.getElementById(k + 'ThumbStatus');
         if (img) img.style.display = 'none';
         if (ph) ph.style.display = 'block';
-        if (st) st.textContent = 'Machine par ungli rakh kar scan dabayein';
+        if (st) st.textContent = 'Not Scanned';
       });
 
       const typeSelect = document.getElementById('custOwnershipType');
@@ -7151,7 +7219,18 @@ async function confirmStatusChange() {
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      // Owner 1 (Primary / Transferee)
+     // Owner 1 (Primary / Transferee) - All Scanned Fingers Saved
+      const primaryThumbImg = window.ownerFingersData?.['o1_r_thumb']?.image || 
+                             window.ownerFingersData?.['o1_r_index']?.image || 
+                             window.ownerFingersData?.['o1_l_thumb']?.image || 
+                             window.ownerFingersData?.['o1_l_index']?.image || 
+                             owner1ThumbBase64 || '';
+
+      const primaryThumbTemplate = window.ownerFingersData?.['o1_r_thumb']?.template || 
+                                  window.ownerFingersData?.['o1_r_index']?.template || 
+                                  window.ownerFingersData?.['o1_l_thumb']?.template || 
+                                  window.ownerFingersData?.['o1_l_index']?.template || '';
+
       customerRecord.hasFirstOwner = true;
       customerRecord.firstOwner = {
         name: document.getElementById('cust1Name').value.trim(),
@@ -7162,7 +7241,9 @@ async function confirmStatusChange() {
         email: document.getElementById('cust1Email').value.trim() || 'N/A',
         address: document.getElementById('cust1Address').value.trim(),
         photo: owner1Base64 || '',
-        thumb: owner1ThumbBase64 || '', // <-- Owner 1 Fingerprint
+        thumb: primaryThumbImg,
+        thumbTemplate: primaryThumbTemplate,
+        fingerprints: window.ownerFingersData || {}, // <-- Tamam fingers ka live data
         nominee: {
           name: document.getElementById('cust1NomineeName').value.trim() || 'N/A',
           relation: document.getElementById('cust1NomineeRelation').value.trim() || 'N/A',
@@ -12477,7 +12558,7 @@ function renderProfitLossReport() {
     `;
   });
 
-  // 3. DIRECT SITE EXPENSES (Labour, Water, Fuel, Machinery)
+  
   let totalSiteExp = 0;
   const siteCategoryMap = {};
 
@@ -12505,7 +12586,7 @@ function renderProfitLossReport() {
     `;
   });
 
-  // 4. OPERATING / OFFICE EXPENSES (Rent, Staff Salaries, Bills)
+
   let totalOfficeExp = 0;
   const officeCategoryMap = {};
 
@@ -12533,7 +12614,7 @@ function renderProfitLossReport() {
     `;
   });
 
-  // TOTAL CALCULATIONS
+  
   const totalDirectCosts = totalPurchases + totalSiteExp;
   const grossProfit = totalRevenue - totalDirectCosts;
   const netProfit = grossProfit - totalOfficeExp;
@@ -12546,7 +12627,7 @@ function renderProfitLossReport() {
     marginBadge.style.color = netProfit >= 0 ? '#15803d' : '#b91c1c';
   }
 
-  // 5 Top Cards Update
+  
   document.getElementById('plCardRevenue').textContent = `Rs. ${totalRevenue.toLocaleString()}`;
   document.getElementById('plCardCost').textContent = `Rs. ${totalDirectCosts.toLocaleString()}`;
   document.getElementById('plCardGross').textContent = `Rs. ${grossProfit.toLocaleString()}`;
@@ -12561,7 +12642,7 @@ function renderProfitLossReport() {
     if (netWrap) netWrap.style.borderTopColor = netProfit >= 0 ? '#059669' : '#dc2626';
   }
 
-  // TABLE RENDERING
+  
   tbody.innerHTML = `
     <!-- 1. REVENUE SECTION -->
     <tr style="background:#f8fafc; font-weight:800; font-size:14px;">
@@ -12641,9 +12722,7 @@ function downloadProfitLossPDF() {
   }
 }
 
-// =========================================================================
-// CASH VOUCHERS (CPV & CRV) ENGINE & A4 PDF GENERATOR
-// =========================================================================
+
 let allCashVouchersData = [];
 
 function initCashVouchersView() {
@@ -12735,7 +12814,7 @@ function calcVoucherAmountInWords() {
   document.getElementById('cvAmountWords').value = numberToWordsRupees(amt);
 }
 
-// Save Voucher to Firestore (Also auto-syncs with Cash Book)
+
 async function saveCashVoucherRecord(e) {
   e.preventDefault();
   const btn = document.getElementById('btnSaveCashVoucher');
@@ -12785,7 +12864,7 @@ async function saveCashVoucherRecord(e) {
     closeCashVoucherModal();
     alert(`${type === 'PAYMENT' ? 'Cash Payment Voucher' : 'Cash Receipt Voucher'} kamiyabi se ban gaya aur Cash Book mein update ho chuka hai!`);
 
-    // Download Official A4 Voucher PDF
+    
     downloadVoucherA4PDF(voucherRecord);
 
   } catch(err) {
@@ -13000,8 +13079,104 @@ async function deleteCashVoucher(id) {
 }
 
 
+// SecuGen HU20: Match ANY Finger (Thumb, Index, Middle etc.)
+    async function searchCustomerByThumb() {
+      const modal = document.getElementById('bmsScannerModal');
+      const title = document.getElementById('bmsModalTitle');
+      const statusMsg = document.getElementById('bmsStatusMessage');
+      const subMsg = document.getElementById('bmsSubMessage');
+      const laser = document.getElementById('bmsLaserBar');
+      const icon = document.getElementById('bmsSensorIcon');
+      const liveImg = document.getElementById('bmsSensorLiveImg');
 
+      if (title) title.textContent = "Biometric Search (Koi Si Bhi Ungli Rakhein)";
+      if (statusMsg) statusMsg.innerHTML = '<span style="color:#38bdf8;"><i class="fa-solid fa-spinner fa-spin"></i> SecuGen sensor par koi si bhi ungli rakhein...</span>';
+      if (subMsg) subMsg.textContent = 'System customer ki tamam ungliyon se match kar raha hai...';
+      if (laser) laser.style.display = 'block';
+      if (icon) icon.style.display = 'block';
+      if (liveImg) liveImg.style.display = 'none';
 
+      modal.classList.add('active');
+
+      try {
+        // 1. Scanner se live finger capture karein
+        const captureParams = new URLSearchParams({
+          Timeout: "10000",
+          Quality: "50",
+          templateFormat: "ISO"
+        });
+
+        const capRes = await fetch("https://localhost:8443/SGIFPCapture?" + captureParams.toString());
+        if (!capRes.ok) throw new Error("SecuGen service connect nahi ho saki.");
+        const capData = await capRes.json();
+
+        if (capData.ErrorCode !== 0 || !capData.TemplateBase64) {
+          throw new Error("Scan fail hua ya ungli sensor par theek se nahi rakhi.");
+        }
+
+        const liveTemplate = capData.TemplateBase64;
+        closeBMSModal();
+
+        let matchedCustomer = null;
+        let matchedFingerName = "";
+        let matchScore = 0;
+
+        // 2. Loop through all customers and ALL their registered fingers
+        for (const cust of allCustomersData) {
+          const fingersObj = cust.firstOwner?.fingerprints || {};
+          const fingerKeys = Object.keys(fingersObj);
+
+          // Check all fingers for this customer
+          for (const fKey of fingerKeys) {
+            const storedTemplate = fingersObj[fKey]?.template;
+            if (!storedTemplate) continue;
+
+            const matchParams = new URLSearchParams({
+              Template1: liveTemplate,
+              Template2: storedTemplate,
+              TemplateFormat: "ISO"
+            });
+
+            const matchRes = await fetch("https://localhost:8443/SGIMatchScore?" + matchParams.toString());
+            if (!matchRes.ok) continue;
+            const matchData = await matchRes.json();
+
+            // Match confirm if score >= 90
+            if (matchData.MatchingScore && matchData.MatchingScore >= 90) {
+              matchedCustomer = cust;
+              matchedFingerName = fingersObj[fKey]?.label || fKey;
+              matchScore = matchData.MatchingScore;
+              break;
+            }
+          }
+
+          if (matchedCustomer) break;
+        }
+
+        // 3. Result Show Karein
+        if (matchedCustomer) {
+          const o1 = matchedCustomer.firstOwner || {};
+
+          // Auto-Filter directory table
+          const searchInput = document.getElementById('customerSearchInput');
+          if (searchInput) {
+            searchInput.value = o1.cnic || o1.name || matchedCustomer.flatNo;
+            filterCustomersTable();
+          }
+
+          // Open Full Customer Profile Modal
+          viewCustomerModal(matchedCustomer.id);
+
+          alert(`✅ BIOMETRIC VERIFIED!\n\nCustomer: ${o1.name}\nCNIC: ${o1.cnic}\nMatched Finger: ${matchedFingerName}\nScore: ${matchScore}`);
+        } else {
+          alert("❌ Fingerprint Match Nahi Hua!\n\nIs ungli ka koi record database mein mojood nahi hai.");
+        }
+
+      } catch (err) {
+        closeBMSModal();
+        alert("Scan Error: " + (err.message || 'SecuGen reader error'));
+      }
+    }
   </script>
 
 <!-- ================= SUPREMA BMS-2 USB BIOMETRIC SCANNER MODAL ================= -->
@@ -13014,38 +13189,36 @@ async function deleteCashVoucher(id) {
         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(56,189,248,0.2); border: 1.5px solid #38bdf8; display: flex; align-items: center; justify-content: center; color: #38bdf8; font-size: 18px;">
           <i class="fa-solid fa-fingerprint"></i>
         </div>
-        <div>
-          <h3 id="bmsModalTitle" style="font-size: 15px; font-weight: 800; margin: 0; color: #ffffff;">Suprema BioMini Slim 2 (BMS-2)</h3>
-          <small style="color: #94a3b8; font-size: 11px;">USB Optical Fingerprint Reader</small>
+      <div>
+          <h3 id="bmsModalTitle" style="font-size: 15px; font-weight: 800; margin: 0; color: #ffffff;">SecuGen Hamster Pro 20 (HU20)</h3>
+          <small style="color: #94a3b8; font-size: 11px;">SecuGen Optical Fingerprint Reader</small>
         </div>
       </div>
       <button type="button" class="btn-close-modal" onclick="closeBMSModal()" style="color: #cbd5e1; background: rgba(255,255,255,0.1);"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
-    <!-- Scanner Optical Platen Screen -->
+    
     <div style="background: #090d16; padding: 30px 20px; text-align: center;">
       
-      <!-- Sensor Glass Graphic -->
+      
       <div id="bmsSensorPlaten" style="position: relative; width: 170px; height: 210px; margin: 0 auto; border-radius: 16px; border: 3px solid #2563eb; background: radial-gradient(circle, #1e3a8a 0%, #030712 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 25px rgba(37,99,235,0.35); transition: all 0.3s ease;">
         
-        <!-- Fingerprint Image / Sensor LED -->
-        <i id="bmsSensorIcon" class="fa-solid fa-fingerprint" style="font-size: 72px; color: #38bdf8; opacity: 0.85;"></i>
+               <i id="bmsSensorIcon" class="fa-solid fa-fingerprint" style="font-size: 72px; color: #38bdf8; opacity: 0.85;"></i>
         <img id="bmsSensorLiveImg" src="" style="display: none; width: 100%; height: 100%; object-fit: contain; background: #ffffff;" alt="Scanned Fingerprint" />
 
-        <!-- Sensor Glowing Laser Effect -->
-        <div id="bmsLaserBar" style="display: none; position: absolute; left: 0; right: 0; height: 3px; background: #38bdf8; box-shadow: 0 0 14px #38bdf8; animation: bmsScanLaser 1.5s infinite ease-in-out;"></div>
+               <div id="bmsLaserBar" style="display: none; position: absolute; left: 0; right: 0; height: 3px; background: #38bdf8; box-shadow: 0 0 14px #38bdf8; animation: bmsScanLaser 1.5s infinite ease-in-out;"></div>
       </div>
 
-      <!-- Live Status Text -->
+      
       <div id="bmsStatusMessage" style="font-size: 13.5px; font-weight: 800; color: #38bdf8; margin-top: 20px;">
         <i class="fa-solid fa-circle-check"></i> Machine Ready: Sensor par angootha rakhein
       </div>
       <div id="bmsSubMessage" style="font-size: 11.5px; color: #94a3b8; margin-top: 4px;">
-        BMS-2 USB scanner machine par ungli press karein
+       
       </div>
     </div>
 
-   <!-- Action Buttons -->
+   
     <div style="padding: 16px 20px; background: #ffffff; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; gap: 10px;">
       <button type="button" class="btn-back" onclick="closeBMSModal()" style="font-weight: 700; padding: 10px 18px;">Cancel</button>
 
@@ -13065,7 +13238,7 @@ async function deleteCashVoucher(id) {
 }
 </style>
 
-<!-- Scanning Animation CSS -->
+
 <style>
 @keyframes scanLaserAnim {
   0% { top: 5%; opacity: 0.9; }
