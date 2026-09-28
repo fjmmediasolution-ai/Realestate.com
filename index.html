@@ -1867,12 +1867,13 @@
         </div>
 
        
-        <!-- FORGOT PASSWORD FORM -->
+        <!-- CHANGE / RESET PASSWORD FORM -->
         <div id="forgotForm" class="form-wrapper">
-          <h2 class="form-title">Reset Password</h2>
-          <p class="form-subtitle">Enter your email and we'll send a secure reset link.</p>
+          <h2 class="form-title">Change Password</h2>
+          <p class="form-subtitle">Purana password darj karein aur foran naya password set karein.</p>
 
           <form id="formForgot">
+            <!-- 1. Email Address -->
             <div class="input-group">
               <label>Email Address</label>
               <div class="input-box">
@@ -1881,13 +1882,33 @@
               </div>
             </div>
 
-            <button type="submit" id="btnForgot" class="btn-submit">
-              <i class="fa-solid fa-paper-plane"></i> Send Reset Link
+            <!-- 2. Old Password -->
+            <div class="input-group">
+              <label>Old Password (Purana Password) *</label>
+              <div class="input-box">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="forgotOldPassword" placeholder="Enter current password" required />
+                <i class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility('forgotOldPassword', this)"></i>
+              </div>
+            </div>
+
+            <!-- 3. New Password -->
+            <div class="input-group">
+              <label>New Password (Naya Password) *</label>
+              <div class="input-box">
+                <i class="fa-solid fa-key input-icon"></i>
+                <input type="password" id="forgotNewPassword" placeholder="Minimum 6 characters" minlength="6" required />
+                <i class="fa-regular fa-eye toggle-password" onclick="togglePasswordVisibility('forgotNewPassword', this)"></i>
+              </div>
+            </div>
+
+            <button type="submit" id="btnForgot" class="btn-submit" style="background: linear-gradient(135deg, #16a34a, #15803d);">
+              <i class="fa-solid fa-shield-halved"></i> Update & Save Password
             </button>
           </form>
 
           <div class="form-switch">
-            Remember password? <a href="javascript:void(0)" onclick="switchAuthForm('login')">Return to Login</a>
+            Password yaad hai? <a href="javascript:void(0)" onclick="switchAuthForm('login')">Return to Login</a>
           </div>
         </div>
 
@@ -3883,7 +3904,7 @@
               <div id="alCardCredit" style="font-size: 22px; font-weight: 900; color: #0f172a; margin-top: 4px;">0</div>
             </div>
 
-            <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+          <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
               <div style="font-size: 12px; font-weight: 700; color: #64748b;">Closing Balance</div>
               <div id="alCardClosing" style="font-size: 22px; font-weight: 900; color: #0066ff; margin-top: 4px;">0</div>
             </div>
@@ -6188,22 +6209,63 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
       }
     });
 
-    // Forgot Password Form Handler
+    // Change Password Form Handler (Verify Old Password & Save New Password)
     document.getElementById('formForgot').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('forgotEmail').value.trim();
+      const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+      const oldPassword = document.getElementById('forgotOldPassword').value;
+      const newPassword = document.getElementById('forgotNewPassword').value;
       const btn = document.getElementById('btnForgot');
+
+      if (newPassword.length < 6) {
+        showAuthAlert('Naya password kam az kam 6 characters ka hona chahiye.', 'error');
+        return;
+      }
+
+      if (oldPassword === newPassword) {
+        showAuthAlert('Naya password puranay password se mukhtalif (alag) hona chahiye.', 'error');
+        return;
+      }
+
       btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying & Updating...';
+
       try {
-        await auth.sendPasswordResetEmail(email);
-        showAuthAlert('Password reset email sent! Please check your inbox.', 'success');
+        // 1. Pehle Email aur Old Password verify karein
+        const userCredential = await auth.signInWithEmailAndPassword(email, oldPassword);
+
+        // 2. Old password theek hone par foran New Password update karein
+        await userCredential.user.updatePassword(newPassword);
+
+        // 3. User ko safe logout karein taake woh naye password se login kare
+        await auth.signOut();
+
+        // 4. Form reset aur success message
         document.getElementById('formForgot').reset();
+        switchAuthForm('login');
+        
+        // Login box mein naya email fill kar dein
+        document.getElementById('loginEmail').value = email;
+        document.getElementById('loginPassword').value = '';
+
+        showCustomAlert(
+          "Password kamiyabi se tabdeel ho gaya hai!\nAb aap apne naye password ke zariye sign-in kar sakte hain.",
+          "success",
+          "Password Updated"
+        );
+
       } catch (error) {
-        showAuthAlert(error.message, 'error');
+        console.error("Password update error:", error);
+        if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+          showAuthAlert('Purana password (Old Password) ghalat hai. Baraye meharbani sahi password likhein.', 'error');
+        } else if (error.code === 'auth/user-not-found') {
+          showAuthAlert('Is email se koi account register nahi hai.', 'error');
+        } else {
+          showAuthAlert('Password change nahi ho saka: ' + error.message, 'error');
+        }
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Send Reset Link';
+        btn.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Update & Save Password';
       }
     });
 
@@ -6296,7 +6358,7 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
         if (document.getElementById('projStartDate')) document.getElementById('projStartDate').value = today;
         if (document.getElementById('expDate')) document.getElementById('expDate').value = today;
 
-        loadProjects();
+       loadProjects();
         loadFlats();
         loadCustomers();
         loadPurchaser();
@@ -6306,6 +6368,7 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
         loadStaffUsers();
         loadPayments();
         loadVendors();
+        loadCashVouchers(); // <-- YEH NAYI LINE: Taake Cash Book aur Ledger foran live hon
         loadLicenseSettings();
 
         // User ki permissions lagu karein
@@ -6435,15 +6498,18 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
           pageHeading.textContent = 'Profit & Loss Report';
           initProfitLossView();
           break;
-        case 'addPurchaser':
+       case 'addPurchaser':
   document.getElementById('sectionAddPurchaser').classList.add('active');
   pageHeading.textContent = 'Add Purchase';
   populatePurchaserCategoriesDropdown(); 
   generatePurchaseBillNo();
-  populateVendorDropdown(); // <-- YEH NAYI LINE ADD KAREIN (Taki accounts list foran refresh ho)
+  populateVendorDropdown();
   
   if (document.getElementById('purDate') && !document.getElementById('purEditId').value) {
     document.getElementById('purDate').value = new Date().toISOString().split('T')[0];
+  }
+  if (document.getElementById('purchaseItemsContainer') && document.getElementById('purchaseItemsContainer').children.length === 0) {
+    addPurchaseItemRow();
   }
   break;
         case 'purchaserDetails':
@@ -8940,128 +9006,6 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
     });
 
 
-    function downloadSiteExpensePDF(id) {
-      const exp = allSiteExpensesData.find(x => x.id === id);
-      if (!exp) return;
-
-      const voucherNo = 'SE-' + (exp.id ? exp.id.substring(0, 6).toUpperCase() : '001');
-      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-      const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.width = '100%';
-      pdfWrapper.style.maxWidth = '190mm';
-      pdfWrapper.style.margin = '0 auto';
-      pdfWrapper.style.padding = '10px 12px';
-      pdfWrapper.style.background = '#ffffff';
-      pdfWrapper.style.color = '#0f172a';
-      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      pdfWrapper.style.boxSizing = 'border-box';
-
-      pdfWrapper.innerHTML = `
-        <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
-          
-          <!-- Standard Corporate Header -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
-              <div>
-                <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Official Construction Site Payment Voucher</div>
-                <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Clifton Boulevard, Karachi &nbsp;|&nbsp; Project: BILAL HEIGHTS</div>
-              </div>
-            </div>
-
-            <div style="text-align: right;">
-              <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
-                SITE VOUCHER
-              </div>
-              <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
-                VOUCHER: <span style="color:#2563eb;">${voucherNo}</span>
-              </div>
-              <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${exp.date || todayDate}</b></div>
-            </div>
-          </div>
-
-          <!-- Category Banner -->
-          <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Expense Head / Category</div>
-              <div style="font-size: 16px; font-weight: 900;">${exp.category || 'General Site Expense'}</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Paid To / Beneficiary</div>
-              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${exp.paidTo || 'Site Worker / Contractor'}</div>
-            </div>
-          </div>
-
-          <!-- Particulars Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
-            <thead>
-              <tr style="background: #0f2a59; color: #ffffff;">
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">EXPENSE DESCRIPTION</th>
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">TOTAL BILL (RS.)</th>
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 24%; background:#166534;">PAID NOW (RS.)</th>
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">REMAINING (RS.)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${exp.description || 'N/A'}</td>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 700; color: #0f172a;">Rs. ${Number(exp.totalAmount || 0).toLocaleString()}</td>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #166534; font-size: 12px; background:#f0fdf4;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</td>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 11.5px;">Rs. ${Number(exp.remainingAmount || 0).toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Status Strip -->
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 12px; margin-bottom: 14px; display: flex; justify-content: space-between; font-size: 9.5px;">
-            <div><b>Project:</b> BILAL HEIGHTS</div>
-            <div><b>Payment Status:</b> <span style="font-weight: 800; color: ${exp.status === 'Paid' ? '#166534' : '#dc2626'}; text-transform: uppercase;">${exp.status || 'Paid'}</span></div>
-          </div>
-
-          <!-- Dual Signatures & Verification Stamp Footer -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding: 0 10px;">
-            <div style="text-align: center; width: 160px;">
-              <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9.5px; font-weight: 800; color: #334155; text-transform: uppercase;">
-                SITE SUPERVISOR / MUNSHI
-              </div>
-              <div style="font-size: 8px; color: #94a3b8;">(Expense Verified on Site)</div>
-            </div>
-
-            <div style="text-align: center; width: 120px;">
-              <div style="border: 1.5px dashed #166534; color: #166534; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
-                Site Approved
-              </div>
-              <div style="font-size: 8px; color: #64748b; font-weight: 600;">Verified Voucher</div>
-            </div>
-
-            <div style="text-align: center; width: 160px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
-                PROJECT DIRECTOR
-              </div>
-              <div style="font-size: 8px; color: #64748b;">Bilal Heights Management</div>
-            </div>
-          </div>
-
-        </div>
-      `;
-
-      const opt = {
-        margin: [8, 8, 8, 8],
-        filename: `Site_Expense_Voucher_${voucherNo}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(pdfWrapper).save();
-      } else {
-        alert('PDF library load nahi ho saki.');
-      }
-    }
-
 // ========================================================
     // 1. CATEGORY DELETE & MANAGE LOGIC
     // ========================================================
@@ -9603,128 +9547,6 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
         btn.disabled = false;
       }
     });
-
-    function downloadOfficeExpensePDF(id) {
-      const exp = allOfficeExpensesData.find(x => x.id === id);
-      if (!exp) return;
-
-      const voucherNo = 'OE-' + (exp.id ? exp.id.substring(0, 6).toUpperCase() : '001');
-      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-      const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.width = '100%';
-      pdfWrapper.style.maxWidth = '190mm';
-      pdfWrapper.style.margin = '0 auto';
-      pdfWrapper.style.padding = '10px 12px';
-      pdfWrapper.style.background = '#ffffff';
-      pdfWrapper.style.color = '#0f172a';
-      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      pdfWrapper.style.boxSizing = 'border-box';
-
-      pdfWrapper.innerHTML = `
-        <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 16px 18px; background: #ffffff;">
-          
-          <!-- Standard Corporate Header -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
-              <div>
-                <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-                <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Head Office Administrative Expense Voucher</div>
-                <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Block 5, Clifton, Karachi</div>
-              </div>
-            </div>
-
-            <div style="text-align: right;">
-              <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
-                OFFICE VOUCHER
-              </div>
-              <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
-                VOUCHER: <span style="color:#2563eb;">${voucherNo}</span>
-              </div>
-              <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${exp.date || todayDate}</b></div>
-            </div>
-          </div>
-
-          <!-- Category Banner -->
-          <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Expense Category / Account Head</div>
-              <div style="font-size: 16px; font-weight: 900;">${exp.category || 'Office General Expense'}</div>
-            </div>
-            <div style="text-align: right;">
-              <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700; letter-spacing: 0.5px;">Paid To / Staff Member</div>
-              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${exp.paidTo || 'N/A'}</div>
-            </div>
-          </div>
-
-          <!-- Particulars Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
-            <thead>
-              <tr style="background: #0f2a59; color: #ffffff;">
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">PURPOSE / EXPENSE DETAILS</th>
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">TOTAL BILL (RS.)</th>
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 24%; background:#166534;">PAID AMOUNT (RS.)</th>
-                <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 22%;">REMAINING (RS.)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${exp.description || 'N/A'}</td>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 700; color: #0f172a;">Rs. ${Number(exp.totalAmount || 0).toLocaleString()}</td>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #166534; font-size: 12px; background:#f0fdf4;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</td>
-                <td style="padding: 9px 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 11.5px;">Rs. ${Number(exp.remainingAmount || 0).toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- Status Strip -->
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 12px; margin-bottom: 14px; display: flex; justify-content: space-between; font-size: 9.5px;">
-            <div><b>Branch:</b> Head Office - Bilal Heights</div>
-            <div><b>Payment Status:</b> <span style="font-weight: 800; color: ${exp.status === 'Paid' ? '#166534' : '#dc2626'}; text-transform: uppercase;">${exp.status || 'Paid'}</span></div>
-          </div>
-
-          <!-- Dual Signatures & Verification Stamp Footer -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 36px; padding: 0 10px;">
-            <div style="text-align: center; width: 160px;">
-              <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9.5px; font-weight: 800; color: #334155; text-transform: uppercase;">
-                ACCOUNTANT / CASHIER
-              </div>
-              <div style="font-size: 8px; color: #94a3b8;">(Voucher Entered in Accounts)</div>
-            </div>
-
-            <div style="text-align: center; width: 120px;">
-              <div style="border: 1.5px dashed #0f2a59; color: #0f2a59; font-size: 7.5px; font-weight: 900; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; margin-bottom: 3px;">
-                Office Approved
-              </div>
-              <div style="font-size: 8px; color: #64748b; font-weight: 600;">Verified Voucher</div>
-            </div>
-
-            <div style="text-align: center; width: 160px;">
-              <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">
-                MANAGING DIRECTOR
-              </div>
-              <div style="font-size: 8px; color: #64748b;">Bilal Heights Executive</div>
-            </div>
-          </div>
-
-        </div>
-      `;
-
-      const opt = {
-        margin: [8, 8, 8, 8],
-        filename: `Office_Expense_Voucher_${voucherNo}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(pdfWrapper).save();
-      } else {
-        alert('PDF library load nahi ho saki.');
-      }
-    }
 
     // =========================================================================
     // 13. SETTINGS MODULE CONTROLLER (5 ESSENTIALS)
@@ -11902,124 +11724,6 @@ function downloadVoucherA4PDFById(id) {
   if (v) downloadVoucherA4PDF(v);
 }
 
-// Strict A4 Standard Corporate Voucher PDF Pattern
-function downloadVoucherA4PDF(v) {
-  const isPayment = (v.type === 'PAYMENT');
-  const voucherTitle = isPayment ? 'CASH PAYMENT VOUCHER' : 'CASH RECEIPT VOUCHER';
-  const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-  const pdfWrapper = document.createElement('div');
-  pdfWrapper.style.width = '100%';
-  pdfWrapper.style.maxWidth = '190mm';
-  pdfWrapper.style.margin = '0 auto';
-  pdfWrapper.style.padding = '10px 12px';
-  pdfWrapper.style.background = '#ffffff';
-  pdfWrapper.style.color = '#0f172a';
-  pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-  pdfWrapper.style.boxSizing = 'border-box';
-
-  pdfWrapper.innerHTML = `
-    <div style="border: 2px solid #0f2a59; border-radius: 10px; padding: 18px 20px; background: #ffffff;">
-      
-      <!-- Standard Corporate Header -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f2a59; padding-bottom: 10px; margin-bottom: 12px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="background: #0f2a59; color: #ffffff; width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px;">BH</div>
-          <div>
-            <h1 style="margin: 0; font-size: 20px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">BILAL HEIGHTS</h1>
-            <div style="font-size: 9px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;">Official Financial Accounts Document</div>
-            <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Main Clifton Boulevard, Karachi &nbsp;|&nbsp; Tel: 021-35890000</div>
-          </div>
-        </div>
-
-        <div style="text-align: right;">
-          <div style="background: #0f2a59; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 4px; display: inline-block; text-transform: uppercase;">
-            ${voucherTitle}
-          </div>
-          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a; margin-top: 4px;">
-            VOUCHER NO: <span style="color: #2563eb;">${v.voucherNo}</span>
-          </div>
-          <div style="font-size: 9px; color: #475569; font-weight: 600;">DATE: <b>${v.date || todayDate}</b></div>
-        </div>
-      </div>
-
-      <!-- Banner -->
-      <div style="background: linear-gradient(135deg, #0f2a59 0%, #1e3a8a 100%); color: #ffffff; border-radius: 7px; padding: 9px 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Account / Party</div>
-          <div style="font-size: 16px; font-weight: 900;">${v.party}</div>
-        </div>
-        <div style="text-align: right;">
-          <div style="font-size: 8.5px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Head / Category</div>
-          <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">${v.head}</div>
-        </div>
-      </div>
-
-      <!-- Particulars Table -->
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 10px;">
-        <thead>
-          <tr style="background: #0f2a59; color: #ffffff;">
-            <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: left; font-weight: 800; text-transform: uppercase;">PARTICULARS / NARRATION</th>
-            <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 25%;">DEBIT (RS.)</th>
-            <th style="padding: 7px 10px; border: 1px solid #0f2a59; text-align: right; font-weight: 800; text-transform: uppercase; width: 25%;">CREDIT (RS.)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td style="padding: 10px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">${v.narration}</td>
-            <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #dc2626; font-size: 12px;">${isPayment ? 'Rs. ' + Number(v.amount).toLocaleString() : '-'}</td>
-            <td style="padding: 10px; border: 1px solid #cbd5e1; text-align: right; font-weight: 900; color: #16a34a; font-size: 12px;">${!isPayment ? 'Rs. ' + Number(v.amount).toLocaleString() : '-'}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr style="background:#f8fafc; font-weight:900;">
-            <td style="padding: 8px 10px; border: 1px solid #cbd5e1; text-align: right;">TOTAL:</td>
-            <td style="padding: 8px 10px; border: 1px solid #cbd5e1; text-align: right; color:#dc2626;">Rs. ${Number(v.amount).toLocaleString()}</td>
-            <td style="padding: 8px 10px; border: 1px solid #cbd5e1; text-align: right; color:#16a34a;">Rs. ${Number(v.amount).toLocaleString()}</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <!-- Amount in Words -->
-      <div style="background: #f8fafc; border-left: 3.5px solid #0066ff; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 10px; margin-bottom: 14px; font-size: 9.5px;">
-        <span style="color: #64748b; font-weight: 800; text-transform: uppercase;">Amount in Words:</span>
-        <strong style="color: #0f172a; text-transform: uppercase;"> ${v.amountInWords || numberToWordsRupees(v.amount)}</strong>
-      </div>
-
-      <!-- 4 Verification Signatures Footer -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 40px; padding: 0 6px;">
-        <div style="text-align: center; width: 120px;">
-          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">PREPARED BY</div>
-        </div>
-        <div style="text-align: center; width: 120px;">
-          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">CHECKED BY</div>
-        </div>
-        <div style="text-align: center; width: 120px;">
-          <div style="border-top: 1.5px dashed #64748b; padding-top: 4px; font-size: 9px; font-weight: 800; color: #334155; text-transform: uppercase;">RECEIVER SIGN</div>
-        </div>
-        <div style="text-align: center; width: 140px;">
-          <div style="border-top: 2px solid #0f2a59; padding-top: 4px; font-size: 9.5px; font-weight: 900; color: #0f2a59; text-transform: uppercase;">AUTHORIZED SIGN</div>
-        </div>
-      </div>
-
-    </div>
-  `;
-
-  const opt = {
-    margin: [8, 8, 8, 8],
-    filename: `${v.voucherNo}_${(v.party || 'Account').replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.2, useCORS: true, letterRendering: true },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-
-  if (typeof html2pdf !== 'undefined') {
-    html2pdf().set(opt).from(pdfWrapper).save();
-  } else {
-    alert('PDF library load nahi ho saki.');
-  }
-}
-
 async function deleteCashVoucher(id) {
   if (confirm("Kiya aap waqai is cash voucher ko delete karna chahte hain?")) {
     try {
@@ -12487,6 +12191,1429 @@ async function deleteCashVoucher(id) {
     };
 
 
+// ==========================================
+// PURCHASE ITEMS & CALCULATION FUNCTIONS
+// ==========================================
+function addPurchaseItemRow() {
+  const container = document.getElementById('purchaseItemsContainer');
+  if (!container) return;
+
+  const row = document.createElement('div');
+  row.className = 'purchase-item-row';
+  row.style.cssText = 'display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: center; background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;';
+
+  let optionsHtml = '<option value="">-- Item Select Karein --</option>';
+  purchaserCategoriesList.forEach(cat => {
+    optionsHtml += `<option value="${cat}">${cat}</option>`;
+  });
+
+  row.innerHTML = `
+    <div>
+      <select class="pur-item-select" required style="width: 100%; padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-weight: 600;">
+        ${optionsHtml}
+      </select>
+    </div>
+    <div>
+      <input type="number" class="pur-item-qty" placeholder="Qty" min="1" value="1" oninput="calcPurchaseTotalAuto()" style="width: 100%; padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 8px;" required />
+    </div>
+    <div>
+      <select class="pur-item-unit" style="width: 100%; padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 8px;">
+        <option value="Bags">Bags</option>
+        <option value="Tons">Tons</option>
+        <option value="Nos">Nos</option>
+        <option value="Sq.Ft">Sq.Ft</option>
+        <option value="Cft">Cft</option>
+        <option value="Kg">Kg</option>
+      </select>
+    </div>
+    <div>
+      <input type="number" class="pur-item-rate" placeholder="Rate" min="0" oninput="calcPurchaseTotalAuto()" style="width: 100%; padding: 8px; border: 1.5px solid #cbd5e1; border-radius: 8px;" required />
+    </div>
+    <div>
+      <input type="number" class="pur-item-amount" placeholder="Total" readonly style="width: 100%; padding: 8px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; font-weight: 700; color: #0f172a;" />
+    </div>
+    <div>
+      <button type="button" onclick="this.closest('.purchase-item-row').remove(); calcPurchaseTotalAuto();" style="background: #fee2e2; color: #dc2626; border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;" title="Remove Item">
+        <i class="fa-solid fa-trash-can"></i>
+      </button>
+    </div>
+  `;
+
+  container.appendChild(row);
+}
+
+function calcPurchaseTotalAuto() {
+  const container = document.getElementById('purchaseItemsContainer');
+  if (!container) return;
+
+  const rows = container.querySelectorAll('.purchase-item-row');
+  let grandTotal = 0;
+
+  rows.forEach(row => {
+    const qty = parseFloat(row.querySelector('.pur-item-qty').value) || 0;
+    const rate = parseFloat(row.querySelector('.pur-item-rate').value) || 0;
+    const rowTotal = qty * rate;
+    row.querySelector('.pur-item-amount').value = rowTotal;
+    grandTotal += rowTotal;
+  });
+
+  const totalInput = document.getElementById('purTotalAmount');
+  if (totalInput) totalInput.value = grandTotal;
+
+  const paidInput = document.getElementById('purPaidAmount');
+  const remInput = document.getElementById('purRemainingAmount');
+  const paid = parseFloat(paidInput?.value) || 0;
+  const rem = Math.max(0, grandTotal - paid);
+
+  if (remInput) remInput.value = rem;
+}
+
+function generatePurchaseBillNo() {
+  const count = (allPurchaserData ? allPurchaserData.length : 0) + 1;
+  const billNoEl = document.getElementById('purBillNo');
+  if (billNoEl && !document.getElementById('purEditId').value) {
+    billNoEl.value = 'PUR-' + String(count).padStart(4, '0');
+  }
+}
+
+function populateVendorDropdown() {
+  const datalist = document.getElementById('purVendorDatalist');
+  if (!datalist) return;
+  datalist.innerHTML = '';
+  const vendorSet = new Set();
+
+  if (allAccountsData) {
+    allAccountsData.forEach(acc => {
+      if (acc.name) vendorSet.add(acc.name);
+    });
+  }
+  if (allPurchaserData) {
+    allPurchaserData.forEach(p => {
+      if (p.vendor) vendorSet.add(p.vendor);
+    });
+  }
+
+  vendorSet.forEach(v => {
+    const opt = document.createElement('option');
+    opt.value = v;
+    datalist.appendChild(opt);
+  });
+}
+
+function populatePurchaserCategoriesDropdown() {
+  renderCategoryChips();
+}
+
+function renderPurchaserCategoriesPage() {
+  const grid = document.getElementById('purchaserCategoriesGrid');
+  if (!grid) return;
+  let html = '';
+  purchaserCategoriesList.forEach(cat => {
+    html += `
+      <div style="background:#ffffff; border:1.5px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 6px rgba(0,0,0,0.02);">
+        <div>
+          <strong style="color:#0f172a; font-size:14px;"><i class="fa-solid fa-cube" style="color:#2563eb; margin-right:8px;"></i>${cat}</strong>
+        </div>
+        <button type="button" onclick="removeSettingCategory('purchaser', '${cat}')" style="background:#fee2e2; color:#dc2626; border:none; width:30px; height:30px; border-radius:6px; cursor:pointer;" title="Delete Category">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    `;
+  });
+  grid.innerHTML = html;
+}
+
+
+// ==========================================
+// ACCOUNT LIST & VENDOR CREATION CONTROLLER
+// ==========================================
+let allAccountsData = [];
+let curAccPage = 1;
+const accItemsPerPage = 10;
+let currentFilteredAccounts = [];
+
+function openCreateAccountModal() {
+  const form = document.getElementById('createAccountForm');
+  if (form) form.reset();
+  const editId = document.getElementById('modalAccEditId');
+  if (editId) editId.value = '';
+  const title = document.getElementById('createAccModalTitle');
+  if (title) title.textContent = 'Create Account';
+  document.getElementById('createAccountModal').classList.add('active');
+}
+
+function closeCreateAccountModal(e) {
+  document.getElementById('createAccountModal').classList.remove('active');
+}
+
+function loadVendors() {
+  db.collection('accounts_directory').orderBy('createdAt', 'desc').onSnapshot(snap => {
+    allAccountsData = [];
+    snap.forEach(doc => {
+      allAccountsData.push({ id: doc.id, ...doc.data() });
+    });
+    filterAccountsDirectory();
+    populateVendorDropdown();
+  }, err => {
+    console.warn("Accounts load error:", err);
+  });
+}
+
+function filterAccountsDirectory() {
+  const q = (document.getElementById('accSearchInput')?.value || '').toLowerCase().trim();
+  const typeFilter = document.getElementById('accTypeFilter')?.value || 'ALL';
+  const tbody = document.getElementById('vendorTableBody');
+
+  if (!tbody) return;
+
+  currentFilteredAccounts = allAccountsData.filter(acc => {
+    const matchesType = (typeFilter === 'ALL' || acc.type === typeFilter);
+    const matchesSearch = !q ||
+      (acc.name && acc.name.toLowerCase().includes(q)) ||
+      (acc.mobile && acc.mobile.includes(q)) ||
+      (acc.cnic && acc.cnic.includes(q)) ||
+      (acc.type && acc.type.toLowerCase().includes(q));
+
+    return matchesType && matchesSearch;
+  });
+
+  renderAccountsTablePage();
+}
+
+function renderAccountsTablePage() {
+  const tbody = document.getElementById('vendorTableBody');
+  const total = currentFilteredAccounts.length;
+
+  if (total === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Koi account record nahi mila.</td></tr>`;
+    document.getElementById('accCountDisplay').textContent = `Showing 0 to 0 of 0 entries`;
+    return;
+  }
+
+  const totalPages = Math.ceil(total / accItemsPerPage);
+  if (curAccPage > totalPages) curAccPage = totalPages;
+  if (curAccPage < 1) curAccPage = 1;
+
+  const start = (curAccPage - 1) * accItemsPerPage;
+  const end = Math.min(start + accItemsPerPage, total);
+  const pageData = currentFilteredAccounts.slice(start, end);
+
+  let html = '';
+  pageData.forEach((acc, idx) => {
+    let badgeClass = 'badge-acc-other';
+    if (acc.type === 'Vendor / Supplier') badgeClass = 'badge-acc-vendor';
+    else if (acc.type === 'Contractor') badgeClass = 'badge-acc-contractor';
+    else if (acc.type === 'Customer') badgeClass = 'badge-acc-customer';
+    else if (acc.type === 'Staff') badgeClass = 'badge-acc-staff';
+    else if (acc.type === 'Capital / Owner') badgeClass = 'badge-acc-capital';
+
+    html += `
+      <tr>
+        <td style="font-weight: 700; color: #475569;">${start + idx + 1}</td>
+        <td><strong style="color: #0f172a; font-size: 13.5px;">${acc.name || 'N/A'}</strong></td>
+        <td><span class="${badgeClass}">${acc.type || 'Other'}</span></td>
+        <td>${acc.mobile || 'N/A'}</td>
+        <td>${acc.cnic || 'N/A'}</td>
+        <td>${acc.address || 'N/A'}</td>
+        <td style="text-align: center;">
+          <div style="display: inline-flex; gap: 6px;">
+            <button class="btn-acc-action-view" onclick="viewAccountDetails('${acc.id}')" title="View Account"><i class="fa-solid fa-eye"></i></button>
+            <button class="btn-acc-action-edit" onclick="editAccountRecord('${acc.id}')" title="Edit Account"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-acc-action-del" onclick="deleteAccountRecord('${acc.id}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+  document.getElementById('accCountDisplay').textContent = `Showing ${start + 1} to ${end} of ${total} entries`;
+  document.getElementById('currentAccPageBtn').textContent = curAccPage;
+}
+
+function prevAccountPage() {
+  if (curAccPage > 1) {
+    curAccPage--;
+    renderAccountsTablePage();
+  }
+}
+function nextAccountPage() {
+  const totalPages = Math.ceil(currentFilteredAccounts.length / accItemsPerPage);
+  if (curAccPage < totalPages) {
+    curAccPage++;
+    renderAccountsTablePage();
+  }
+}
+
+// Account Save Handler
+document.getElementById('createAccountForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const editId = document.getElementById('modalAccEditId').value;
+  const btn = document.getElementById('btnSaveModalAccount');
+
+  const accData = {
+    name: document.getElementById('modalAccName').value.trim(),
+    type: document.getElementById('modalAccType').value,
+    mobile: document.getElementById('modalAccMobile').value.trim(),
+    cnic: document.getElementById('modalAccCnic').value.trim() || 'N/A',
+    address: document.getElementById('modalAccAddress').value.trim(),
+    notes: document.getElementById('modalAccNotes').value.trim() || '',
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+  try {
+    if (editId) {
+      await db.collection('accounts_directory').doc(editId).update(accData);
+      alert('Account kamiyabi se update ho gaya!');
+    } else {
+      accData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('accounts_directory').add(accData);
+      alert('Naya account kamiyabi se ban gaya!');
+    }
+    closeCreateAccountModal();
+  } catch(err) {
+    alert('Account save karne me masla aaya: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Account';
+  }
+});
+
+function viewAccountDetails(id) {
+  const acc = allAccountsData.find(x => x.id === id);
+  if (!acc) return;
+
+  document.getElementById('accountListViewCard').style.display = 'none';
+  document.getElementById('accountDetailsViewCard').style.display = 'block';
+
+  document.getElementById('accDetailName').textContent = acc.name;
+  document.getElementById('accDetailBadge').textContent = acc.type;
+  document.getElementById('accDetailMobile').textContent = acc.mobile;
+  document.getElementById('accDetailCnic').textContent = acc.cnic || 'N/A';
+  document.getElementById('accDetailAddress').textContent = acc.address;
+  document.getElementById('accDetailNotes').textContent = acc.notes || 'No remarks added.';
+
+  document.getElementById('btnEditFromDetail').onclick = () => editAccountRecord(acc.id);
+  document.getElementById('btnDeleteFromDetail').onclick = () => deleteAccountRecord(acc.id);
+
+  // Recent Transactions Table Render Karna
+  const recentTbody = document.getElementById('accRecentTransactionsBody');
+  if (recentTbody) {
+    let txns = [];
+
+    // Purchases
+    (allPurchaserData || []).filter(p => p.vendor === acc.name).forEach(p => {
+      txns.push({
+        date: p.date,
+        ref: p.billNo || 'PUR',
+        desc: `Purchase - ${p.item || 'Material'}`,
+        debit: parseFloat(p.total || p.totalAmount) || 0,
+        credit: parseFloat(p.paid || p.paidAmount) || 0
+      });
+    });
+
+    // Customer Receipts
+    (allPaymentsData || []).filter(p => p.customerName === acc.name).forEach(p => {
+      txns.push({
+        date: p.date,
+        ref: p.receiptNo || 'BH-REC',
+        desc: `Customer Payment Received (${p.head || 'Installment'})`,
+        debit: 0,
+        credit: parseFloat(p.amount) || 0
+      });
+    });
+
+    // Cash Vouchers
+    (allCashVouchersData || []).filter(v => v.party === acc.name).forEach(v => {
+      txns.push({
+        date: v.date,
+        ref: v.voucherNo || 'CV',
+        desc: v.narration || v.head,
+        debit: (v.type === 'PAYMENT') ? (parseFloat(v.amount) || 0) : 0,
+        credit: (v.type === 'RECEIPT') ? (parseFloat(v.amount) || 0) : 0
+      });
+    });
+
+    // Sort by date desc
+    txns.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (txns.length === 0) {
+      recentTbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 25px; color: var(--text-muted);">No transactions recorded yet.</td></tr>`;
+    } else {
+      let rHtml = '';
+      let runningBal = 0;
+      txns.slice(0, 5).forEach(t => {
+        runningBal += (t.debit - t.credit);
+        rHtml += `
+          <tr>
+            <td>${t.date}</td>
+            <td><strong style="color: #2563eb;">${t.ref}</strong></td>
+            <td>${t.desc}</td>
+            <td style="text-align: right; color: #dc2626; font-weight: 700;">${t.debit > 0 ? 'Rs. ' + t.debit.toLocaleString() : '-'}</td>
+            <td style="text-align: right; color: #16a34a; font-weight: 700;">${t.credit > 0 ? 'Rs. ' + t.credit.toLocaleString() : '-'}</td>
+            <td style="text-align: right; font-weight: 800;">Rs. ${runningBal.toLocaleString()}</td>
+          </tr>
+        `;
+      });
+      recentTbody.innerHTML = rHtml;
+    }
+  }
+}
+
+function backToAccountList() {
+  document.getElementById('accountDetailsViewCard').style.display = 'none';
+  document.getElementById('accountListViewCard').style.display = 'block';
+}
+
+function editAccountRecord(id) {
+  const acc = allAccountsData.find(x => x.id === id);
+  if (!acc) return;
+
+  document.getElementById('modalAccEditId').value = acc.id;
+  document.getElementById('modalAccName').value = acc.name || '';
+  document.getElementById('modalAccType').value = acc.type || '';
+  document.getElementById('modalAccMobile').value = acc.mobile || '';
+  document.getElementById('modalAccCnic').value = acc.cnic !== 'N/A' ? acc.cnic : '';
+  document.getElementById('modalAccAddress').value = acc.address || '';
+  document.getElementById('modalAccNotes').value = acc.notes || '';
+
+  document.getElementById('createAccModalTitle').textContent = 'Edit Account';
+  document.getElementById('createAccountModal').classList.add('active');
+}
+
+async function deleteAccountRecord(id) {
+  if (confirm('Kiya aap waqai is account ko delete karna chahte hain?')) {
+    try {
+      await db.collection('accounts_directory').doc(id).delete();
+      backToAccountList();
+      alert('Account delete ho gaya.');
+    } catch(err) {
+      alert('Delete failed: ' + err.message);
+    }
+  }
+}
+
+
+// ==========================================
+// PAYMENT DETAILS ACTIONS HELPERS
+// ==========================================
+function downloadPaymentReceiptPDFById(paymentId) {
+  const p = allPaymentsData.find(x => x.id === paymentId);
+  if (p) {
+    downloadPaymentReceiptPDF(p);
+  } else {
+    alert("Payment record nahi mila.");
+  }
+}
+
+async function deletePaymentRecord(paymentId) {
+  if (confirm("Kiya aap waqai is payment receipt ko delete karna chahte hain?")) {
+    try {
+      await db.collection('payments').doc(paymentId).delete();
+      allPaymentsData = allPaymentsData.filter(x => x.id !== paymentId);
+      updatePaymentSummaryMetrics();
+      filterPaymentsTable();
+      alert("Payment receipt kamiyabi se delete ho gayi.");
+    } catch(err) {
+      alert("Delete failed: " + err.message);
+    }
+  }
+}
+
+
+// ========================================================
+// CASH BOOK REPORT COMPLETE CONTROLLER
+// ========================================================
+let currentCbPreset = 'daily';
+
+function initCashBookView() {
+  const today = new Date().toISOString().split('T')[0];
+  const dFrom = document.getElementById('cbFilterDateFrom');
+  const dTo = document.getElementById('cbFilterDateTo');
+  if (dFrom && !dFrom.value) dFrom.value = today;
+  if (dTo && !dTo.value) dTo.value = today;
+
+  renderCashBookReport();
+}
+
+function setCashBookPreset(preset, btn) {
+  currentCbPreset = preset;
+  document.querySelectorAll('#btnCbPresetDaily, #btnCbPresetWeekly, #btnCbPresetMonthly, #btnCbPresetAll').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+
+  const dFrom = document.getElementById('cbFilterDateFrom');
+  const dTo = document.getElementById('cbFilterDateTo');
+
+  if (preset === 'daily') {
+    dFrom.value = todayStr;
+    dTo.value = todayStr;
+  } else if (preset === 'weekly') {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 7);
+    dFrom.value = sevenDaysAgo.toISOString().split('T')[0];
+    dTo.value = todayStr;
+  } else if (preset === 'monthly') {
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    dFrom.value = firstDay;
+    dTo.value = todayStr;
+  } else if (preset === 'all') {
+    dFrom.value = '';
+    dTo.value = '';
+  }
+
+  renderCashBookReport();
+}
+
+function renderCashBookReport() {
+  const dateFrom = document.getElementById('cbFilterDateFrom')?.value;
+  const dateTo = document.getElementById('cbFilterDateTo')?.value;
+  const tbody = document.getElementById('cbTableBody');
+
+  if (!tbody) return;
+
+  let cashTransactions = [];
+
+  // 1. Customer Cash Payments (Inflow)
+  (allPaymentsData || []).forEach(p => {
+    if (p.mode === 'Cash') {
+      cashTransactions.push({
+        date: p.date,
+        ref: p.receiptNo || 'BH-REC',
+        desc: `Customer Payment - ${p.customerName} (Flat ${p.flatNo})`,
+        head: p.head || 'Monthly Installment',
+        cashIn: parseFloat(p.amount) || 0,
+        cashOut: 0
+      });
+    }
+  });
+
+  // 2. Cash Vouchers (CPV & CRV)
+  (allCashVouchersData || []).forEach(v => {
+    const amt = parseFloat(v.amount) || 0;
+    cashTransactions.push({
+      date: v.date,
+      ref: v.voucherNo,
+      desc: `${v.party} - ${v.narration || ''}`,
+      head: v.head || 'Cash Voucher',
+      cashIn: (v.type === 'RECEIPT') ? amt : 0,
+      cashOut: (v.type === 'PAYMENT') ? amt : 0
+    });
+  });
+
+  // 3. Site Expenses (Cash Outflow)
+  (allSiteExpensesData || []).forEach(se => {
+    const paid = parseFloat(se.paidAmount) || 0;
+    if (paid > 0) {
+      cashTransactions.push({
+        date: se.date,
+        ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
+        desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
+        head: se.category || 'Site Expense',
+        cashIn: 0,
+        cashOut: paid
+      });
+    }
+  });
+
+  // 4. Office Expenses (Cash Outflow)
+  (allOfficeExpensesData || []).forEach(oe => {
+    const paid = parseFloat(oe.paidAmount) || 0;
+    if (paid > 0) {
+      cashTransactions.push({
+        date: oe.date,
+        ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
+        desc: `${oe.paidTo || 'Office Staff'} - ${oe.description || ''}`,
+        head: oe.category || 'Office Expense',
+        cashIn: 0,
+        cashOut: paid
+      });
+    }
+  });
+
+  // Date sorting
+  cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  // Date filtering
+  let filtered = cashTransactions.filter(item => {
+    if (dateFrom && item.date < dateFrom) return false;
+    if (dateTo && item.date > dateTo) return false;
+    return true;
+  });
+
+  let totalIn = 0;
+  let totalOut = 0;
+  let runningBal = 0;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Chuni gayi tareekh mein koi naqad entry mojood nahi hai.</td></tr>`;
+    document.getElementById('cbCardTotalIn').textContent = 'Rs. 0';
+    document.getElementById('cbCardTotalOut').textContent = 'Rs. 0';
+    document.getElementById('cbCardNetBalance').textContent = 'Rs. 0';
+    document.getElementById('cbFootIn').textContent = 'Rs. 0';
+    document.getElementById('cbFootOut').textContent = 'Rs. 0';
+    document.getElementById('cbFootBalance').textContent = 'Rs. 0';
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(item => {
+    totalIn += item.cashIn;
+    totalOut += item.cashOut;
+    runningBal += (item.cashIn - item.cashOut);
+
+    html += `
+      <tr>
+        <td>${item.date}</td>
+        <td><strong style="color: #2563eb;">${item.ref}</strong></td>
+        <td>${item.desc}</td>
+        <td><span class="badge-project-pill">${item.head}</span></td>
+        <td style="text-align: right; color: #16a34a; font-weight: 700;">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
+        <td style="text-align: right; color: #dc2626; font-weight: 700;">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
+        <td style="text-align: right; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+
+  document.getElementById('cbCardTotalIn').textContent = `Rs. ${totalIn.toLocaleString()}`;
+  document.getElementById('cbCardTotalOut').textContent = `Rs. ${totalOut.toLocaleString()}`;
+  document.getElementById('cbCardNetBalance').textContent = `Rs. ${runningBal.toLocaleString()}`;
+
+  document.getElementById('cbFootIn').textContent = `Rs. ${totalIn.toLocaleString()}`;
+  document.getElementById('cbFootOut').textContent = `Rs. ${totalOut.toLocaleString()}`;
+  document.getElementById('cbFootBalance').textContent = `Rs. ${runningBal.toLocaleString()}`;
+}
+
+function openCashDrawerModal(type) {
+  const modal = document.getElementById('cashDrawerModal');
+  const typeInput = document.getElementById('cdEntryType');
+  const title = document.getElementById('cashDrawerModalTitle');
+  const label = document.getElementById('cdLabelPerson');
+  const form = document.getElementById('cashDrawerEntryForm');
+
+  if (form) form.reset();
+  if (typeInput) typeInput.value = type;
+
+  if (type === 'IN') {
+    if (title) title.innerHTML = '<i class="fa-solid fa-plus-circle" style="color:#16a34a;"></i> Add Cash In (Galle Mein Jama)';
+    if (label) label.textContent = 'Received From (Person / Source) *';
+  } else {
+    if (title) title.innerHTML = '<i class="fa-solid fa-hand-holding-dollar" style="color:#dc2626;"></i> Cash Handover (Galle Se Nikalna)';
+    if (label) label.textContent = 'Handover To (Person / Owner) *';
+  }
+
+  if (modal) modal.classList.add('active');
+}
+
+function closeCashDrawerModal() {
+  document.getElementById('cashDrawerModal').classList.remove('active');
+}
+
+async function saveCashDrawerEntry(e) {
+  e.preventDefault();
+  const type = document.getElementById('cdEntryType').value;
+  const person = document.getElementById('cdPerson').value.trim();
+  const amount = parseFloat(document.getElementById('cdAmount').value) || 0;
+  const note = document.getElementById('cdNote').value.trim();
+
+  if (amount <= 0) {
+    alert("Bara-e-meherbani raqam darj karein.");
+    return;
+  }
+
+  const voucherRecord = {
+    voucherNo: (type === 'IN') ? 'CRV-' + Math.floor(1000 + Math.random() * 9000) : 'CPV-' + Math.floor(1000 + Math.random() * 9000),
+    type: (type === 'IN') ? 'RECEIPT' : 'PAYMENT',
+    date: new Date().toISOString().split('T')[0],
+    party: person,
+    head: (type === 'IN') ? 'Cash Drawer Inflow' : 'Owner Drawing / Handover',
+    amount: amount,
+    amountInWords: numberToWordsRupees(amount),
+    narration: note || (type === 'IN' ? 'Cash added into drawer' : 'Cash handover from drawer'),
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try {
+    await db.collection('cash_vouchers').add(voucherRecord);
+    closeCashDrawerModal();
+    alert("Cash entry kamiyabi se darj ho gayi!");
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
+}
+
+function downloadCashBookPDF() {
+  const element = document.getElementById('cashBookPrintArea');
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: `Cash_Book_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  };
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(element).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
+
+
+
+// ========================================================
+// PROFIT & LOSS FINANCIAL STATEMENT CONTROLLER
+// ========================================================
+let currentPlPreset = 'daily';
+
+function initProfitLossView() {
+  const today = new Date().toISOString().split('T')[0];
+  const dFrom = document.getElementById('plFilterDateFrom');
+  const dTo = document.getElementById('plFilterDateTo');
+  if (dFrom && !dFrom.value) dFrom.value = today;
+  if (dTo && !dTo.value) dTo.value = today;
+
+  renderProfitLossReport();
+}
+
+function setProfitLossPreset(preset, btn) {
+  currentPlPreset = preset;
+  document.querySelectorAll('#btnPlPresetDaily, #btnPlPresetWeekly, #btnPlPresetMonthly, #btnPlPresetAll').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+  const dFrom = document.getElementById('plFilterDateFrom');
+  const dTo = document.getElementById('plFilterDateTo');
+
+  if (preset === 'daily') {
+    dFrom.value = todayStr;
+    dTo.value = todayStr;
+  } else if (preset === 'weekly') {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(now.getDate() - 7);
+    dFrom.value = sevenDaysAgo.toISOString().split('T')[0];
+    dTo.value = todayStr;
+  } else if (preset === 'monthly') {
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+    dFrom.value = firstDay;
+    dTo.value = todayStr;
+  } else if (preset === 'all') {
+    dFrom.value = '';
+    dTo.value = '';
+  }
+
+  renderProfitLossReport();
+}
+
+function renderProfitLossReport() {
+  const dateFrom = document.getElementById('plFilterDateFrom')?.value;
+  const dateTo = document.getElementById('plFilterDateTo')?.value;
+  const tbody = document.getElementById('plTableBody');
+
+  if (!tbody) return;
+
+  // 1. Revenue: Total Customer Bookings / Inflows
+  let revenue = 0;
+  (allCustomersData || []).forEach(c => {
+    const cDate = c.createdAt ? (c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : (typeof c.createdAt === 'string' ? c.createdAt.substring(0,10) : '')) : '';
+    if (dateFrom && cDate && cDate < dateFrom) return;
+    if (dateTo && cDate && cDate > dateTo) return;
+    revenue += (parseFloat(c.financials?.totalPrice) || 0);
+  });
+
+  // Agar deal price na mile to received customer payments se revenue banayein
+  let totalPaymentsReceived = 0;
+  (allPaymentsData || []).forEach(p => {
+    if (dateFrom && p.date < dateFrom) return;
+    if (dateTo && p.date > dateTo) return;
+    totalPaymentsReceived += (parseFloat(p.amount) || 0);
+  });
+
+  const displayRevenue = revenue > 0 ? revenue : totalPaymentsReceived;
+
+  // 2. Construction Costs: Site Expenses + Material Purchases
+  let constructionCost = 0;
+  (allPurchaserData || []).forEach(p => {
+    if (dateFrom && p.date < dateFrom) return;
+    if (dateTo && p.date > dateTo) return;
+    constructionCost += (parseFloat(p.total || p.totalAmount) || 0);
+  });
+
+  (allSiteExpensesData || []).forEach(se => {
+    if (dateFrom && se.date < dateFrom) return;
+    if (dateTo && se.date > dateTo) return;
+    constructionCost += (parseFloat(se.totalAmount) || 0);
+  });
+
+  // 3. Gross Profit = Revenue - Construction Costs
+  const grossProfit = displayRevenue - constructionCost;
+
+  // 4. Operating Expenses: Office Expenses
+  let operatingCost = 0;
+  (allOfficeExpensesData || []).forEach(oe => {
+    if (dateFrom && oe.date < dateFrom) return;
+    if (dateTo && oe.date > dateTo) return;
+    operatingCost += (parseFloat(oe.totalAmount) || 0);
+  });
+
+  // 5. Net Profit / Loss = Gross Profit - Operating Expenses
+  const netProfit = grossProfit - operatingCost;
+  const netMargin = displayRevenue > 0 ? Math.round((netProfit / displayRevenue) * 100) : 0;
+
+  // Top KPI Cards Update
+  document.getElementById('plCardRevenue').textContent = `Rs. ${displayRevenue.toLocaleString()}`;
+  document.getElementById('plCardCost').textContent = `Rs. ${constructionCost.toLocaleString()}`;
+  document.getElementById('plCardGross').textContent = `Rs. ${grossProfit.toLocaleString()}`;
+  document.getElementById('plCardGross').style.color = grossProfit >= 0 ? '#16a34a' : '#dc2626';
+
+  document.getElementById('plCardOperating').textContent = `Rs. ${operatingCost.toLocaleString()}`;
+  document.getElementById('plCardNet').textContent = `Rs. ${netProfit.toLocaleString()}`;
+  document.getElementById('plCardNet').style.color = netProfit >= 0 ? '#059669' : '#dc2626';
+
+  const marginBadge = document.getElementById('plNetMarginBadge');
+  if (marginBadge) {
+    marginBadge.textContent = `Net Margin: ${netMargin}%`;
+    marginBadge.style.background = netProfit >= 0 ? '#dcfce7' : '#fee2e2';
+    marginBadge.style.color = netProfit >= 0 ? '#15803d' : '#b91c1c';
+  }
+
+  // P&L Statement Table Render
+  tbody.innerHTML = `
+    <tr style="background:#f8fafc; font-weight:800;">
+      <td colspan="3" style="color:#1e40af; font-size:14px;"><i class="fa-solid fa-arrow-trend-up"></i> 1. REVENUE / SALES</td>
+    </tr>
+    <tr>
+      <td style="padding-left:24px;">Property Units Total Allotment Value</td>
+      <td style="text-align:right;">Rs. ${displayRevenue.toLocaleString()}</td>
+      <td style="text-align:right; font-weight:800; color:#16a34a;">Rs. ${displayRevenue.toLocaleString()}</td>
+    </tr>
+
+    <tr style="background:#f8fafc; font-weight:800;">
+      <td colspan="3" style="color:#ea580c; font-size:14px;"><i class="fa-solid fa-helmet-safety"></i> 2. DIRECT CONSTRUCTION COSTS</td>
+    </tr>
+    <tr>
+      <td style="padding-left:24px;">Raw Material Purchases (Cement, Steel, Bricks)</td>
+      <td style="text-align:right;">Rs. ${((allPurchaserData || []).reduce((s, p) => s + (parseFloat(p.total) || 0), 0)).toLocaleString()}</td>
+      <td style="text-align:right;">-</td>
+    </tr>
+    <tr>
+      <td style="padding-left:24px;">Site Labor Wages & Construction Expenses</td>
+      <td style="text-align:right;">Rs. ${((allSiteExpensesData || []).reduce((s, se) => s + (parseFloat(se.totalAmount) || 0), 0)).toLocaleString()}</td>
+      <td style="text-align:right;">-</td>
+    </tr>
+    <tr style="font-weight:700;">
+      <td style="padding-left:24px; color:#ea580c;">Total Cost of Construction</td>
+      <td style="text-align:right;">-</td>
+      <td style="text-align:right; font-weight:800; color:#ea580c;">(Rs. ${constructionCost.toLocaleString()})</td>
+    </tr>
+
+    <tr style="background:#eff6ff; font-weight:900; font-size:14px;">
+      <td>GROSS PROFIT</td>
+      <td style="text-align:right;">-</td>
+      <td style="text-align:right; color:${grossProfit >= 0 ? '#16a34a' : '#dc2626'};">Rs. ${grossProfit.toLocaleString()}</td>
+    </tr>
+
+    <tr style="background:#f8fafc; font-weight:800;">
+      <td colspan="3" style="color:#dc2626; font-size:14px;"><i class="fa-solid fa-briefcase"></i> 3. OPERATING & ADMINISTRATIVE EXPENSES</td>
+    </tr>
+    <tr>
+      <td style="padding-left:24px;">Head Office Salaries, Utilities & Rent</td>
+      <td style="text-align:right;">Rs. ${operatingCost.toLocaleString()}</td>
+      <td style="text-align:right; font-weight:800; color:#dc2626;">(Rs. ${operatingCost.toLocaleString()})</td>
+    </tr>
+
+    <tr style="background:${netProfit >= 0 ? '#f0fdf4' : '#fef2f2'}; font-weight:900; font-size:15px; border-top:2px solid #0f172a;">
+      <td style="color:#0f172a;">NET PROFIT / (LOSS)</td>
+      <td style="text-align:right;">-</td>
+      <td style="text-align:right; color:${netProfit >= 0 ? '#16a34a' : '#dc2626'};">Rs. ${netProfit.toLocaleString()}</td>
+    </tr>
+  `;
+}
+
+function downloadProfitLossPDF() {
+  const element = document.getElementById('profitLossPrintArea');
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: `Profit_Loss_Statement_${new Date().toISOString().slice(0, 10)}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(element).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
+
+
+// ========================================================
+// LIVE DASHBOARD STATS & RECOVERY UPDATER
+// ========================================================
+function updateDashboardChartsAndStats() {
+  // 1. Flats Stats
+  const totalFlats = allFlatsData ? allFlatsData.length : 0;
+  const availFlats = (allFlatsData || []).filter(f => (f.status || '').toLowerCase() === 'available').length;
+  const bookedFlats = totalFlats - availFlats;
+
+  if (document.getElementById('statTotalFlats')) document.getElementById('statTotalFlats').textContent = totalFlats;
+  if (document.getElementById('statAvailableFlats')) document.getElementById('statAvailableFlats').textContent = availFlats;
+  if (document.getElementById('statBookedSoldFlats')) document.getElementById('statBookedSoldFlats').textContent = bookedFlats;
+
+  // 2. Financial Collections & Expenses
+  let customerCollections = 0;
+  let bankBal = 0;
+  let cashBal = 0;
+
+  (allPaymentsData || []).forEach(p => {
+    const amt = parseFloat(p.amount) || 0;
+    customerCollections += amt;
+    if (p.mode === 'Cash') cashBal += amt;
+    else bankBal += amt;
+  });
+
+  let siteExpTotal = 0;
+  (allSiteExpensesData || []).forEach(se => {
+    const paid = parseFloat(se.paidAmount) || 0;
+    siteExpTotal += paid;
+    cashBal -= paid;
+  });
+
+  let officeExpTotal = 0;
+  (allOfficeExpensesData || []).forEach(oe => {
+    const paid = parseFloat(oe.paidAmount) || 0;
+    officeExpTotal += paid;
+    cashBal -= paid;
+  });
+
+  if (document.getElementById('dashTotalInflow')) {
+    document.getElementById('dashTotalInflow').textContent = `Rs. ${customerCollections.toLocaleString()}`;
+  }
+  if (document.getElementById('dashTotalExpenses')) {
+    document.getElementById('dashTotalExpenses').textContent = `Rs. ${siteExpTotal.toLocaleString()}`;
+  }
+  if (document.getElementById('dashTotalOfficeExpenses')) {
+    document.getElementById('dashTotalOfficeExpenses').textContent = `Rs. ${officeExpTotal.toLocaleString()}`;
+  }
+
+  // 3. Balance Strip
+  const totalBal = bankBal + cashBal;
+  if (document.getElementById('dashBankBalance')) document.getElementById('dashBankBalance').textContent = `Rs. ${bankBal.toLocaleString()}`;
+  if (document.getElementById('dashCashBalance')) document.getElementById('dashCashBalance').textContent = `Rs. ${cashBal.toLocaleString()}`;
+  if (document.getElementById('dashTotalBalance')) document.getElementById('dashTotalBalance').textContent = `Rs. ${totalBal.toLocaleString()}`;
+
+  // 4. Customer Pending Dues Table
+  const tbody = document.getElementById('dashPendingPaymentsTableBody');
+  if (tbody) {
+    let pendingRowsHtml = '';
+    (allCustomersData || []).slice(0, 5).forEach(c => {
+      const o1 = c.firstOwner || {};
+      const totPrice = parseFloat(c.financials?.totalPrice) || 0;
+      const pastPaid = (allPaymentsData || []).filter(p => p.customerId === c.id).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+      const rem = Math.max(0, totPrice - pastPaid);
+
+      if (rem > 0) {
+        pendingRowsHtml += `
+          <tr>
+            <td><strong>${o1.name || 'Customer'}</strong></td>
+            <td><strong style="color:#2563eb;">Flat ${c.flatNo || '-'}</strong></td>
+            <td>Due This Month</td>
+            <td style="color:#dc2626; font-weight:800;">Rs. ${rem.toLocaleString()}</td>
+            <td style="text-align:center;"><span class="badge-status badge-booked">Pending</span></td>
+          </tr>
+        `;
+      }
+    });
+
+    tbody.innerHTML = pendingRowsHtml || `<tr><td colspan="5" style="text-align:center; padding:20px; color:#64748b;">No pending dues. All payments clear!</td></tr>`;
+  }
+}
+
+
+// =========================================================================
+// 1. PURCHASES VIEW, EDIT & QUICK PAY CONTROLLER
+// =========================================================================
+
+// (A) Purchase Bill View Modal
+function viewPurchaseBill(id) {
+  const p = allPurchaserData.find(x => x.id === id);
+  if (!p) return;
+
+  const modal = document.getElementById('purchaseViewModal');
+  const body = document.getElementById('purchaseModalBodyContent');
+  if (!modal || !body) return;
+
+  const total = Number(p.total || p.totalAmount || 0);
+  const paid = Number(p.paid || p.paidAmount || 0);
+  const rem = Number(p.remaining || p.remainingAmount || 0);
+
+  let itemsHtml = '';
+  if (p.itemsList && p.itemsList.length > 0) {
+    p.itemsList.forEach((itm, idx) => {
+      itemsHtml += `
+        <tr>
+          <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0;">${idx + 1}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; font-weight:700;">${itm.item || 'Item'}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; text-align:center;">${itm.qty || 1} ${itm.unit || ''}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; text-align:right;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:800;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
+        </tr>
+      `;
+    });
+  } else {
+    itemsHtml = `
+      <tr>
+        <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0;">1</td>
+        <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; font-weight:700;">${p.item || 'Material Item'}</td>
+        <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; text-align:center;">${p.qty || 1}</td>
+        <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; text-align:right;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
+        <td style="padding:8px 12px; border-bottom:1px solid #e2e8f0; text-align:right; font-weight:800;">Rs. ${total.toLocaleString()}</td>
+      </tr>
+    `;
+  }
+
+  body.innerHTML = `
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <h4 style="margin:0; font-size:18px; color:#0f172a; font-weight:800;">Bill No: <span style="color:#2563eb;">${p.billNo || 'PUR-000'}</span></h4>
+          <div style="font-size:12px; color:#64748b; margin-top:2px;">Date: <b>${p.displayDate || p.date || 'N/A'}</b> | Project: <b>${p.project || 'BILAL HEIGHTS'}</b></div>
+        </div>
+        <div>
+          <span style="background:${rem <= 0 ? '#dcfce7' : '#fef3c7'}; color:${rem <= 0 ? '#15803d' : '#b45309'}; font-weight:800; padding:5px 14px; border-radius:20px; font-size:12px;">
+            ${p.status || 'Paid'}
+          </span>
+        </div>
+      </div>
+      <div style="margin-top:12px; font-size:13.5px; color:#334155;">
+        Supplier / Vendor: <strong style="color:#0f172a;">${p.vendor || 'N/A'}</strong>
+      </div>
+    </div>
+
+    <div style="border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; margin-bottom:16px;">
+      <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+        <thead style="background:#f1f5f9; color:#475569; font-weight:700;">
+          <tr>
+            <th style="padding:9px 12px; text-align:left;">#</th>
+            <th style="padding:9px 12px; text-align:left;">Item</th>
+            <th style="padding:9px 12px; text-align:center;">Qty</th>
+            <th style="padding:9px 12px; text-align:right;">Rate</th>
+            <th style="padding:9px 12px; text-align:right;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:16px;">
+      <div style="background:#eff6ff; padding:12px; border-radius:10px; text-align:center;">
+        <small style="color:#1e40af; font-weight:700;">Total Bill</small>
+        <div style="font-size:16px; font-weight:900; color:#0f172a;">Rs. ${total.toLocaleString()}</div>
+      </div>
+      <div style="background:#f0fdf4; padding:12px; border-radius:10px; text-align:center;">
+        <small style="color:#166534; font-weight:700;">Paid Amount</small>
+        <div style="font-size:16px; font-weight:900; color:#16a34a;">Rs. ${paid.toLocaleString()}</div>
+      </div>
+      <div style="background:#fef2f2; padding:12px; border-radius:10px; text-align:center;">
+        <small style="color:#991b1b; font-weight:700;">Remaining Balance</small>
+        <div style="font-size:16px; font-weight:900; color:#dc2626;">Rs. ${rem.toLocaleString()}</div>
+      </div>
+    </div>
+
+    ${p.notes ? `
+      <div style="background:#f8fafc; padding:10px 14px; border-radius:8px; font-size:12px; color:#475569;">
+        <b>Remarks:</b> ${p.notes}
+      </div>
+    ` : ''}
+
+    <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:8px;">
+      <button type="button" class="btn-action-primary" style="background:#059669;" onclick="downloadPurchaseBillPDF('${p.id}')">
+        <i class="fa-solid fa-file-pdf"></i> Download PDF
+      </button>
+      <button type="button" class="btn-back" onclick="closePurchaseViewModal()">Close</button>
+    </div>
+  `;
+
+  modal.classList.add('active');
+}
+
+function closePurchaseViewModal() {
+  const modal = document.getElementById('purchaseViewModal');
+  if (modal) modal.classList.remove('active');
+}
+
+// (B) Purchase Bill Edit Mode
+function editPurchaseBill(id) {
+  const p = allPurchaserData.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('purEditId').value = p.id;
+  document.getElementById('purBillNo').value = p.billNo || '';
+  document.getElementById('purDate').value = p.date || '';
+  document.getElementById('purProject').value = p.project || 'BILAL HEIGHTS';
+  document.getElementById('purVendor').value = p.vendor || '';
+  document.getElementById('purPaidAmount').value = p.paid || p.paidAmount || 0;
+  document.getElementById('purPaymentMethod').value = p.paymentMethod || 'Cash';
+  document.getElementById('purNotes').value = p.notes || '';
+
+  const container = document.getElementById('purchaseItemsContainer');
+  if (container) {
+    container.innerHTML = '';
+    if (p.itemsList && p.itemsList.length > 0) {
+      p.itemsList.forEach(itm => {
+        addPurchaseItemRow();
+        const lastRow = container.lastElementChild;
+        if (lastRow) {
+          lastRow.querySelector('.pur-item-select').value = itm.item || '';
+          lastRow.querySelector('.pur-item-qty').value = itm.qty || 1;
+          lastRow.querySelector('.pur-item-unit').value = itm.unit || 'Bags';
+          lastRow.querySelector('.pur-item-rate').value = itm.rate || 0;
+          lastRow.querySelector('.pur-item-amount').value = itm.amount || 0;
+        }
+      });
+    } else {
+      addPurchaseItemRow();
+      const lastRow = container.lastElementChild;
+      if (lastRow) {
+        lastRow.querySelector('.pur-item-select').value = p.item || '';
+        lastRow.querySelector('.pur-item-qty').value = p.qty || 1;
+        lastRow.querySelector('.pur-item-rate').value = p.rate || 0;
+      }
+    }
+    calcPurchaseTotalAuto();
+  }
+
+  const btn = document.getElementById('btnSavePurchaser');
+  if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> Update Purchase Bill';
+
+  openAndSwitch('purchaserSubmenu', 'navPurchaserParent', 'addPurchaser', 'subAddPurchaser');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// (C) Quick Pay Supplier Balance
+let activeQuickPayPur = null;
+
+function openQuickPayPurchaseModal(id) {
+  const p = allPurchaserData.find(x => x.id === id);
+  if (!p) return;
+
+  activeQuickPayPur = p;
+  document.getElementById('quickPayPurId').value = p.id;
+  document.getElementById('quickPayPurVendorText').textContent = p.vendor || 'N/A';
+  document.getElementById('quickPayPurBillText').textContent = p.billNo || 'N/A';
+  document.getElementById('quickPayPurRemText').textContent = `Rs. ${Number(p.remaining || 0).toLocaleString()}`;
+  document.getElementById('quickPayPurAmountInput').value = p.remaining || 0;
+
+  document.getElementById('quickPayPurchaseModal').classList.add('active');
+}
+
+function closeQuickPayPurchaseModal() {
+  document.getElementById('quickPayPurchaseModal').classList.remove('active');
+  activeQuickPayPur = null;
+}
+
+async function confirmQuickPayPurchase() {
+  if (!activeQuickPayPur) return;
+
+  const paying = parseFloat(document.getElementById('quickPayPurAmountInput').value) || 0;
+  const currentRem = parseFloat(activeQuickPayPur.remaining || 0);
+
+  if (paying <= 0) {
+    alert("Bara-e-meherbani raqam darj karein.");
+    return;
+  }
+  if (paying > currentRem) {
+    alert(`Aap baqiya raqam (Rs. ${currentRem}) se zyada ada nahi kar sakte.`);
+    return;
+  }
+
+  const newPaid = (parseFloat(activeQuickPayPur.paid || 0)) + paying;
+  const newRem = Math.max(0, currentRem - paying);
+  const newStatus = (newRem === 0) ? 'Paid' : 'Partial';
+
+  try {
+    await db.collection('purchases').doc(activeQuickPayPur.id).update({
+      paid: newPaid,
+      remaining: newRem,
+      status: newStatus,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    alert(`Rs. ${paying.toLocaleString()} ki adaigi kamiyabi se darj ho gayi!`);
+    closeQuickPayPurchaseModal();
+  } catch(err) {
+    alert("Error: " + err.message);
+  }
+}
+
+// =========================================================================
+// 2. ACCOUNT LEDGER REPORT & MODAL CONTROLLER
+// =========================================================================
+
+function initAccountLedgerView() {
+  const accSelect = document.getElementById('alFilterAccount');
+  if (accSelect) {
+    accSelect.innerHTML = '<option value="ALL">All Accounts (Consolidated)</option>';
+    const accSet = new Set();
+    (allAccountsData || []).forEach(a => { if (a.name) accSet.add(a.name); });
+    (allCustomersData || []).forEach(c => {
+      const o1 = c.firstOwner || c.secondOwner || {};
+      if (o1.name) accSet.add(o1.name);
+    });
+    (allPurchaserData || []).forEach(p => { if (p.vendor) accSet.add(p.vendor); });
+
+    accSet.forEach(name => {
+      accSelect.innerHTML += `<option value="${name}">${name}</option>`;
+    });
+  }
+
+  renderAccountLedgerReport();
+}
+
+function renderAccountLedgerReport() {
+  const selectedAcc = document.getElementById('alFilterAccount')?.value || 'ALL';
+  const dateFrom = document.getElementById('alFilterDateFrom')?.value;
+  const dateTo = document.getElementById('alFilterDateTo')?.value;
+  const txnType = document.getElementById('alFilterType')?.value || 'ALL';
+  const tbody = document.getElementById('alTableBody');
+  const heading = document.getElementById('alReportHeading');
+
+  if (!tbody) return;
+
+  if (heading) {
+    heading.textContent = selectedAcc === 'ALL' 
+      ? 'Account Ledger - All Consolidated Accounts' 
+      : `Account Ledger - ${selectedAcc}`;
+  }
+
+  let ledgerEntries = [];
+
+  // (1) Customer Receipts (Credit to Customer, Debit Cash/Bank)
+  (allPaymentsData || []).forEach(p => {
+    if (selectedAcc === 'ALL' || p.customerName === selectedAcc) {
+      ledgerEntries.push({
+        date: p.date,
+        ref: p.receiptNo || 'BH-REC',
+        desc: `Customer Payment Received (Flat ${p.flatNo})`,
+        debit: 0,
+        credit: parseFloat(p.amount) || 0
+      });
+    }
+  });
+
+  // (2) Supplier Purchases (Debit Supplier, Credit Payable)
+  (allPurchaserData || []).forEach(pur => {
+    if (selectedAcc === 'ALL' || pur.vendor === selectedAcc) {
+      const total = parseFloat(pur.total || pur.totalAmount) || 0;
+      const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
+
+      ledgerEntries.push({
+        date: pur.date,
+        ref: pur.billNo || 'PUR-001',
+        desc: `Material Purchase - ${pur.item || 'Items'}`,
+        debit: total,
+        credit: paid
+      });
+    }
+  });
+
+  // (3) Cash Vouchers
+  (allCashVouchersData || []).forEach(v => {
+    if (selectedAcc === 'ALL' || v.party === selectedAcc) {
+      const amt = parseFloat(v.amount) || 0;
+      ledgerEntries.push({
+        date: v.date,
+        ref: v.voucherNo,
+        desc: v.narration || v.head,
+        debit: (v.type === 'PAYMENT') ? amt : 0,
+        credit: (v.type === 'RECEIPT') ? amt : 0
+      });
+    }
+  });
+
+  // Sort by date
+  ledgerEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  // Filter
+  let filtered = ledgerEntries.filter(entry => {
+    if (dateFrom && entry.date < dateFrom) return false;
+    if (dateTo && entry.date > dateTo) return false;
+    if (txnType === 'Debit' && entry.debit <= 0) return false;
+    if (txnType === 'Credit' && entry.credit <= 0) return false;
+    return true;
+  });
+
+  let totalDebit = 0;
+  let totalCredit = 0;
+  let runningBal = 0;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Is account mein koi transaction nahi mili.</td></tr>`;
+    document.getElementById('alCardOpening').textContent = 'Rs. 0';
+    document.getElementById('alCardDebit').textContent = 'Rs. 0';
+    document.getElementById('alCardCredit').textContent = 'Rs. 0';
+    document.getElementById('alCardClosing').textContent = 'Rs. 0';
+    document.getElementById('alFootDebit').textContent = '0';
+    document.getElementById('alFootCredit').textContent = '0';
+    document.getElementById('alFootBalance').textContent = '0';
+    return;
+  }
+
+  let html = '';
+  filtered.forEach(entry => {
+    totalDebit += entry.debit;
+    totalCredit += entry.credit;
+    runningBal += (entry.debit - entry.credit);
+
+    html += `
+      <tr>
+        <td>${entry.date}</td>
+        <td><strong style="color:#2563eb;">${entry.ref}</strong></td>
+        <td>${entry.desc}</td>
+        <td style="text-align:right; font-weight:700; color:#dc2626;">${entry.debit > 0 ? entry.debit.toLocaleString() : '-'}</td>
+        <td style="text-align:right; font-weight:700; color:#16a34a;">${entry.credit > 0 ? entry.credit.toLocaleString() : '-'}</td>
+        <td style="text-align:right; font-weight:800; color:${runningBal >= 0 ? '#0f172a' : '#dc2626'};">${runningBal.toLocaleString()}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
+
+  document.getElementById('alFootDebit').textContent = totalDebit.toLocaleString();
+  document.getElementById('alFootCredit').textContent = totalCredit.toLocaleString();
+  document.getElementById('alFootBalance').textContent = runningBal.toLocaleString();
+
+  document.getElementById('alCardOpening').textContent = 'Rs. 0';
+  document.getElementById('alCardDebit').textContent = `Rs. ${totalDebit.toLocaleString()}`;
+  document.getElementById('alCardCredit').textContent = `Rs. ${totalCredit.toLocaleString()}`;
+  document.getElementById('alCardClosing').textContent = `Rs. ${runningBal.toLocaleString()}`;
+}
+
+function downloadAccountLedgerPDF() {
+  const element = document.getElementById('accountLedgerPrintArea');
+  const opt = {
+    margin: [8, 8, 8, 8],
+    filename: `Account_Ledger_${new Date().toISOString().slice(0, 10)}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2.2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  };
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(element).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
+
+// Direct Click Attachment (Bina DOMContentLoaded ke intizar ke foran kaam karega)
+function openAccountFullLedgerFromDetails() {
+  const accName = document.getElementById('accDetailName')?.textContent.trim();
+  const modal = document.getElementById('accountLedgerModal');
+  const body = document.getElementById('accountLedgerBody');
+  const title = document.getElementById('ledgerModalTitle');
+
+  if (title) title.innerHTML = `<i class="fa-solid fa-book-open-reader" style="color:#2563eb;"></i> Account Statement: ${accName}`;
+
+  let transactions = [];
+
+  // 1. Supplier Purchases
+  (allPurchaserData || []).filter(p => p.vendor === accName).forEach(pur => {
+    transactions.push({
+      date: pur.date,
+      ref: pur.billNo || 'PUR',
+      desc: `Purchase - ${pur.item || ''}`,
+      debit: parseFloat(pur.total || pur.totalAmount) || 0,
+      credit: parseFloat(pur.paid || pur.paidAmount) || 0
+    });
+  });
+
+  // 2. Customer Payments
+  (allPaymentsData || []).filter(p => p.customerName === accName).forEach(p => {
+    transactions.push({
+      date: p.date,
+      ref: p.receiptNo || 'BH-REC',
+      desc: `Payment Received (${p.head || 'Installment'})`,
+      debit: 0,
+      credit: parseFloat(p.amount) || 0
+    });
+  });
+
+  // 3. Cash Vouchers (CPV & CRV)
+  (allCashVouchersData || []).filter(v => v.party === accName).forEach(v => {
+    transactions.push({
+      date: v.date,
+      ref: v.voucherNo || 'CV',
+      desc: v.narration || v.head,
+      debit: v.type === 'PAYMENT' ? (parseFloat(v.amount) || 0) : 0,
+      credit: v.type === 'RECEIPT' ? (parseFloat(v.amount) || 0) : 0
+    });
+  });
+
+  transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  let rows = '';
+  let bal = 0;
+  transactions.forEach(t => {
+    bal += (t.debit - t.credit);
+    rows += `
+      <tr>
+        <td>${t.date}</td>
+        <td><strong style="color:#2563eb;">${t.ref}</strong></td>
+        <td>${t.desc}</td>
+        <td style="text-align:right; color:#dc2626; font-weight:700;">${t.debit > 0 ? 'Rs. ' + t.debit.toLocaleString() : '-'}</td>
+        <td style="text-align:right; color:#16a34a; font-weight:700;">${t.credit > 0 ? 'Rs. ' + t.credit.toLocaleString() : '-'}</td>
+        <td style="text-align:right; font-weight:800;">Rs. ${bal.toLocaleString()}</td>
+      </tr>
+    `;
+  });
+
+  if (body) {
+    body.innerHTML = `
+      <div class="table-container">
+        <table class="erp-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Ref No</th>
+              <th>Description</th>
+              <th style="text-align:right;">Debit</th>
+              <th style="text-align:right;">Credit</th>
+              <th style="text-align:right;">Balance</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows || '<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">No ledger entries for this account.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+        <button type="button" class="btn-back" onclick="closeAccountLedgerModal()">Close</button>
+      </div>
+    `;
+  }
+
+  if (modal) modal.classList.add('active');
+}
+
+// Button par direct onclick laga dein
+const ledgerBtnEl = document.getElementById('btnOpenFullLedgerModal');
+if (ledgerBtnEl) ledgerBtnEl.onclick = openAccountFullLedgerFromDetails;
+
+function closeAccountLedgerModal() {
+  const modal = document.getElementById('accountLedgerModal');
+  if (modal) modal.classList.remove('active');
+}
+
+
   </script>
 
 <!-- ================= SUPREMA BMS-2 USB BIOMETRIC SCANNER MODAL ================= -->
@@ -12661,14 +13788,6 @@ async function deleteCashVoucher(id) {
   color: #0f172a;
   font-weight: 800;
 }
-
-
-
-
 </style>
-
-
-
-
 </body>
 </html>
