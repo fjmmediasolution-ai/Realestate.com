@@ -6454,27 +6454,61 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
       }
     }
 
+    // ========================================================
+    // ACCORDION NAVIGATION DROPDOWN (AUTO-CLOSE PREVIOUS MENUS)
+    // ========================================================
     function toggleDropdown(submenuId, parentElement) {
       const submenu = document.getElementById(submenuId);
-      submenu.classList.toggle('open');
-      parentElement.classList.toggle('open');
+      const isCurrentlyOpen = submenu.classList.contains('open');
+
+      // 1. Pehle tamam khulay huay submenus aur unke arrow/parent icons ko band karein
+      document.querySelectorAll('.sidebar-menu .submenu').forEach(sub => {
+        sub.classList.remove('open');
+      });
+      document.querySelectorAll('.sidebar-menu .nav-dropdown .nav-item').forEach(nav => {
+        nav.classList.remove('open');
+      });
+
+      // 2. Agar Account & Finance ke ilawa koi aur menu khola jaye to nested Expenses submenu ko bhi close karein
+      if (submenuId !== 'paymentsSubmenu') {
+        const nestedSub = document.getElementById('nestedExpensesSubmenu');
+        const nestedParent = document.getElementById('nestedExpensesParent');
+        if (nestedSub) nestedSub.classList.remove('open');
+        if (nestedParent) nestedParent.classList.remove('open');
+      }
+
+      // 3. Agar user ne jo click kiya woh pehle se open nahi tha, to sirf usi ko open karein
+      if (!isCurrentlyOpen) {
+        submenu.classList.add('open');
+        parentElement.classList.add('open');
+      }
     }
 
-    // NAYA: Nested Expenses Submenu Toggle Function (Arrow ke liye)
+    // Nested Expenses Submenu Toggle Function (Arrow ke liye)
     function toggleNestedDropdown(event, submenuId, parentElement) {
-      event.stopPropagation(); // Taake parent menu band na ho
+      event.stopPropagation(); // Taake main parent menu band na ho
       const submenu = document.getElementById(submenuId);
       if (submenu) submenu.classList.toggle('open');
       if (parentElement) parentElement.classList.toggle('open');
     }
 
+    // Direct button click par bhi baqi sab close ho kar sirf matlooba menu open hoga
     function openAndSwitch(submenuId, parentId, sectionName, subItemId) {
+      // 1. Pehle baqi submenus ko band karein
+      document.querySelectorAll('.sidebar-menu .submenu').forEach(sub => {
+        sub.classList.remove('open');
+      });
+      document.querySelectorAll('.sidebar-menu .nav-dropdown .nav-item').forEach(nav => {
+        nav.classList.remove('open');
+      });
+
+      // 2. Sirf target menu ko open karein
       const submenu = document.getElementById(submenuId);
       const parent = document.getElementById(parentId);
       if (submenu) submenu.classList.add('open');
       if (parent) parent.classList.add('open');
 
-      // Agar expense ka koi page open ho to nested menu bhi auto-open ho jaye
+      // 3. Agar expense ka page ho to nested submenu bhi auto-open ho jaye
       if (['addSiteExpense', 'siteExpenseDetails', 'addOfficeExpense', 'officeExpenseDetails'].includes(sectionName)) {
         const nestedSub = document.getElementById('nestedExpensesSubmenu');
         const nestedParent = document.getElementById('nestedExpensesParent');
