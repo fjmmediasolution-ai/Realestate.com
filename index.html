@@ -5984,6 +5984,62 @@
     let customerThumbBase64 = '';
     let uploadedDocs = { cnic: '', payment: '', other: '' };
 
+    // Auto Image & Document Compressor (Firestore 1MB limit ke mutabiq)
+    function compressImageFile(file, maxWidth = 900, maxHeight = 900, quality = 0.65) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve('');
+        
+        // Agar PDF file ho to size check karein (Max 650KB)
+        if (!file.type.startsWith('image/')) {
+          if (file.size > 700 * 1024) {
+            reject(new Error("PDF file ka size 700KB se bara hai. Bara-e-meherbani choti PDF upload karein ya image (JPG/PNG) lein."));
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => resolve(e.target.result);
+          reader.onerror = (err) => reject(err);
+          reader.readAsDataURL(file);
+          return;
+        }
+
+        // Agar Image (JPG/PNG) ho to Canvas se compress karein
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Compress to lightweight Base64 (Approx 35KB - 75KB)
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressedBase64);
+          };
+          img.onerror = (err) => reject(err);
+          img.src = e.target.result;
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
     
 
     
@@ -7594,7 +7650,7 @@ async function confirmStatusChange() {
         size: document.getElementById('custSize').value || '',
         ownershipType: ownershipType,
 
-        financials: {
+      financials: {
           totalPrice: totalPrice,
           downPayment: downPayment,
           greyStructure: greyStructure,
@@ -7603,7 +7659,11 @@ async function confirmStatusChange() {
           monthlyInstallment: monthly
         },
 
-        documents: uploadedDocs,
+        documents: {
+          cnic: (typeof uploadedDocs.cnic === 'string') ? uploadedDocs.cnic : '',
+          payment: (typeof uploadedDocs.payment === 'string') ? uploadedDocs.payment : '',
+          other: (typeof uploadedDocs.other === 'string') ? uploadedDocs.other : ''
+        },
         termsAgreed: true,
         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       };
@@ -7683,21 +7743,32 @@ async function confirmStatusChange() {
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registering & Generating PDF...';
 
-      try {
+     try {
         let savedCustomerId = editId;
 
         if (editId) {
           const oldRecord = allCustomersData.find(c => c.id === editId);
           if (oldRecord && oldRecord.flatId && oldRecord.flatId !== selectedFlatId) {
-            await db.collection('flats').doc(oldRecord.flatId).update({ status: 'Available' });
+            try {
+              await db.collection('flats').doc(oldRecord.flatId).set({ status: 'Available' }, { merge: true });
+            } catch (oldErr) {
+              console.warn("Purana flat update skip:", oldErr);
+            }
           }
           await db.collection('customers').doc(editId).update(customerRecord);
-          await db.collection('flats').doc(selectedFlatId).update({ status: 'Booked' });
         } else {
           customerRecord.createdAt = firebase.firestore.FieldValue.serverTimestamp();
           const docRef = await db.collection('customers').add(customerRecord);
           savedCustomerId = docRef.id;
-          await db.collection('flats').doc(selectedFlatId).update({ status: 'Booked' });
+        }
+
+        // Flat status update (Safe set with merge: Agar document na bhi ho to crash nahi hoga)
+        if (selectedFlatId) {
+          try {
+            await db.collection('flats').doc(selectedFlatId).set({ status: 'Booked' }, { merge: true });
+          } catch (flatErr) {
+            console.warn("Flat document missing in database, skipping flat status update:", flatErr);
+          }
         }
 
         customerRecord.id = savedCustomerId;
@@ -7958,33 +8029,49 @@ async function confirmStatusChange() {
       input.value = val;
     }
 
-    // Missing Helper: Photo Preview
-    function previewOwnerPhoto(event, imgId, placeholderId) {
+// Photo Preview with Auto Compression
+    async function previewOwnerPhoto(event, imgId, placeholderId) {
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        if (imgId === 'owner1Img') owner1Base64 = e.target.result;
-        if (imgId === 'owner2Img') owner2Base64 = e.target.result;
+
+      try {
+        const compressed = await compressImageFile(file, 600, 600, 0.7);
+        if (imgId === 'owner1Img') owner1Base64 = compressed;
+        if (imgId === 'owner2Img') owner2Base64 = compressed;
+
         const img = document.getElementById(imgId);
         const placeholder = document.getElementById(placeholderId);
-        if (img) { img.src = e.target.result; img.style.display = 'block'; }
+        if (img) { img.src = compressed; img.style.display = 'block'; }
         if (placeholder) placeholder.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        alert('Photo error: ' + err.message);
+      }
     }
 
-    // Missing Helper: Document Upload
-    function handleDocUpload(event, type) {
+    // Document Upload with Auto Compression
+    async function handleDocUpload(event, type) {
       const file = event.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        uploadedDocs[type] = e.target.result;
-        const statusEl = document.getElementById(type + 'DocStatus');
-        if (statusEl) statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-check"></i> Uploaded</span>';
-      };
-      reader.readAsDataURL(file);
+
+      const statusEl = document.getElementById(type + 'DocStatus');
+      if (statusEl) {
+        statusEl.innerHTML = '<span style="color:#2563eb; font-weight:700;"><i class="fa-solid fa-spinner fa-spin"></i> Processing...</span>';
+      }
+
+      try {
+        const compressed = await compressImageFile(file, 900, 900, 0.65);
+        uploadedDocs[type] = compressed;
+
+        if (statusEl) {
+          statusEl.innerHTML = '<span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-check"></i> Ready</span>';
+        }
+      } catch (err) {
+        alert(err.message || 'File upload error');
+        if (statusEl) {
+          statusEl.innerHTML = '<span style="color:#dc2626; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> Error</span>';
+        }
+        event.target.value = '';
+      }
     }
 
     // 5. EDIT CUSTOMER (Safe & Error-Free)
@@ -10939,7 +11026,7 @@ loadLicenseSettings();
       else alert('PDF library load nahi ho saki.');
     }
 
-    // 3. ALLOTMENT DOSSIER / ORDER
+   // 3. ALLOTMENT DOSSIER / ORDER (PHOTO & THUMB TOP, ALLOTTED TO UNDERNEATH, PROPER VERTICAL SPACING)
     function downloadCustomerPDF(customerId) {
       const c = allCustomersData.find(item => item.id === customerId);
       if (!c) return;
@@ -10948,6 +11035,13 @@ loadLicenseSettings();
       const fin = c.financials || {};
       const bookingId = 'AL-' + (c.id ? c.id.substring(0, 5).toUpperCase() : '10123');
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      // Settings se legal terms uthana (agar na ho to default)
+      const legalText = document.getElementById('setLegalTermsText')?.value.trim() || 
+        "1. Payment Schedule: All installments must be cleared on or before the 10th of each calendar month as per the agreed schedule.\n" +
+        "2. Possession Rights: Physical possession of the unit will only be handed over upon 100% clearance of all total dues, documentation, and utility charges.\n" +
+        "3. Cancellation Policy: In case of default on consecutive installments, management reserves the right to issue notice as per project bylaws.\n" +
+        "4. Transfer & Mutation: No transfer or third-party sale will be acknowledged without an official NOC and clearing transfer fee charges.";
 
       const pdfWrapper = document.createElement('div');
       pdfWrapper.style.width = '100%';
@@ -10958,107 +11052,162 @@ loadLicenseSettings();
       pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="background:#ffffff; min-height:297mm; display:flex; flex-direction:column; justify-content:space-between;">
+        <div style="background:#ffffff; min-height:297mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box;">
           <div>
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 34px 38px 45px 38px; border-bottom-left-radius: 50% 25px; border-bottom-right-radius: 50% 25px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+            <!-- Top Blue Wave Header -->
+            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 26px 36px 36px 36px; border-bottom-left-radius: 50% 22px; border-bottom-right-radius: 50% 22px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
               <div>
-                <h1 style="margin: 0; font-size: 32px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">ALLOTMENT</h1>
-                <div style="font-size: 11px; color: #bbdefb; font-weight: 700; letter-spacing: 1px; margin-top: 4px;">OFFICIAL PROPERTY ALLOTMENT ORDER</div>
+                <h1 style="margin: 0; font-size: 29px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">ALLOTMENT</h1>
+                <div style="font-size: 11px; color: #bbdefb; font-weight: 700; letter-spacing: 1px; margin-top: 3px;">OFFICIAL PROPERTY ALLOTMENT ORDER</div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 15px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25);">
+                <div style="font-size: 14px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3);">
                   REF: ${bookingId}
                 </div>
               </div>
             </div>
 
-            <div style="padding: 28px 38px 10px 38px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px;">
-                <div style="width: 48%;">
-                  <div style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Allotted To:</div>
-                  <div style="font-size: 13.5px; font-weight: 700; color: #334155;">${o1.name || 'Allottee Name'}</div>
-                  <div style="font-size: 12px; color: #64748b; margin-top: 3px;">S/O, W/O: ${o1.fatherHusband || '-'}</div>
-                  <div style="font-size: 12px; color: #64748b;">CNIC: ${o1.cnic || '-'}</div>
-                  <div style="font-size: 12px; color: #64748b;">Phone: ${o1.mobile || '-'}</div>
+            <!-- Upper Meta: Photo & Thumb on Top Left, Allotted To Details Underneath -->
+            <div style="padding: 20px 36px 8px 36px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; gap: 20px;">
+                
+                <!-- Left Column: Photo + Thumb (UPAR), Allotted To (NEECHAY) -->
+                <div style="flex: 2;">
+                  
+                  <!-- 1. Picture & Thumb Bar (UPAR) -->
+                  <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+                    <!-- Customer Picture -->
+                    <div style="text-align: center;">
+                      <div style="width: 74px; height: 82px; border-radius: 8px; border: 1.8px solid #0d47a1; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(13,71,161,0.12);">
+                        ${o1.photo 
+                          ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Customer Photo" />` 
+                          : `<div style="font-size:9.5px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
+                      </div>
+                      <small style="font-size: 8.5px; font-weight: 700; color: #475569; display: block; margin-top: 3px;">Allottee Photo</small>
+                    </div>
+
+                    <!-- Verified Thumb (Barabar Mein) -->
+                    <div style="text-align: center;">
+                      <div style="width: 74px; height: 82px; border-radius: 8px; border: 1.8px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(22,163,74,0.12);">
+                        ${o1.thumb 
+                          ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` 
+                          : `<i class="fa-solid fa-fingerprint" style="font-size:36px; color:#94a3b8;"></i>`}
+                      </div>
+                      <small style="font-size: 8.5px; font-weight: 700; color: #166534; display: block; margin-top: 3px;">Verified Thumb</small>
+                    </div>
+                  </div>
+
+                  <!-- 2. ALLOTTED TO: Details (TASVEER KE THEEK NEECHAY) -->
+                  <div>
+                    <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-bottom: 4px; text-transform: uppercase; border-bottom: 2px solid #0d47a1; display: inline-block; padding-bottom: 2px;">ALLOTTED TO:</div>
+                    <div style="font-size: 15px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 3px;">${o1.name || 'Allottee Name'}</div>
+                    <div style="font-size: 11.5px; color: #334155; margin-top: 2px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
+                    <div style="font-size: 11.5px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b></div>
+                    <div style="font-size: 11.5px; color: #334155;">Phone: <b>${o1.mobile || '-'}</b></div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.3;">Address: ${o1.address || '-'}</div>
+                    <div style="font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 4px;">Ownership: ${c.ownershipType || 'Single Owner'}</div>
+                  </div>
+
                 </div>
 
-                <div style="width: 45%; text-align: right;">
-                  <div style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Project Authority:</div>
-                  <div style="font-size: 13.5px; font-weight: 700; color: #334155;">Bilal Heights Residency</div>
-                  <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Clifton Boulevard, Karachi</div>
-                  <div style="font-size: 12px; color: #0284c7; font-weight: 700;">Type: ${c.ownershipType || 'Single Owner'}</div>
+                <!-- Right Column: Project Authority & Date -->
+                <div style="flex: 1.2; text-align: right;">
+                  <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; margin-bottom: 4px; text-transform: uppercase; border-bottom: 2px solid #0d47a1; display: inline-block; padding-bottom: 2px;">PROJECT AUTHORITY:</div>
+                  <div style="font-size: 14px; font-weight: 800; color: #0d47a1; margin-top: 3px;">Bilal Heights Residency</div>
+                  <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">Clifton Boulevard, Karachi</div>
+                  <div style="font-size: 11.5px; color: #475569;">Tel: 021-35890000</div>
+                  
+                  <div style="margin-top: 18px; font-size: 12px; font-weight: 700; color: #0f172a;">
+                    Date: <span style="font-weight: 600; color: #475569;">${todayDate}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Deal Financials Table (Spaced down slightly) -->
+              <div style="margin-top: 14px;">
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11.5px;">
+                  <thead>
+                    <tr style="background: #0d47a1; color: #ffffff;">
+                      <th style="padding: 9px 12px; text-align: left; font-weight: 700; width: 44%; border: 1px solid #0d47a1;">Description</th>
+                      <th style="padding: 9px 12px; text-align: center; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Details</th>
+                      <th style="padding: 9px 12px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Payment Stage</th>
+                      <th style="padding: 9px 12px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                      <td style="padding: 9px 12px; color: #0f172a; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Apartment Unit Allocation (Flat ${c.flatNo || '-'})</td>
+                      <td style="padding: 9px 12px; text-align: center; color: #475569; border-right: 1px solid #e2e8f0;">Floor: ${c.floor || '1st'} (${c.size || ''})</td>
+                      <td style="padding: 9px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Total Price</td>
+                      <td style="padding: 9px 12px; text-align: right; font-weight: 800; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                      <td style="padding: 9px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Down Payment / Booking Deposit</td>
+                      <td style="padding: 9px 12px; text-align: center; color: #16a34a; font-weight: 700; border-right: 1px solid #e2e8f0;">Paid</td>
+                      <td style="padding: 9px 12px; text-align: right; color: #16a34a; font-weight: 700; border-right: 1px solid #e2e8f0;">Initial</td>
+                      <td style="padding: 9px 12px; text-align: right; font-weight: 700; color: #16a34a; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                      <td style="padding: 9px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Monthly Installment Schedule</td>
+                      <td style="padding: 9px 12px; text-align: center; color: #0284c7; font-weight: 700; border-right: 1px solid #e2e8f0;">${fin.durationMonths || 36} Months</td>
+                      <td style="padding: 9px 12px; text-align: right; color: #0284c7; font-weight: 700; border-right: 1px solid #e2e8f0;">Per Month</td>
+                      <td style="padding: 9px 12px; text-align: right; font-weight: 800; color: #0284c7; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Total Ribbon -->
+              <div style="display: flex; justify-content: flex-end; margin-top: 4px; margin-bottom: 18px;">
+                <div style="background: #0d47a1; color: #ffffff; padding: 8px 22px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 240px; justify-content: space-between;">
+                  <span style="font-size: 12px; font-weight: 700; text-transform: uppercase;">Total Deal</span>
+                  <span style="font-size: 14.5px; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
                 </div>
               </div>
 
-              <div style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 22px;">
-                Date: <span style="font-weight: 600; color: #64748b;">${todayDate}</span>
-              </div>
-
-              <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 12px;">
-                <thead>
-                  <tr style="background: #0d47a1; color: #ffffff;">
-                    <th style="padding: 10px 14px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #0d47a1;">Description</th>
-                    <th style="padding: 10px 14px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #0d47a1;">Details</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Payment Stage</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Apartment Unit Allocation (Flat ${c.flatNo})</td>
-                    <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">Floor: ${c.floor || '1st'}</td>
-                    <td style="padding: 10px 14px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Total Price</td>
-                    <td style="padding: 10px 14px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Down Payment / Booking Deposit</td>
-                    <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">Paid</td>
-                    <td style="padding: 10px 14px; text-align: right; color: #16a34a; font-weight: 700; border-right: 1px solid #e2e8f0;">Initial</td>
-                    <td style="padding: 10px 14px; text-align: right; font-weight: 700; color: #16a34a; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
-                  </tr>
-                  <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Monthly Installment Schedule</td>
-                    <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${fin.durationMonths || 36} Months</td>
-                    <td style="padding: 10px 14px; text-align: right; color: #0284c7; font-weight: 700; border-right: 1px solid #e2e8f0;">Per Month</td>
-                    <td style="padding: 10px 14px; text-align: right; font-weight: 800; color: #0284c7; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
-                <div style="background: #0d47a1; color: #ffffff; padding: 10px 24px; border-radius: 6px; display: flex; gap: 30px; align-items: center; min-width: 250px; justify-content: space-between;">
-                  <span style="font-size: 13px; font-weight: 700; text-transform: uppercase;">Total Deal</span>
-                  <span style="font-size: 15px; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
+              <!-- Terms & Conditions of Allotment (Mazeed thoda neechay shifted) -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; margin-top: 18px; margin-bottom: 20px;">
+                <div style="font-size: 11.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;">
+                  <i class="fa-solid fa-file-contract"></i> TERMS & CONDITIONS OF ALLOTMENT:
+                </div>
+                <div style="font-size: 9.5px; color: #334155; line-height: 1.6; white-space: pre-line;">
+                  ${legalText}
                 </div>
               </div>
 
-              <div style="margin-bottom: 35px;">
-                <div style="font-size: 12.5px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Note:</div>
-                <div style="font-size: 11.5px; color: #64748b; line-height: 1.6; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; width: 65%;">
-                  Possession will be handed over upon 100% dues clearance. All installments must be cleared on or before the due date as per Bilal Heights bylaws.
-                </div>
-              </div>
             </div>
           </div>
 
-          <div style="padding: 0 38px 40px 38px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div>
-              <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Biometric Verification:</div>
-              <div style="display: flex; gap: 12px; align-items: center; margin-top: 6px;">
-                <div style="width: 52px; height: 60px; border: 1.5px solid #0d47a1; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                  ${o1.thumb ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" />` : `<i class="fa-solid fa-fingerprint" style="color:#94a3b8; font-size:24px;"></i>`}
-                </div>
-                <div style="font-size: 10.5px; color: #64748b; font-weight: 600;">Thumb Scanned & Verified<br>In Enterprise ERP</div>
+          <!-- Bottom: Dual Signatures (Authorized Sign & Customer Sign) -->
+          <div style="padding: 0 36px 30px 36px; display: flex; justify-content: space-between; align-items: flex-end;">
+            
+            <!-- Left: Customer Signature -->
+            <div style="text-align: center; width: 190px;">
+              <div style="height: 38px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                Customer Signature
               </div>
+              <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">(${o1.name || 'Allottee'})</div>
             </div>
 
-            <div style="text-align: right;">
-              <h2 style="margin: 0; font-size: 28px; font-weight: 900; color: #0d47a1;">Thank You!</h2>
-              <div style="border-top: 1.5px dashed #94a3b8; width: 160px; margin-top: 25px; text-align: center; padding-top: 4px; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">
-                Project Director Sign
-              </div>
+            <!-- Center Thank You Note -->
+            <div style="text-align: center;">
+              <h3 style="margin: 0; font-size: 21px; font-weight: 900; color: #0d47a1; letter-spacing: 0.5px;">Thank You!</h3>
+              <small style="font-size: 9.5px; color: #64748b;">Bilal Heights Residency</small>
             </div>
+
+            <!-- Right: Authorized Person Signature -->
+            <div style="text-align: center; width: 190px;">
+              <div style="height: 38px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                Authorized Person Signature
+              </div>
+              <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">(Project Director / Management)</div>
+            </div>
+
           </div>
+
         </div>
       `;
 
