@@ -6881,118 +6881,132 @@ function loadFlats() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 2. Download Official Project Profile PDF
+    // 2. Download Official Project Profile PDF (Blue Wave Executive Style - Single A4 Page)
     function downloadProjectPDF(projectId) {
       const p = allProjectsData.find(item => item.id === projectId);
       if (!p) return;
 
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      // Printable Container
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.padding = '24px 28px';
+      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.maxWidth = '210mm';
+      pdfWrapper.style.margin = '0 auto';
       pdfWrapper.style.background = '#ffffff';
-      pdfWrapper.style.color = '#0f172a';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
       pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="border: 2.5px solid #0f2a59; border-radius: 14px; padding: 22px; background: #ffffff;">
-          
-          <!-- Top Header -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f2a59; padding-bottom: 12px; margin-bottom: 16px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="background: #0f2a59; color: #ffffff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;">
-                BH
-              </div>
+        <div style="background:#ffffff; min-height:297mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box;">
+          <div>
+            <!-- Top Blue Wave Header (Matching Allotment / Customer Management Theme) -->
+            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 26px 36px 36px 36px; border-bottom-left-radius: 50% 22px; border-bottom-right-radius: 50% 22px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
               <div>
-                <h1 style="margin: 0; font-size: 22px; font-weight: 900; color: #0f2a59; letter-spacing: 0.5px; text-transform: uppercase;">${p.name}</h1>
-                <div style="font-size: 10px; color: #475569; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Official Project Portfolio & Specifications</div>
+                <h1 style="margin: 0; font-size: 28px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">${p.name}</h1>
+                <div style="font-size: 11px; color: #bbdefb; font-weight: 700; letter-spacing: 1px; margin-top: 3px;">OFFICIAL PROJECT PORTFOLIO & SPECIFICATIONS</div>
               </div>
-            </div>
-
-            <div style="text-align: right;">
-              <div style="background: #eff6ff; border: 1.5px solid #3b82f6; color: #1d4ed8; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 6px; display: inline-block; text-transform: uppercase;">
-                PROJECT OVERVIEW
-              </div>
-              <div style="font-size: 10px; color: #334155; margin-top: 4px; font-weight: 700;">
-                DATE: <span>${todayDate}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Project Banner -->
-          <div style="background: #0f2a59; color: #ffffff; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
-            <div style="font-size: 10px; text-transform: uppercase; color: #93c5fd; font-weight: 700;">Project Name</div>
-            <div style="font-size: 22px; font-weight: 900; color: #ffffff;">${p.name}</div>
-            <div style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">
-              <i class="fa-solid fa-location-dot"></i> ${p.location}, ${p.city || 'N/A'}
-            </div>
-          </div>
-
-          <!-- Key Specifications Grid -->
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px;">
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Location / Address</div>
-              <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px;">${p.location}</div>
-            </div>
-
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">City</div>
-              <div style="font-size: 14px; font-weight: 700; color: #1d4ed8; margin-top: 4px;">${p.city || 'N/A'}</div>
-            </div>
-
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Floors</div>
-              <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 4px;">${p.floors}</div>
-            </div>
-
-            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 16px;">
-              <div style="font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase;">Total Flats / Units</div>
-              <div style="font-size: 14px; font-weight: 800; color: #16a34a; margin-top: 4px;">${p.flatsCount} Units</div>
-            </div>
-          </div>
-
-          <!-- Description Section -->
-          ${p.description ? `
-          <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; margin-bottom: 24px;">
-            <div style="font-size: 11.5px; color: #0f2a59; font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">
-              Project Description & Remarks
-            </div>
-            <div style="font-size: 12.5px; color: #334155; line-height: 1.6;">
-              ${p.description}
-            </div>
-          </div>
-          ` : ''}
-
-          <!-- Official Stamp & Verification Signature -->
-          <div style="display: flex; justify-content: flex-end; margin-top: 40px; padding-right: 14px;">
-            <div style="text-align: center; width: 220px;">
-              <div style="height: 40px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
-                <span style="border: 1px dashed #2563eb; color: #1d4ed8; font-size: 8.5px; font-weight: 800; padding: 3px 10px; border-radius: 4px; text-transform: uppercase;">
-                  Verified Record
-                </span>
-              </div>
-              <div style="border-top: 2px solid #0f172a; padding-top: 6px;">
-                <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-                  AUTHORIZED PERSON
-                </div>
-                <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">
-                  Corporate Management
+              <div style="text-align: right;">
+                <div style="font-size: 13.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3);">
+                  PROJECT OVERVIEW
                 </div>
               </div>
             </div>
+
+            <!-- Body Content -->
+            <div style="padding: 24px 36px 12px 36px;">
+              
+              <!-- Upper Info Bar -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 14px;">
+                <div>
+                  <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 3px;">Project Identity:</div>
+                  <div style="font-size: 18px; font-weight: 900; color: #0d47a1; text-transform: uppercase;">${p.name}</div>
+                  <div style="font-size: 12px; color: #475569; margin-top: 2px;">City: <strong style="color: #0f172a;">${p.city || 'Karachi'}</strong></div>
+                </div>
+
+                <div style="text-align: right;">
+                  <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 3px;">Issuance Details:</div>
+                  <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Corporate Portfolio Dossier</div>
+                  <div style="font-size: 12px; color: #475569; margin-top: 2px;">Date: <strong style="color: #0d47a1;">${todayDate}</strong></div>
+                </div>
+              </div>
+
+              <!-- Main Address Banner -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 10px; padding: 14px 18px; margin-bottom: 22px;">
+                <div style="font-size: 11px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">Location / Address:</div>
+                <div style="font-size: 14px; font-weight: 700; color: #0f172a; line-height: 1.5;">${p.location || 'N/A'}</div>
+              </div>
+
+              <!-- 4 Specifications Grid Cards -->
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 22px;">
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 18px;">
+                  <small style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 4px;">Total Floors</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #0f172a;">${p.floors || 'N/A'}</div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 18px;">
+                  <small style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 4px;">Total Flats / Units</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #16a34a;">${p.flatsCount || '0'} Units</div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 18px;">
+                  <small style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 4px;">Project City</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #0284c7;">${p.city || 'N/A'}</div>
+                </div>
+
+                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 14px 18px;">
+                  <small style="font-size: 10.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 4px;">Project Status</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #15803d;">Active Construction</div>
+                </div>
+              </div>
+
+              <!-- Project Description & Remarks Box -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;">
+                <div style="font-size: 11.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 6px;">
+                  Project Description & Specifications
+                </div>
+                <div style="font-size: 12px; color: #334155; line-height: 1.6;">
+                  ${p.description ? p.description : 'High-rise residential and commercial luxury apartments with modern amenities, earthquake resistant structure, and dedicated parking floors.'}
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom: Clean Footer with Authorized Sign (No "Verified Record" dashed stamp) -->
+          <div style="padding: 0 36px 36px 36px; display: flex; justify-content: space-between; align-items: flex-end;">
+            
+            <!-- Left Info -->
+            <div style="font-size: 10.5px; color: #64748b;">
+              <strong style="color: #0f172a; font-size: 12px;">EstateERP Enterprise Edition</strong><br>
+              Official Documentation & Engineering Record
+            </div>
+
+            <!-- Center Thank You -->
+            <div style="text-align: center;">
+              <h3 style="margin: 0; font-size: 21px; font-weight: 900; color: #0d47a1; letter-spacing: 0.5px;">Thank You!</h3>
+              <small style="font-size: 9.5px; color: #64748b;">Bilal Heights Residency</small>
+            </div>
+
+            <!-- Right: Clean Authorized Person Signature -->
+            <div style="text-align: center; width: 200px;">
+              <div style="height: 38px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                Authorized Person Signature
+              </div>
+              <div style="font-size: 9.5px; color: #64748b; font-weight: 600;">(Corporate Management)</div>
+            </div>
+
           </div>
 
         </div>
       `;
 
       const opt = {
-        margin: [0.25, 0.25, 0.25, 0.25],
+        margin: [0, 0, 0, 0],
         filename: `Project_${p.name.replace(/\s+/g, '_')}_Portfolio.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.5, useCORS: true, logging: false },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2.2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       if (typeof html2pdf !== 'undefined') {
