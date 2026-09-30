@@ -17,17 +17,120 @@
 
   <style>
 
-    @media (max-width: 1200px) {
-  .dash-kpi-5-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-}
+  /* ================================================= */
+/* COMPLETE MOBILE & TABLET AUTO-RESPONSIVE FIX      */
+/* ================================================= */
+
+/* 1. Mobile par Form Inputs aur Grids ko 1 column me adjust karna */
 @media (max-width: 768px) {
+  /* Login Screen Adjustments */
+  .erp-container {
+    flex-direction: column !important;
+    max-width: 95% !important;
+    min-height: auto !important;
+    border-radius: 18px !important;
+    margin: 15px auto !important;
+  }
+  .erp-banner {
+    display: none !important; /* Mobile par login banner hide taake form foran samne aaye */
+  }
+  .erp-forms {
+    padding: 26px 20px !important;
+  }
+
+  /* Dashboard Cards Auto Adjust */
   .dash-kpi-5-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
   }
   .dash-balances-grid {
     grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Tamam Forms Grid 1 Column par set hon */
+  .form-grid-layout {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Cards & Padding Mobile Friendly */
+  .content-area {
+    padding: 12px !important;
+  }
+  .card-panel, .flat-detail-header-card, .owner-box-section {
+    padding: 16px 14px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Topbar Adjustments */
+  .topbar {
+    padding: 8px 12px !important;
+    min-height: 58px !important;
+  }
+  .page-title {
+    font-size: 16px !important;
+  }
+  .user-pill {
+    padding: 5px 9px !important;
+    max-width: 140px !important;
+    font-size: 11px !important;
+  }
+
+  /* Modals full width on mobile */
+  .modal-overlay {
+    padding: 10px !important;
+  }
+  .modal-card {
+    max-height: 94vh !important;
+    border-radius: 14px !important;
+  }
+  .modal-header {
+    padding: 14px 16px !important;
+  }
+  .modal-body {
+    padding: 16px 14px !important;
+  }
+
+  /* Filters Row Auto Stacking */
+  .filters-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+  .search-filter-box, .filter-select-group {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  /* Responsive Purchase Item Row */
+  .purchase-item-row {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .purchase-item-row > div:first-child {
+    grid-column: 1 / -1 !important;
+  }
+  .purchase-item-row > div:last-child {
+    grid-column: 1 / -1 !important;
+    text-align: right !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-kpi-5-grid {
+    grid-template-columns: 1fr !important; /* Bohat chotay mobile par KPI 1 column */
+  }
+  .btn-action-primary, .btn-back {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-bottom: 5px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .dash-kpi-5-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 }
 
@@ -3527,10 +3630,10 @@
                   <input type="number" id="purTotalAmount" placeholder="e.g. 750000" readonly style="background:#f8fafc; font-weight:800;" required />
                 </div>
 
-                <!-- Paid Amount -->
+              <!-- Paid Amount (Ab Optional Hai - Khali Chhorne Par Baqaya Mein Jayega) -->
                 <div>
-                  <label>Paid Amount (Rs.) *</label>
-                  <input type="number" id="purPaidAmount" placeholder="e.g. 300000" required oninput="calcPurchaseTotalAuto()" />
+                  <label>Paid Amount (Rs.) <small style="color:#64748b; font-weight:500;">(Agar nahi di to khali chhor dein)</small></label>
+                  <input type="number" id="purPaidAmount" placeholder="0 ya ada ki gayi raqam" min="0" oninput="calcPurchaseTotalAuto()" />
                 </div>
 
                 <!-- Remaining Amount (Auto) -->
@@ -3797,7 +3900,7 @@
        <!-- ================= SECTION: ACCOUNT LEDGER (EXACT AS IMAGE) ================= -->
         <section id="sectionAccountLedger" class="erp-section">
           
-          <!-- Top Title & Filter Bar -->
+         <!-- Top Title & Filter Bar (With Date Range) -->
           <div class="card-panel" style="margin-bottom: 20px;">
             <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Account Ledger</h2>
             
@@ -3807,6 +3910,18 @@
                 <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Account</label>
                 <select id="alFilterAccount" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13.5px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;">
                 </select>
+              </div>
+
+              <!-- 2. Date From (Naya Option) -->
+              <div style="flex: 1; min-width: 135px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date From</label>
+                <input type="date" id="alFilterDateFrom" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 8.5px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;" />
+              </div>
+
+              <!-- 3. Date To (Naya Option) -->
+              <div style="flex: 1; min-width: 135px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Date To</label>
+                <input type="date" id="alFilterDateTo" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 8.5px 11px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;" />
               </div>
 
               <!-- 4. Transaction Type -->
@@ -3821,6 +3936,9 @@
 
               <!-- Action Buttons -->
               <div style="display: flex; gap: 8px; align-items: center;">
+                <button type="button" onclick="resetAccountLedgerDates()" style="background: #ffffff; border: 1.5px solid #cbd5e1; color: #475569; padding: 9px 14px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;" title="Reset Dates">
+                  <i class="fa-solid fa-rotate-right"></i> Reset
+                </button>
                 <button type="button" onclick="downloadAccountLedgerPDF()" style="background: #0066ff; color: #ffffff; border: none; padding: 10px 18px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
                   <i class="fa-solid fa-download"></i> Download PDF
                 </button>
@@ -5354,16 +5472,34 @@
               Apne tamam Projects, Flats, Registered Customers, Purchaser Ledger, aur Site/Office Expenses ka mukammal data ek hi file mein offline download kar ke mehfooz rakh sakte hain. Kisi bhi gadbad ki surat mein aap ka data 100% safe rahega.
             </p>
 
-            <div style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:14px; padding:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+           <!-- 1. Download Master Backup Card -->
+            <div style="background:#f8fafc; border:1.5px dashed #cbd5e1; border-radius:14px; padding:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
               <div>
                 <h4 style="font-size:15px; font-weight:800; color:#0f172a; margin-bottom:4px;">
-                  <i class="fa-solid fa-file-code" style="color:#2563eb;"></i> Complete JSON Database Dump
+                  <i class="fa-solid fa-file-export" style="color:#2563eb;"></i> 1. Complete Master Database Download (All Modules)
                 </h4>
-                <div style="font-size:12px; color:#64748b;" id="backupStatusText">Last Backup: Not downloaded yet in this session</div>
+                <div style="font-size:12px; color:#64748b;" id="backupStatusText">Projects, Flats, Customers, Payments, Purchases, CPV/CRV, Accounts, Expenses, Staff & Settings</div>
               </div>
 
-              <button type="button" class="btn-action-primary" onclick="exportCompleteDatabase()" style="background:#0f172a; padding:12px 20px;">
+              <button type="button" id="btnExportDb" class="btn-action-primary" onclick="exportCompleteDatabase()" style="background:#0f172a; padding:12px 20px;">
                 <i class="fa-solid fa-download"></i> Download Full Backup (.json)
+              </button>
+            </div>
+
+            <!-- 2. Restore / Upload Backup to Cloud Card -->
+            <div style="background:#fffdf5; border:1.5px dashed #f59e0b; border-radius:14px; padding:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+              <div style="flex:1; min-width:260px;">
+                <h4 style="font-size:15px; font-weight:800; color:#92400e; margin-bottom:4px;">
+                  <i class="fa-solid fa-cloud-arrow-up" style="color:#ea580c;"></i> 2. Restore Database to Cloud (Backup File Upload)
+                </h4>
+                <div style="font-size:12px; color:#78350f; margin-bottom:8px;">
+                  Agar cloud se data delete ho jaye to download shuda (.json) file select kar ke dobara cloud par upload karein.
+                </div>
+                <input type="file" id="restoreFileInput" accept=".json" style="font-size:12.5px; color:#334155;" />
+              </div>
+
+              <button type="button" id="btnRestoreDb" class="btn-action-primary" onclick="restoreCompleteDatabase()" style="background:#16a34a; padding:12px 20px;">
+                <i class="fa-solid fa-rotate"></i> Upload & Restore to Cloud
               </button>
             </div>
           </div>
@@ -5654,8 +5790,8 @@
 
                 <!-- 5. Lockout Display Notice / Message -->
                 <div class="form-group-full">
-                  <label style="font-weight: 800; color: #0f172a;">Lockout Screen Message (Jab Software Band Ho)</label>
-                  <textarea id="licLockoutMessage" rows="3" style="width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; font-size: 13.5px; font-family: inherit;">Aapka 1 saal ka Cloud Database Subscription expire ho chuka hai. Software dobara active karne ke liye developer / Super Admin se rabta karein.</textarea>
+                  <label style="font-weight: 800; color: #0f172a;">Lockout Screen Message</label>
+                  <textarea id="licLockoutMessage" rows="3" style="width: 100%; border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; font-size: 13.5px; font-family: inherit;">Your 1-year cloud database subscription has expired. Please contact the developer or super admin to reactivate the software.</textarea>
                 </div>
 
               </div>
@@ -6828,19 +6964,23 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
 let currentSelectedFlat = null;
 
 function loadFlats() {
-  db.collection('flats').orderBy('flatNo', 'asc').onSnapshot((snapshot) => {
+  // Bina orderBy ke safe snapshot taake koi bhi flat miss na ho
+  db.collection('flats').onSnapshot((snapshot) => {
     allFlatsData = [];
 
     snapshot.forEach((doc) => {
       allFlatsData.push({ id: doc.id, ...doc.data() });
     });
 
-    const statFlatsEl = document.getElementById('statTotalFlats');
-    if (statFlatsEl) statFlatsEl.textContent = allFlatsData.length;
-    
+    // JavaScript ke zariye natural sorting
+    allFlatsData.sort((a, b) => String(a.flatNo || '').localeCompare(String(b.flatNo || ''), undefined, { numeric: true }));
+
     updateFlatsFilterProjects();
     filterFlatsTable();
     populateAvailableFlatsDropdown();
+
+    // Dashboard ke tamam Flat counters ko live update karein
+    updateDashboardChartsAndStats();
 
     // Agar flat select tha to use refresh karein, warna pehla flat auto-select kar dein
     if (currentSelectedFlat) {
@@ -6851,9 +6991,10 @@ function loadFlats() {
         viewFlatDetails(allFlatsData[0].id, false);
       }
     } else if (allFlatsData.length > 0) {
-      // Pehla flat ready rakhein
       viewFlatDetails(allFlatsData[0].id, false);
     }
+  }, (err) => {
+    console.error("Flats load error:", err);
   });
 }
 
@@ -7910,7 +8051,7 @@ async function confirmStatusChange() {
     }
 
     // 3. Customer Data Load from Firebase
-    function loadCustomers() {
+   function loadCustomers() {
       db.collection('customers').orderBy('createdAt', 'desc').onSnapshot(snap => {
         allCustomersData = [];
 
@@ -7931,6 +8072,9 @@ async function confirmStatusChange() {
         if (document.getElementById('statTotalCustomers')) {
           document.getElementById('statTotalCustomers').textContent = snap.size;
         }
+
+        // Customer ki Down Payment aate hi Dashboard ke tamam balances foran update hon
+        updateDashboardChartsAndStats();
       });
     }
 
@@ -10157,34 +10301,172 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
       }
     }
 
-    function exportCompleteDatabase() {
-      const backupData = {
-        exportDate: new Date().toISOString(),
-        system: "EstateERP - Bilal Heights",
-        projects: allProjectsData,
-        flats: allFlatsData,
-        customers: allCustomersData,
-        purchases: allPurchaserData,
-        siteExpenses: allSiteExpensesData,
-        officeExpenses: allOfficeExpensesData
+   // =========================================================================
+    // COMPLETE MASTER DATABASE BACKUP & CLOUD RESTORE ENGINE (ALL MODULES)
+    // =========================================================================
+    async function exportCompleteDatabase() {
+      const btn = document.getElementById('btnExportDb');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reading Cloud Data...';
+      }
+
+      try {
+        // Tamam 11 modules ka live data Firestore cloud se fetch karna
+        const collections = [
+          'projects',
+          'flats',
+          'customers',
+          'purchases',
+          'payments',
+          'cash_vouchers',
+          'accounts_directory',
+          'site_expenses',
+          'office_expenses',
+          'system_staff',
+          'app_settings'
+        ];
+
+        const backupData = {
+          exportDate: new Date().toISOString(),
+          version: "2.0-Enterprise",
+          system: "EstateERP - Bilal Heights Master Backup",
+          data: {}
+        };
+
+        for (const col of collections) {
+          const snap = await db.collection(col).get();
+          backupData.data[col] = [];
+          snap.forEach(doc => {
+            backupData.data[col].push({ id: doc.id, ...doc.data() });
+          });
+        }
+
+        // Complete JSON File download trigger karna
+        const jsonStr = JSON.stringify(backupData, null, 2);
+        const blob = new Blob([jsonStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const todayStr = new Date().toISOString().split('T')[0];
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Bilal_Heights_Full_Master_Backup_${todayStr}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        const statusEl = document.getElementById('backupStatusText');
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Mukammal Master Backup Download Ho Gaya! (${new Date().toLocaleTimeString()})</span>`;
+        }
+
+        showCustomAlert(
+          "Tamam 11 modules ka mukammal data (Projects, Flats, Customers, Payments, Purchases, CPV/CRV, Accounts, Expenses, Staff aur Settings) kamiyabi se mehfooz ho chuka hai.",
+          "success",
+          "Master Backup Saved"
+        );
+      } catch (err) {
+        alert("Backup lene me masla aaya: " + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-download"></i> Download Full Backup (.json)';
+        }
+      }
+    }
+
+    // File se data parh kar Cloud par Restore karne ka function
+    async function restoreCompleteDatabase() {
+      const fileInput = document.getElementById('restoreFileInput');
+      const btn = document.getElementById('btnRestoreDb');
+
+      if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+        alert("Bara-e-meherbani pehle backup (.json) file select karein.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      if (!confirm("Kiya aap waqai is file se tamam data cloud par restore karna chahte hain? Mojooda cloud data update ho jayega.")) {
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Restoring to Cloud...';
+      }
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          
+          // Data structure verify karna
+          const dataObj = parsed.data || parsed;
+          const knownCollections = [
+            'projects', 'flats', 'customers', 'purchases', 'payments', 
+            'cash_vouchers', 'accounts_directory', 'site_expenses', 
+            'office_expenses', 'system_staff', 'app_settings'
+          ];
+
+          let restoredCounts = 0;
+
+          // Har collection ka data bari bari Firestore me write karna
+          for (const col of knownCollections) {
+            let records = dataObj[col];
+
+            // Agar purane backup format ka naam ho to match karein
+            if (!records) {
+              if (col === 'site_expenses' && dataObj['siteExpenses']) records = dataObj['siteExpenses'];
+              if (col === 'office_expenses' && dataObj['officeExpenses']) records = dataObj['officeExpenses'];
+            }
+
+            if (Array.isArray(records) && records.length > 0) {
+              for (const item of records) {
+                const docId = item.id;
+                const cleanItem = { ...item };
+                delete cleanItem.id; // ID field alag rakhte hain
+
+                if (docId) {
+                  await db.collection(col).doc(docId).set(cleanItem, { merge: true });
+                } else {
+                  await db.collection(col).add(cleanItem);
+                }
+                restoredCounts++;
+              }
+            }
+          }
+
+          fileInput.value = '';
+          showCustomAlert(
+            `Kamiyabi! Kul ${restoredCounts} records cloud par kamiyabi se restore aur update ho chuke hain. System bilkul up-to-date hai.`,
+            "success",
+            "Cloud Data Restored"
+          );
+
+          // Screen ka sara data foran refresh karein
+          loadProjects();
+          loadFlats();
+          loadCustomers();
+          loadPurchaser();
+          loadPayments();
+          loadCashVouchers();
+          loadVendors();
+          loadSiteExpenses();
+          loadOfficeExpenses();
+          loadStaffUsers();
+          loadSettingsFromDatabase();
+
+        } catch (err) {
+          alert("File restore karne me masla aaya: " + err.message);
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Upload & Restore to Cloud';
+          }
+        }
       };
 
-      const jsonStr = JSON.stringify(backupData, null, 2);
-      const blob = new Blob([jsonStr], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-
-      const todayStr = new Date().toISOString().split('T')[0];
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Bilal_Heights_ERP_Backup_${todayStr}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      const statusEl = document.getElementById('backupStatusText');
-      if (statusEl) {
-        statusEl.innerHTML = `<span style="color:#16a34a; font-weight:700;"><i class="fa-solid fa-circle-check"></i> Backup downloaded successfully at ${new Date().toLocaleTimeString()}!</span>`;
-      }
+      reader.readAsText(file);
     }
 
   
@@ -10775,12 +11057,26 @@ loadLicenseSettings();
       document.getElementById('payCustMobile').value = o1.mobile || 'N/A';
 
       const totalPrice = parseNumericValue(cust.financials?.totalPrice);
+      const bookingDownPayment = parseNumericValue(cust.financials?.downPayment);
 
-      const pastPaidTotal = allPaymentsData
-        .filter(p => p.customerId === customerId)
-        .reduce((sum, p) => sum + parseNumericValue(p.amount), 0);
+      // Is customer / flat ki tamam jama shuda payments dhoondein
+      const pastPayments = (allPaymentsData || []).filter(p => 
+        (p.customerId && p.customerId === customerId) ||
+        (p.flatNo && cust.flatNo && String(p.flatNo).trim().toLowerCase() === String(cust.flatNo).trim().toLowerCase())
+      );
 
-      const currentRemaining = Math.max(0, totalPrice - pastPaidTotal);
+      // Check karein ke kiya 'Down Payment' ki alag se receipt kati hai ya nahi
+      const hasRecordedDownPayment = pastPayments.some(p => p.head === 'Down Payment');
+
+      let totalPaidSoFar = pastPayments.reduce((sum, p) => sum + parseNumericValue(p.amount), 0);
+
+      // Agar alag receipt nahi kati to Registration ke waqt di gayi Down Payment (Top Payment) ko jama karein
+      if (!hasRecordedDownPayment && bookingDownPayment > 0) {
+        totalPaidSoFar += bookingDownPayment;
+      }
+
+      // Baqaya raqam = Total Price - (Down Payment + Installments)
+      const currentRemaining = Math.max(0, totalPrice - totalPaidSoFar);
 
       document.getElementById('payCurrentBalance').value = `Rs. ${currentRemaining.toLocaleString()}`;
       document.getElementById('payCurrentBalance').setAttribute('data-rem', currentRemaining);
@@ -10825,10 +11121,22 @@ loadLicenseSettings();
       return "Rupees " + inWords(Math.round(num)).trim() + " Only";
     }
 
-    function updatePaymentSummaryMetrics() {
+   function updatePaymentSummaryMetrics() {
       let totalRecovered = 0;
       allPaymentsData.forEach(p => {
         totalRecovered += parseNumericValue(p.amount);
+      });
+
+      // Customers ki registration wali Down Payments (Top Payments) ko bhi total received mein shamil karein
+      (allCustomersData || []).forEach(c => {
+        const down = parseNumericValue(c.financials?.downPayment);
+        const hasRec = allPaymentsData.some(p => 
+          ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && p.flatNo === c.flatNo)) && 
+          p.head === 'Down Payment'
+        );
+        if (!hasRec && down > 0) {
+          totalRecovered += down;
+        }
       });
 
       let totalAgreedMarket = 0;
@@ -11148,7 +11456,7 @@ loadLicenseSettings();
       else alert('PDF library load nahi ho saki.');
     }
 
-    // 2. PURCHASE BILL (STRICT SINGLE PAGE A4, LOGO + TERMS & CONDITIONS, CLEAN BOTTOM)
+    // 2. PURCHASE BILL (CLEAN VENDOR INVOICE - NO CUSTOMER TERMS, PROPER SIGNATURES)
     function downloadPurchaseBillPDF(id) {
       const p = allPurchaserData.find(x => x.id === id);
       if (!p) return;
@@ -11163,6 +11471,7 @@ loadLicenseSettings();
       const compProject = document.getElementById('setProjectTitle')?.value.trim() || p.project || 'BILAL HEIGHTS';
       const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
       const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
+      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
 
       let compLogo = settingLogoBase64;
       if (!compLogo) {
@@ -11172,31 +11481,25 @@ loadLicenseSettings();
         }
       }
 
-      // Settings se Terms & Conditions uthana
-      const termsText = document.getElementById('setLegalTermsText')?.value.trim() || 
-        "1. Material Acceptance: All material supplied is subject to site quality verification and inspection.\n" +
-        "2. Payment Terms: Payment will be disbursed as per verified delivery challan and agreed terms.\n" +
-        "3. Defective Goods: Damaged, inferior, or sub-standard materials will be returned at supplier's cost.";
-
       let itemsRowsHtml = '';
       if (p.itemsList && p.itemsList.length > 0) {
         p.itemsList.forEach((itm) => {
           itemsRowsHtml += `
             <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 8px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${itm.item || 'Material Item'}</td>
-              <td style="padding: 8px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${itm.qty || 1} ${itm.unit || ''}</td>
-              <td style="padding: 8px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
-              <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
+              <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight:600;">${itm.item || 'Material Item'}</td>
+              <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${itm.qty || 1} ${itm.unit || ''}</td>
+              <td style="padding: 10px 14px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
+              <td style="padding: 10px 14px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
             </tr>
           `;
         });
       } else {
         itemsRowsHtml = `
           <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 8px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${p.item || 'Construction Materials'}</td>
-            <td style="padding: 8px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${p.qty || '1'}</td>
-            <td style="padding: 8px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
-            <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${total.toLocaleString()}</td>
+            <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight:600;">${p.item || 'Construction Materials'}</td>
+            <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${p.qty || '1'}</td>
+            <td style="padding: 10px 14px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
+            <td style="padding: 10px 14px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${total.toLocaleString()}</td>
           </tr>
         `;
       }
@@ -11213,101 +11516,117 @@ loadLicenseSettings();
         <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           <div>
             <!-- Top Blue Wave Header with Logo -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 30px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 26px 36px 34px 36px; border-bottom-left-radius: 50% 20px; border-bottom-right-radius: 50% 20px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+              <div style="display: flex; align-items: center; gap: 14px;">
                 ${compLogo ? `
-                  <div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
+                  <div style="width: 50px; height: 50px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
                     <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : ''}
                 <div>
-                  <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">PURCHASE BILL</h1>
-                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">PROJECT: ${compProject.toUpperCase()}</div>
+                  <h1 style="margin: 0; font-size: 28px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">PURCHASE BILL</h1>
+                  <div style="font-size: 11px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">PROJECT: ${compProject.toUpperCase()}</div>
                 </div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+                <div style="font-size: 14px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3);">
                   NO: ${billNo}
                 </div>
               </div>
             </div>
 
             <!-- Upper Meta: Supplier & Consignee -->
-            <div style="padding: 18px 34px 6px 34px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div style="padding: 24px 36px 10px 36px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
                 <div style="width: 48%;">
-                  <div style="font-size: 12px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">Bill From (Supplier):</div>
-                  <div style="font-size: 14px; font-weight: 800; color: #0f172a;">${p.vendor || 'Authorized Supplier'}</div>
-                  <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Material & Construction Vendor</div>
-                  <div style="font-size: 11px; color: #16a34a; font-weight: 600;">Delivery Status: Verified on Site</div>
+                  <div style="font-size: 12px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">Bill From (Supplier / Vendor):</div>
+                  <div style="font-size: 16px; font-weight: 800; color: #0f172a;">${p.vendor || 'Authorized Supplier'}</div>
+                  <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">Material & Construction Supplier</div>
+                  <div style="font-size: 11.5px; color: #16a34a; font-weight: 700; margin-top: 2px;"><i class="fa-solid fa-circle-check"></i> Quality & Delivery Verified on Site</div>
                 </div>
 
                 <div style="width: 45%; text-align: right;">
-                  <div style="font-size: 12px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">Consignee:</div>
-                  <div style="font-size: 14px; font-weight: 800; color: #0f172a;">${compProject} Site Office</div>
-                  <div style="font-size: 11px; color: #64748b; margin-top: 2px;">${compAddress}</div>
-                  <div style="font-size: 11px; color: #64748b;">Procurement & Accounts Department</div>
+                  <div style="font-size: 12px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">Consignee / Site Office:</div>
+                  <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${compProject} Site Office</div>
+                  <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">${compAddress}</div>
+                  <div style="font-size: 11.5px; color: #64748b;">Phone: ${compPhone}</div>
                 </div>
               </div>
 
-              <div style="font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 14px;">
-                Date: <span style="font-weight: 600; color: #0f172a;">${todayDate}</span>
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 18px;">
+                <div style="font-size: 12.5px; font-weight: 700; color: #334155;">
+                  Date: <span style="font-weight: 600; color: #0f172a;">${todayDate}</span>
+                </div>
+                <div style="font-size: 12px; color: #64748b; font-weight: 600;">
+                  Payment Mode: <strong style="color:#0f172a;">${p.paymentMethod || 'Cash'}</strong>
+                </div>
               </div>
 
               <!-- Items Table -->
-              <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11px;">
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px;">
                 <thead>
                   <tr style="background: #0d47a1; color: #ffffff;">
-                    <th style="padding: 8px 12px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #0d47a1;">Description</th>
-                    <th style="padding: 8px 12px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #0d47a1;">Qty</th>
-                    <th style="padding: 8px 12px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Price</th>
-                    <th style="padding: 8px 12px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Total</th>
+                    <th style="padding: 10px 14px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #0d47a1;">Item Description</th>
+                    <th style="padding: 10px 14px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #0d47a1;">Quantity</th>
+                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Unit Rate</th>
+                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Total (Rs.)</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${itemsRowsHtml}
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 7px 12px; color: #166534; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Paid Amount</td>
-                    <td style="padding: 7px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
-                    <td style="padding: 7px 12px; text-align: right; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
-                    <td style="padding: 7px 12px; text-align: right; font-weight: 800; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
+                    <td style="padding: 9px 14px; color: #166534; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Amount Paid</td>
+                    <td style="padding: 9px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
+                    <td style="padding: 9px 14px; text-align: right; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
+                    <td style="padding: 9px 14px; text-align: right; font-weight: 800; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 7px 12px; color: #dc2626; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Remaining Balance (Payable)</td>
-                    <td style="padding: 7px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
-                    <td style="padding: 7px 12px; text-align: right; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
-                    <td style="padding: 7px 12px; text-align: right; font-weight: 800; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
+                    <td style="padding: 9px 14px; color: #dc2626; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Remaining Balance (Payable)</td>
+                    <td style="padding: 9px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
+                    <td style="padding: 9px 14px; text-align: right; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
+                    <td style="padding: 9px 14px; text-align: right; font-weight: 800; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
                   </tr>
                 </tbody>
               </table>
 
               <!-- Total Ribbon -->
-              <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
-                <div style="background: #0d47a1; color: #ffffff; padding: 8px 22px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 230px; justify-content: space-between;">
-                  <span style="font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Total Bill</span>
-                  <span style="font-size: 14.5px; font-weight: 900;">Rs. ${total.toLocaleString()}</span>
+              <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+                <div style="background: #0d47a1; color: #ffffff; padding: 10px 24px; border-radius: 7px; display: flex; gap: 28px; align-items: center; min-width: 250px; justify-content: space-between;">
+                  <span style="font-size: 13px; font-weight: 700; text-transform: uppercase;">Total Bill Amount</span>
+                  <span style="font-size: 16px; font-weight: 900;">Rs. ${total.toLocaleString()}</span>
                 </div>
               </div>
 
-              <!-- Terms & Conditions Box (Settings Se) -->
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 11px 16px;">
-                <div style="font-size: 10.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                  <i class="fa-solid fa-file-contract"></i> TERMS & CONDITIONS OF PURCHASE:
+              <!-- Notes Box (Agar koi remarks enter kiye gaye hon to) -->
+              ${p.notes ? `
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
+                  <div style="font-size: 11px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">
+                    Remarks / Delivery Notes:
+                  </div>
+                  <div style="font-size: 11px; color: #334155; line-height: 1.5;">
+                    ${p.notes}
+                  </div>
                 </div>
-                <div style="font-size: 9px; color: #334155; line-height: 1.5; white-space: pre-line;">
-                  ${termsText}
-                </div>
-              </div>
+              ` : ''}
 
             </div>
           </div>
 
-          <!-- Bottom: Clean Footer with Store Incharge Sign on Right -->
-          <div style="padding: 0 34px 28px 34px; display: flex; justify-content: flex-end; align-items: flex-end;">
-            <div style="text-align: center; width: 210px;">
-              <div style="height: 38px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-                STORE INCHARGE SIGN
+          <!-- Bottom: Clean Professional Dual Signatures for Purchase Bill -->
+          <div style="padding: 0 36px 36px 36px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <!-- Left Side: Supplier / Vendor Signature -->
+            <div style="text-align: center; width: 220px;">
+              <div style="height: 40px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                SUPPLIER / VENDOR SIGNATURE
+              </div>
+            </div>
+
+            <!-- Right Side: Store Incharge / Verified By -->
+            <div style="text-align: center; width: 220px;">
+              <div style="height: 40px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+                STORE INCHARGE / VERIFIED BY
               </div>
             </div>
           </div>
@@ -11316,7 +11635,7 @@ loadLicenseSettings();
 
       const opt = {
         margin: [0, 0, 0, 0],
-        filename: `Purchase_Invoice_${billNo}.pdf`,
+        filename: `Purchase_Bill_${billNo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -11577,8 +11896,8 @@ loadLicenseSettings();
                     <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : ''}
-                <div>
-                  <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">SITE VOUCHER</h1>
+              <div>
+                  <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">SITE EXPENSE VOUCHER</h1>
                   <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
                     ${compProject} • CONSTRUCTION EXPENSE RECORD
                   </div>
@@ -11646,14 +11965,6 @@ loadLicenseSettings();
                 <div style="background: #0d47a1; color: #ffffff; padding: 8px 22px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 230px; justify-content: space-between;">
                   <span style="font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Amount Disbursed</span>
                   <span style="font-size: 14.5px; font-weight: 900;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</span>
-                </div>
-              </div>
-
-              <!-- Note -->
-              <div style="background: #f8fafc; border-left: 3px solid #0d47a1; padding: 8px 14px; margin-bottom: 14px; border-radius: 4px;">
-                <div style="font-size: 10.5px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Note:</div>
-                <div style="font-size: 10px; color: #475569; line-height: 1.4;">
-                  Site petty payment acknowledged and entered in daily site cash book register.
                 </div>
               </div>
 
@@ -11734,8 +12045,8 @@ loadLicenseSettings();
                     <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : ''}
-                <div>
-                  <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">OFFICE VOUCHER</h1>
+              <div>
+                  <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">OFFICE EXPENSE VOUCHER</h1>
                   <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
                     ${compProject} • ADMINISTRATIVE EXPENSE VOUCHER
                   </div>
@@ -11803,14 +12114,6 @@ loadLicenseSettings();
                 <div style="background: #0d47a1; color: #ffffff; padding: 8px 22px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 230px; justify-content: space-between;">
                   <span style="font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Amount Paid</span>
                   <span style="font-size: 14.5px; font-weight: 900;">Rs. ${Number(exp.paidAmount || 0).toLocaleString()}</span>
-                </div>
-              </div>
-
-              <!-- Note -->
-              <div style="background: #f8fafc; border-left: 3px solid #0d47a1; padding: 8px 14px; margin-bottom: 14px; border-radius: 4px;">
-                <div style="font-size: 10.5px; font-weight: 800; color: #0f172a; margin-bottom: 2px;">Note:</div>
-                <div style="font-size: 10px; color: #475569; line-height: 1.4;">
-                  Official administrative expense verified and posted into profit & loss accounts.
                 </div>
               </div>
 
@@ -12069,7 +12372,7 @@ loadLicenseSettings();
    // 6. CASH PAYMENT / RECEIPT VOUCHER (STRICT SINGLE PAGE A4, LOGO + INLINE AMOUNT IN WORDS + CLEAN SIGNATURES)
     function downloadVoucherA4PDF(v) {
       const isPayment = (v.type === 'PAYMENT');
-      const voucherTitle = isPayment ? 'CASH PAYMENT' : 'CASH RECEIPT';
+      const voucherTitle = isPayment ? 'CASH PAYMENT VOUCHER' : 'CASH RECEIPT VOUCHER';
       const todayDate = v.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       // Settings se live Logo aur Project Details uthana
@@ -12767,16 +13070,14 @@ async function deleteCashVoucher(id) {
     };
 
 
-// ==========================================
-// PURCHASE ITEMS & CALCULATION FUNCTIONS
-// ==========================================
 function addPurchaseItemRow() {
   const container = document.getElementById('purchaseItemsContainer');
   if (!container) return;
 
   const row = document.createElement('div');
   row.className = 'purchase-item-row';
-  row.style.cssText = 'display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: center; background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;';
+  // Inline grid-template-columns hata kar dynamic CSS class par rely kiya gaya hai
+  row.style.cssText = 'display: grid; gap: 8px; align-items: center; background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1;';
 
   let optionsHtml = '<option value="">-- Item Select Karein --</option>';
   purchaserCategoriesList.forEach(cat => {
@@ -12858,17 +13159,31 @@ function populateVendorDropdown() {
   datalist.innerHTML = '';
   const vendorSet = new Set();
 
-  if (allAccountsData) {
+  // 1. Account List se Naam aur Designation (Type) dono shamil karein
+  if (allAccountsData && allAccountsData.length > 0) {
     allAccountsData.forEach(acc => {
-      if (acc.name) vendorSet.add(acc.name);
-    });
-  }
-  if (allPurchaserData) {
-    allPurchaserData.forEach(p => {
-      if (p.vendor) vendorSet.add(p.vendor);
+      if (acc.name) {
+        const designation = acc.type ? ` (${acc.type})` : ' (Vendor)';
+        vendorSet.add(`${acc.name}${designation}`);
+      }
     });
   }
 
+  // 2. Purchases record se bhi match kar ke designation lagayein
+  if (allPurchaserData && allPurchaserData.length > 0) {
+    allPurchaserData.forEach(p => {
+      if (p.vendor) {
+        const matchedAcc = (allAccountsData || []).find(a => a.name === p.vendor || p.vendor.includes(a.name));
+        if (matchedAcc && matchedAcc.type && !p.vendor.includes('(')) {
+          vendorSet.add(`${p.vendor} (${matchedAcc.type})`);
+        } else {
+          vendorSet.add(p.vendor);
+        }
+      }
+    });
+  }
+
+  // Dropdown me Name + Designation load karein
   vendorSet.forEach(v => {
     const opt = document.createElement('option');
     opt.value = v;
@@ -13080,8 +13395,7 @@ function viewAccountDetails(id) {
   if (recentTbody) {
     let txns = [];
 
-    // Purchases
-    (allPurchaserData || []).filter(p => p.vendor === acc.name).forEach(p => {
+(allPurchaserData || []).filter(p => p.vendor === acc.name || (p.vendor && p.vendor.includes(acc.name))).forEach(p => {
       txns.push({
         date: p.date,
         ref: p.billNo || 'PUR',
@@ -13102,14 +13416,14 @@ function viewAccountDetails(id) {
       });
     });
 
-    // Cash Vouchers
+    // Cash Vouchers (Payment Credit mein jayegi taake baqaya minus ho)
     (allCashVouchersData || []).filter(v => v.party === acc.name).forEach(v => {
       txns.push({
         date: v.date,
         ref: v.voucherNo || 'CV',
         desc: v.narration || v.head,
-        debit: (v.type === 'PAYMENT') ? (parseFloat(v.amount) || 0) : 0,
-        credit: (v.type === 'RECEIPT') ? (parseFloat(v.amount) || 0) : 0
+        debit: (v.type === 'RECEIPT') ? (parseFloat(v.amount) || 0) : 0,
+        credit: (v.type === 'PAYMENT') ? (parseFloat(v.amount) || 0) : 0
       });
     });
 
@@ -13255,38 +13569,64 @@ function renderCashBookReport() {
 
   let cashTransactions = [];
 
-  // 1. Customer Cash Payments (Inflow)
-  (allPaymentsData || []).forEach(p => {
-    if (p.mode === 'Cash') {
+  // 1. Customer Registration Down Payments (Top Payments) Shamil Karein
+  (allCustomersData || []).forEach(c => {
+    const down = parseFloat(c.financials?.downPayment) || 0;
+    const o1 = c.firstOwner || c.secondOwner || {};
+
+    const hasDownRec = (allPaymentsData || []).some(p => 
+      ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && String(p.flatNo).trim() === String(c.flatNo).trim())) && 
+      p.head === 'Down Payment'
+    );
+
+    if (!hasDownRec && down > 0) {
+      let cDate = c.registrationDate || c.date;
+      if (!cDate && c.createdAt) {
+        try { cDate = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10); } catch(e){}
+      }
+      if (!cDate) cDate = new Date().toISOString().split('T')[0];
+
       cashTransactions.push({
-        date: p.date,
-        ref: p.receiptNo || 'BH-REC',
-        desc: `Customer Payment - ${p.customerName} (Flat ${p.flatNo})`,
-        head: p.head || 'Monthly Installment',
-        cashIn: parseFloat(p.amount) || 0,
+        date: cDate,
+        ref: 'BH-DP-' + (c.id ? c.id.substring(0, 4).toUpperCase() : 'BOOK'),
+        desc: `Booking / Down Payment - ${o1.name || 'Customer'} (Flat ${c.flatNo || '-'})`,
+        head: 'Down Payment',
+        cashIn: down,
         cashOut: 0
       });
     }
   });
 
-  // 2. Cash Vouchers (CPV & CRV)
+  // 2. Customer Installments / Collections (Cash aur Online dono shamil karein)
+  (allPaymentsData || []).forEach(p => {
+    const modeLabel = p.mode ? ` (${p.mode})` : '';
+    cashTransactions.push({
+      date: p.date,
+      ref: p.receiptNo || 'BH-REC',
+      desc: `Customer Payment - ${p.customerName || 'Customer'} (Flat ${p.flatNo || '-'})${modeLabel}`,
+      head: p.head || 'Monthly Installment',
+      cashIn: parseFloat(p.amount) || 0,
+      cashOut: 0
+    });
+  });
+
+  // 3. Cash Vouchers (CPV & CRV)
   (allCashVouchersData || []).forEach(v => {
     const amt = parseFloat(v.amount) || 0;
     cashTransactions.push({
       date: v.date,
-      ref: v.voucherNo,
-      desc: `${v.party} - ${v.narration || ''}`,
+      ref: v.voucherNo || 'CV',
+      desc: `${v.party || 'Party'} - ${v.narration || v.head || ''}`,
       head: v.head || 'Cash Voucher',
       cashIn: (v.type === 'RECEIPT') ? amt : 0,
       cashOut: (v.type === 'PAYMENT') ? amt : 0
     });
   });
 
-  // 3. Purchases Paid in Cash (Outflow)
+  // 4. Purchases (Paid Amount Outflow)
   (allPurchaserData || []).forEach(pur => {
     const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-    const isCash = (pur.paymentMethod === 'Cash' || !pur.paymentMethod);
-    if (paid > 0 && isCash) {
+    if (paid > 0) {
       cashTransactions.push({
         date: pur.date,
         ref: pur.billNo || 'PUR-BILL',
@@ -13298,7 +13638,7 @@ function renderCashBookReport() {
     }
   });
 
-  // 4. Site Expenses (Cash Outflow)
+  // 5. Site Expenses (Outflow)
   (allSiteExpensesData || []).forEach(se => {
     const paid = parseFloat(se.paidAmount) || 0;
     if (paid > 0) {
@@ -13313,7 +13653,7 @@ function renderCashBookReport() {
     }
   });
 
-  // 5. Office Expenses (Cash Outflow)
+  // 6. Office Expenses (Outflow)
   (allOfficeExpensesData || []).forEach(oe => {
     const paid = parseFloat(oe.paidAmount) || 0;
     if (paid > 0) {
@@ -13328,10 +13668,10 @@ function renderCashBookReport() {
     }
   });
 
-  // Date sorting
+  // Date Sort
   cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  // Date filtering
+  // Date Filtering
   let filtered = cashTransactions.filter(item => {
     if (dateFrom && item.date < dateFrom) return false;
     if (dateTo && item.date > dateTo) return false;
@@ -13343,7 +13683,7 @@ function renderCashBookReport() {
   let runningBal = 0;
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Chuni gayi tareekh mein koi naqad entry mojood nahi hai.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Chuni gayi tareekh mein koi entry mojood nahi hai.</td></tr>`;
     document.getElementById('cbCardTotalIn').textContent = 'Rs. 0';
     document.getElementById('cbCardTotalOut').textContent = 'Rs. 0';
     document.getElementById('cbCardNetBalance').textContent = 'Rs. 0';
@@ -13768,26 +14108,66 @@ function renderProfitLossReport() {
 
   if (!tbody) return;
 
-  // 1. Revenue: Total Customer Bookings / Inflows
-  let revenue = 0;
-  (allCustomersData || []).forEach(c => {
-    const cDate = c.createdAt ? (c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : (typeof c.createdAt === 'string' ? c.createdAt.substring(0,10) : '')) : '';
-    if (dateFrom && cDate && cDate < dateFrom) return;
-    if (dateTo && cDate && cDate > dateTo) return;
-    revenue += (parseFloat(c.financials?.totalPrice) || 0);
-  });
-
-  // Agar deal price na mile to received customer payments se revenue banayein
-  let totalPaymentsReceived = 0;
+  // A. Customer Installments / Collections (Wasool Shuda 1 Lakh aur baqi installments)
+  let totalInstallments = 0;
   (allPaymentsData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
     if (dateTo && p.date > dateTo) return;
-    totalPaymentsReceived += (parseFloat(p.amount) || 0);
+    totalInstallments += (parseFloat(p.amount) || 0);
   });
 
-  let displayRevenue = revenue > 0 ? revenue : totalPaymentsReceived;
+  // B. Customer Booking / Down Payments (Registration ke waqt li gayi)
+  let totalDownPayments = 0;
+  let totalAllotmentDealValue = 0;
 
-  // 2. Direct Construction Costs (Sirf Raw Material Purchases):
+  (allCustomersData || []).forEach(c => {
+    const down = parseFloat(c.financials?.downPayment) || 0;
+    const dealPrice = parseFloat(c.financials?.totalPrice) || 0;
+    totalAllotmentDealValue += dealPrice;
+
+    let cDate = c.registrationDate || c.date;
+    if (!cDate && c.createdAt) {
+      try { cDate = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10); } catch(e){}
+    }
+
+    if (dateFrom && cDate && cDate < dateFrom) return;
+    if (dateTo && cDate && cDate > dateTo) return;
+
+    const hasDownRec = (allPaymentsData || []).some(p => 
+      ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && p.flatNo === c.flatNo)) && 
+      p.head === 'Down Payment'
+    );
+    if (!hasDownRec && down > 0) {
+      totalDownPayments += down;
+    }
+  });
+
+  // C. Cash Receipt Vouchers (CRV)
+  let crvIncome = 0;
+  let cpvMaterial = 0;
+  let cpvOperating = 0;
+
+  (allCashVouchersData || []).forEach(v => {
+    if (dateFrom && v.date < dateFrom) return;
+    if (dateTo && v.date > dateTo) return;
+
+    const amt = parseFloat(v.amount) || 0;
+    if (v.type === 'RECEIPT') {
+      crvIncome += amt;
+    } else if (v.type === 'PAYMENT') {
+      const head = (v.head || '').toLowerCase();
+      if (head.includes('vendor') || head.includes('material')) {
+        cpvMaterial += amt;
+      } else if (!head.includes('owner') && !head.includes('drawing') && !head.includes('capital') && !head.includes('advance return')) {
+        cpvOperating += amt;
+      }
+    }
+  });
+
+  // Kul Haqeeqi Wasooli (Realized Revenue Inflow)
+  const grandRevenue = totalInstallments + totalDownPayments + crvIncome;
+
+  // 2. Direct Construction Costs (Purchases + Material CPV)
   let totalPurchases = 0;
   (allPurchaserData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
@@ -13795,37 +14175,9 @@ function renderProfitLossReport() {
     totalPurchases += (parseFloat(p.total || p.totalAmount) || 0);
   });
 
-  // Material related CPVs aur Other Incomes
-  let cpvMaterial = 0;
-  let cpvOperating = 0;
-  let crvIncome = 0;
-
-  (allCashVouchersData || []).forEach(v => {
-    if (dateFrom && v.date < dateFrom) return;
-    if (dateTo && v.date > dateTo) return;
-
-    const amt = parseFloat(v.amount) || 0;
-    if (v.type === 'PAYMENT') {
-      const head = (v.head || '').toLowerCase();
-      if (head.includes('vendor') || head.includes('material')) {
-        cpvMaterial += amt;
-      } else if (head.includes('owner') || head.includes('drawing') || head.includes('capital') || head.includes('advance return')) {
-        // Drawings / Capital equity items
-      } else {
-        // Site, Labour, Office aur Baqi Tamam Kharchay -> Operating Expenses
-        cpvOperating += amt;
-      }
-    } else if (v.type === 'RECEIPT') {
-      const head = (v.head || '').toLowerCase();
-      if (head.includes('booking') || head.includes('token') || head.includes('drawer') || head.includes('miscellaneous')) {
-        crvIncome += amt;
-      }
-    }
-  });
-
   const totalConstructionCost = totalPurchases + cpvMaterial;
 
-  // 3. Operating Expenses (Site Expenses + Office Expenses + CPVs):
+  // 3. Operating Expenses (Site Expenses + Office Expenses + CPVs)
   let totalSiteExp = 0;
   (allSiteExpensesData || []).forEach(se => {
     if (dateFrom && se.date < dateFrom) return;
@@ -13840,11 +14192,9 @@ function renderProfitLossReport() {
     totalOfficeExp += (parseFloat(oe.totalAmount) || 0);
   });
 
-  // Site Expense aur Office Expense dono Operating Cost me jama honge:
   const totalOperatingCost = totalSiteExp + totalOfficeExp + cpvOperating;
 
-  // 4. Final Calculations:
-  const grandRevenue = displayRevenue + crvIncome;
+  // 4. Calculations (Gross & Net Profit)
   const grossProfit = grandRevenue - totalConstructionCost;
   const netProfit = grossProfit - totalOperatingCost;
   const netMargin = grandRevenue > 0 ? Math.round((netProfit / grandRevenue) * 100) : 0;
@@ -13869,12 +14219,33 @@ function renderProfitLossReport() {
   // P&L Statement Table Render:
   tbody.innerHTML = `
     <tr style="background:#f8fafc; font-weight:800;">
-      <td colspan="3" style="color:#1e40af; font-size:14px;"><i class="fa-solid fa-arrow-trend-up"></i> 1. REVENUE / SALES</td>
+      <td colspan="3" style="color:#1e40af; font-size:14px;"><i class="fa-solid fa-arrow-trend-up"></i> 1. REVENUE / SALES (CUSTOMER COLLECTIONS)</td>
     </tr>
     <tr>
-      <td style="padding-left:24px;">Property Units Total Allotment Value & Inflows</td>
-      <td style="text-align:right;">Rs. ${grandRevenue.toLocaleString()}</td>
-      <td style="text-align:right; font-weight:800; color:#16a34a;">Rs. ${grandRevenue.toLocaleString()}</td>
+      <td style="padding-left:24px;">Customer Installments Collected (Raseedein)</td>
+      <td style="text-align:right; font-weight:700; color:#16a34a;">Rs. ${totalInstallments.toLocaleString()}</td>
+      <td style="text-align:right;">-</td>
+    </tr>
+    <tr>
+      <td style="padding-left:24px;">Customer Booking / Down Payments (Advance)</td>
+      <td style="text-align:right; font-weight:700; color:#16a34a;">Rs. ${totalDownPayments.toLocaleString()}</td>
+      <td style="text-align:right;">-</td>
+    </tr>
+    ${crvIncome > 0 ? `
+    <tr>
+      <td style="padding-left:24px;">Other Cash Receipts (CRV)</td>
+      <td style="text-align:right;">Rs. ${crvIncome.toLocaleString()}</td>
+      <td style="text-align:right;">-</td>
+    </tr>` : ''}
+    <tr style="background:#f0fdf4; font-weight:800;">
+      <td style="padding-left:24px; color:#166534;">Total Realized Revenue (Wasool Shuda Raqam)</td>
+      <td style="text-align:right;">-</td>
+      <td style="text-align:right; font-weight:900; color:#16a34a;">Rs. ${grandRevenue.toLocaleString()}</td>
+    </tr>
+    <tr style="color:#64748b; font-size:11.5px; border-bottom:1.5px solid #cbd5e1;">
+      <td style="padding-left:24px;"><em>Total Property Allotment Deal Value (Kul Contract)</em></td>
+      <td style="text-align:right;"><em>Rs. ${totalAllotmentDealValue.toLocaleString()}</em></td>
+      <td style="text-align:right;"><em>(Reference)</em></td>
     </tr>
 
     <tr style="background:#f8fafc; font-weight:800;">
@@ -13898,7 +14269,7 @@ function renderProfitLossReport() {
     </tr>
 
     <tr style="background:#eff6ff; font-weight:900; font-size:14px;">
-      <td>GROSS PROFIT</td>
+      <td>GROSS PROFIT / (LOSS)</td>
       <td style="text-align:right;">-</td>
       <td style="text-align:right; color:${grossProfit >= 0 ? '#16a34a' : '#dc2626'};">Rs. ${grossProfit.toLocaleString()}</td>
     </tr>
@@ -13955,23 +14326,34 @@ function downloadProfitLossPDF() {
     }
   }
 
-  // 1. Revenue
-  let revenue = 0;
-  (allCustomersData || []).forEach(c => {
-    const cDate = c.createdAt ? (c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : (typeof c.createdAt === 'string' ? c.createdAt.substring(0,10) : '')) : '';
-    if (dateFrom && cDate && cDate < dateFrom) return;
-    if (dateTo && cDate && cDate > dateTo) return;
-    revenue += (parseFloat(c.financials?.totalPrice) || 0);
-  });
-
-  let totalPaymentsReceived = 0;
+// 1. Revenue & Collections
+  let totalInstallments = 0;
   (allPaymentsData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
     if (dateTo && p.date > dateTo) return;
-    totalPaymentsReceived += (parseFloat(p.amount) || 0);
+    totalInstallments += (parseFloat(p.amount) || 0);
   });
 
-  let displayRevenue = revenue > 0 ? revenue : totalPaymentsReceived;
+  let totalDownPayments = 0;
+  (allCustomersData || []).forEach(c => {
+    const down = parseFloat(c.financials?.downPayment) || 0;
+    let cDate = c.registrationDate || c.date;
+    if (!cDate && c.createdAt) {
+      try { cDate = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10); } catch(e){}
+    }
+    if (dateFrom && cDate && cDate < dateFrom) return;
+    if (dateTo && cDate && cDate > dateTo) return;
+
+    const hasDownRec = (allPaymentsData || []).some(p => 
+      ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && p.flatNo === c.flatNo)) && 
+      p.head === 'Down Payment'
+    );
+    if (!hasDownRec && down > 0) {
+      totalDownPayments += down;
+    }
+  });
+
+  let displayRevenue = totalInstallments + totalDownPayments;
 
   // 2. Direct Construction Costs
   let totalPurchases = 0;
@@ -13985,27 +14367,19 @@ function downloadProfitLossPDF() {
   let cpvOperating = 0;
   let crvIncome = 0;
 
-  (allCashVouchersData || []).forEach(v => {
-    if (dateFrom && v.date < dateFrom) return;
-    if (dateTo && v.date > dateTo) return;
-
-    const amt = parseFloat(v.amount) || 0;
-    if (v.type === 'PAYMENT') {
-      const head = (v.head || '').toLowerCase();
-      if (head.includes('vendor') || head.includes('material')) {
-        cpvMaterial += amt;
-      } else if (head.includes('owner') || head.includes('drawing') || head.includes('capital') || head.includes('advance return')) {
-        // Equity items
-      } else {
-        cpvOperating += amt;
-      }
-    } else if (v.type === 'RECEIPT') {
-      const head = (v.head || '').toLowerCase();
-      if (head.includes('booking') || head.includes('token') || head.includes('drawer') || head.includes('miscellaneous')) {
-        crvIncome += amt;
-      }
-    }
-  });
+  // (3) Cash Vouchers (Payment Credit mein jayegi taake baqaya minus ho)
+      (allCashVouchersData || []).forEach(v => {
+        if (selectedAcc === 'ALL' || v.party === selectedAcc) {
+          const amt = parseFloat(v.amount) || 0;
+          ledgerEntries.push({
+            date: v.date,
+            ref: v.voucherNo,
+            desc: v.narration || v.head,
+            debit: (v.type === 'RECEIPT') ? amt : 0,
+            credit: (v.type === 'PAYMENT') ? amt : 0
+          });
+        }
+      });
 
   const totalConstructionCost = totalPurchases + cpvMaterial;
 
@@ -14229,24 +14603,29 @@ function downloadProfitLossPDF() {
 }
 
 
-// ========================================================
-// LIVE DASHBOARD STATS & RECOVERY UPDATER
-// ========================================================
 function updateDashboardChartsAndStats() {
   // 1. Flats Stats
-  const totalFlats = allFlatsData ? allFlatsData.length : 0;
+  let totalFlats = allFlatsData ? allFlatsData.length : 0;
+  if (totalFlats === 0 && allProjectsData && allProjectsData.length > 0) {
+    totalFlats = allProjectsData.reduce((sum, p) => sum + (parseInt(p.flatsCount) || 0), 0);
+  }
+
   const availFlats = (allFlatsData || []).filter(f => (f.status || '').toLowerCase() === 'available').length;
-  const bookedFlats = totalFlats - availFlats;
+  const bookedFlats = (allFlatsData || []).filter(f => {
+    const st = (f.status || '').toLowerCase();
+    return st === 'booked' || st === 'sold';
+  }).length;
 
   if (document.getElementById('statTotalFlats')) document.getElementById('statTotalFlats').textContent = totalFlats;
-  if (document.getElementById('statAvailableFlats')) document.getElementById('statAvailableFlats').textContent = availFlats;
+  if (document.getElementById('statAvailableFlats')) document.getElementById('statAvailableFlats').textContent = (allFlatsData.length > 0) ? availFlats : totalFlats;
   if (document.getElementById('statBookedSoldFlats')) document.getElementById('statBookedSoldFlats').textContent = bookedFlats;
 
-  // 2. Financial Collections & Expenses
+  // 2. Financial Collections (Installments + Down Payments)
   let customerCollections = 0;
   let bankBal = 0;
   let cashBal = 0;
 
+  // A. Collected Installments
   (allPaymentsData || []).forEach(p => {
     const amt = parseFloat(p.amount) || 0;
     customerCollections += amt;
@@ -14254,6 +14633,20 @@ function updateDashboardChartsAndStats() {
     else bankBal += amt;
   });
 
+  // B. Registration wali Down Payments (Agar alag receipt na bani ho to yahan jama karein)
+  (allCustomersData || []).forEach(c => {
+    const down = parseFloat(c.financials?.downPayment) || 0;
+    const hasDownRec = (allPaymentsData || []).some(p => 
+      ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && p.flatNo === c.flatNo)) && 
+      p.head === 'Down Payment'
+    );
+    if (!hasDownRec && down > 0) {
+      customerCollections += down;
+      cashBal += down; // Default Cash mein jama hogi
+    }
+  });
+
+  // Expenses Minus Karein
   let siteExpTotal = 0;
   (allSiteExpensesData || []).forEach(se => {
     const paid = parseFloat(se.paidAmount) || 0;
@@ -14278,36 +14671,95 @@ function updateDashboardChartsAndStats() {
     document.getElementById('dashTotalOfficeExpenses').textContent = `Rs. ${officeExpTotal.toLocaleString()}`;
   }
 
-  // 3. Balance Strip
+  // 3. Balance Cards (Bank + Cash)
   const totalBal = bankBal + cashBal;
   if (document.getElementById('dashBankBalance')) document.getElementById('dashBankBalance').textContent = `Rs. ${bankBal.toLocaleString()}`;
   if (document.getElementById('dashCashBalance')) document.getElementById('dashCashBalance').textContent = `Rs. ${cashBal.toLocaleString()}`;
   if (document.getElementById('dashTotalBalance')) document.getElementById('dashTotalBalance').textContent = `Rs. ${totalBal.toLocaleString()}`;
 
-  // 4. Customer Pending Dues Table
+  // 4. Customer Overdue Payments Table (Sirf wahi jinki Date nikal chuki hai aur payment nahi ki)
   const tbody = document.getElementById('dashPendingPaymentsTableBody');
   if (tbody) {
-    let pendingRowsHtml = '';
-    (allCustomersData || []).slice(0, 5).forEach(c => {
-      const o1 = c.firstOwner || {};
-      const totPrice = parseFloat(c.financials?.totalPrice) || 0;
-      const pastPaid = (allPaymentsData || []).filter(p => p.customerId === c.id).reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
-      const rem = Math.max(0, totPrice - pastPaid);
+    let overdueRowsHtml = '';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-      if (rem > 0) {
-        pendingRowsHtml += `
+    (allCustomersData || []).forEach(c => {
+      const o1 = c.firstOwner || c.secondOwner || {};
+      const monthlyInst = parseFloat(c.financials?.monthlyInstallment) || 0;
+      const durationMonths = parseInt(c.financials?.durationMonths) || 36;
+
+      // Customer ki Registration Date nikalein
+      let regDateStr = c.registrationDate || c.date;
+      if (!regDateStr && c.createdAt) {
+        try {
+          regDateStr = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10);
+        } catch(e){}
+      }
+      if (!regDateStr) return; // Agar date na ho to skip
+
+      const regDate = new Date(regDateStr);
+      regDate.setHours(0, 0, 0, 0);
+
+      // Customer ne ab tak kul kitni installments jama karwai hain (Down payment ke ilawa)
+      const installmentsPaid = (allPaymentsData || []).filter(p => 
+        ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && String(p.flatNo).trim() === String(c.flatNo).trim())) &&
+        p.head !== 'Down Payment'
+      ).reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+
+      // Aaj tak kitnay mahinay guzar chuke hain (Installments due)
+      let expectedMonthsPassed = 0;
+      let earliestUnpaidDueDate = null;
+
+      for (let m = 1; m <= durationMonths; m++) {
+        const dueDate = new Date(regDate.getFullYear(), regDate.getMonth() + m, regDate.getDate());
+        dueDate.setHours(0, 0, 0, 0);
+
+        if (dueDate <= today) {
+          expectedMonthsPassed++;
+          // Earliest unpaid date check
+          const expectedAmountTillNow = m * monthlyInst;
+          if (installmentsPaid < expectedAmountTillNow && !earliestUnpaidDueDate) {
+            earliestUnpaidDueDate = dueDate;
+          }
+        } else {
+          break; // Agay ki dates abhi aayi hi nahi hain
+        }
+      }
+
+      // Kul raqam jo aaj tak jama ho jani chahiye thi
+      const totalExpectedDueTillToday = expectedMonthsPassed * monthlyInst;
+      const overdueAmount = Math.max(0, totalExpectedDueTillToday - installmentsPaid);
+
+      // SIRF TAB SHOW KAREIN JAB TAREEKH GUZAR CHUKI HO AUR RAQAM BHI BAQI HO
+      if (overdueAmount > 0 && earliestUnpaidDueDate) {
+        const diffTime = today - earliestUnpaidDueDate;
+        const daysOverdue = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        const formattedDueDate = earliestUnpaidDueDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+        overdueRowsHtml += `
           <tr>
             <td><strong>${o1.name || 'Customer'}</strong></td>
             <td><strong style="color:#2563eb;">Flat ${c.flatNo || '-'}</strong></td>
-            <td>Due This Month</td>
-            <td style="color:#dc2626; font-weight:800;">Rs. ${rem.toLocaleString()}</td>
-            <td style="text-align:center;"><span class="badge-status badge-booked">Pending</span></td>
+            <td style="color:#b91c1c; font-weight:700;"><i class="fa-regular fa-calendar-xmark"></i> ${formattedDueDate}</td>
+            <td style="color:#dc2626; font-weight:900;">Rs. ${overdueAmount.toLocaleString()}</td>
+            <td style="text-align:center;">
+              <span class="badge-status badge-sold" style="background:#fee2e2; color:#dc2626; padding:4px 10px; font-size:11px; font-weight:800;">
+                Overdue (${daysOverdue} Days)
+              </span>
+            </td>
           </tr>
         `;
       }
     });
 
-    tbody.innerHTML = pendingRowsHtml || `<tr><td colspan="5" style="text-align:center; padding:20px; color:#64748b;">No pending dues. All payments clear!</td></tr>`;
+    tbody.innerHTML = overdueRowsHtml || `
+      <tr>
+        <td colspan="5" style="text-align:center; padding:24px; color:#16a34a; font-weight:700;">
+          <i class="fa-solid fa-circle-check" style="font-size:16px;"></i> No overdue payments pending. All accounts are up to date!
+        </td>
+      </tr>
+    `;
   }
 }
 
@@ -14530,10 +14982,6 @@ async function confirmQuickPayPurchase() {
   }
 }
 
-// =========================================================================
-// 2. ACCOUNT LEDGER REPORT & MODAL CONTROLLER
-// =========================================================================
-
 function initAccountLedgerView() {
   const accSelect = document.getElementById('alFilterAccount');
   if (accSelect) {
@@ -14551,6 +14999,17 @@ function initAccountLedgerView() {
     });
   }
 
+  renderAccountLedgerReport();
+}
+
+// Naya Reset Function (Dates clear karne ke liye)
+function resetAccountLedgerDates() {
+  const dFrom = document.getElementById('alFilterDateFrom');
+  const dTo = document.getElementById('alFilterDateTo');
+  const typeSelect = document.getElementById('alFilterType');
+  if (dFrom) dFrom.value = '';
+  if (dTo) dTo.value = '';
+  if (typeSelect) typeSelect.value = 'ALL';
   renderAccountLedgerReport();
 }
 
@@ -14969,14 +15428,14 @@ function openAccountFullLedgerFromDetails() {
     });
   });
 
-  // 3. Cash Vouchers (CPV & CRV)
+  // 3. Cash Vouchers (Payment Credit mein jayegi taake baqaya minus ho)
   (allCashVouchersData || []).filter(v => v.party === accName).forEach(v => {
     transactions.push({
       date: v.date,
       ref: v.voucherNo || 'CV',
       desc: v.narration || v.head,
-      debit: v.type === 'PAYMENT' ? (parseFloat(v.amount) || 0) : 0,
-      credit: v.type === 'RECEIPT' ? (parseFloat(v.amount) || 0) : 0
+      debit: v.type === 'RECEIPT' ? (parseFloat(v.amount) || 0) : 0,
+      credit: v.type === 'PAYMENT' ? (parseFloat(v.amount) || 0) : 0
     });
   });
 
