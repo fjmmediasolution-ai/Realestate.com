@@ -7377,7 +7377,7 @@ async function confirmStatusChange() {
   }
 }
 
-    // 1. Available Flats Dropdown (Smart Fallback ke sath)
+    // 1. Available Flats Dropdown (STRICT: Booked/Sold Flats Never Show Up)
     function populateAvailableFlatsDropdown() {
       const select = document.getElementById('custFlatSelect');
       if (!select) return;
@@ -7389,8 +7389,41 @@ async function confirmStatusChange() {
         return;
       }
 
-      // 1. Pehle Available flats filter karein (Case-insensitive check)
-      const availableFlats = allFlatsData.filter(f => (f.status || '').trim().toLowerCase() === 'available');
+      // Agar Edit Mode ho to us customer ka apna flat dropdown mein allow ho
+      const currentEditId = document.getElementById('customerEditId')?.value || '';
+      const currentEditingCust = currentEditId ? allCustomersData.find(c => c.id === currentEditId) : null;
+      const currentCustFlatId = currentEditingCust?.flatId || '';
+      const currentCustFlatNo = (currentEditingCust?.flatNo || '').trim().toLowerCase();
+
+      // Tamam already booked flats ke IDs aur Numbers collect karein
+      const bookedFlatIds = new Set();
+      const bookedFlatNos = new Set();
+
+      (allCustomersData || []).forEach(c => {
+        if (currentEditId && c.id === currentEditId) return; // Edit karte waqt apna flat exclude na ho
+        if (c.flatId) bookedFlatIds.add(c.flatId);
+        if (c.flatNo) bookedFlatNos.add(c.flatNo.trim().toLowerCase());
+      });
+
+      // Strict Filter: Sirf wahi flat aayega jo Booked ya Sold na ho aur na kisi customer ke paas ho
+      const availableFlats = allFlatsData.filter(f => {
+        // Agar edit ho raha ho to customer ka apna flat dikhayein
+        if (currentEditId && (f.id === currentCustFlatId || (f.flatNo && f.flatNo.trim().toLowerCase() === currentCustFlatNo))) {
+          return true;
+        }
+
+        const status = (f.status || '').trim().toLowerCase();
+        const fNo = (f.flatNo || '').trim().toLowerCase();
+
+        // 1. Agar status Booked ya Sold hai to dropdown mein nahi aayega
+        if (status === 'booked' || status === 'sold') return false;
+
+        // 2. Agar Customer directory mein kisi customer ke paas yeh flat pehle se book hai to nahi aayega
+        if (bookedFlatIds.has(f.id) || bookedFlatNos.has(fNo)) return false;
+
+        // 3. Sirf Available flats
+        return status === 'available';
+      });
 
       if (availableFlats.length > 0) {
         availableFlats.forEach(f => {
@@ -7404,23 +7437,12 @@ async function confirmStatusChange() {
           select.appendChild(opt);
         });
       } else {
-        // 2. Agar koi flat Available na ho, to system tamam flats show karega taake form block na ho
+        // Agar koi flat available nahi hai to saaf message aayega, booked flats select nahi honge
         const optNotice = document.createElement('option');
         optNotice.value = "";
         optNotice.disabled = true;
-        optNotice.textContent = "-- Note: Tamam flats booked hain (Neeche se select karein) --";
+        optNotice.textContent = "Tamam Flats Booked Hain (Koi Flat Dastyab Nahi Hai)";
         select.appendChild(optNotice);
-
-        allFlatsData.forEach(f => {
-          const opt = document.createElement('option');
-          opt.value = f.id;
-          opt.textContent = `${f.flatNo} (${f.floor || 'Floor'} - ${f.status || 'Booked'})`;
-          opt.setAttribute('data-floor', f.floor || '');
-          opt.setAttribute('data-size', f.size || '');
-          opt.setAttribute('data-price', f.price || '');
-          opt.setAttribute('data-flatno', f.flatNo || '');
-          select.appendChild(opt);
-        });
       }
     }
 
