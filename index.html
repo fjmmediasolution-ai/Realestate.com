@@ -530,6 +530,29 @@
       --sidebar-width: 275px;
     }
 
+    /* Modern Sleek Glassmorphic Arrow Button */
+    .btn-sidebar-arrow {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #94a3b8 !important;
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      font-size: 13px !important;
+      transition: all 0.25s ease !important;
+      outline: none !important;
+    }
+    .btn-sidebar-arrow:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+      color: #ffffff !important;
+      border-color: var(--secondary) !important;
+      transform: scale(1.08);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -2029,13 +2052,14 @@
     <!-- Navigation Sidebar -->
     <aside id="sidebar" class="sidebar">
       <div>
-        <div class="sidebar-header">
-          <div class="sidebar-brand">
-            <i class="fa-solid fa-gem"></i>
-            <span>EstateERP</span>
+       <div class="sidebar-header" style="padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+          <div class="sidebar-brand" style="display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-gem" style="color: var(--secondary); font-size: 19px;"></i>
+            <span style="font-weight: 800; font-size: 17px; color: #ffffff; letter-spacing: 0.5px;">EstateERP</span>
           </div>
-          <button class="btn-close-sidebar" onclick="toggleSidebar()">
-            <i class="fa-solid fa-xmark"></i>
+          <!-- Sleek Circular Arrow Button -->
+          <button type="button" class="btn-sidebar-arrow" onclick="toggleSidebar()" title="Collapse / Expand Menu">
+            <i class="fa-solid fa-chevron-left" id="sidebarArrowIcon"></i>
           </button>
         </div>
 
@@ -2286,9 +2310,10 @@
       
       <!-- Top Navigation Bar -->
       <header class="topbar">
-        <div class="topbar-left">
-          <button class="btn-toggle-menu" onclick="toggleSidebar()" title="Toggle Sidebar">
-            <i class="fa-solid fa-bars"></i>
+        <div class="topbar-left" style="display: flex; align-items: center; gap: 12px;">
+          <!-- Sleek Modern Open Arrow Button (Sirf tab dikhega jab sidebar band ho) -->
+          <button id="btnFloatingSidebarOpen" onclick="toggleSidebar()" title="Open Navigation Menu" style="display: none; width: 36px; height: 36px; border-radius: 10px; background: #ffffff; color: var(--primary); border: 1.5px solid var(--border); cursor: pointer; align-items: center; justify-content: center; font-size: 13px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: all 0.2s ease;">
+            <i class="fa-solid fa-chevron-right"></i>
           </button>
           <h2 class="page-title" id="pageHeading">Dashboard</h2>
         </div>
@@ -3905,11 +3930,11 @@
             <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 16px;">Account Ledger</h2>
             
             <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
-              <!-- 1. Account Dropdown -->
-              <div style="flex: 2; min-width: 180px;">
-                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Account</label>
-                <select id="alFilterAccount" onchange="renderAccountLedgerReport()" style="width: 100%; padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13.5px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;">
-                </select>
+              <!-- 1. Searchable Account Input with Datalist (Designations Included) -->
+              <div style="flex: 2; min-width: 220px;">
+                <label style="font-size: 12px; font-weight: 700; color: #334155; display: block; margin-bottom: 5px;">Account (Search / Select)</label>
+                <input type="text" id="alFilterAccount" list="alAccountDatalist" oninput="renderAccountLedgerReport()" placeholder="Search name or designation..." style="width: 100%; padding: 9px 12px; border: 1.5px solid #cbd5e1; border-radius: 9px; font-size: 13.5px; font-weight: 600; outline: none; background: #ffffff; color: #0f172a;" autocomplete="off" />
+                <datalist id="alAccountDatalist"></datalist>
               </div>
 
               <!-- 2. Date From (Naya Option) -->
@@ -5287,10 +5312,14 @@
             </button>
           </div>
 
-          <!-- Settings Tab Navigation Buttons -->
+         <!-- Settings Tab Navigation Buttons -->
           <div class="settings-nav-tabs">
             <button type="button" class="set-tab-btn active" onclick="switchSettingsTab('tabCompany', this)">
               <i class="fa-solid fa-building"></i> Company Profile
+            </button>
+            <!-- 4 Themes Tab Button -->
+            <button type="button" class="set-tab-btn" onclick="switchSettingsTab('tabThemes', this)">
+              <i class="fa-solid fa-palette"></i> ERP Themes
             </button>
             <button type="button" class="set-tab-btn" onclick="switchSettingsTab('tabCategories', this)">
               <i class="fa-solid fa-tags"></i> Master Categories
@@ -5304,6 +5333,74 @@
             <button type="button" class="set-tab-btn" onclick="switchSettingsTab('tabBackup', this)">
               <i class="fa-solid fa-database"></i> Data Backup
             </button>
+          </div>
+
+          <!-- ================= TAB: 4 PROFESSIONAL ERP THEMES ================= -->
+          <div id="tabThemes" class="settings-tab-pane card-panel">
+            <div class="panel-header">
+              <h3 class="panel-title"><i class="fa-solid fa-palette" style="color: var(--primary);"></i> Choose ERP Visual Theme</h3>
+              <small style="color: #64748b;">Neeche diye gaye 4 themes me se kisi par bhi click karein, software ka rang foran tabdeel ho jayega.</small>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 14px;">
+              
+              <!-- 1. Royal Sapphire Blue -->
+              <div onclick="applyERPTheme('theme-blue')" id="card_theme-blue" style="background: #ffffff; border: 2px solid #2563eb; border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 14px rgba(37,99,235,0.12);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <strong style="color: #0f172a; font-size: 14.5px;">1. Royal Sapphire Blue</strong>
+                  <span id="badge_theme-blue" style="font-size: 11px; font-weight: 800; background: #dbeafe; color: #1d4ed8; padding: 3px 9px; border-radius: 12px;">Active</span>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #071228;" title="Sidebar"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #2563eb;" title="Primary"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #38bdf8;" title="Secondary"></div>
+                </div>
+                <small style="color: #64748b; font-size: 12px;">Classic corporate royal blue look.</small>
+              </div>
+
+              <!-- 2. Emerald Luxury Green -->
+              <div onclick="applyERPTheme('theme-emerald')" id="card_theme-emerald" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <strong style="color: #0f172a; font-size: 14.5px;">2. Emerald Luxury</strong>
+                  <span id="badge_theme-emerald" style="display: none; font-size: 11px; font-weight: 800; background: #dcfce7; color: #15803d; padding: 3px 9px; border-radius: 12px;">Active</span>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #041f17;" title="Sidebar"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #059669;" title="Primary"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #34d399;" title="Secondary"></div>
+                </div>
+                <small style="color: #64748b; font-size: 12px;">High-end property & investment green theme.</small>
+              </div>
+
+              <!-- 3. Midnight Onyx / Slate -->
+              <div onclick="applyERPTheme('theme-slate')" id="card_theme-slate" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <strong style="color: #0f172a; font-size: 14.5px;">3. Midnight Slate</strong>
+                  <span id="badge_theme-slate" style="display: none; font-size: 11px; font-weight: 800; background: #f1f5f9; color: #334155; padding: 3px 9px; border-radius: 12px;">Active</span>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #090e17;" title="Sidebar"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #334155;" title="Primary"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #94a3b8;" title="Secondary"></div>
+                </div>
+                <small style="color: #64748b; font-size: 12px;">Dark modern minimalist charcoal aesthetic.</small>
+              </div>
+
+              <!-- 4. Royal Velvet Purple -->
+              <div onclick="applyERPTheme('theme-purple')" id="card_theme-purple" style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <strong style="color: #0f172a; font-size: 14.5px;">4. Velvet Purple</strong>
+                  <span id="badge_theme-purple" style="display: none; font-size: 11px; font-weight: 800; background: #f3e8ff; color: #7e22ce; padding: 3px 9px; border-radius: 12px;">Active</span>
+                </div>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #130a24;" title="Sidebar"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #7c3aed;" title="Primary"></div>
+                  <div style="flex: 1; height: 32px; border-radius: 8px; background: #c084fc;" title="Secondary"></div>
+                </div>
+                <small style="color: #64748b; font-size: 12px;">Crystal royal purple aesthetic interface.</small>
+              </div>
+
+            </div>
           </div>
 
           <!-- ================= TAB 1: COMPANY PROFILE ================= -->
@@ -6537,22 +6634,65 @@ document.getElementById('formLogin').addEventListener('submit', async (e) => {
       }
     });
 
-    // ==========================================
-    // 3. NAVIGATION ROUTING
-    // ==========================================
+   // ========================================================
+    // SIDEBAR ARROW TOGGLE (HIDE / SHOW CONTROLLER)
+    // ========================================================
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const mainWrapper = document.getElementById('mainWrapper');
       const overlay = document.getElementById('sidebarOverlay');
+      const floatBtn = document.getElementById('btnFloatingSidebarOpen');
 
       if (window.innerWidth <= 992) {
         sidebar.classList.toggle('mobile-open');
-        overlay.classList.toggle('active');
+        if (overlay) overlay.classList.toggle('active');
       } else {
-        sidebar.classList.toggle('collapsed');
-        mainWrapper.classList.toggle('full-width');
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        if (mainWrapper) mainWrapper.classList.toggle('full-width', isCollapsed);
+
+        // Jab sidebar hide ho to Topbar par expand karne ka Arrow button show hoga
+        if (floatBtn) {
+          floatBtn.style.display = isCollapsed ? 'inline-flex' : 'none';
+        }
       }
     }
+
+    // ========================================================
+    // 4 THEMES ENGINE (LIVE APPLY & SAVE IN LOCALSTORAGE)
+    // ========================================================
+    function applyERPTheme(themeName, save = true) {
+      document.documentElement.setAttribute('data-theme', themeName);
+
+      if (save) {
+        localStorage.setItem('estate_erp_theme', themeName);
+      }
+
+      // Settings Cards ke Active State ko update karna
+      ['theme-blue', 'theme-emerald', 'theme-slate', 'theme-purple'].forEach(tName => {
+        const card = document.getElementById(`card_${tName}`);
+        const badge = document.getElementById(`badge_${tName}`);
+
+        if (card) {
+          if (tName === themeName) {
+            card.style.borderColor = 'var(--primary)';
+            card.style.boxShadow = '0 4px 14px rgba(0,0,0,0.12)';
+          } else {
+            card.style.borderColor = '#e2e8f0';
+            card.style.boxShadow = 'none';
+          }
+        }
+
+        if (badge) {
+          badge.style.display = (tName === themeName) ? 'inline-block' : 'none';
+        }
+      });
+    }
+
+    // Page Refresh hone par saved theme khud-ba-khud active ho
+    (function loadSavedThemeOnStart() {
+      const savedTheme = localStorage.getItem('estate_erp_theme') || 'theme-blue';
+      applyERPTheme(savedTheme, false);
+    })();
 
     // ========================================================
     // ACCORDION NAVIGATION DROPDOWN (AUTO-CLOSE PREVIOUS MENUS)
@@ -9505,7 +9645,7 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
-      try {
+    try {
         if (editId) {
           await db.collection('site_expenses').doc(editId).update(expData);
           alert('Expense kamiyabi se update ho gaya!');
@@ -9525,10 +9665,48 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       }
     });
 
+    // ========================================================
+    // DELETE SITE EXPENSE FUNCTION (FIXED)
+    // ========================================================
+    async function deleteSiteExpense(id) {
+      if (!id) return;
+      if (confirm('Kiya aap waqai is site expense ko delete karna chahte hain?')) {
+        try {
+          await db.collection('site_expenses').doc(id).delete();
+          allSiteExpensesData = allSiteExpensesData.filter(x => x.id !== id);
+          filterSiteExpenses();
+          updateDashboardChartsAndStats();
+          alert('Site expense kamiyabi se delete ho gaya!');
+        } catch (err) {
+          alert('Delete failed: ' + err.message);
+        }
+      }
+    }
+
+    // ========================================================
+    // DELETE OFFICE EXPENSE FUNCTION (FIXED)
+    // ========================================================
+    async function deleteOfficeExpense(id) {
+      if (!id) return;
+      if (confirm('Kiya aap waqai is office expense ko delete karna chahte hain?')) {
+        try {
+          await db.collection('office_expenses').doc(id).delete();
+          allOfficeExpensesData = allOfficeExpensesData.filter(x => x.id !== id);
+          filterOfficeExpenses();
+          updateDashboardChartsAndStats();
+          alert('Office expense kamiyabi se delete ho gaya!');
+        } catch (err) {
+          alert('Delete failed: ' + err.message);
+        }
+      }
+    }
 
 // ========================================================
     // 1. CATEGORY DELETE & MANAGE LOGIC
     // ========================================================
+
+
+
     function openCategoryManageModal() {
       const container = document.getElementById('categoryManageList');
       if (!container) return;
@@ -10048,7 +10226,7 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
-      try {
+     try {
         if (editId) {
           await db.collection('office_expenses').doc(editId).update(expData);
           alert('Office expense update ho gaya!');
@@ -10068,9 +10246,31 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
       }
     });
 
+    // ========================================================
+    // DELETE OFFICE EXPENSE FUNCTION (FIXED)
+    // ========================================================
+    async function deleteOfficeExpense(id) {
+      if (!id) return;
+      if (confirm('Kiya aap waqai is office expense ko delete karna chahte hain?')) {
+        try {
+          await db.collection('office_expenses').doc(id).delete();
+          allOfficeExpensesData = allOfficeExpensesData.filter(x => x.id !== id);
+          filterOfficeExpenses();
+          updateDashboardChartsAndStats();
+          alert('Office expense kamiyabi se delete ho gaya!');
+        } catch (err) {
+          alert('Delete failed: ' + err.message);
+        }
+      }
+    }
+
     // =========================================================================
     // 13. SETTINGS MODULE CONTROLLER (5 ESSENTIALS)
     // =========================================================================
+
+
+
+
     let settingLogoBase64 = '';
     let settingStampBase64 = '';
     let purchaserCategoriesList = [
@@ -11326,12 +11526,29 @@ loadLicenseSettings();
     // UNIFIED BLUE WAVE INVOICE PDF GENERATOR ENGINE (MATCHING EXACT TEMPLATE)
     // =========================================================================
 
-    // 1. CUSTOMER PAYMENT RECEIPT
+  // 1. CUSTOMER PAYMENT RECEIPT (DYNAMIC FROM SETTINGS + STRICT SINGLE PAGE A4)
     function downloadPaymentReceiptPDF(p) {
       const pAmount = parseNumericValue(p.amount);
       const pPrev = parseNumericValue(p.previousBalance);
       const pRem = parseNumericValue(p.remainingBalance);
       const todayDate = p.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+
+      // Settings se live Company Name, Address, Phone, Logo aur NTN uthana
+      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
+      const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
+      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
+      const compWhatsapp = document.getElementById('setCompanyWhatsapp')?.value.trim() || '';
+      const compEmail = document.getElementById('setCompanyEmail')?.value.trim() || 'info@bilalheights.com';
+      const compRegNo = document.getElementById('setCompanyRegNo')?.value.trim() || 'NTN: 9876543-2';
+      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Block 5, Clifton, Karachi';
+
+      let compLogo = settingLogoBase64;
+      if (!compLogo) {
+        const logoEl = document.getElementById('setLogoImg');
+        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
+          compLogo = logoEl.src;
+        }
+      }
 
       const pdfWrapper = document.createElement('div');
       pdfWrapper.style.width = '100%';
@@ -11340,116 +11557,124 @@ loadLicenseSettings();
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.color = '#1e293b';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      pdfWrapper.style.position = 'relative';
       pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="background:#ffffff; min-height:297mm; display:flex; flex-direction:column; justify-content:space-between; position:relative;">
+        <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           
-          <!-- Top Blue Wave Header -->
           <div>
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 34px 38px 45px 38px; border-bottom-left-radius: 50% 25px; border-bottom-right-radius: 50% 25px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div>
-                <h1 style="margin: 0; font-size: 36px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">RECEIPT</h1>
-                <div style="font-size: 11px; color: #bbdefb; font-weight: 700; letter-spacing: 1px; margin-top: 4px;">BILAL HEIGHTS LUXURY RESIDENCY</div>
+            <!-- Top Blue Wave Header with Logo & Project Title -->
+            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 28px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                ${compLogo ? `
+                  <div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
+                    <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+                  </div>
+                ` : ''}
+                <div>
+                  <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">RECEIPT</h1>
+                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">${compProject.toUpperCase()} • PAYMENT ACKNOWLEDGEMENT</div>
+                </div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 15px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25);">
-                  NO: ${p.receiptNo || 'REC-12345'}
+                <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+                  NO: ${p.receiptNo || 'BH-REC'}
                 </div>
               </div>
             </div>
 
-            <!-- Bill To & From Meta -->
-            <div style="padding: 28px 38px 10px 38px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px;">
+            <!-- Bill To & From Meta (Dynamic from Settings) -->
+            <div style="padding: 18px 34px 6px 34px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
                 <div style="width: 48%;">
-                  <div style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Bill To:</div>
-                  <div style="font-size: 13.5px; font-weight: 700; color: #334155;">${p.customerName || 'Valued Customer'}</div>
-                  <div style="font-size: 12px; color: #64748b; margin-top: 3px;">CNIC: ${p.customerCnic || '-'}</div>
-                  <div style="font-size: 12px; color: #64748b;">Phone: ${p.customerMobile || '-'}</div>
-                  <div style="font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 2px;">Property: Flat ${p.flatNo} (${p.floor || 'Standard Floor'})</div>
+                  <div style="font-size: 13px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">Bill To (Customer):</div>
+                  <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">${p.customerName || 'Valued Customer'}</div>
+                  <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">CNIC: <b>${p.customerCnic || '-'}</b></div>
+                  <div style="font-size: 11.5px; color: #475569;">Phone: <b>${p.customerMobile || '-'}</b></div>
+                  <div style="font-size: 11.5px; color: #0284c7; font-weight: 700; margin-top: 2px;">Property: Flat ${p.flatNo} (${p.floor || 'Standard Floor'})</div>
                 </div>
 
-                <div style="width: 45%; text-align: right;">
-                  <div style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">From:</div>
-                  <div style="font-size: 13.5px; font-weight: 700; color: #334155;">Bilal Builders & Developers</div>
-                  <div style="font-size: 12px; color: #64748b; margin-top: 3px;">+92-21-35890000 / 0300-1234567</div>
-                  <div style="font-size: 12px; color: #64748b;">Clifton Boulevard, Block 5, Karachi</div>
-                  <div style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 2px;">NTN: 9876543-2</div>
+                <div style="width: 48%; text-align: right;">
+                  <div style="font-size: 13px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">From (Issuer):</div>
+                  <div style="font-size: 14.5px; font-weight: 800; color: #0f172a;">${compName}</div>
+                  <div style="font-size: 11px; color: #475569; margin-top: 2px; line-height: 1.35;">${compAddress}</div>
+                  <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">Tel: <b>${compPhone}</b> ${compWhatsapp ? ' | WA: <b>' + compWhatsapp + '</b>' : ''}</div>
+                  ${compRegNo ? `<div style="font-size: 11px; color: #059669; font-weight: 700; margin-top: 2px;">${compRegNo}</div>` : ''}
                 </div>
               </div>
 
               <!-- Date -->
-              <div style="font-size: 13px; font-weight: 700; color: #334155; margin-bottom: 22px;">
-                Date: <span style="font-weight: 600; color: #64748b;">${todayDate}</span>
+              <div style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 14px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
+                Date: <span style="font-weight: 600; color: #0f172a;">${todayDate}</span>
               </div>
 
               <!-- Items Table -->
-              <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 12px;">
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 11.5px;">
                 <thead>
                   <tr style="background: #0d47a1; color: #ffffff;">
-                    <th style="padding: 10px 14px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #0d47a1;">Description</th>
-                    <th style="padding: 10px 14px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #0d47a1;">Qty</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Price</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Total</th>
+                    <th style="padding: 9px 12px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #0d47a1;">Description</th>
+                    <th style="padding: 9px 12px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #0d47a1;">Qty</th>
+                    <th style="padding: 9px 12px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Price</th>
+                    <th style="padding: 9px 12px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 11px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${p.head || 'Monthly Installment'} (Flat ${p.flatNo})</td>
-                    <td style="padding: 11px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">1</td>
-                    <td style="padding: 11px 14px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${pAmount.toLocaleString()}</td>
-                    <td style="padding: 11px 14px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${pAmount.toLocaleString()}</td>
+                    <td style="padding: 10px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight: 600;">
+                      ${p.head || 'Monthly Installment'} (Flat ${p.flatNo})
+                    </td>
+                    <td style="padding: 10px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">1</td>
+                    <td style="padding: 10px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${pAmount.toLocaleString()}</td>
+                    <td style="padding: 10px 12px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${pAmount.toLocaleString()}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 9px 14px; color: #64748b; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Previous Dues / Arrears</td>
-                    <td style="padding: 9px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
-                    <td style="padding: 9px 14px; text-align: right; color: #64748b; border-right: 1px solid #e2e8f0;">Rs. ${pPrev.toLocaleString()}</td>
-                    <td style="padding: 9px 14px; text-align: right; color: #64748b; border-right: 1px solid #e2e8f0;">Rs. ${pPrev.toLocaleString()}</td>
+                    <td style="padding: 8px 12px; color: #64748b; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Previous Dues / Arrears</td>
+                    <td style="padding: 8px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
+                    <td style="padding: 8px 12px; text-align: right; color: #64748b; border-right: 1px solid #e2e8f0;">Rs. ${pPrev.toLocaleString()}</td>
+                    <td style="padding: 8px 12px; text-align: right; color: #64748b; border-right: 1px solid #e2e8f0;">Rs. ${pPrev.toLocaleString()}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 9px 14px; color: #dc2626; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Remaining Balance Outstanding</td>
-                    <td style="padding: 9px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
-                    <td style="padding: 9px 14px; text-align: right; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${pRem.toLocaleString()}</td>
-                    <td style="padding: 9px 14px; text-align: right; font-weight: 800; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${pRem.toLocaleString()}</td>
+                    <td style="padding: 8px 12px; color: #dc2626; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Remaining Balance Outstanding</td>
+                    <td style="padding: 8px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
+                    <td style="padding: 8px 12px; text-align: right; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${pRem.toLocaleString()}</td>
+                    <td style="padding: 8px 12px; text-align: right; font-weight: 800; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${pRem.toLocaleString()}</td>
                   </tr>
                 </tbody>
               </table>
 
-              <!-- Sub Total / Grand Total Ribbon (Exact Template Look) -->
-              <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
-                <div style="background: #0d47a1; color: #ffffff; padding: 10px 24px; border-radius: 6px; display: flex; gap: 30px; align-items: center; min-width: 250px; justify-content: space-between;">
-                  <span style="font-size: 13px; font-weight: 700; text-transform: uppercase;">Amount Paid</span>
+              <!-- Amount Paid Ribbon -->
+              <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
+                <div style="background: #0d47a1; color: #ffffff; padding: 9px 24px; border-radius: 6px; display: flex; gap: 28px; align-items: center; min-width: 240px; justify-content: space-between;">
+                  <span style="font-size: 12px; font-weight: 700; text-transform: uppercase;">Amount Paid</span>
                   <span style="font-size: 15px; font-weight: 900;">Rs. ${pAmount.toLocaleString()}</span>
                 </div>
               </div>
 
               <!-- Note -->
-              <div style="margin-bottom: 35px;">
-                <div style="font-size: 12.5px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Note:</div>
-                <div style="font-size: 11.5px; color: #64748b; line-height: 1.6; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; width: 60%;">
+              <div style="margin-bottom: 18px;">
+                <div style="font-size: 11.5px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Note / Remarks:</div>
+                <div style="font-size: 11px; color: #64748b; line-height: 1.5; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; width: 65%;">
                   ${p.remarks ? p.remarks : 'Computer generated payment acknowledgement. Possession subject to full clearance of dues.'}
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Bottom Footer Information & Thank You -->
-          <div style="padding: 0 38px 40px 38px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <!-- Bottom Footer Information & Signatures -->
+          <div style="padding: 0 34px 28px 34px; display: flex; justify-content: space-between; align-items: flex-end;">
             <div>
-              <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">Payment Information:</div>
-              <div style="font-size: 11px; color: #475569; line-height: 1.6;">
-                <div><b>Mode:</b> ${p.mode || 'Cash'} ${(p.reference && p.reference !== 'N/A') ? '(' + p.reference + ')' : ''}</div>
-                <div><b>Bank:</b> Meezan Bank Ltd (Clifton Branch)</div>
-                <div><b>A/C No:</b> 0102-0103492019</div>
-                <div><b>Email:</b> accounts@bilalheights.com</div>
+              <div style="font-size: 11.5px; font-weight: 800; color: #0d47a1; margin-bottom: 4px; text-transform: uppercase;">Payment Information:</div>
+              <div style="font-size: 10.5px; color: #475569; line-height: 1.5;">
+                <div><b>Payment Mode:</b> ${p.mode || 'Cash'} ${(p.reference && p.reference !== 'N/A') ? '(' + p.reference + ')' : ''}</div>
+                <div><b>Project:</b> ${compProject}</div>
+                <div><b>Official Email:</b> ${compEmail}</div>
+                <div><b>Address:</b> ${compAddress}</div>
               </div>
             </div>
 
             <div style="text-align: right;">
-              <h2 style="margin: 0; font-size: 28px; font-weight: 900; color: #0d47a1; font-family: 'Plus Jakarta Sans', sans-serif;">Thank You!</h2>
-              <div style="border-top: 1.5px dashed #94a3b8; width: 150px; margin-top: 30px; text-align: center; padding-top: 4px; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase;">
+              <h2 style="margin: 0; font-size: 24px; font-weight: 900; color: #0d47a1; font-family: 'Plus Jakarta Sans', sans-serif;">Thank You!</h2>
+              <div style="border-top: 1.5px dashed #0f172a; width: 160px; margin-top: 24px; text-align: center; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
                 Authorized Officer
               </div>
             </div>
@@ -11462,8 +11687,9 @@ loadLicenseSettings();
         margin: [0, 0, 0, 0],
         filename: `Invoice_${p.receiptNo || 'BH'}_Flat_${p.flatNo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: 'avoid-all' }
       };
 
       if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
@@ -12400,7 +12626,7 @@ loadLicenseSettings();
       }
     }
 
-    // 8. Accounts & Customers list Datalist mein load karna
+// 8. Accounts & Customers list Datalist mein load karna (FIXED: Account List Included)
     function populateVoucherAccountsDatalist() {
       const datalist = document.getElementById('cvAccountsDatalist');
       if (!datalist) return;
@@ -12408,18 +12634,40 @@ loadLicenseSettings();
 
       const parties = new Set();
 
-      // Customers
-      allCustomersData.forEach(c => {
+      // 1. Account List se Tamam Log (Capital/Owner, Contractor, Staff, Vendor)
+      (allAccountsData || []).forEach(acc => {
+        if (acc.name) {
+          const typeStr = acc.type ? ` (${acc.type})` : '';
+          parties.add(`${acc.name}${typeStr}`);
+          parties.add(acc.name); // Simple Name bhi add karein
+        }
+      });
+
+      // 2. Customers Directory se Allottees
+      (allCustomersData || []).forEach(c => {
         const o1 = c.firstOwner || c.secondOwner || {};
-        if (o1.name) parties.add(o1.name);
+        if (o1.name) {
+          parties.add(`${o1.name} (Customer - Flat ${c.flatNo || ''})`);
+          parties.add(o1.name);
+        }
       });
 
-      // Vendors & Contractors
-      allPurchaserData.forEach(p => {
-        if (p.vendor) parties.add(p.vendor);
+      // 3. Purchases ke Suppliers
+      (allPurchaserData || []).forEach(p => {
+        if (p.vendor) {
+          parties.add(p.vendor);
+        }
       });
 
-      // Add to datalist
+      // 4. Site & Office Expenses ke Persons / Staff
+      (allSiteExpensesData || []).forEach(se => {
+        if (se.paidTo) parties.add(se.paidTo);
+      });
+      (allOfficeExpensesData || []).forEach(oe => {
+        if (oe.paidTo) parties.add(oe.paidTo);
+      });
+
+      // Datalist mein Options Append Karein
       parties.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p;
@@ -13354,6 +13602,7 @@ function loadVendors() {
     });
     filterAccountsDirectory();
     populateVendorDropdown();
+    populateVoucherAccountsDatalist(); // <-- YEH LINE ADD HO GAYI HAI
   }, err => {
     console.warn("Accounts load error:", err);
   });
@@ -14217,7 +14466,7 @@ function renderProfitLossReport() {
 
   if (!tbody) return;
 
-  // A. Customer Installments / Collections (Wasool Shuda 1 Lakh aur baqi installments)
+  // 1. REVENUE (Collections + Down Payments + CRV)
   let totalInstallments = 0;
   (allPaymentsData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
@@ -14225,7 +14474,6 @@ function renderProfitLossReport() {
     totalInstallments += (parseFloat(p.amount) || 0);
   });
 
-  // B. Customer Booking / Down Payments (Registration ke waqt li gayi)
   let totalDownPayments = 0;
   let totalAllotmentDealValue = 0;
 
@@ -14251,9 +14499,7 @@ function renderProfitLossReport() {
     }
   });
 
-  // C. Cash Receipt Vouchers (CRV)
   let crvIncome = 0;
-  let cpvMaterial = 0;
   let cpvOperating = 0;
 
   (allCashVouchersData || []).forEach(v => {
@@ -14261,22 +14507,25 @@ function renderProfitLossReport() {
     if (dateTo && v.date > dateTo) return;
 
     const amt = parseFloat(v.amount) || 0;
+    const head = (v.head || '').toLowerCase();
+
     if (v.type === 'RECEIPT') {
       crvIncome += amt;
     } else if (v.type === 'PAYMENT') {
-      const head = (v.head || '').toLowerCase();
-      if (head.includes('vendor') || head.includes('material')) {
-        cpvMaterial += amt;
-      } else if (!head.includes('owner') && !head.includes('drawing') && !head.includes('capital') && !head.includes('advance return')) {
+      // Sirf woh CPVs jo direct operational expense hain unko P&L me lein
+      // Vendor / Material Bill, Owner Drawing, Partner Capital aur Advance Return ko alag expense me double count nahi karenge
+      const isVendorSettlement = head.includes('vendor') || head.includes('material') || head.includes('bill');
+      const isOwnerDrawing = head.includes('owner') || head.includes('drawing') || head.includes('capital') || head.includes('advance return');
+
+      if (!isVendorSettlement && !isOwnerDrawing) {
         cpvOperating += amt;
       }
     }
   });
 
-  // Kul Haqeeqi Wasooli (Realized Revenue Inflow)
   const grandRevenue = totalInstallments + totalDownPayments + crvIncome;
 
-  // 2. Direct Construction Costs (Purchases + Material CPV)
+  // 2. DIRECT CONSTRUCTION COSTS (Sirf Purchases Bill Total - No Double Counting)
   let totalPurchases = 0;
   (allPurchaserData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
@@ -14284,9 +14533,9 @@ function renderProfitLossReport() {
     totalPurchases += (parseFloat(p.total || p.totalAmount) || 0);
   });
 
-  const totalConstructionCost = totalPurchases + cpvMaterial;
+  const totalConstructionCost = totalPurchases;
 
-  // 3. Operating Expenses (Site Expenses + Office Expenses + CPVs)
+  // 3. OPERATING EXPENSES (Site + Office + Other Non-Vendor CPVs)
   let totalSiteExp = 0;
   (allSiteExpensesData || []).forEach(se => {
     if (dateFrom && se.date < dateFrom) return;
@@ -14351,11 +14600,6 @@ function renderProfitLossReport() {
       <td style="text-align:right;">-</td>
       <td style="text-align:right; font-weight:900; color:#16a34a;">Rs. ${grandRevenue.toLocaleString()}</td>
     </tr>
-    <tr style="color:#64748b; font-size:11.5px; border-bottom:1.5px solid #cbd5e1;">
-      <td style="padding-left:24px;"><em>Total Property Allotment Deal Value (Kul Contract)</em></td>
-      <td style="text-align:right;"><em>Rs. ${totalAllotmentDealValue.toLocaleString()}</em></td>
-      <td style="text-align:right;"><em>(Reference)</em></td>
-    </tr>
 
     <tr style="background:#f8fafc; font-weight:800;">
       <td colspan="3" style="color:#ea580c; font-size:14px;"><i class="fa-solid fa-helmet-safety"></i> 2. DIRECT CONSTRUCTION COSTS</td>
@@ -14365,12 +14609,6 @@ function renderProfitLossReport() {
       <td style="text-align:right;">Rs. ${totalPurchases.toLocaleString()}</td>
       <td style="text-align:right;">-</td>
     </tr>
-    ${cpvMaterial > 0 ? `
-    <tr>
-      <td style="padding-left:24px;">Material Cash Vouchers (CPV)</td>
-      <td style="text-align:right;">Rs. ${cpvMaterial.toLocaleString()}</td>
-      <td style="text-align:right;">-</td>
-    </tr>` : ''}
     <tr style="font-weight:700;">
       <td style="padding-left:24px; color:#ea580c;">Total Cost of Construction</td>
       <td style="text-align:right;">-</td>
@@ -14398,7 +14636,7 @@ function renderProfitLossReport() {
     </tr>
     ${cpvOperating > 0 ? `
     <tr>
-      <td style="padding-left:24px;">Cash Payment Vouchers (CPV - Operations & Site)</td>
+      <td style="padding-left:24px;">Other Cash Payment Vouchers (CPV - Miscellaneous)</td>
       <td style="text-align:right;">Rs. ${cpvOperating.toLocaleString()}</td>
       <td style="text-align:right;">-</td>
     </tr>` : ''}
@@ -14729,12 +14967,12 @@ function updateDashboardChartsAndStats() {
   if (document.getElementById('statAvailableFlats')) document.getElementById('statAvailableFlats').textContent = (allFlatsData.length > 0) ? availFlats : totalFlats;
   if (document.getElementById('statBookedSoldFlats')) document.getElementById('statBookedSoldFlats').textContent = bookedFlats;
 
-  // 2. Financial Collections (Installments + Down Payments)
+  // 2. Financial Collections & Balance Calculation
   let customerCollections = 0;
   let bankBal = 0;
   let cashBal = 0;
 
-  // A. Collected Installments
+  // A. Collected Customer Payments
   (allPaymentsData || []).forEach(p => {
     const amt = parseFloat(p.amount) || 0;
     customerCollections += amt;
@@ -14742,7 +14980,7 @@ function updateDashboardChartsAndStats() {
     else bankBal += amt;
   });
 
-  // B. Registration wali Down Payments (Agar alag receipt na bani ho to yahan jama karein)
+  // B. Registration wali Down Payments (Agar alag receipt na bani ho)
   (allCustomersData || []).forEach(c => {
     const down = parseFloat(c.financials?.downPayment) || 0;
     const hasDownRec = (allPaymentsData || []).some(p => 
@@ -14751,11 +14989,11 @@ function updateDashboardChartsAndStats() {
     );
     if (!hasDownRec && down > 0) {
       customerCollections += down;
-      cashBal += down; // Default Cash mein jama hogi
+      cashBal += down; // Cash drawer mein jama hogi
     }
   });
 
-  // Expenses Minus Karein
+  // C. Site Expenses Minus Karein
   let siteExpTotal = 0;
   (allSiteExpensesData || []).forEach(se => {
     const paid = parseFloat(se.paidAmount) || 0;
@@ -14763,11 +15001,22 @@ function updateDashboardChartsAndStats() {
     cashBal -= paid;
   });
 
+  // D. Office Expenses Minus Karein
   let officeExpTotal = 0;
   (allOfficeExpensesData || []).forEach(oe => {
     const paid = parseFloat(oe.paidAmount) || 0;
     officeExpTotal += paid;
     cashBal -= paid;
+  });
+
+  // E. Cash Vouchers (CPV se Cash Minus aur CRV se Cash Plus) [FIXED]
+  (allCashVouchersData || []).forEach(v => {
+    const amt = parseFloat(v.amount) || 0;
+    if (v.type === 'RECEIPT') {
+      cashBal += amt; // CRV se Cash in Hand barhega
+    } else if (v.type === 'PAYMENT') {
+      cashBal -= amt; // CPV se Cash in Hand minus hoga
+    }
   });
 
   if (document.getElementById('dashTotalInflow')) {
@@ -14786,7 +15035,7 @@ function updateDashboardChartsAndStats() {
   if (document.getElementById('dashCashBalance')) document.getElementById('dashCashBalance').textContent = `Rs. ${cashBal.toLocaleString()}`;
   if (document.getElementById('dashTotalBalance')) document.getElementById('dashTotalBalance').textContent = `Rs. ${totalBal.toLocaleString()}`;
 
-  // 4. Customer Overdue Payments Table (Sirf wahi jinki Date nikal chuki hai aur payment nahi ki)
+  // 4. Customer Overdue Payments Table
   const tbody = document.getElementById('dashPendingPaymentsTableBody');
   if (tbody) {
     let overdueRowsHtml = '';
@@ -14798,25 +15047,22 @@ function updateDashboardChartsAndStats() {
       const monthlyInst = parseFloat(c.financials?.monthlyInstallment) || 0;
       const durationMonths = parseInt(c.financials?.durationMonths) || 36;
 
-      // Customer ki Registration Date nikalein
       let regDateStr = c.registrationDate || c.date;
       if (!regDateStr && c.createdAt) {
         try {
           regDateStr = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10);
         } catch(e){}
       }
-      if (!regDateStr) return; // Agar date na ho to skip
+      if (!regDateStr) return;
 
       const regDate = new Date(regDateStr);
       regDate.setHours(0, 0, 0, 0);
 
-      // Customer ne ab tak kul kitni installments jama karwai hain (Down payment ke ilawa)
       const installmentsPaid = (allPaymentsData || []).filter(p => 
         ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && String(p.flatNo).trim() === String(c.flatNo).trim())) &&
         p.head !== 'Down Payment'
       ).reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
 
-      // Aaj tak kitnay mahinay guzar chuke hain (Installments due)
       let expectedMonthsPassed = 0;
       let earliestUnpaidDueDate = null;
 
@@ -14826,21 +15072,18 @@ function updateDashboardChartsAndStats() {
 
         if (dueDate <= today) {
           expectedMonthsPassed++;
-          // Earliest unpaid date check
           const expectedAmountTillNow = m * monthlyInst;
           if (installmentsPaid < expectedAmountTillNow && !earliestUnpaidDueDate) {
             earliestUnpaidDueDate = dueDate;
           }
         } else {
-          break; // Agay ki dates abhi aayi hi nahi hain
+          break;
         }
       }
 
-      // Kul raqam jo aaj tak jama ho jani chahiye thi
       const totalExpectedDueTillToday = expectedMonthsPassed * monthlyInst;
       const overdueAmount = Math.max(0, totalExpectedDueTillToday - installmentsPaid);
 
-      // SIRF TAB SHOW KAREIN JAB TAREEKH GUZAR CHUKI HO AUR RAQAM BHI BAQI HO
       if (overdueAmount > 0 && earliestUnpaidDueDate) {
         const diffTime = today - earliestUnpaidDueDate;
         const daysOverdue = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -15092,38 +15335,68 @@ async function confirmQuickPayPurchase() {
 }
 
 function initAccountLedgerView() {
-  const accSelect = document.getElementById('alFilterAccount');
-  if (accSelect) {
-    accSelect.innerHTML = '<option value="ALL">All Accounts (Consolidated)</option>';
+  const datalist = document.getElementById('alAccountDatalist');
+  const accInput = document.getElementById('alFilterAccount');
+  
+  if (datalist) {
+    datalist.innerHTML = '';
     const accSet = new Set();
-    (allAccountsData || []).forEach(a => { if (a.name) accSet.add(a.name); });
+    accSet.add('All Accounts (Consolidated)');
+
+    // 1. Account List se Naam aur Designation (e.g. Farooq Boss (Capital / Owner))
+    (allAccountsData || []).forEach(a => {
+      if (a.name) {
+        const desig = a.type ? ` (${a.type})` : '';
+        accSet.add(`${a.name}${desig}`);
+      }
+    });
+
+    // 2. Customers List
     (allCustomersData || []).forEach(c => {
       const o1 = c.firstOwner || c.secondOwner || {};
-      if (o1.name) accSet.add(o1.name);
+      if (o1.name) {
+        accSet.add(`${o1.name} (Customer - Flat ${c.flatNo || ''})`);
+      }
     });
-    (allPurchaserData || []).forEach(p => { if (p.vendor) accSet.add(p.vendor); });
 
-    accSet.forEach(name => {
-      accSelect.innerHTML += `<option value="${name}">${name}</option>`;
+    // 3. Purchases Vendors
+    (allPurchaserData || []).forEach(p => {
+      if (p.vendor) {
+        accSet.add(p.vendor);
+      }
+    });
+
+    accSet.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      datalist.appendChild(opt);
     });
   }
 
   renderAccountLedgerReport();
 }
 
-// Naya Reset Function (Dates clear karne ke liye)
+// Reset Filter Button
 function resetAccountLedgerDates() {
   const dFrom = document.getElementById('alFilterDateFrom');
   const dTo = document.getElementById('alFilterDateTo');
   const typeSelect = document.getElementById('alFilterType');
+  const accInput = document.getElementById('alFilterAccount');
   if (dFrom) dFrom.value = '';
   if (dTo) dTo.value = '';
   if (typeSelect) typeSelect.value = 'ALL';
+  if (accInput) accInput.value = '';
   renderAccountLedgerReport();
 }
 
+// Helper to extract clean name (brackets hata kar sirf naam match kare)
+function extractCleanAccName(rawStr) {
+  if (!rawStr) return '';
+  return rawStr.replace(/\s*\(.*?\)\s*/g, '').trim().toLowerCase();
+}
+
 function renderAccountLedgerReport() {
-  const selectedAcc = document.getElementById('alFilterAccount')?.value || 'ALL';
+  const rawAcc = document.getElementById('alFilterAccount')?.value.trim() || '';
   const dateFrom = document.getElementById('alFilterDateFrom')?.value;
   const dateTo = document.getElementById('alFilterDateTo')?.value;
   const txnType = document.getElementById('alFilterType')?.value || 'ALL';
@@ -15132,51 +15405,57 @@ function renderAccountLedgerReport() {
 
   if (!tbody) return;
 
+  const isAll = (!rawAcc || rawAcc === 'ALL' || rawAcc.toLowerCase().includes('consolidated') || rawAcc.toLowerCase().includes('all accounts'));
+  const cleanTargetName = isAll ? '' : extractCleanAccName(rawAcc);
+
   if (heading) {
-    heading.textContent = selectedAcc === 'ALL' 
+    heading.textContent = isAll 
       ? 'Account Ledger - All Consolidated Accounts' 
-      : `Account Ledger - ${selectedAcc}`;
+      : `Account Ledger - ${rawAcc}`;
   }
 
   let ledgerEntries = [];
 
-  // (1) Customer Receipts (Credit to Customer, Debit Cash/Bank)
+  // (1) Customer Receipts
   (allPaymentsData || []).forEach(p => {
-    if (selectedAcc === 'ALL' || p.customerName === selectedAcc) {
+    const cName = extractCleanAccName(p.customerName);
+    if (isAll || cName === cleanTargetName || (p.customerName && p.customerName.toLowerCase().includes(cleanTargetName))) {
       ledgerEntries.push({
         date: p.date,
         ref: p.receiptNo || 'BH-REC',
-        desc: `Customer Payment Received (Flat ${p.flatNo})`,
+        desc: `Customer Payment Received (${p.customerName || 'Customer'} - Flat ${p.flatNo})`,
         debit: 0,
         credit: parseFloat(p.amount) || 0
       });
     }
   });
 
-  // (2) Supplier Purchases (Debit Supplier, Credit Payable)
+  // (2) Supplier Purchases
   (allPurchaserData || []).forEach(pur => {
-    if (selectedAcc === 'ALL' || pur.vendor === selectedAcc) {
+    const vName = extractCleanAccName(pur.vendor);
+    if (isAll || vName === cleanTargetName || (pur.vendor && pur.vendor.toLowerCase().includes(cleanTargetName))) {
       const total = parseFloat(pur.total || pur.totalAmount) || 0;
       const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
 
       ledgerEntries.push({
         date: pur.date,
         ref: pur.billNo || 'PUR-001',
-        desc: `Material Purchase - ${pur.item || 'Items'}`,
+        desc: `Material Purchase (${pur.vendor || 'Supplier'} - ${pur.item || 'Items'})`,
         debit: total,
         credit: paid
       });
     }
   });
 
-  // (3) Cash Vouchers (Payment Credit mein jayegi taake baqaya minus ho)
+  // (3) Cash Vouchers (CPV & CRV)
   (allCashVouchersData || []).forEach(v => {
-    if (selectedAcc === 'ALL' || v.party === selectedAcc || (v.party && selectedAcc.includes(v.party)) || (v.party && v.party.includes(selectedAcc))) {
+    const partyClean = extractCleanAccName(v.party);
+    if (isAll || partyClean === cleanTargetName || (v.party && v.party.toLowerCase().includes(cleanTargetName))) {
       const amt = parseFloat(v.amount) || 0;
       ledgerEntries.push({
         date: v.date,
         ref: v.voucherNo,
-        desc: v.narration || v.head,
+        desc: `${v.party || 'Account'} - ${v.narration || v.head}`,
         debit: (v.type === 'RECEIPT') ? amt : 0,
         credit: (v.type === 'PAYMENT') ? amt : 0
       });
@@ -15186,7 +15465,7 @@ function renderAccountLedgerReport() {
   // Sort by date
   ledgerEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  // Filter
+  // Date & Type Filter
   let filtered = ledgerEntries.filter(entry => {
     if (dateFrom && entry.date < dateFrom) return false;
     if (dateTo && entry.date > dateTo) return false;
