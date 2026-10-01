@@ -12626,51 +12626,82 @@ loadLicenseSettings();
       }
     }
 
-// 8. Accounts & Customers list Datalist mein load karna (FIXED: Account List Included)
+// 8. Accounts & Customers list Datalist mein load karna (SINGLE UNIQUE NAME + DESIGNATION ONLY)
     function populateVoucherAccountsDatalist() {
       const datalist = document.getElementById('cvAccountsDatalist');
       if (!datalist) return;
       datalist.innerHTML = '';
 
-      const parties = new Set();
+      // Unique Mapping: Har shakhs ka sirf aik single format rahega
+      const uniquePartiesMap = new Map();
 
-      // 1. Account List se Tamam Log (Capital/Owner, Contractor, Staff, Vendor)
+      // Helper: Brackets hata kar clean naam nikalna taake duplicate na bane
+      function getCleanBaseName(str) {
+        if (!str) return '';
+        return str.replace(/\s*\(.*?\)\s*/g, '').trim();
+      }
+
+      // 1. Priority 1: Account List se Log (Capital/Owner, Contractor, Staff, Vendor)
       (allAccountsData || []).forEach(acc => {
         if (acc.name) {
-          const typeStr = acc.type ? ` (${acc.type})` : '';
-          parties.add(`${acc.name}${typeStr}`);
-          parties.add(acc.name); // Simple Name bhi add karein
+          const clean = getCleanBaseName(acc.name);
+          const desig = acc.type ? ` (${acc.type})` : ' (Account)';
+          const key = clean.toLowerCase();
+          if (!uniquePartiesMap.has(key)) {
+            uniquePartiesMap.set(key, `${clean}${desig}`);
+          }
         }
       });
 
-      // 2. Customers Directory se Allottees
+      // 2. Priority 2: Customers Directory se Allottees
       (allCustomersData || []).forEach(c => {
         const o1 = c.firstOwner || c.secondOwner || {};
         if (o1.name) {
-          parties.add(`${o1.name} (Customer - Flat ${c.flatNo || ''})`);
-          parties.add(o1.name);
+          const clean = getCleanBaseName(o1.name);
+          const key = clean.toLowerCase();
+          if (!uniquePartiesMap.has(key)) {
+            const flatInfo = c.flatNo ? ` - Flat ${c.flatNo}` : '';
+            uniquePartiesMap.set(key, `${clean} (Customer${flatInfo})`);
+          }
         }
       });
 
-      // 3. Purchases ke Suppliers
+      // 3. Priority 3: Purchases ke Suppliers (Agar Account List me na ho)
       (allPurchaserData || []).forEach(p => {
         if (p.vendor) {
-          parties.add(p.vendor);
+          const clean = getCleanBaseName(p.vendor);
+          const key = clean.toLowerCase();
+          if (!uniquePartiesMap.has(key)) {
+            uniquePartiesMap.set(key, `${clean} (Vendor / Supplier)`);
+          }
         }
       });
 
-      // 4. Site & Office Expenses ke Persons / Staff
+      // 4. Priority 4: Site & Office Expenses ke Persons / Staff
       (allSiteExpensesData || []).forEach(se => {
-        if (se.paidTo) parties.add(se.paidTo);
-      });
-      (allOfficeExpensesData || []).forEach(oe => {
-        if (oe.paidTo) parties.add(oe.paidTo);
+        if (se.paidTo) {
+          const clean = getCleanBaseName(se.paidTo);
+          const key = clean.toLowerCase();
+          if (!uniquePartiesMap.has(key)) {
+            uniquePartiesMap.set(key, `${clean} (Staff / Labour)`);
+          }
+        }
       });
 
-      // Datalist mein Options Append Karein
-      parties.forEach(p => {
+      (allOfficeExpensesData || []).forEach(oe => {
+        if (oe.paidTo) {
+          const clean = getCleanBaseName(oe.paidTo);
+          const key = clean.toLowerCase();
+          if (!uniquePartiesMap.has(key)) {
+            uniquePartiesMap.set(key, `${clean} (Office Staff)`);
+          }
+        }
+      });
+
+      // Datalist mein sirf Unique Single Entries add karein
+      uniquePartiesMap.forEach(formattedName => {
         const opt = document.createElement('option');
-        opt.value = p;
+        opt.value = formattedName;
         datalist.appendChild(opt);
       });
     }
