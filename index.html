@@ -2946,53 +2946,148 @@
                 </div>
               </div>
 
-              <!-- ================= 2. DEAL FINANCIALS & PAYMENT PLAN ================= -->
+             <!-- ================= 2. DEAL FINANCIALS & PAYMENT PLANS (PLAN 1, 2, 3) ================= -->
               <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:16px; padding:20px; margin-bottom:22px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #dbeafe; padding-bottom:10px;">
-                  <h4 style="font-size:15px; font-weight:800; color:#1e40af; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-file-invoice-dollar"></i> Deal Financials & Payment Plan
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; border-bottom:1px solid #dbeafe; padding-bottom:10px; flex-wrap:wrap; gap:8px;">
+                  <h4 style="font-size:15px; font-weight:800; color:#1e40af; display:flex; align-items:center; gap:8px; margin:0;">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Deal Financials & Payment Plan Scheme
                   </h4>
-                  <span style="font-size:11.5px; background:#dbeafe; color:#1d4ed8; font-weight:700; padding:4px 10px; border-radius:20px;">
-                    Auto Installment Calculator
+                  <span style="font-size:11.5px; background:#dbeafe; color:#1d4ed8; font-weight:700; padding:4px 12px; border-radius:20px;">
+                    Dynamic 3-Plan Calculator
                   </span>
                 </div>
 
-                <div class="form-grid-layout">
+                <!-- Top Row: Total Price & Plan Selector -->
+                <div class="form-grid-layout" style="margin-bottom:16px;">
                   <div>
-                    <label>Total Agreed Price (Rs.) *</label>
-                    <input type="number" id="dealTotalPrice" placeholder="e.g. 800000" required oninput="calculateMonthlyInstallment()" />
+                    <label style="color:#0f172a; font-weight:800;">Total Agreed Price (Rs.) *</label>
+                    <input type="number" id="dealTotalPrice" placeholder="e.g. 5000000" required oninput="calculatePaymentPlans()" style="font-size:15px; font-weight:800; border-color:#2563eb;" />
                   </div>
 
                   <div>
-                    <label>Booking / Down Payment (Rs.) *</label>
-                    <input type="number" id="dealDownPayment" placeholder="e.g. 150000" required oninput="calculateMonthlyInstallment()" />
-                  </div>
-
-                  <div>
-                    <label>On Grey Structure Completion (Rs.)</label>
-                    <input type="number" id="dealGreyStructure" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
-                  </div>
-
-                  <div>
-                    <label>On Possession Payment (Rs.)</label>
-                    <input type="number" id="dealPossession" placeholder="e.g. 100000" value="0" oninput="calculateMonthlyInstallment()" />
-                  </div>
-
-                  <div>
-                    <label>Plan Duration *</label>
-                    <select id="dealDuration" required onchange="calculateMonthlyInstallment()">
-                      <option value="12">12 Months (1 Year)</option>
-                      <option value="24">24 Months (2 Years)</option>
-                      <option value="36" selected>36 Months (3 Years)</option>
-                      <option value="48">48 Months (4 Years)</option>
+                    <label style="color:#1e40af; font-weight:800;">Select Payment Plan Scheme *</label>
+                    <select id="dealPlanScheme" onchange="switchPaymentPlanScheme(this.value)" style="width:100%; padding:11px 14px; border:1.5px solid #2563eb; border-radius:10px; font-size:13.5px; font-weight:800; color:#1e3a8a; background:#ffffff;">
+                      <option value="Plan1" selected>Plan 1: Milestone Plan (Down Payment + Grey Structure + Possession)</option>
+<option value="Plan2">Plan 2: Percentage-Based Schedule (10% Booking, 5% Alloc, 5% Conf, 40% Inst, 10% Quarterly, 15% Finish, 15% Poss)</option>
+                      <option value="Plan3">Plan 3: Construction-Stage Detailed Milestones (18 Stages / Plinth / Slabs)</option>
                     </select>
                   </div>
+                </div>
 
-                  <div>
-                    <label style="color:#1e40af; font-weight:800;">Monthly Installment Amount (Auto)</label>
-                    <input type="text" id="dealMonthlyInstallment" readonly style="background:#1e3a8a; color:#ffffff; font-size:16px; font-weight:800;" value="Rs. 0 / Month" />
+                <!-- ================= PLAN 1: STANDARD MILESTONE ================= -->
+                <div id="plan1Box" style="background:#ffffff; border:1px solid #dbeafe; border-radius:12px; padding:16px; margin-bottom:10px;">
+                  <div style="font-size:12.5px; font-weight:800; color:#1e40af; margin-bottom:12px;">
+                    <i class="fa-solid fa-sliders"></i> Plan 1: Standard Milestone Breakdown
+                  </div>
+                  <div class="form-grid-layout">
+                    <div>
+                      <label>Booking / Down Payment (Rs.) *</label>
+                      <input type="number" id="p1DownPayment" placeholder="e.g. 1000000" oninput="calculatePlan1()" />
+                    </div>
+                    <div>
+                      <label>On Grey Structure Completion (Rs.)</label>
+                      <input type="number" id="p1GreyStructure" placeholder="e.g. 500000" value="0" oninput="calculatePlan1()" />
+                    </div>
+                    <div>
+                      <label>On Possession Payment (Rs.)</label>
+                      <input type="number" id="p1Possession" placeholder="e.g. 500000" value="0" oninput="calculatePlan1()" />
+                    </div>
+                    <div>
+                      <label>Plan Duration *</label>
+                      <select id="p1Duration" onchange="calculatePlan1()">
+                        <option value="12">12 Months (1 Year)</option>
+                        <option value="24">24 Months (2 Years)</option>
+                        <option value="36" selected>36 Months (3 Years)</option>
+                        <option value="48">48 Months (4 Years)</option>
+                      </select>
+                    </div>
+                    <div class="form-group-full">
+                      <label style="color:#1e40af; font-weight:800;">Monthly Installment Amount (Auto)</label>
+                      <input type="text" id="p1MonthlyInstallment" readonly style="background:#1e3a8a; color:#ffffff; font-size:16px; font-weight:800;" value="Rs. 0 / Month" />
+                    </div>
                   </div>
                 </div>
+
+                <!-- ================= PLAN 2: PERCENTAGE BASED (24 MONTHS) ================= -->
+                <div id="plan2Box" style="display:none; background:#ffffff; border:1px solid #dbeafe; border-radius:12px; padding:16px; margin-bottom:10px;">
+                  <div style="font-size:12.5px; font-weight:800; color:#15803d; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fa-solid fa-percent"></i> Plan 2: Percentage-Based Schedule</span>
+                    <span style="font-size:11px; background:#dcfce7; color:#15803d; padding:2px 8px; border-radius:10px;">Total 100% Split (7 Stages)</span>
+                  </div>
+
+                  <div class="form-grid-layout">
+                    <div>
+                      <label>Booking (10%) (Rs.)</label>
+                      <input type="number" id="p2Booking" placeholder="10% Amount" oninput="calculatePlan2Manual()" />
+                    </div>
+                    <div>
+                      <label>Allocation (5%) (Rs.)</label>
+                      <input type="number" id="p2Allocation" placeholder="5% Amount" oninput="calculatePlan2Manual()" />
+                    </div>
+                    <div>
+                      <label>Confirmation (5%) (Rs.)</label>
+                      <input type="number" id="p2Confirmation" placeholder="5% Amount" oninput="calculatePlan2Manual()" />
+                    </div>
+                    <div>
+                      <label>24 Months Installments (40%) (Rs.)</label>
+                      <input type="number" id="p2InstallmentsTotal" placeholder="40% Pool" oninput="calculatePlan2Manual()" />
+                    </div>
+                    <div>
+                      <label style="color:#0284c7; font-weight:800;">Quarterly Installments (10%) (Rs.)</label>
+                      <input type="number" id="p2Quarterly" placeholder="10% Amount" oninput="calculatePlan2Manual()" style="border-color:#38bdf8;" />
+                    </div>
+                    <div>
+                      <label>Finishing (15%) (Rs.)</label>
+                      <input type="number" id="p2Finishing" placeholder="15% Amount" oninput="calculatePlan2Manual()" />
+                    </div>
+                    <div>
+                      <label>Possession (15%) (Rs.)</label>
+                      <input type="number" id="p2Possession" placeholder="15% Amount" oninput="calculatePlan2Manual()" />
+                    </div>
+                    <div class="form-group-full">
+                      <label style="color:#15803d; font-weight:800;">24 Months Per Month Installment (Auto 40% / 24)</label>
+                      <input type="text" id="p2MonthlyInstallment" readonly style="background:#166534; color:#ffffff; font-size:16px; font-weight:800;" value="Rs. 0 / Month (24 Months)" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ================= PLAN 3: 18 CONSTRUCTION-STAGE DETAILED MILESTONES ================= -->
+                <div id="plan3Box" style="display:none; background:#ffffff; border:1px solid #dbeafe; border-radius:12px; padding:16px; margin-bottom:10px;">
+                  <div style="font-size:12.5px; font-weight:800; color:#7c3aed; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fa-solid fa-trowel-bricks"></i> Plan 3: Comprehensive Construction Stage Plan (18 Stages)</span>
+                    <span style="font-size:11px; background:#f3e8ff; color:#7c3aed; padding:2px 8px; border-radius:10px;">Milestone Schedule</span>
+                  </div>
+
+                  <div class="form-grid-layout" style="grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap:12px;">
+                    <div><label>1. On Booking (Rs.)</label><input type="number" id="p3Booking" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>2. On Allocation (Rs.)</label><input type="number" id="p3Allocation" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>3. On Confirmation (Rs.)</label><input type="number" id="p3Confirmation" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>4. On Start of Work (Rs.)</label><input type="number" id="p3StartWork" placeholder="0" oninput="calculatePlan3()" /></div>
+                    
+                    <div><label>5. Monthly Installments Pool (Rs.)</label><input type="number" id="p3MonthlyPool" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>Months Count</label><select id="p3MonthsCount" onchange="calculatePlan3()"><option value="12">12 Months</option><option value="24">24 Months</option><option value="36" selected>36 Months</option></select></div>
+                    <div><label>6. Quarterly Installments (Rs.)</label><input type="number" id="p3Quarterly" placeholder="0" oninput="calculatePlan3()" /></div>
+
+                    <div><label>7. On Excavation (Rs.)</label><input type="number" id="p3Excavation" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>8. On Foundation (Rs.)</label><input type="number" id="p3Foundation" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>9. On Plinth (Rs.)</label><input type="number" id="p3Plinth" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>10. On Slab Casting (Rs.)</label><input type="number" id="p3SlabCasting" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>11. On Block Masonry (Rs.)</label><input type="number" id="p3BlockMasonry" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>12. On Plaster (Rs.)</label><input type="number" id="p3Plaster" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>13. On Electric Work (Rs.)</label><input type="number" id="p3ElectricWork" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>14. On Plumbing Work (Rs.)</label><input type="number" id="p3PlumbingWork" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>15. On Colouring (Rs.)</label><input type="number" id="p3Colouring" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>16. On Flooring (Rs.)</label><input type="number" id="p3Flooring" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>17. On Finishing (Rs.)</label><input type="number" id="p3Finishing" placeholder="0" oninput="calculatePlan3()" /></div>
+                    <div><label>18. On Possession (Rs.)</label><input type="number" id="p3Possession" placeholder="0" oninput="calculatePlan3()" /></div>
+
+                    <div class="form-group-full">
+                      <label style="color:#7c3aed; font-weight:800;">Monthly Installment Rate (Auto)</label>
+                      <input type="text" id="p3MonthlyPerMonth" readonly style="background:#581c87; color:#ffffff; font-size:16px; font-weight:800;" value="Rs. 0 / Month" />
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
               <!-- ================= 3. TRANSFER CASE SECTION ================= -->
@@ -6094,12 +6189,14 @@
     function getCompanyPrintProfile() {
       const name = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
       const project = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-      const phone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
-      const email = document.getElementById('setCompanyEmail')?.value.trim() || 'info@bilalheights.com';
-      const address = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Block 5, Clifton, Karachi';
+      const phone = document.getElementById('setCompanyPhone')?.value.trim() || '';
+      const whatsapp = document.getElementById('setCompanyWhatsapp')?.value.trim() || '';
+      const email = document.getElementById('setCompanyEmail')?.value.trim() || '';
+      const regNo = document.getElementById('setCompanyRegNo')?.value.trim() || '';
+      const address = document.getElementById('setCompanyAddress')?.value.trim() || '';
       
-      // Setting Logo Image check
-      let logo = settingLogoBase64;
+      // Logo Fetch: Pehle memory se, phir DOM element se, phir local storage se
+      let logo = settingLogoBase64 || '';
       if (!logo) {
         const logoImgEl = document.getElementById('setLogoImg');
         if (logoImgEl && logoImgEl.src && logoImgEl.style.display !== 'none' && !logoImgEl.src.includes('undefined')) {
@@ -6107,7 +6204,7 @@
         }
       }
 
-      return { name, project, phone, email, address, logo };
+      return { name, project, phone, whatsapp, email, regNo, address, logo };
     }
 
     let allCashVouchersData = [];
@@ -7168,19 +7265,13 @@ function loadFlats() {
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       // Settings se Company Name, Address, Contacts, Logo aur Terms nikalna
-      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
-      const compWhatsapp = document.getElementById('setCompanyWhatsapp')?.value.trim() || '';
-      const compEmail = document.getElementById('setCompanyEmail')?.value.trim() || 'info@bilalheights.com';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Block 5, Clifton, Karachi';
-
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+      const comp = getCompanyPrintProfile();
+      const compName = comp.name;
+      const compPhone = comp.phone;
+      const compWhatsapp = comp.whatsapp;
+      const compEmail = comp.email;
+      const compAddress = comp.address || 'Head Office';
+      const compLogo = comp.logo;
 
       const termsText = document.getElementById('setLegalTermsText')?.value.trim() || 
         "1. All bookings and allotments are governed under project bylaws.\n" +
@@ -7727,8 +7818,7 @@ async function confirmStatusChange() {
       }
     }
 
-    // Flat select karte hi Floor, Size, Price aur (Transfer ke waqt) Previous Owner auto-fill hoga
-    function handleFlatSelection(flatId) {
+   function handleFlatSelection(flatId) {
       const flat = allFlatsData.find(f => f.id === flatId);
       if (!flat) {
         document.getElementById('custFloor').value = '';
@@ -7743,45 +7833,90 @@ async function confirmStatusChange() {
       if (!isNaN(cleanPrice) && cleanPrice !== '') {
         document.getElementById('dealTotalPrice').value = cleanPrice;
       }
-      calculateMonthlyInstallment();
+      calculatePaymentPlans();
+    }
+  // =========================================================================
+    // 3 DYNAMIC PAYMENT PLANS CALCULATOR ENGINE (PLAN 1, 2, 3)
+    // =========================================================================
+    function switchPaymentPlanScheme(scheme) {
+      const p1 = document.getElementById('plan1Box');
+      const p2 = document.getElementById('plan2Box');
+      const p3 = document.getElementById('plan3Box');
 
-      // Transfer Mode mein: Is flat ke puranay customer ka record dhoond kar Previous Owner me bharein
-      const ownershipType = document.getElementById('custOwnershipType')?.value;
-      if (ownershipType === 'Transfer' || ownershipType === 'Transfer Ownership') {
-        // Flat ID ya Flat No dono se purana record search karein
-        const prevCust = allCustomersData.find(c => (c.flatId === flatId) || (c.flatNo && flat && c.flatNo === flat.flatNo));
-        if (prevCust) {
-          const o = prevCust.firstOwner || {};
-          document.getElementById('prevOwnerName').value = o.name || '';
-          document.getElementById('prevOwnerCnic').value = o.cnic || '';
-          document.getElementById('prevOwnerMobile').value = o.mobile || '';
+      if (p1) p1.style.display = (scheme === 'Plan1') ? 'block' : 'none';
+      if (p2) p2.style.display = (scheme === 'Plan2') ? 'block' : 'none';
+      if (p3) p3.style.display = (scheme === 'Plan3') ? 'block' : 'none';
 
-          // Deal financials bhi puranay record se auto-match karein
-          if (prevCust.financials) {
-            document.getElementById('dealTotalPrice').value = prevCust.financials.totalPrice || cleanPrice;
-            document.getElementById('dealDownPayment').value = prevCust.financials.downPayment || 0;
-            document.getElementById('dealGreyStructure').value = prevCust.financials.greyStructure || 0;
-            document.getElementById('dealPossession').value = prevCust.financials.possession || 0;
-            document.getElementById('dealDuration').value = prevCust.financials.durationMonths || 36;
-            calculateMonthlyInstallment();
-          }
-        }
-      }
+      calculatePaymentPlans();
     }
 
-    // Deal Financials Formula: Monthly Installment = (Total - Down - Grey - Possession) / Months
+    function calculatePaymentPlans() {
+      const scheme = document.getElementById('dealPlanScheme')?.value || 'Plan1';
+      if (scheme === 'Plan1') calculatePlan1();
+      else if (scheme === 'Plan2') calculatePlan2Auto();
+      else if (scheme === 'Plan3') calculatePlan3();
+    }
+
+    // Plan 1: Standard Milestone Calculator
+    function calculatePlan1() {
+      const total = parseFloat(document.getElementById('dealTotalPrice')?.value) || 0;
+      const down = parseFloat(document.getElementById('p1DownPayment')?.value) || 0;
+      const grey = parseFloat(document.getElementById('p1GreyStructure')?.value) || 0;
+      const poss = parseFloat(document.getElementById('p1Possession')?.value) || 0;
+      const months = parseInt(document.getElementById('p1Duration')?.value) || 36;
+
+      const rem = total - down - grey - poss;
+      const monthly = (rem > 0 && months > 0) ? (rem / months) : 0;
+
+      const out = document.getElementById('p1MonthlyInstallment');
+      if (out) out.value = `Rs. ${Math.round(monthly).toLocaleString()} / Month`;
+    }
+
+    // Plan 2: Percentage Split Calculator (10% Booking, 5% Alloc, 5% Conf, 40% Inst, 10% Quarterly, 15% Finish, 15% Poss)
+    function calculatePlan2Auto() {
+      const total = parseFloat(document.getElementById('dealTotalPrice')?.value) || 0;
+
+      const b10 = Math.round(total * 0.10);
+      const a5 = Math.round(total * 0.05);
+      const c5 = Math.round(total * 0.05);
+      const inst40 = Math.round(total * 0.40);
+      const q10 = Math.round(total * 0.10);
+      const f15 = Math.round(total * 0.15);
+      const p15 = Math.round(total * 0.15);
+
+      if (document.getElementById('p2Booking')) document.getElementById('p2Booking').value = b10;
+      if (document.getElementById('p2Allocation')) document.getElementById('p2Allocation').value = a5;
+      if (document.getElementById('p2Confirmation')) document.getElementById('p2Confirmation').value = c5;
+      if (document.getElementById('p2InstallmentsTotal')) document.getElementById('p2InstallmentsTotal').value = inst40;
+      if (document.getElementById('p2Quarterly')) document.getElementById('p2Quarterly').value = q10;
+      if (document.getElementById('p2Finishing')) document.getElementById('p2Finishing').value = f15;
+      if (document.getElementById('p2Possession')) document.getElementById('p2Possession').value = p15;
+
+      const monthly24 = Math.round(inst40 / 24);
+      const out = document.getElementById('p2MonthlyInstallment');
+      if (out) out.value = `Rs. ${monthly24.toLocaleString()} / Month (24 Months)`;
+    }
+
+    function calculatePlan2Manual() {
+      const inst40 = parseFloat(document.getElementById('p2InstallmentsTotal')?.value) || 0;
+      const monthly24 = Math.round(inst40 / 24);
+      const out = document.getElementById('p2MonthlyInstallment');
+      if (out) out.value = `Rs. ${monthly24.toLocaleString()} / Month (24 Months)`;
+    }
+
+    // Plan 3: 18 Detailed Stages Calculator
+    function calculatePlan3() {
+      const pool = parseFloat(document.getElementById('p3MonthlyPool')?.value) || 0;
+      const months = parseInt(document.getElementById('p3MonthsCount')?.value) || 36;
+      const monthly = (pool > 0 && months > 0) ? Math.round(pool / months) : 0;
+
+      const out = document.getElementById('p3MonthlyPerMonth');
+      if (out) out.value = `Rs. ${monthly.toLocaleString()} / Month (${months} Months)`;
+    }
+
+    // Legacy function support
     function calculateMonthlyInstallment() {
-      const totalPrice = parseFloat(document.getElementById('dealTotalPrice').value) || 0;
-      const downPayment = parseFloat(document.getElementById('dealDownPayment').value) || 0;
-      const greyStructure = parseFloat(document.getElementById('dealGreyStructure').value) || 0;
-      const possession = parseFloat(document.getElementById('dealPossession').value) || 0;
-      const months = parseInt(document.getElementById('dealDuration').value) || 36;
-
-      const remainingAmount = totalPrice - downPayment - greyStructure - possession;
-      const monthly = remainingAmount > 0 ? (remainingAmount / months) : 0;
-
-      const formattedMonthly = Math.round(monthly).toLocaleString();
-      document.getElementById('dealMonthlyInstallment').value = `Rs. ${formattedMonthly} / Month`;
+      calculatePaymentPlans();
     }
 
 
@@ -7978,12 +8113,79 @@ async function confirmStatusChange() {
       const isJoint = (ownershipType === 'Joint Ownership');
       const isTransfer = (ownershipType === 'Transfer' || ownershipType === 'Transfer Ownership');
 
+    // Financials Data Construction for Plan 1, Plan 2 or Plan 3
+      const planScheme = document.getElementById('dealPlanScheme')?.value || 'Plan1';
       const totalPrice = parseFloat(document.getElementById('dealTotalPrice').value) || 0;
-      const downPayment = parseFloat(document.getElementById('dealDownPayment').value) || 0;
-      const greyStructure = parseFloat(document.getElementById('dealGreyStructure').value) || 0;
-      const possession = parseFloat(document.getElementById('dealPossession').value) || 0;
-      const months = parseInt(document.getElementById('dealDuration').value) || 36;
-      const monthly = Math.round((totalPrice - downPayment - greyStructure - possession) / months);
+
+      let finPayload = {
+        planScheme: planScheme,
+        totalPrice: totalPrice,
+        downPayment: 0,
+        monthlyInstallment: 0
+      };
+
+      if (planScheme === 'Plan1') {
+        const dDown = parseFloat(document.getElementById('p1DownPayment')?.value) || 0;
+        const dGrey = parseFloat(document.getElementById('p1GreyStructure')?.value) || 0;
+        const dPoss = parseFloat(document.getElementById('p1Possession')?.value) || 0;
+        const dDur = parseInt(document.getElementById('p1Duration')?.value) || 36;
+        const dMonth = (dDur > 0) ? Math.round((totalPrice - dDown - dGrey - dPoss) / dDur) : 0;
+
+        finPayload.downPayment = dDown;
+        finPayload.greyStructure = dGrey;
+        finPayload.possession = dPoss;
+        finPayload.durationMonths = dDur;
+        finPayload.monthlyInstallment = dMonth;
+   } else if (planScheme === 'Plan2') {
+        const b10 = parseFloat(document.getElementById('p2Booking')?.value) || 0;
+        const a5 = parseFloat(document.getElementById('p2Allocation')?.value) || 0;
+        const c5 = parseFloat(document.getElementById('p2Confirmation')?.value) || 0;
+        const inst40 = parseFloat(document.getElementById('p2InstallmentsTotal')?.value) || 0;
+        const q10 = parseFloat(document.getElementById('p2Quarterly')?.value) || 0;
+        const f15 = parseFloat(document.getElementById('p2Finishing')?.value) || 0;
+        const p15 = parseFloat(document.getElementById('p2Possession')?.value) || 0;
+        const dMonth = Math.round(inst40 / 24);
+
+        finPayload.downPayment = b10;
+        finPayload.allocation = a5;
+        finPayload.confirmation = c5;
+        finPayload.installmentsPool = inst40;
+        finPayload.quarterly = q10;
+        finPayload.finishing = f15;
+        finPayload.possession = p15;
+        finPayload.durationMonths = 24;
+        finPayload.monthlyInstallment = dMonth;
+      } else if (planScheme === 'Plan3') {
+        const p3Pool = parseFloat(document.getElementById('p3MonthlyPool')?.value) || 0;
+        const p3Months = parseInt(document.getElementById('p3MonthsCount')?.value) || 36;
+        const p3Month = (p3Months > 0) ? Math.round(p3Pool / p3Months) : 0;
+        const p3Book = parseFloat(document.getElementById('p3Booking')?.value) || 0;
+
+        finPayload.downPayment = p3Book;
+        finPayload.monthlyInstallment = p3Month;
+        finPayload.durationMonths = p3Months;
+        finPayload.stages = {
+          booking: p3Book,
+          allocation: parseFloat(document.getElementById('p3Allocation')?.value) || 0,
+          confirmation: parseFloat(document.getElementById('p3Confirmation')?.value) || 0,
+          startWork: parseFloat(document.getElementById('p3StartWork')?.value) || 0,
+          monthlyPool: p3Pool,
+          monthsCount: p3Months,
+          quarterly: parseFloat(document.getElementById('p3Quarterly')?.value) || 0,
+          excavation: parseFloat(document.getElementById('p3Excavation')?.value) || 0,
+          foundation: parseFloat(document.getElementById('p3Foundation')?.value) || 0,
+          plinth: parseFloat(document.getElementById('p3Plinth')?.value) || 0,
+          slabCasting: parseFloat(document.getElementById('p3SlabCasting')?.value) || 0,
+          blockMasonry: parseFloat(document.getElementById('p3BlockMasonry')?.value) || 0,
+          plaster: parseFloat(document.getElementById('p3Plaster')?.value) || 0,
+          electricWork: parseFloat(document.getElementById('p3ElectricWork')?.value) || 0,
+          plumbingWork: parseFloat(document.getElementById('p3PlumbingWork')?.value) || 0,
+          colouring: parseFloat(document.getElementById('p3Colouring')?.value) || 0,
+          flooring: parseFloat(document.getElementById('p3Flooring')?.value) || 0,
+          finishing: parseFloat(document.getElementById('p3Finishing')?.value) || 0,
+          possession: parseFloat(document.getElementById('p3Possession')?.value) || 0
+        };
+      }
 
       const customerRecord = {
         project: 'BILAL HEIGHTS',
@@ -7993,15 +8195,7 @@ async function confirmStatusChange() {
         floor: document.getElementById('custFloor').value || '',
         size: document.getElementById('custSize').value || '',
         ownershipType: ownershipType,
-
-      financials: {
-          totalPrice: totalPrice,
-          downPayment: downPayment,
-          greyStructure: greyStructure,
-          possession: possession,
-          durationMonths: months,
-          monthlyInstallment: monthly
-        },
+        financials: finPayload,
 
         documents: {
           cnic: (typeof uploadedDocs.cnic === 'string') ? uploadedDocs.cnic : '',
@@ -8370,20 +8564,14 @@ async function confirmStatusChange() {
     const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
     // Settings se Company Name, Address, Contacts aur Logo nikalna
-    const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-    const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-    const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
-    const compWhatsapp = document.getElementById('setCompanyWhatsapp')?.value.trim() || '';
-    const compEmail = document.getElementById('setCompanyEmail')?.value.trim() || 'info@bilalheights.com';
-    const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Block 5, Clifton, Karachi';
-
-    let compLogo = settingLogoBase64;
-    if (!compLogo) {
-      const logoEl = document.getElementById('setLogoImg');
-      if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-        compLogo = logoEl.src;
-      }
-    }
+    const comp = getCompanyPrintProfile();
+    const compName = comp.name;
+    const compProject = comp.project;
+    const compPhone = comp.phone;
+    const compWhatsapp = comp.whatsapp;
+    const compEmail = comp.email;
+    const compAddress = comp.address || 'Head Office';
+    const compLogo = comp.logo;
 
     // Totals & KPI Metrics Calculate karna
     let totalFlatsBooked = 0;
@@ -8696,14 +8884,54 @@ async function confirmStatusChange() {
       if (document.getElementById('custFloor')) document.getElementById('custFloor').value = c.floor || '';
       if (document.getElementById('custSize')) document.getElementById('custSize').value = c.size || '';
 
-      // Financials Fill
+    // Financials Fill (Plan 1, 2, 3)
       const fin = c.financials || {};
+      const scheme = fin.planScheme || 'Plan1';
+      
+      const schemeSelect = document.getElementById('dealPlanScheme');
+      if (schemeSelect) schemeSelect.value = scheme;
+      switchPaymentPlanScheme(scheme);
+
       if (document.getElementById('dealTotalPrice')) document.getElementById('dealTotalPrice').value = fin.totalPrice || '';
-      if (document.getElementById('dealDownPayment')) document.getElementById('dealDownPayment').value = fin.downPayment || '';
-      if (document.getElementById('dealGreyStructure')) document.getElementById('dealGreyStructure').value = fin.greyStructure || 0;
-      if (document.getElementById('dealPossession')) document.getElementById('dealPossession').value = fin.possession || 0;
-      if (document.getElementById('dealDuration')) document.getElementById('dealDuration').value = fin.durationMonths || 36;
-      calculateMonthlyInstallment();
+
+      if (scheme === 'Plan1') {
+        if (document.getElementById('p1DownPayment')) document.getElementById('p1DownPayment').value = fin.downPayment || '';
+        if (document.getElementById('p1GreyStructure')) document.getElementById('p1GreyStructure').value = fin.greyStructure || 0;
+        if (document.getElementById('p1Possession')) document.getElementById('p1Possession').value = fin.possession || 0;
+        if (document.getElementById('p1Duration')) document.getElementById('p1Duration').value = fin.durationMonths || 36;
+        calculatePlan1();
+      } else if (scheme === 'Plan2') {
+        if (document.getElementById('p2Booking')) document.getElementById('p2Booking').value = fin.downPayment || 0;
+        if (document.getElementById('p2Allocation')) document.getElementById('p2Allocation').value = fin.allocation || 0;
+        if (document.getElementById('p2Confirmation')) document.getElementById('p2Confirmation').value = fin.confirmation || 0;
+        if (document.getElementById('p2InstallmentsTotal')) document.getElementById('p2InstallmentsTotal').value = fin.installmentsPool || 0;
+        if (document.getElementById('p2Quarterly')) document.getElementById('p2Quarterly').value = fin.quarterly || 0;
+        if (document.getElementById('p2Finishing')) document.getElementById('p2Finishing').value = fin.finishing || 0;
+        if (document.getElementById('p2Possession')) document.getElementById('p2Possession').value = fin.possession || 0;
+        calculatePlan2Manual();
+      } else if (scheme === 'Plan3') {
+        const st = fin.stages || {};
+        if (document.getElementById('p3Booking')) document.getElementById('p3Booking').value = st.booking || fin.downPayment || 0;
+        if (document.getElementById('p3Allocation')) document.getElementById('p3Allocation').value = st.allocation || 0;
+        if (document.getElementById('p3Confirmation')) document.getElementById('p3Confirmation').value = st.confirmation || 0;
+        if (document.getElementById('p3StartWork')) document.getElementById('p3StartWork').value = st.startWork || 0;
+        if (document.getElementById('p3MonthlyPool')) document.getElementById('p3MonthlyPool').value = st.monthlyPool || 0;
+        if (document.getElementById('p3MonthsCount')) document.getElementById('p3MonthsCount').value = st.monthsCount || 36;
+        if (document.getElementById('p3Quarterly')) document.getElementById('p3Quarterly').value = st.quarterly || 0;
+        if (document.getElementById('p3Excavation')) document.getElementById('p3Excavation').value = st.excavation || 0;
+        if (document.getElementById('p3Foundation')) document.getElementById('p3Foundation').value = st.foundation || 0;
+        if (document.getElementById('p3Plinth')) document.getElementById('p3Plinth').value = st.plinth || 0;
+        if (document.getElementById('p3SlabCasting')) document.getElementById('p3SlabCasting').value = st.slabCasting || 0;
+        if (document.getElementById('p3BlockMasonry')) document.getElementById('p3BlockMasonry').value = st.blockMasonry || 0;
+        if (document.getElementById('p3Plaster')) document.getElementById('p3Plaster').value = st.plaster || 0;
+        if (document.getElementById('p3ElectricWork')) document.getElementById('p3ElectricWork').value = st.electricWork || 0;
+        if (document.getElementById('p3PlumbingWork')) document.getElementById('p3PlumbingWork').value = st.plumbingWork || 0;
+        if (document.getElementById('p3Colouring')) document.getElementById('p3Colouring').value = st.colouring || 0;
+        if (document.getElementById('p3Flooring')) document.getElementById('p3Flooring').value = st.flooring || 0;
+        if (document.getElementById('p3Finishing')) document.getElementById('p3Finishing').value = st.finishing || 0;
+        if (document.getElementById('p3Possession')) document.getElementById('p3Possession').value = st.possession || 0;
+        calculatePlan3();
+      }
 
       // Terms Agreement
       if (document.getElementById('checkAgreeTerms')) {
@@ -10294,18 +10522,22 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addOfficeExpense', 'subAd
       if (btn) btn.classList.add('active');
     }
 
-    // 2. Logo & Stamp Image Previews
-    function previewSettingLogo(e) {
+    async function previewSettingLogo(e) {
       const file = e.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        settingLogoBase64 = evt.target.result;
-        document.getElementById('setLogoImg').src = settingLogoBase64;
-        document.getElementById('setLogoImg').style.display = 'block';
-        document.getElementById('setLogoPlaceholder').style.display = 'none';
-      };
-      reader.readAsDataURL(file);
+      try {
+        const compressedLogo = await compressImageFile(file, 400, 400, 0.85);
+        settingLogoBase64 = compressedLogo;
+        const img = document.getElementById('setLogoImg');
+        const placeholder = document.getElementById('setLogoPlaceholder');
+        if (img) {
+          img.src = compressedLogo;
+          img.style.display = 'block';
+        }
+        if (placeholder) placeholder.style.display = 'none';
+      } catch (err) {
+        alert("Logo upload karne mein masla aaya: " + err.message);
+      }
     }
 
     function previewSettingStamp(e) {
@@ -11707,19 +11939,13 @@ loadLicenseSettings();
       const paid = Number(p.paid || p.paidAmount || 0);
       const remaining = Number(p.remaining || p.remainingAmount || 0);
 
-      // Settings se Logo aur Project Details uthana
-      const compProject = document.getElementById('setProjectTitle')?.value.trim() || p.project || 'BILAL HEIGHTS';
-      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
-
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+    // Settings se Logo aur Project Details uthana
+      const comp = getCompanyPrintProfile();
+      const compProject = comp.project || p.project || 'BILAL HEIGHTS';
+      const compName = comp.name;
+      const compAddress = comp.address || 'Site Office';
+      const compPhone = comp.phone;
+      const compLogo = comp.logo;
 
       let itemsRowsHtml = '';
       if (p.itemsList && p.itemsList.length > 0) {
@@ -11900,17 +12126,15 @@ loadLicenseSettings();
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       // Settings se live details aur logo uthana
-      const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Clifton Boulevard, Karachi';
-      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
+      const comp = getCompanyPrintProfile();
+      const compProject = comp.project;
+      const compName = comp.name;
+      const compAddress = comp.address || 'Head Office';
+      const compPhone = comp.phone;
+      const compWhatsapp = comp.whatsapp;
+      const compLogo = comp.logo;
 
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+      
 
       // Single Owner vs Joint Owner HTML block
       let ownersDetailsHtml = '';
@@ -12129,38 +12353,96 @@ loadLicenseSettings();
               <!-- Dynamic Owners Section (Single or Joint) -->
               ${ownersDetailsHtml}
 
-              <!-- Deal Financials Table -->
-              <div style="margin-top: 8px;">
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 11.5px;">
-                  <thead>
-                    <tr style="background: #0d47a1; color: #ffffff;">
-                      <th style="padding: 9px 12px; text-align: left; font-weight: 700; width: 44%; border: 1px solid #0d47a1;">Description</th>
-                      <th style="padding: 9px 12px; text-align: center; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Details</th>
-                      <th style="padding: 9px 12px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Payment Stage</th>
-                      <th style="padding: 9px 12px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                      <td style="padding: 9px 12px; color: #0f172a; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Apartment Unit Allocation (Flat ${c.flatNo || '-'})</td>
-                      <td style="padding: 9px 12px; text-align: center; color: #475569; border-right: 1px solid #e2e8f0;">Floor: ${c.floor || 'Ground'} (${c.size || ''})</td>
-                      <td style="padding: 9px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Total Price</td>
-                      <td style="padding: 9px 12px; text-align: right; font-weight: 800; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                      <td style="padding: 9px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Down Payment / Booking Deposit</td>
-                      <td style="padding: 9px 12px; text-align: center; color: #16a34a; font-weight: 700; border-right: 1px solid #e2e8f0;">Paid</td>
-                      <td style="padding: 9px 12px; text-align: right; color: #16a34a; font-weight: 700; border-right: 1px solid #e2e8f0;">Initial</td>
-                      <td style="padding: 9px 12px; text-align: right; font-weight: 700; color: #16a34a; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                      <td style="padding: 9px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Monthly Installment Schedule</td>
-                      <td style="padding: 9px 12px; text-align: center; color: #0284c7; font-weight: 700; border-right: 1px solid #e2e8f0;">${fin.durationMonths || 12} Months</td>
-                      <td style="padding: 9px 12px; text-align: right; color: #0284c7; font-weight: 700; border-right: 1px solid #e2e8f0;">Per Month</td>
-                      <td style="padding: 9px 12px; text-align: right; font-weight: 800; color: #0284c7; border-right: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
-                    </tr>
-                  </tbody>
-                </table>
+<!-- Dynamic Deal Financials Table (Plan 1, Plan 2, Plan 3) -->
+              <div style="margin-top: 6px;">
+                ${(() => {
+                  const scheme = fin.planScheme || 'Plan1';
+                 if (scheme === 'Plan2') {
+                    return `
+                      <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px;">
+                        <thead>
+                          <tr style="background: #0d47a1; color: #ffffff;">
+                            <th style="padding: 5px 8px; text-align: left; width: 46%; border: 1px solid #0d47a1;">Plan 2: Stage Description</th>
+                            <th style="padding: 5px 8px; text-align: center; width: 16%; border: 1px solid #0d47a1;">Ratio %</th>
+                            <th style="padding: 5px 8px; text-align: right; width: 38%; border: 1px solid #0d47a1;">Amount (Rs.)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; font-weight: 700; border: 1px solid #e2e8f0;">1. Booking Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">2. Allocation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.allocation || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">3. Confirmation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.confirmation || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; color:#0284c7; font-weight: 700; border: 1px solid #e2e8f0;">4. 24 Months Installments (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}/Mo)</td><td style="text-align: center; border: 1px solid #e2e8f0;">40 %</td><td style="text-align: right; font-weight: 800; color:#0284c7; border: 1px solid #e2e8f0;">Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">5. Quarterly Installments</td><td style="text-align: center; border: 1px solid #e2e8f0;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.quarterly || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">6. On Finishing</td><td style="text-align: center; border: 1px solid #e2e8f0;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.finishing || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">7. On Possession</td><td style="text-align: center; border: 1px solid #e2e8f0;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td></tr>
+                        </tbody>
+                      </table>
+                    `;
+                  } else if (scheme === 'Plan3') {
+                    const st = fin.stages || {};
+                    return `
+                      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px 10px; margin-bottom:6px;">
+                        <div style="font-size:9.5px; font-weight:800; color:#0d47a1; margin-bottom:4px; text-transform:uppercase;">Plan 3: Construction-Stage Detailed Schedule (18 Stages)</div>
+                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:3px 8px; font-size:9px; color:#334155;">
+                          <div>1. Booking: <b>Rs. ${Number(st.booking || fin.downPayment || 0).toLocaleString()}</b></div>
+                          <div>2. Allocation: <b>Rs. ${Number(st.allocation || 0).toLocaleString()}</b></div>
+                          <div>3. Confirmation: <b>Rs. ${Number(st.confirmation || 0).toLocaleString()}</b></div>
+                          <div>4. Start of Work: <b>Rs. ${Number(st.startWork || 0).toLocaleString()}</b></div>
+                          <div>5. Monthly Pool: <b>Rs. ${Number(st.monthlyPool || 0).toLocaleString()}</b></div>
+                          <div>6. Quarterly: <b>Rs. ${Number(st.quarterly || 0).toLocaleString()}</b></div>
+                          <div>7. Excavation: <b>Rs. ${Number(st.excavation || 0).toLocaleString()}</b></div>
+                          <div>8. Foundation: <b>Rs. ${Number(st.foundation || 0).toLocaleString()}</b></div>
+                          <div>9. Plinth: <b>Rs. ${Number(st.plinth || 0).toLocaleString()}</b></div>
+                          <div>10. Slab Casting: <b>Rs. ${Number(st.slabCasting || 0).toLocaleString()}</b></div>
+                          <div>11. Block Masonry: <b>Rs. ${Number(st.blockMasonry || 0).toLocaleString()}</b></div>
+                          <div>12. Plaster: <b>Rs. ${Number(st.plaster || 0).toLocaleString()}</b></div>
+                          <div>13. Electric Work: <b>Rs. ${Number(st.electricWork || 0).toLocaleString()}</b></div>
+                          <div>14. Plumbing Work: <b>Rs. ${Number(st.plumbingWork || 0).toLocaleString()}</b></div>
+                          <div>15. Colouring: <b>Rs. ${Number(st.colouring || 0).toLocaleString()}</b></div>
+                          <div>16. Flooring: <b>Rs. ${Number(st.flooring || 0).toLocaleString()}</b></div>
+                          <div>17. Finishing: <b>Rs. ${Number(st.finishing || 0).toLocaleString()}</b></div>
+                          <div>18. Possession: <b>Rs. ${Number(st.possession || 0).toLocaleString()}</b></div>
+                        </div>
+                        <div style="margin-top:4px; font-size:9.5px; font-weight:800; color:#166534; border-top:1px dashed #cbd5e1; padding-top:2px;">
+                          Monthly Installment: Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()} / Month (${fin.durationMonths || 36} Months)
+                        </div>
+                      </div>
+                    `;
+                  } else {
+                    return `
+                      <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 11px;">
+                        <thead>
+                          <tr style="background: #0d47a1; color: #ffffff;">
+                            <th style="padding: 6px 10px; text-align: left; width: 44%; border: 1px solid #0d47a1;">Plan 1: Description</th>
+                            <th style="padding: 6px 10px; text-align: center; width: 18%; border: 1px solid #0d47a1;">Details</th>
+                            <th style="padding: 6px 10px; text-align: right; width: 18%; border: 1px solid #0d47a1;">Payment Stage</th>
+                            <th style="padding: 6px 10px; text-align: right; width: 20%; border: 1px solid #0d47a1;">Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 6px 10px; color: #0f172a; font-weight: 700; border: 1px solid #e2e8f0;">Apartment Allocation (Flat ${c.flatNo || '-'})</td>
+                            <td style="padding: 6px 10px; text-align: center; color: #475569; border: 1px solid #e2e8f0;">Floor: ${c.floor || 'Ground'} (${c.size || ''})</td>
+                            <td style="padding: 6px 10px; text-align: right; color: #334155; border: 1px solid #e2e8f0;">Total Price</td>
+                            <td style="padding: 6px 10px; text-align: right; font-weight: 800; color: #0f172a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
+                          </tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 6px 10px; color: #334155; border: 1px solid #e2e8f0;">Booking / Down Payment</td>
+                            <td style="padding: 6px 10px; text-align: center; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Paid</td>
+                            <td style="padding: 6px 10px; text-align: right; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Initial</td>
+                            <td style="padding: 6px 10px; text-align: right; font-weight: 700; color: #16a34a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
+                          </tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 6px 10px; color: #334155; border: 1px solid #e2e8f0;">Monthly Installment Schedule</td>
+                            <td style="padding: 6px 10px; text-align: center; color: #0284c7; font-weight: 700; border: 1px solid #e2e8f0;">${fin.durationMonths || 36} Months</td>
+                            <td style="padding: 6px 10px; text-align: right; color: #0284c7; font-weight: 700; border: 1px solid #e2e8f0;">Per Month</td>
+                            <td style="padding: 6px 10px; text-align: right; font-weight: 800; color: #0284c7; border: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    `;
+                  }
+                })()}
               </div>
 
               <!-- Total Ribbon -->
@@ -12204,17 +12486,11 @@ loadLicenseSettings();
       const todayDate = exp.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       // Settings se live Logo aur Project Details uthana
-      const compProject = document.getElementById('setProjectTitle')?.value.trim() || exp.project || 'BILAL HEIGHTS';
-      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+      const comp = getCompanyPrintProfile();
+      const compProject = comp.project || exp.project || 'BILAL HEIGHTS';
+      const compName = comp.name;
+      const compAddress = comp.address || 'Site Office';
+      const compLogo = comp.logo;
 
       const pdfWrapper = document.createElement('div');
       pdfWrapper.style.width = '100%';
@@ -12353,17 +12629,11 @@ loadLicenseSettings();
       const todayDate = exp.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
       // Settings se live Logo aur Project Details uthana
-      const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+      const comp = getCompanyPrintProfile();
+      const compProject = comp.project;
+      const compName = comp.name;
+      const compAddress = comp.address || 'Head Office';
+      const compLogo = comp.logo;
 
       const pdfWrapper = document.createElement('div');
       pdfWrapper.style.width = '100%';
@@ -12767,18 +13037,12 @@ loadLicenseSettings();
       const voucherTitle = isPayment ? 'CASH PAYMENT VOUCHER' : 'CASH RECEIPT VOUCHER';
       const todayDate = v.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      // Settings se live Logo aur Project Details uthana
-      const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+     // Settings se live Logo aur Project Details uthana
+      const comp = getCompanyPrintProfile();
+      const compProject = comp.project;
+      const compName = comp.name;
+      const compAddress = comp.address || 'Head Office';
+      const compLogo = comp.logo;
 
       const pdfWrapper = document.createElement('div');
       pdfWrapper.style.width = '100%';
@@ -14497,7 +14761,7 @@ function renderProfitLossReport() {
 
   if (!tbody) return;
 
-  // 1. REVENUE (Collections + Down Payments + CRV)
+  // 1. REVENUE (Installments + Down Payments + CRV Receipts)
   let totalInstallments = 0;
   (allPaymentsData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
@@ -14506,13 +14770,8 @@ function renderProfitLossReport() {
   });
 
   let totalDownPayments = 0;
-  let totalAllotmentDealValue = 0;
-
   (allCustomersData || []).forEach(c => {
     const down = parseFloat(c.financials?.downPayment) || 0;
-    const dealPrice = parseFloat(c.financials?.totalPrice) || 0;
-    totalAllotmentDealValue += dealPrice;
-
     let cDate = c.registrationDate || c.date;
     if (!cDate && c.createdAt) {
       try { cDate = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10); } catch(e){}
@@ -14530,33 +14789,25 @@ function renderProfitLossReport() {
     }
   });
 
+  // Cash Vouchers (CRV & CPV)
   let crvIncome = 0;
-  let cpvOperating = 0;
+  let cpvTotalExpenses = 0;
 
   (allCashVouchersData || []).forEach(v => {
     if (dateFrom && v.date < dateFrom) return;
     if (dateTo && v.date > dateTo) return;
 
     const amt = parseFloat(v.amount) || 0;
-    const head = (v.head || '').toLowerCase();
-
     if (v.type === 'RECEIPT') {
       crvIncome += amt;
     } else if (v.type === 'PAYMENT') {
-      // Sirf woh CPVs jo direct operational expense hain unko P&L me lein
-      // Vendor / Material Bill, Owner Drawing, Partner Capital aur Advance Return ko alag expense me double count nahi karenge
-      const isVendorSettlement = head.includes('vendor') || head.includes('material') || head.includes('bill');
-      const isOwnerDrawing = head.includes('owner') || head.includes('drawing') || head.includes('capital') || head.includes('advance return');
-
-      if (!isVendorSettlement && !isOwnerDrawing) {
-        cpvOperating += amt;
-      }
+      cpvTotalExpenses += amt; // Tamam Cash Payment Vouchers ko expense mein shamil karein
     }
   });
 
   const grandRevenue = totalInstallments + totalDownPayments + crvIncome;
 
-  // 2. DIRECT CONSTRUCTION COSTS (Sirf Purchases Bill Total - No Double Counting)
+  // 2. DIRECT CONSTRUCTION COSTS
   let totalPurchases = 0;
   (allPurchaserData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
@@ -14566,7 +14817,7 @@ function renderProfitLossReport() {
 
   const totalConstructionCost = totalPurchases;
 
-  // 3. OPERATING EXPENSES (Site + Office + Other Non-Vendor CPVs)
+  // 3. OPERATING & CASH EXPENSES (Site + Office + Cash Payment Vouchers)
   let totalSiteExp = 0;
   (allSiteExpensesData || []).forEach(se => {
     if (dateFrom && se.date < dateFrom) return;
@@ -14581,7 +14832,7 @@ function renderProfitLossReport() {
     totalOfficeExp += (parseFloat(oe.totalAmount) || 0);
   });
 
-  const totalOperatingCost = totalSiteExp + totalOfficeExp + cpvOperating;
+  const totalOperatingCost = totalSiteExp + totalOfficeExp + cpvTotalExpenses;
 
   // 4. Calculations (Gross & Net Profit)
   const grossProfit = grandRevenue - totalConstructionCost;
@@ -14623,7 +14874,7 @@ function renderProfitLossReport() {
     ${crvIncome > 0 ? `
     <tr>
       <td style="padding-left:24px;">Other Cash Receipts (CRV)</td>
-      <td style="text-align:right;">Rs. ${crvIncome.toLocaleString()}</td>
+      <td style="text-align:right; font-weight:700; color:#16a34a;">Rs. ${crvIncome.toLocaleString()}</td>
       <td style="text-align:right;">-</td>
     </tr>` : ''}
     <tr style="background:#f0fdf4; font-weight:800;">
@@ -14653,7 +14904,7 @@ function renderProfitLossReport() {
     </tr>
 
     <tr style="background:#f8fafc; font-weight:800;">
-      <td colspan="3" style="color:#dc2626; font-size:14px;"><i class="fa-solid fa-briefcase"></i> 3. OPERATING & ADMINISTRATIVE EXPENSES</td>
+      <td colspan="3" style="color:#dc2626; font-size:14px;"><i class="fa-solid fa-briefcase"></i> 3. OPERATING & CASH EXPENSES</td>
     </tr>
     <tr>
       <td style="padding-left:24px;">Site Expenses (Labour Wages, Fuel, Maintenance, Cartage)</td>
@@ -14665,14 +14916,14 @@ function renderProfitLossReport() {
       <td style="text-align:right;">Rs. ${totalOfficeExp.toLocaleString()}</td>
       <td style="text-align:right;">-</td>
     </tr>
-    ${cpvOperating > 0 ? `
+    ${cpvTotalExpenses > 0 ? `
     <tr>
-      <td style="padding-left:24px;">Other Cash Payment Vouchers (CPV - Miscellaneous)</td>
-      <td style="text-align:right;">Rs. ${cpvOperating.toLocaleString()}</td>
+      <td style="padding-left:24px;">Cash Payment Vouchers (CPV - Paid Vouchers)</td>
+      <td style="text-align:right; font-weight:700; color:#dc2626;">Rs. ${cpvTotalExpenses.toLocaleString()}</td>
       <td style="text-align:right;">-</td>
     </tr>` : ''}
     <tr style="font-weight:700;">
-      <td style="padding-left:24px; color:#dc2626;">Total Operating Expenses</td>
+      <td style="padding-left:24px; color:#dc2626;">Total Operating & Cash Expenses</td>
       <td style="text-align:right;">-</td>
       <td style="text-align:right; font-weight:800; color:#dc2626;">(Rs. ${totalOperatingCost.toLocaleString()})</td>
     </tr>
@@ -14691,18 +14942,12 @@ function downloadProfitLossPDF() {
   const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   // Settings se Logo aur Project Details uthana
-  const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-  const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-  const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-  const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
-
-  let compLogo = settingLogoBase64;
-  if (!compLogo) {
-    const logoEl = document.getElementById('setLogoImg');
-    if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-      compLogo = logoEl.src;
-    }
-  }
+  const comp = getCompanyPrintProfile();
+  const compProject = comp.project;
+  const compName = comp.name;
+  const compAddress = comp.address || 'Head Office';
+  const compPhone = comp.phone;
+  const compLogo = comp.logo;
 
 // 1. Revenue & Collections
   let totalInstallments = 0;
@@ -14745,19 +14990,22 @@ function downloadProfitLossPDF() {
   let cpvOperating = 0;
   let crvIncome = 0;
 
-  // (3) Cash Vouchers (Payment Credit mein jayegi taake baqaya minus ho)
-      (allCashVouchersData || []).forEach(v => {
-        if (selectedAcc === 'ALL' || v.party === selectedAcc) {
-          const amt = parseFloat(v.amount) || 0;
-          ledgerEntries.push({
-            date: v.date,
-            ref: v.voucherNo,
-            desc: v.narration || v.head,
-            debit: (v.type === 'RECEIPT') ? amt : 0,
-            credit: (v.type === 'PAYMENT') ? amt : 0
-          });
-        }
-      });
+  // (3) Cash Vouchers (CRV Income & CPV Expenses)
+  (allCashVouchersData || []).forEach(v => {
+    if (dateFrom && v.date < dateFrom) return;
+    if (dateTo && v.date > dateTo) return;
+
+    const amt = parseFloat(v.amount) || 0;
+    if (v.type === 'RECEIPT') {
+      crvIncome += amt;
+    } else if (v.type === 'PAYMENT') {
+      if (v.head === 'Vendor / Material Bill') {
+        cpvMaterial += amt;
+      } else {
+        cpvOperating += amt;
+      }
+    }
+  });
 
   const totalConstructionCost = totalPurchases + cpvMaterial;
 
@@ -15552,34 +15800,31 @@ function renderAccountLedgerReport() {
 }
 
 function downloadAccountLedgerPDF() {
-  const selectedAcc = document.getElementById('alFilterAccount')?.value || 'ALL';
+  const selectedAcc = document.getElementById('alFilterAccount')?.value.trim() || '';
   const dateFrom = document.getElementById('alFilterDateFrom')?.value || '';
   const dateTo = document.getElementById('alFilterDateTo')?.value || '';
   const txnType = document.getElementById('alFilterType')?.value || 'ALL';
   const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   // Settings se Logo aur Company Info uthana
-  const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-  const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-  const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-  const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
+  const comp = getCompanyPrintProfile();
+  const compProject = comp.project;
+  const compName = comp.name;
+  const compAddress = comp.address || 'Head Office';
+  const compPhone = comp.phone;
+  const compLogo = comp.logo;
 
-  let compLogo = settingLogoBase64;
-  if (!compLogo) {
-    const logoEl = document.getElementById('setLogoImg');
-    if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-      compLogo = logoEl.src;
-    }
-  }
+  const isAll = (!selectedAcc || selectedAcc === 'ALL' || selectedAcc.toLowerCase().includes('consolidated') || selectedAcc.toLowerCase().includes('all accounts'));
+  const cleanTargetName = isAll ? '' : extractCleanAccName(selectedAcc);
 
   // Selected Account ki extra details dhoondna
   let accMeta = null;
-  if (selectedAcc !== 'ALL') {
-    accMeta = (allAccountsData || []).find(a => a.name === selectedAcc);
+  if (!isAll) {
+    accMeta = (allAccountsData || []).find(a => extractCleanAccName(a.name) === cleanTargetName);
     if (!accMeta) {
       const cust = (allCustomersData || []).find(c => {
         const o1 = c.firstOwner || c.secondOwner || {};
-        return o1.name === selectedAcc;
+        return extractCleanAccName(o1.name) === cleanTargetName;
       });
       if (cust) {
         const o = cust.firstOwner || cust.secondOwner || {};
@@ -15588,16 +15833,17 @@ function downloadAccountLedgerPDF() {
     }
   }
 
-  // Transactions compile karna
+  // Transactions compile karna (Smart Matching with Designation)
   let ledgerEntries = [];
 
   // 1. Customer Receipts
   (allPaymentsData || []).forEach(p => {
-    if (selectedAcc === 'ALL' || p.customerName === selectedAcc) {
+    const cName = extractCleanAccName(p.customerName);
+    if (isAll || cName === cleanTargetName || (p.customerName && p.customerName.toLowerCase().includes(cleanTargetName))) {
       ledgerEntries.push({
         date: p.date,
         ref: p.receiptNo || 'BH-REC',
-        desc: `Customer Payment Received (Flat ${p.flatNo})`,
+        desc: `Customer Payment Received (${p.customerName || 'Customer'} - Flat ${p.flatNo})`,
         debit: 0,
         credit: parseFloat(p.amount) || 0
       });
@@ -15606,27 +15852,29 @@ function downloadAccountLedgerPDF() {
 
   // 2. Supplier Purchases
   (allPurchaserData || []).forEach(pur => {
-    if (selectedAcc === 'ALL' || pur.vendor === selectedAcc) {
+    const vName = extractCleanAccName(pur.vendor);
+    if (isAll || vName === cleanTargetName || (pur.vendor && pur.vendor.toLowerCase().includes(cleanTargetName))) {
       const total = parseFloat(pur.total || pur.totalAmount) || 0;
       const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
       ledgerEntries.push({
         date: pur.date,
         ref: pur.billNo || 'PUR-001',
-        desc: `Material Purchase - ${pur.item || 'Items'}`,
+        desc: `Material Purchase (${pur.vendor || 'Supplier'} - ${pur.item || 'Items'})`,
         debit: total,
         credit: paid
       });
     }
   });
 
-  // 3. Cash Vouchers (Payment Credit mein jayegi taake baqaya minus ho)
+  // 3. Cash Vouchers (CPV & CRV)
   (allCashVouchersData || []).forEach(v => {
-    if (selectedAcc === 'ALL' || v.party === selectedAcc || (v.party && selectedAcc.includes(v.party)) || (v.party && v.party.includes(selectedAcc))) {
+    const partyClean = extractCleanAccName(v.party);
+    if (isAll || partyClean === cleanTargetName || (v.party && v.party.toLowerCase().includes(cleanTargetName))) {
       const amt = parseFloat(v.amount) || 0;
       ledgerEntries.push({
         date: v.date,
         ref: v.voucherNo || 'CV',
-        desc: v.narration || v.head,
+        desc: `${v.party || 'Account'} - ${v.narration || v.head}`,
         debit: (v.type === 'RECEIPT') ? amt : 0,
         credit: (v.type === 'PAYMENT') ? amt : 0
       });
