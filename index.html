@@ -12226,7 +12226,7 @@ loadLicenseSettings();
       else alert('PDF library load nahi ho saki.');
     }
 
-   // 3. ALLOTMENT DOSSIER / ORDER (CLEAN DESIGN - WITHOUT TERMS & CONDITIONS BOX)
+   // 3. ALLOTMENT DOSSIER / ORDER (WITH TERMS & CONDITIONS BOX INCLUDED)
     function downloadCustomerPDF(customerId) {
       const c = allCustomersData.find(item => item.id === customerId);
       if (!c) return;
@@ -12248,7 +12248,11 @@ loadLicenseSettings();
       const compWhatsapp = comp.whatsapp;
       const compLogo = comp.logo;
 
-      
+      // Settings ya default se Terms & Conditions uthana
+      const termsText = document.getElementById('setLegalTermsText')?.value.trim() || (typeof defaultLegalTerms !== 'undefined' ? defaultLegalTerms : 
+        "1. All bookings and allotments are governed under project bylaws.\n" +
+        "2. Possession rights will only be handed over upon 100% dues clearance.\n" +
+        "3. Building architecture, utilities, and structure are verified by engineering authorities.");
 
       // Single Owner vs Joint Owner HTML block
       let ownersDetailsHtml = '';
@@ -12256,62 +12260,62 @@ loadLicenseSettings();
       if (isJoint) {
         // JOINT OWNERSHIP: 2 Owners Side by Side
         ownersDetailsHtml = `
-          <div style="display: flex; justify-content: space-between; gap: 14px; margin-bottom: 14px;">
+          <div style="display: flex; justify-content: space-between; gap: 12px; margin-bottom: 10px;">
             
             <!-- Owner 1 Column -->
-            <div style="flex: 1; background: #f8fafc; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 10px 12px;">
+            <div style="flex: 1; background: #f8fafc; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 8px 10px;">
               <div style="display: flex; gap: 10px; align-items: flex-start;">
                 <!-- Photo & Thumb -->
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <div style="width: 58px; height: 66px; border-radius: 6px; border: 1.5px solid #0d47a1; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="width: 52px; height: 58px; border-radius: 6px; border: 1.5px solid #0d47a1; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
                     ${o1.photo 
                       ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` 
                       : `<div style="font-size:8px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
                   </div>
-                  <div style="width: 58px; height: 58px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                  <div style="width: 52px; height: 50px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
                     ${o1.thumb 
                       ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` 
-                      : `<i class="fa-solid fa-fingerprint" style="font-size:26px; color:#94a3b8;"></i>`}
+                      : `<i class="fa-solid fa-fingerprint" style="font-size:22px; color:#94a3b8;"></i>`}
                   </div>
                 </div>
 
                 <!-- Info -->
                 <div style="flex: 1; min-width: 0;">
-                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase;">OWNER 1 (PARTNER 1):</div>
-                  <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
-                  <div style="font-size: 11px; color: #334155; margin-top: 2px;">S/O: <b>${o1.fatherHusband || '-'}</b></div>
-                  <div style="font-size: 11px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b></div>
-                  <div style="font-size: 11px; color: #334155;">Phone: <b>${o1.mobile || '-'}</b></div>
-                  <div style="font-size: 10.5px; color: #64748b; margin-top: 2px; line-height: 1.3;">Address: ${o1.address || '-'}</div>
+                  <div style="font-size: 9.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase;">OWNER 1 (PARTNER 1):</div>
+                  <div style="font-size: 12.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
+                  <div style="font-size: 10.5px; color: #334155; margin-top: 1px;">S/O: <b>${o1.fatherHusband || '-'}</b></div>
+                  <div style="font-size: 10.5px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b></div>
+                  <div style="font-size: 10.5px; color: #334155;">Phone: <b>${o1.mobile || '-'}</b></div>
+                  <div style="font-size: 10px; color: #64748b; margin-top: 1px; line-height: 1.25;">Address: ${o1.address || '-'}</div>
                 </div>
               </div>
             </div>
 
             <!-- Owner 2 Column -->
-            <div style="flex: 1; background: #f8fafc; border: 1.5px solid #bae6fd; border-radius: 10px; padding: 10px 12px;">
+            <div style="flex: 1; background: #f8fafc; border: 1.5px solid #bae6fd; border-radius: 8px; padding: 8px 10px;">
               <div style="display: flex; gap: 10px; align-items: flex-start;">
                 <!-- Photo & Thumb -->
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  <div style="width: 58px; height: 66px; border-radius: 6px; border: 1.5px solid #0284c7; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="width: 52px; height: 58px; border-radius: 6px; border: 1.5px solid #0284c7; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
                     ${o2.photo 
                       ? `<img src="${o2.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` 
                       : `<div style="font-size:8px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
                   </div>
-                  <div style="width: 58px; height: 58px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                  <div style="width: 52px; height: 50px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
                     ${o2.thumb 
                       ? `<img src="${o2.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` 
-                      : `<i class="fa-solid fa-fingerprint" style="font-size:26px; color:#94a3b8;"></i>`}
+                      : `<i class="fa-solid fa-fingerprint" style="font-size:22px; color:#94a3b8;"></i>`}
                   </div>
                 </div>
 
                 <!-- Info -->
                 <div style="flex: 1; min-width: 0;">
-                  <div style="font-size: 10px; font-weight: 800; color: #0284c7; text-transform: uppercase;">OWNER 2 (PARTNER 2):</div>
-                  <div style="font-size: 13.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o2.name || 'Partner Name'}</div>
-                  <div style="font-size: 11px; color: #334155; margin-top: 2px;">S/O, W/O: <b>${o2.fatherHusband || '-'}</b></div>
-                  <div style="font-size: 11px; color: #334155;">CNIC: <b>${o2.cnic || '-'}</b></div>
-                  <div style="font-size: 11px; color: #334155;">Phone: <b>${o2.mobile || '-'}</b></div>
-                  <div style="font-size: 10.5px; color: #64748b; margin-top: 2px; line-height: 1.3;">Address: ${o2.address || o1.address || '-'}</div>
+                  <div style="font-size: 9.5px; font-weight: 800; color: #0284c7; text-transform: uppercase;">OWNER 2 (PARTNER 2):</div>
+                  <div style="font-size: 12.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o2.name || 'Partner Name'}</div>
+                  <div style="font-size: 10.5px; color: #334155; margin-top: 1px;">S/O, W/O: <b>${o2.fatherHusband || '-'}</b></div>
+                  <div style="font-size: 10.5px; color: #334155;">CNIC: <b>${o2.cnic || '-'}</b></div>
+                  <div style="font-size: 10.5px; color: #334155;">Phone: <b>${o2.mobile || '-'}</b></div>
+                  <div style="font-size: 10px; color: #64748b; margin-top: 1px; line-height: 1.25;">Address: ${o2.address || o1.address || '-'}</div>
                 </div>
               </div>
             </div>
@@ -12321,46 +12325,45 @@ loadLicenseSettings();
       } else {
         // SINGLE OWNER
         ownersDetailsHtml = `
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; gap: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 16px;">
             <div style="flex: 2;">
-              <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
                 <div style="text-align: center;">
-                  <div style="width: 75px; height: 84px; border-radius: 8px; border: 1.8px solid #0d47a1; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(13,71,161,0.12);">
+                  <div style="width: 65px; height: 72px; border-radius: 6px; border: 1.5px solid #0d47a1; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(13,71,161,0.1);">
                     ${o1.photo 
                       ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Customer Photo" />` 
                       : `<div style="font-size:9px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
                   </div>
-                  <small style="font-size: 8.5px; font-weight: 700; color: #475569; display: block; margin-top: 2px;">Allottee Photo</small>
+                  <small style="font-size: 8px; font-weight: 700; color: #475569; display: block; margin-top: 2px;">Allottee Photo</small>
                 </div>
 
                 <div style="text-align: center;">
-                  <div style="width: 75px; height: 84px; border-radius: 8px; border: 1.8px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(22,163,74,0.12);">
+                  <div style="width: 65px; height: 72px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(22,163,74,0.1);">
                     ${o1.thumb 
                       ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` 
-                      : `<i class="fa-solid fa-fingerprint" style="font-size:36px; color:#94a3b8;"></i>`}
+                      : `<i class="fa-solid fa-fingerprint" style="font-size:30px; color:#94a3b8;"></i>`}
                   </div>
-                  <small style="font-size: 8.5px; font-weight: 700; color: #166534; display: block; margin-top: 2px;">Verified Thumb</small>
+                  <small style="font-size: 8px; font-weight: 700; color: #166534; display: block; margin-top: 2px;">Verified Thumb</small>
                 </div>
               </div>
 
               <div>
-                <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 2px; text-transform: uppercase; border-bottom: 2px solid #0d47a1; display: inline-block; padding-bottom: 1px;">ALLOTTED TO:</div>
-                <div style="font-size: 15px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
-                <div style="font-size: 11.5px; color: #334155; margin-top: 2px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
-                <div style="font-size: 11.5px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b></div>
-                <div style="font-size: 11.5px; color: #334155;">Phone: <b>${o1.mobile || '-'}</b></div>
-                <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.3;">Address: ${o1.address || '-'}</div>
-                <div style="font-size: 11.5px; color: #0284c7; font-weight: 700; margin-top: 3px;">Ownership: ${c.ownershipType || 'Single Owner'}</div>
+                <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid #0d47a1; display: inline-block; padding-bottom: 1px;">ALLOTTED TO:</div>
+                <div style="font-size: 14px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
+                <div style="font-size: 11px; color: #334155; margin-top: 1px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
+                <div style="font-size: 11px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b> | Phone: <b>${o1.mobile || '-'}</b></div>
+                <div style="font-size: 10.5px; color: #64748b; margin-top: 1px; line-height: 1.25;">Address: ${o1.address || '-'}</div>
+                <div style="font-size: 10.5px; color: #0284c7; font-weight: 700; margin-top: 2px;">Ownership: ${c.ownershipType || 'Single Owner'}</div>
               </div>
             </div>
 
             <div style="flex: 1.2; text-align: right;">
-              <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 2px; text-transform: uppercase; border-bottom: 2px solid #0d47a1; display: inline-block; padding-bottom: 1px;">PROJECT AUTHORITY:</div>
-              <div style="font-size: 15px; font-weight: 800; color: #0d47a1; margin-top: 2px;">${compProject}</div>
-              <div style="font-size: 11.5px; color: #475569; margin-top: 2px;">${compAddress}</div>
-              <div style="font-size: 11.5px; color: #475569;">Tel: ${compPhone}</div>
+              <div style="font-size: 11px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid #0d47a1; display: inline-block; padding-bottom: 1px;">PROJECT AUTHORITY:</div>
+              <div style="font-size: 14px; font-weight: 800; color: #0d47a1; margin-top: 2px;">${compProject}</div>
+              <div style="font-size: 11px; color: #475569; margin-top: 1px;">${compAddress}</div>
+              <div style="font-size: 11px; color: #475569;">Tel: ${compPhone}</div>
               
-              <div style="margin-top: 18px; font-size: 12px; font-weight: 700; color: #0f172a;">
+              <div style="margin-top: 12px; font-size: 11.5px; font-weight: 700; color: #0f172a;">
                 Date: <span style="font-weight: 600; color: #475569;">${todayDate}</span>
               </div>
             </div>
@@ -12373,43 +12376,43 @@ loadLicenseSettings();
       if (isJoint) {
         signaturesHtml = `
           <!-- Left: Authorized Person -->
-          <div style="text-align: center; width: 180px;">
-            <div style="height: 45px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+          <div style="text-align: center; width: 170px;">
+            <div style="height: 32px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
               AUTHORIZED SIGNATURE
             </div>
           </div>
 
           <!-- Middle: Owner 1 -->
-          <div style="text-align: center; width: 180px;">
-            <div style="height: 45px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+          <div style="text-align: center; width: 170px;">
+            <div style="height: 32px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
               OWNER 1 SIGNATURE
             </div>
-            <div style="font-size: 9px; color: #64748b;">(${o1.name || 'Partner 1'})</div>
+            <div style="font-size: 8.5px; color: #64748b;">(${o1.name || 'Partner 1'})</div>
           </div>
 
           <!-- Right: Owner 2 -->
-          <div style="text-align: center; width: 180px;">
-            <div style="height: 45px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+          <div style="text-align: center; width: 170px;">
+            <div style="height: 32px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
               OWNER 2 SIGNATURE
             </div>
-            <div style="font-size: 9px; color: #64748b;">(${o2.name || 'Partner 2'})</div>
+            <div style="font-size: 8.5px; color: #64748b;">(${o2.name || 'Partner 2'})</div>
           </div>
         `;
       } else {
         signaturesHtml = `
-          <div style="text-align: center; width: 220px;">
-            <div style="height: 50px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 6px; font-size: 11.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+          <div style="text-align: center; width: 200px;">
+            <div style="height: 34px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
               AUTHORIZED PERSON SIGNATURE
             </div>
           </div>
 
-          <div style="text-align: center; width: 220px;">
-            <div style="height: 50px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 6px; font-size: 11.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+          <div style="text-align: center; width: 200px;">
+            <div style="height: 34px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
               CUSTOMER SIGNATURE
             </div>
           </div>
@@ -12428,37 +12431,37 @@ loadLicenseSettings();
         <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           <div>
             <!-- Top Blue Wave Header with Logo -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 30px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+              <div style="display: flex; align-items: center; gap: 12px;">
                 ${compLogo ? `
-                  <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                  <div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
                     <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : ''}
                 <div>
-                  <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">ALLOTMENT</h1>
-                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">ALLOTMENT ORDER</h1>
+                  <div style="font-size: 10px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
                     ${compProject} • OFFICIAL PROPERTY ALLOTMENT ORDER ${isJoint ? '(JOINT OWNERSHIP)' : ''}
                   </div>
                 </div>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3);">
                   REF: ${bookingId}
                 </div>
               </div>
             </div>
 
             <!-- Body Content -->
-            <div style="padding: 16px 34px 6px 34px;">
+            <div style="padding: 12px 32px 4px 32px;">
               
               <!-- Authority Bar for Joint Mode -->
               ${isJoint ? `
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 12px;">
-                  <div style="font-size: 11px; color: #334155;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 8px;">
+                  <div style="font-size: 10.5px; color: #334155;">
                     Project: <b style="color:#0d47a1;">${compProject}</b> | Head Office: ${compAddress} | Tel: <b>${compPhone}</b>
                   </div>
-                  <div style="font-size: 11px; font-weight: 700; color: #0f172a;">
+                  <div style="font-size: 10.5px; font-weight: 700; color: #0f172a;">
                     Date: <span style="font-weight: 600; color: #475569;">${todayDate}</span>
                   </div>
                 </div>
@@ -12467,37 +12470,37 @@ loadLicenseSettings();
               <!-- Dynamic Owners Section (Single or Joint) -->
               ${ownersDetailsHtml}
 
-<!-- Dynamic Deal Financials Table (Plan 1, Plan 2, Plan 3) -->
-              <div style="margin-top: 6px;">
+              <!-- Dynamic Deal Financials Table (Plan 1, Plan 2, Plan 3) -->
+              <div style="margin-top: 4px;">
                 ${(() => {
                   const scheme = fin.planScheme || 'Plan1';
                  if (scheme === 'Plan2') {
                     return `
-                      <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 10px;">
+                      <table style="width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px;">
                         <thead>
                           <tr style="background: #0d47a1; color: #ffffff;">
-                            <th style="padding: 5px 8px; text-align: left; width: 46%; border: 1px solid #0d47a1;">Plan 2: Stage Description</th>
-                            <th style="padding: 5px 8px; text-align: center; width: 16%; border: 1px solid #0d47a1;">Ratio %</th>
-                            <th style="padding: 5px 8px; text-align: right; width: 38%; border: 1px solid #0d47a1;">Amount (Rs.)</th>
+                            <th style="padding: 4px 8px; text-align: left; width: 46%; border: 1px solid #0d47a1;">Plan 2: Stage Description</th>
+                            <th style="padding: 4px 8px; text-align: center; width: 16%; border: 1px solid #0d47a1;">Ratio %</th>
+                            <th style="padding: 4px 8px; text-align: right; width: 38%; border: 1px solid #0d47a1;">Amount (Rs.)</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; font-weight: 700; border: 1px solid #e2e8f0;">1. Booking Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">2. Allocation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.allocation || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">3. Confirmation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.confirmation || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; color:#0284c7; font-weight: 700; border: 1px solid #e2e8f0;">4. 24 Months Installments (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}/Mo)</td><td style="text-align: center; border: 1px solid #e2e8f0;">40 %</td><td style="text-align: right; font-weight: 800; color:#0284c7; border: 1px solid #e2e8f0;">Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">5. Quarterly Installments</td><td style="text-align: center; border: 1px solid #e2e8f0;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.quarterly || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">6. On Finishing</td><td style="text-align: center; border: 1px solid #e2e8f0;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.finishing || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 4px 8px; border: 1px solid #e2e8f0;">7. On Possession</td><td style="text-align: center; border: 1px solid #e2e8f0;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; font-weight: 700; border: 1px solid #e2e8f0;">1. Booking Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; border: 1px solid #e2e8f0;">2. Allocation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.allocation || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; border: 1px solid #e2e8f0;">3. Confirmation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.confirmation || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; color:#0284c7; font-weight: 700; border: 1px solid #e2e8f0;">4. 24 Months Installments (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}/Mo)</td><td style="text-align: center; border: 1px solid #e2e8f0;">40 %</td><td style="text-align: right; font-weight: 800; color:#0284c7; border: 1px solid #e2e8f0;">Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; border: 1px solid #e2e8f0;">5. Quarterly Installments</td><td style="text-align: center; border: 1px solid #e2e8f0;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.quarterly || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; border: 1px solid #e2e8f0;">6. On Finishing</td><td style="text-align: center; border: 1px solid #e2e8f0;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.finishing || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 8px; border: 1px solid #e2e8f0;">7. On Possession</td><td style="text-align: center; border: 1px solid #e2e8f0;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td></tr>
                         </tbody>
                       </table>
                     `;
                   } else if (scheme === 'Plan3') {
                     const st = fin.stages || {};
                     return `
-                      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:6px 10px; margin-bottom:6px;">
-                        <div style="font-size:9.5px; font-weight:800; color:#0d47a1; margin-bottom:4px; text-transform:uppercase;">Plan 3: Construction-Stage Detailed Schedule (18 Stages)</div>
-                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:3px 8px; font-size:9px; color:#334155;">
+                      <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:6px; padding:5px 8px; margin-bottom:4px;">
+                        <div style="font-size:9px; font-weight:800; color:#0d47a1; margin-bottom:3px; text-transform:uppercase;">Plan 3: Construction-Stage Detailed Schedule (18 Stages)</div>
+                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:2px 8px; font-size:8.5px; color:#334155;">
                           <div>1. Booking: <b>Rs. ${Number(st.booking || fin.downPayment || 0).toLocaleString()}</b></div>
                           <div>2. Allocation: <b>Rs. ${Number(st.allocation || 0).toLocaleString()}</b></div>
                           <div>3. Confirmation: <b>Rs. ${Number(st.confirmation || 0).toLocaleString()}</b></div>
@@ -12517,40 +12520,40 @@ loadLicenseSettings();
                           <div>17. Finishing: <b>Rs. ${Number(st.finishing || 0).toLocaleString()}</b></div>
                           <div>18. Possession: <b>Rs. ${Number(st.possession || 0).toLocaleString()}</b></div>
                         </div>
-                        <div style="margin-top:4px; font-size:9.5px; font-weight:800; color:#166534; border-top:1px dashed #cbd5e1; padding-top:2px;">
+                        <div style="margin-top:3px; font-size:9px; font-weight:800; color:#166534; border-top:1px dashed #cbd5e1; padding-top:2px;">
                           Monthly Installment: Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()} / Month (${fin.durationMonths || 36} Months)
                         </div>
                       </div>
                     `;
                   } else {
                     return `
-                      <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px; font-size: 11px;">
+                      <table style="width: 100%; border-collapse: collapse; margin-bottom: 4px; font-size: 10px;">
                         <thead>
                           <tr style="background: #0d47a1; color: #ffffff;">
-                            <th style="padding: 6px 10px; text-align: left; width: 44%; border: 1px solid #0d47a1;">Plan 1: Description</th>
-                            <th style="padding: 6px 10px; text-align: center; width: 18%; border: 1px solid #0d47a1;">Details</th>
-                            <th style="padding: 6px 10px; text-align: right; width: 18%; border: 1px solid #0d47a1;">Payment Stage</th>
-                            <th style="padding: 6px 10px; text-align: right; width: 20%; border: 1px solid #0d47a1;">Amount</th>
+                            <th style="padding: 5px 8px; text-align: left; width: 44%; border: 1px solid #0d47a1;">Plan 1: Description</th>
+                            <th style="padding: 5px 8px; text-align: center; width: 18%; border: 1px solid #0d47a1;">Details</th>
+                            <th style="padding: 5px 8px; text-align: right; width: 18%; border: 1px solid #0d47a1;">Payment Stage</th>
+                            <th style="padding: 5px 8px; text-align: right; width: 20%; border: 1px solid #0d47a1;">Amount</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 6px 10px; color: #0f172a; font-weight: 700; border: 1px solid #e2e8f0;">Apartment Allocation (Flat ${c.flatNo || '-'})</td>
-                            <td style="padding: 6px 10px; text-align: center; color: #475569; border: 1px solid #e2e8f0;">Floor: ${c.floor || 'Ground'} (${c.size || ''})</td>
-                            <td style="padding: 6px 10px; text-align: right; color: #334155; border: 1px solid #e2e8f0;">Total Price</td>
-                            <td style="padding: 6px 10px; text-align: right; font-weight: 800; color: #0f172a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
+                            <td style="padding: 4px 8px; color: #0f172a; font-weight: 700; border: 1px solid #e2e8f0;">Apartment Allocation (Flat ${c.flatNo || '-'})</td>
+                            <td style="padding: 4px 8px; text-align: center; color: #475569; border: 1px solid #e2e8f0;">Floor: ${c.floor || 'Ground'} (${c.size || ''})</td>
+                            <td style="padding: 4px 8px; text-align: right; color: #334155; border: 1px solid #e2e8f0;">Total Price</td>
+                            <td style="padding: 4px 8px; text-align: right; font-weight: 800; color: #0f172a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td>
                           </tr>
                           <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 6px 10px; color: #334155; border: 1px solid #e2e8f0;">Booking / Down Payment</td>
-                            <td style="padding: 6px 10px; text-align: center; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Paid</td>
-                            <td style="padding: 6px 10px; text-align: right; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Initial</td>
-                            <td style="padding: 6px 10px; text-align: right; font-weight: 700; color: #16a34a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
+                            <td style="padding: 4px 8px; color: #334155; border: 1px solid #e2e8f0;">Booking / Down Payment</td>
+                            <td style="padding: 4px 8px; text-align: center; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Paid</td>
+                            <td style="padding: 4px 8px; text-align: right; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Initial</td>
+                            <td style="padding: 4px 8px; text-align: right; font-weight: 700; color: #16a34a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td>
                           </tr>
                           <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 6px 10px; color: #334155; border: 1px solid #e2e8f0;">Monthly Installment Schedule</td>
-                            <td style="padding: 6px 10px; text-align: center; color: #0284c7; font-weight: 700; border: 1px solid #e2e8f0;">${fin.durationMonths || 36} Months</td>
-                            <td style="padding: 6px 10px; text-align: right; color: #0284c7; font-weight: 700; border: 1px solid #e2e8f0;">Per Month</td>
-                            <td style="padding: 6px 10px; text-align: right; font-weight: 800; color: #0284c7; border: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
+                            <td style="padding: 4px 8px; color: #334155; border: 1px solid #e2e8f0;">Monthly Installment Schedule</td>
+                            <td style="padding: 4px 8px; text-align: center; color: #0284c7; font-weight: 700; border: 1px solid #e2e8f0;">${fin.durationMonths || 36} Months</td>
+                            <td style="padding: 4px 8px; text-align: right; color: #0284c7; font-weight: 700; border: 1px solid #e2e8f0;">Per Month</td>
+                            <td style="padding: 4px 8px; text-align: right; font-weight: 800; color: #0284c7; border: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -12560,10 +12563,20 @@ loadLicenseSettings();
               </div>
 
               <!-- Total Ribbon -->
-              <div style="display: flex; justify-content: flex-end; margin-top: 4px; margin-bottom: 10px;">
-                <div style="background: #0d47a1; color: #ffffff; padding: 8px 22px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 240px; justify-content: space-between;">
-                  <span style="font-size: 12px; font-weight: 700; text-transform: uppercase;">Total Deal</span>
-                  <span style="font-size: 15px; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
+              <div style="display: flex; justify-content: flex-end; margin-top: 4px; margin-bottom: 6px;">
+                <div style="background: #0d47a1; color: #ffffff; padding: 6px 18px; border-radius: 6px; display: flex; gap: 20px; align-items: center; min-width: 220px; justify-content: space-between;">
+                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Total Deal</span>
+                  <span style="font-size: 14px; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
+                </div>
+              </div>
+
+              <!-- Terms & Conditions Box (Pulls directly from Settings) -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 8px; padding: 7px 12px; margin-top: 6px; margin-bottom: 8px;">
+                <div style="font-size: 9.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px; display: flex; align-items: center; gap: 5px;">
+                  <i class="fa-solid fa-file-contract"></i> TERMS & CONDITIONS OF ALLOTMENT:
+                </div>
+                <div style="font-size: 8.5px; color: #334155; line-height: 1.35; white-space: pre-line;">
+                  ${termsText}
                 </div>
               </div>
 
@@ -12571,7 +12584,7 @@ loadLicenseSettings();
           </div>
 
           <!-- Bottom: Signatures Area -->
-          <div style="padding: 0 34px 34px 34px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div style="padding: 0 32px 20px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
             ${signaturesHtml}
           </div>
 
