@@ -5199,7 +5199,7 @@
               </div>
             </div>
           </div>
-          <!-- Expense Ledger Table -->
+         <!-- Expense Ledger Table -->
           <div class="table-container">
             <table class="erp-table">
               <thead>
@@ -5207,6 +5207,7 @@
                   <th style="width:40px;">#</th>
                   <th>Date</th>
                   <th>Category</th>
+                  <th>Paid To</th>
                   <th>Description</th>
                   <th>Total (Rs.)</th>
                   <th>Paid (Rs.)</th>
@@ -5216,7 +5217,7 @@
                 </tr>
               </thead>
               <tbody id="siteExpenseTableBody">
-                <tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Loading site expenses...</td></tr>
+                <tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);">Loading site expenses...</td></tr>
               </tbody>
             </table>
           </div>
@@ -8716,8 +8717,8 @@ async function confirmStatusChange() {
           <!-- Top Blue Wave Header with Logo -->
           <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
             <div style="display: flex; align-items: center; gap: 14px;">
-              ${compLogo ? `
-                <div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
+             ${compLogo ? `
+                <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                   <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                 </div>
               ` : ''}
@@ -9830,7 +9831,7 @@ function fixJointShareOnBlur(source) {
       if (!tbody) return;
 
       if (!list || list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Koi site expense record nahi mila.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);">Koi site expense record nahi mila.</td></tr>`;
         return;
       }
 
@@ -9852,6 +9853,7 @@ function fixJointShareOnBlur(source) {
             <td style="font-weight:700; color:#475569;">${idx + 1}</td>
             <td><strong>${exp.date || 'N/A'}</strong></td>
             <td><span class="badge-project-pill">${exp.category || 'General'}</span></td>
+            <td><strong style="color:#0f172a;">${exp.paidTo || 'N/A'}</strong></td>
             <td>${exp.description || 'N/A'}</td>
             <td><strong>Rs. ${total.toLocaleString()}</strong></td>
             <td style="color:#16a34a; font-weight:700;">Rs. ${paid.toLocaleString()}</td>
@@ -12429,7 +12431,7 @@ loadLicenseSettings();
             <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 30px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
               <div style="display: flex; align-items: center; gap: 14px;">
                 ${compLogo ? `
-                  <div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
+                  <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
                     <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : ''}
@@ -13172,7 +13174,7 @@ loadLicenseSettings();
             <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 28px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
               <div style="display: flex; align-items: center; gap: 16px;">
                 ${compLogo ? `
-                  <div style="width: 52px; height: 52px; border-radius: 10px; background: #ffffff; padding: 4px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.22); overflow: hidden; flex-shrink: 0;">
+                  <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : `
@@ -14327,167 +14329,168 @@ function setCashBookPreset(preset, btn) {
 }
 
 function renderCashBookReport() {
-  const dateFrom = document.getElementById('cbFilterDateFrom')?.value;
-  const dateTo = document.getElementById('cbFilterDateTo')?.value;
-  const tbody = document.getElementById('cbTableBody');
+      const dateFrom = document.getElementById('cbFilterDateFrom')?.value;
+      const dateTo = document.getElementById('cbFilterDateTo')?.value;
+      const tbody = document.getElementById('cbTableBody');
 
-  if (!tbody) return;
+      if (!tbody) return;
 
-  let cashTransactions = [];
+      let cashTransactions = [];
 
-  // 1. Customer Registration Down Payments (Top Payments) Shamil Karein
-  (allCustomersData || []).forEach(c => {
-    const down = parseFloat(c.financials?.downPayment) || 0;
-    const o1 = c.firstOwner || c.secondOwner || {};
+      // 1. Customer Registration Down Payments (Top Payments)
+      (allCustomersData || []).forEach(c => {
+        const down = parseFloat(c.financials?.downPayment) || 0;
+        const o1 = c.firstOwner || c.secondOwner || {};
 
-    const hasDownRec = (allPaymentsData || []).some(p => 
-      ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && String(p.flatNo).trim() === String(c.flatNo).trim())) && 
-      (p.head === 'Down Payment' || p.head === 'Booking / Down Payment')
-    );
+        const hasDownRec = (allPaymentsData || []).some(p => 
+          ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && String(p.flatNo).trim() === String(c.flatNo).trim())) && 
+          (p.head === 'Down Payment' || p.head === 'Booking / Down Payment')
+        );
 
-    if (!hasDownRec && down > 0) {
-      let cDate = c.registrationDate || c.date;
-      if (!cDate && c.createdAt) {
-        try { cDate = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10); } catch(e){}
+        if (!hasDownRec && down > 0) {
+          let cDate = c.registrationDate || c.date;
+          if (!cDate && c.createdAt) {
+            try { cDate = c.createdAt.toDate ? c.createdAt.toDate().toISOString().split('T')[0] : String(c.createdAt).substring(0, 10); } catch(e){}
+          }
+          if (!cDate) cDate = new Date().toISOString().split('T')[0];
+
+          cashTransactions.push({
+            date: cDate,
+            ref: 'BH-DP-' + (c.id ? c.id.substring(0, 4).toUpperCase() : 'BOOK'),
+            desc: `Booking / Down Payment - ${o1.name || 'Customer'} (Flat ${c.flatNo || '-'})`,
+            head: 'Down Payment',
+            cashIn: down,
+            cashOut: 0
+          });
+        }
+      });
+
+      // 2. Customer Installments / Collections
+      (allPaymentsData || []).forEach(p => {
+        const modeLabel = p.mode ? ` (${p.mode})` : '';
+        cashTransactions.push({
+          date: p.date,
+          ref: p.receiptNo || 'BH-REC',
+          desc: `Customer Payment - ${p.customerName || 'Customer'} (Flat ${p.flatNo || '-'})${modeLabel}`,
+          head: p.head || 'Monthly Installment',
+          cashIn: parseFloat(p.amount) || 0,
+          cashOut: 0
+        });
+      });
+
+      // 3. Cash Vouchers (CPV & CRV)
+      (allCashVouchersData || []).forEach(v => {
+        const amt = parseFloat(v.amount) || 0;
+        cashTransactions.push({
+          date: v.date,
+          ref: v.voucherNo || 'CV',
+          desc: `${v.party || 'Party'} - ${v.narration || v.head || ''}`,
+          head: v.head || 'Cash Voucher',
+          cashIn: (v.type === 'RECEIPT') ? amt : 0,
+          cashOut: (v.type === 'PAYMENT') ? amt : 0
+        });
+      });
+
+      // 4. Purchases (Paid Amount Outflow) - FIXED
+      (allPurchaserData || []).forEach(pur => {
+        const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
+        if (paid > 0) {
+          const modeLabel = pur.paymentMethod ? ` (${pur.paymentMethod})` : '';
+          cashTransactions.push({
+            date: pur.date || new Date().toISOString().split('T')[0],
+            ref: pur.billNo || 'PUR-BILL',
+            desc: `Purchase Payment - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${modeLabel}`,
+            head: 'Material Purchase',
+            cashIn: 0,
+            cashOut: paid
+          });
+        }
+      });
+
+      // 5. Site Expenses (Outflow)
+      (allSiteExpensesData || []).forEach(se => {
+        const paid = parseFloat(se.paidAmount) || 0;
+        if (paid > 0) {
+          cashTransactions.push({
+            date: se.date || new Date().toISOString().split('T')[0],
+            ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
+            desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
+            head: se.category || 'Site Expense',
+            cashIn: 0,
+            cashOut: paid
+          });
+        }
+      });
+
+      // 6. Office Expenses (Outflow)
+      (allOfficeExpensesData || []).forEach(oe => {
+        const paid = parseFloat(oe.paidAmount) || 0;
+        if (paid > 0) {
+          cashTransactions.push({
+            date: oe.date || new Date().toISOString().split('T')[0],
+            ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
+            desc: `${oe.paidTo || 'Office Staff'} - ${oe.description || ''}`,
+            head: oe.category || 'Office Expense',
+            cashIn: 0,
+            cashOut: paid
+          });
+        }
+      });
+
+      // Date Sort
+      cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Date Filtering
+      let filtered = cashTransactions.filter(item => {
+        if (dateFrom && item.date < dateFrom) return false;
+        if (dateTo && item.date > dateTo) return false;
+        return true;
+      });
+
+      let totalIn = 0;
+      let totalOut = 0;
+      let runningBal = 0;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Chuni gayi tareekh mein koi entry mojood nahi hai.</td></tr>`;
+        document.getElementById('cbCardTotalIn').textContent = 'Rs. 0';
+        document.getElementById('cbCardTotalOut').textContent = 'Rs. 0';
+        document.getElementById('cbCardNetBalance').textContent = 'Rs. 0';
+        document.getElementById('cbFootIn').textContent = 'Rs. 0';
+        document.getElementById('cbFootOut').textContent = 'Rs. 0';
+        document.getElementById('cbFootBalance').textContent = 'Rs. 0';
+        return;
       }
-      if (!cDate) cDate = new Date().toISOString().split('T')[0];
 
-      cashTransactions.push({
-        date: cDate,
-        ref: 'BH-DP-' + (c.id ? c.id.substring(0, 4).toUpperCase() : 'BOOK'),
-        desc: `Booking / Down Payment - ${o1.name || 'Customer'} (Flat ${c.flatNo || '-'})`,
-        head: 'Down Payment',
-        cashIn: down,
-        cashOut: 0
+      let html = '';
+      filtered.forEach(item => {
+        totalIn += item.cashIn;
+        totalOut += item.cashOut;
+        runningBal += (item.cashIn - item.cashOut);
+
+        html += `
+          <tr>
+            <td>${item.date}</td>
+            <td><strong style="color: #2563eb;">${item.ref}</strong></td>
+            <td>${item.desc}</td>
+            <td><span class="badge-project-pill">${item.head}</span></td>
+            <td style="text-align: right; color: #16a34a; font-weight: 700;">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
+            <td style="text-align: right; color: #dc2626; font-weight: 700;">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
+            <td style="text-align: right; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
+          </tr>
+        `;
       });
+
+      tbody.innerHTML = html;
+
+      document.getElementById('cbCardTotalIn').textContent = `Rs. ${totalIn.toLocaleString()}`;
+      document.getElementById('cbCardTotalOut').textContent = `Rs. ${totalOut.toLocaleString()}`;
+      document.getElementById('cbCardNetBalance').textContent = `Rs. ${runningBal.toLocaleString()}`;
+
+      document.getElementById('cbFootIn').textContent = `Rs. ${totalIn.toLocaleString()}`;
+      document.getElementById('cbFootOut').textContent = `Rs. ${totalOut.toLocaleString()}`;
+      document.getElementById('cbFootBalance').textContent = `Rs. ${runningBal.toLocaleString()}`;
     }
-  });
-
-  // 2. Customer Installments / Collections (Cash aur Online dono shamil karein)
-  (allPaymentsData || []).forEach(p => {
-    const modeLabel = p.mode ? ` (${p.mode})` : '';
-    cashTransactions.push({
-      date: p.date,
-      ref: p.receiptNo || 'BH-REC',
-      desc: `Customer Payment - ${p.customerName || 'Customer'} (Flat ${p.flatNo || '-'})${modeLabel}`,
-      head: p.head || 'Monthly Installment',
-      cashIn: parseFloat(p.amount) || 0,
-      cashOut: 0
-    });
-  });
-
-  // 3. Cash Vouchers (CPV & CRV)
-  (allCashVouchersData || []).forEach(v => {
-    const amt = parseFloat(v.amount) || 0;
-    cashTransactions.push({
-      date: v.date,
-      ref: v.voucherNo || 'CV',
-      desc: `${v.party || 'Party'} - ${v.narration || v.head || ''}`,
-      head: v.head || 'Cash Voucher',
-      cashIn: (v.type === 'RECEIPT') ? amt : 0,
-      cashOut: (v.type === 'PAYMENT') ? amt : 0
-    });
-  });
-
-  // 4. Purchases (Paid Amount Outflow)
-  (allPurchaserData || []).forEach(pur => {
-    const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-    if (paid > 0) {
-      cashTransactions.push({
-        date: pur.date,
-        ref: pur.billNo || 'PUR-BILL',
-        desc: `Purchase Payment - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})`,
-        head: 'Material Purchase',
-        cashIn: 0,
-        cashOut: paid
-      });
-    }
-  });
-
-  // 5. Site Expenses (Outflow)
-  (allSiteExpensesData || []).forEach(se => {
-    const paid = parseFloat(se.paidAmount) || 0;
-    if (paid > 0) {
-      cashTransactions.push({
-        date: se.date,
-        ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
-        desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
-        head: se.category || 'Site Expense',
-        cashIn: 0,
-        cashOut: paid
-      });
-    }
-  });
-
-  // 6. Office Expenses (Outflow)
-  (allOfficeExpensesData || []).forEach(oe => {
-    const paid = parseFloat(oe.paidAmount) || 0;
-    if (paid > 0) {
-      cashTransactions.push({
-        date: oe.date,
-        ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
-        desc: `${oe.paidTo || 'Office Staff'} - ${oe.description || ''}`,
-        head: oe.category || 'Office Expense',
-        cashIn: 0,
-        cashOut: paid
-      });
-    }
-  });
-
-  // Date Sort
-  cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  // Date Filtering
-  let filtered = cashTransactions.filter(item => {
-    if (dateFrom && item.date < dateFrom) return false;
-    if (dateTo && item.date > dateTo) return false;
-    return true;
-  });
-
-  let totalIn = 0;
-  let totalOut = 0;
-  let runningBal = 0;
-
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">Chuni gayi tareekh mein koi entry mojood nahi hai.</td></tr>`;
-    document.getElementById('cbCardTotalIn').textContent = 'Rs. 0';
-    document.getElementById('cbCardTotalOut').textContent = 'Rs. 0';
-    document.getElementById('cbCardNetBalance').textContent = 'Rs. 0';
-    document.getElementById('cbFootIn').textContent = 'Rs. 0';
-    document.getElementById('cbFootOut').textContent = 'Rs. 0';
-    document.getElementById('cbFootBalance').textContent = 'Rs. 0';
-    return;
-  }
-
-  let html = '';
-  filtered.forEach(item => {
-    totalIn += item.cashIn;
-    totalOut += item.cashOut;
-    runningBal += (item.cashIn - item.cashOut);
-
-    html += `
-      <tr>
-        <td>${item.date}</td>
-        <td><strong style="color: #2563eb;">${item.ref}</strong></td>
-        <td>${item.desc}</td>
-        <td><span class="badge-project-pill">${item.head}</span></td>
-        <td style="text-align: right; color: #16a34a; font-weight: 700;">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
-        <td style="text-align: right; color: #dc2626; font-weight: 700;">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
-        <td style="text-align: right; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
-      </tr>
-    `;
-  });
-
-  tbody.innerHTML = html;
-
-  document.getElementById('cbCardTotalIn').textContent = `Rs. ${totalIn.toLocaleString()}`;
-  document.getElementById('cbCardTotalOut').textContent = `Rs. ${totalOut.toLocaleString()}`;
-  document.getElementById('cbCardNetBalance').textContent = `Rs. ${runningBal.toLocaleString()}`;
-
-  document.getElementById('cbFootIn').textContent = `Rs. ${totalIn.toLocaleString()}`;
-  document.getElementById('cbFootOut').textContent = `Rs. ${totalOut.toLocaleString()}`;
-  document.getElementById('cbFootBalance').textContent = `Rs. ${runningBal.toLocaleString()}`;
-}
 
 function openCashDrawerModal(type) {
   const modal = document.getElementById('cashDrawerModal');
@@ -14548,277 +14551,242 @@ async function saveCashDrawerEntry(e) {
 }
 
 function downloadCashBookPDF() {
-  const dateFrom = document.getElementById('cbFilterDateFrom')?.value || '';
-  const dateTo = document.getElementById('cbFilterDateTo')?.value || '';
-  const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const dateFrom = document.getElementById('cbFilterDateFrom')?.value || '';
+      const dateTo = document.getElementById('cbFilterDateTo')?.value || '';
+      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-  // Settings se Logo aur Company Profile uthana
-  const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-  const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-  const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-  const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
+      const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
+      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
+      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
+      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
 
-  let compLogo = settingLogoBase64;
-  if (!compLogo) {
-    const logoEl = document.getElementById('setLogoImg');
-    if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-      compLogo = logoEl.src;
-    }
-  }
+      let compLogo = settingLogoBase64;
+      if (!compLogo) {
+        const logoEl = document.getElementById('setLogoImg');
+        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
+          compLogo = logoEl.src;
+        }
+      }
 
-  // Cash Transactions Compile Karna
-  let cashTransactions = [];
+      let cashTransactions = [];
 
-  // 1. Customer Cash Payments (Inflow)
-  (allPaymentsData || []).forEach(p => {
-    if (p.mode === 'Cash') {
-      cashTransactions.push({
-        date: p.date,
-        ref: p.receiptNo || 'BH-REC',
-        desc: `Customer Payment - ${p.customerName} (Flat ${p.flatNo})`,
-        head: p.head || 'Monthly Installment',
-        cashIn: parseFloat(p.amount) || 0,
-        cashOut: 0
+      // 1. Customer Cash Payments
+      (allPaymentsData || []).forEach(p => {
+        const modeLabel = p.mode ? ` (${p.mode})` : '';
+        cashTransactions.push({
+          date: p.date,
+          ref: p.receiptNo || 'BH-REC',
+          desc: `Customer Payment - ${p.customerName} (Flat ${p.flatNo})${modeLabel}`,
+          head: p.head || 'Monthly Installment',
+          cashIn: parseFloat(p.amount) || 0,
+          cashOut: 0
+        });
       });
-    }
-  });
 
-  // 2. Cash Vouchers (CPV & CRV)
-  (allCashVouchersData || []).forEach(v => {
-    const amt = parseFloat(v.amount) || 0;
-    cashTransactions.push({
-      date: v.date,
-      ref: v.voucherNo || 'CV',
-      desc: `${v.party || 'Account'} - ${v.narration || ''}`,
-      head: v.head || 'Cash Voucher',
-      cashIn: (v.type === 'RECEIPT') ? amt : 0,
-      cashOut: (v.type === 'PAYMENT') ? amt : 0
-    });
-  });
-
-  // 3. Purchases Paid in Cash (Outflow)
-  (allPurchaserData || []).forEach(pur => {
-    const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-    const isCash = (pur.paymentMethod === 'Cash' || !pur.paymentMethod);
-    if (paid > 0 && isCash) {
-      cashTransactions.push({
-        date: pur.date,
-        ref: pur.billNo || 'PUR-BILL',
-        desc: `Purchase - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})`,
-        head: 'Material Purchase',
-        cashIn: 0,
-        cashOut: paid
+      // 2. Cash Vouchers (CPV & CRV)
+      (allCashVouchersData || []).forEach(v => {
+        const amt = parseFloat(v.amount) || 0;
+        cashTransactions.push({
+          date: v.date,
+          ref: v.voucherNo || 'CV',
+          desc: `${v.party || 'Account'} - ${v.narration || ''}`,
+          head: v.head || 'Cash Voucher',
+          cashIn: (v.type === 'RECEIPT') ? amt : 0,
+          cashOut: (v.type === 'PAYMENT') ? amt : 0
+        });
       });
-    }
-  });
 
-  // 4. Site Expenses (Outflow)
-  (allSiteExpensesData || []).forEach(se => {
-    const paid = parseFloat(se.paidAmount) || 0;
-    if (paid > 0) {
-      cashTransactions.push({
-        date: se.date,
-        ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
-        desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
-        head: se.category || 'Site Expense',
-        cashIn: 0,
-        cashOut: paid
+      // 3. Purchases (Paid Amount Outflow) - FIXED
+      (allPurchaserData || []).forEach(pur => {
+        const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
+        if (paid > 0) {
+          const modeLabel = pur.paymentMethod ? ` (${pur.paymentMethod})` : '';
+          cashTransactions.push({
+            date: pur.date || new Date().toISOString().split('T')[0],
+            ref: pur.billNo || 'PUR-BILL',
+            desc: `Purchase Payment - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${modeLabel}`,
+            head: 'Material Purchase',
+            cashIn: 0,
+            cashOut: paid
+          });
+        }
       });
-    }
-  });
 
-  // 5. Office Expenses (Outflow)
-  (allOfficeExpensesData || []).forEach(oe => {
-    const paid = parseFloat(oe.paidAmount) || 0;
-    if (paid > 0) {
-      cashTransactions.push({
-        date: oe.date,
-        ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
-        desc: `${oe.paidTo || 'Staff'} - ${oe.description || ''}`,
-        head: oe.category || 'Office Expense',
-        cashIn: 0,
-        cashOut: paid
+      // 4. Site Expenses
+      (allSiteExpensesData || []).forEach(se => {
+        const paid = parseFloat(se.paidAmount) || 0;
+        if (paid > 0) {
+          cashTransactions.push({
+            date: se.date || new Date().toISOString().split('T')[0],
+            ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
+            desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
+            head: se.category || 'Site Expense',
+            cashIn: 0,
+            cashOut: paid
+          });
+        }
       });
-    }
-  });
 
-  // Date Sort
-  cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+      // 5. Office Expenses
+      (allOfficeExpensesData || []).forEach(oe => {
+        const paid = parseFloat(oe.paidAmount) || 0;
+        if (paid > 0) {
+          cashTransactions.push({
+            date: oe.date || new Date().toISOString().split('T')[0],
+            ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
+            desc: `${oe.paidTo || 'Staff'} - ${oe.description || ''}`,
+            head: oe.category || 'Office Expense',
+            cashIn: 0,
+            cashOut: paid
+          });
+        }
+      });
 
-  // Date Filtering
-  let filtered = cashTransactions.filter(item => {
-    if (dateFrom && item.date < dateFrom) return false;
-    if (dateTo && item.date > dateTo) return false;
-    return true;
-  });
+      cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  let totalIn = 0;
-  let totalOut = 0;
-  let runningBal = 0;
-  let rowsHtml = '';
+      let filtered = cashTransactions.filter(item => {
+        if (dateFrom && item.date < dateFrom) return false;
+        if (dateTo && item.date > dateTo) return false;
+        return true;
+      });
 
-  filtered.forEach((item, idx) => {
-    totalIn += item.cashIn;
-    totalOut += item.cashOut;
-    runningBal += (item.cashIn - item.cashOut);
+      let totalIn = 0; let totalOut = 0; let runningBal = 0; let rowsHtml = '';
 
-    rowsHtml += `
-      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
-        <td style="padding: 7px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${item.date || '-'}</td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: #0d47a1;">${item.ref}</strong></td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #0f172a;">${item.desc}</td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #475569;"><span style="background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-weight: 600;">${item.head}</span></td>
-        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashIn > 0 ? '#16a34a' : '#64748b'};">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
-        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashOut > 0 ? '#dc2626' : '#64748b'};">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
-        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
-      </tr>
-    `;
-  });
+      filtered.forEach((item, idx) => {
+        totalIn += item.cashIn;
+        totalOut += item.cashOut;
+        runningBal += (item.cashIn - item.cashOut);
 
-  if (!rowsHtml) {
-    rowsHtml = `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #64748b;">Chuni gayi tareekh mein koi cash transaction nahi mili.</td></tr>`;
-  }
+        rowsHtml += `
+          <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
+            <td style="padding: 7px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
+            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${item.date || '-'}</td>
+            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: #0d47a1;">${item.ref}</strong></td>
+            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #0f172a;">${item.desc}</td>
+            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #475569;"><span style="background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-weight: 600;">${item.head}</span></td>
+            <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashIn > 0 ? '#16a34a' : '#64748b'};">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
+            <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashOut > 0 ? '#dc2626' : '#64748b'};">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
+            <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
+          </tr>
+        `;
+      });
 
-  const pdfWrapper = document.createElement('div');
-  pdfWrapper.style.width = '100%';
-  pdfWrapper.style.maxWidth = '297mm';
-  pdfWrapper.style.margin = '0 auto';
-  pdfWrapper.style.background = '#ffffff';
-  pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-  pdfWrapper.style.boxSizing = 'border-box';
+      if (!rowsHtml) {
+        rowsHtml = `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #64748b;">Chuni gayi tareekh mein koi cash transaction nahi mili.</td></tr>`;
+      }
 
-  pdfWrapper.innerHTML = `
-    <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
-      <div>
-        <!-- Top Wave Header with Logo -->
-        <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            ${compLogo ? `
-              <div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;">
-                <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+      const pdfWrapper = document.createElement('div');
+      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.maxWidth = '297mm';
+      pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.background = '#ffffff';
+      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+      pdfWrapper.style.boxSizing = 'border-box';
+
+      pdfWrapper.innerHTML = `
+        <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
+          <div>
+            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                ${compLogo ? `<div style="width: 48px; height: 48px; border-radius: 8px; background: #ffffff; padding: 3px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden; flex-shrink: 0;"><img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" /></div>` : ''}
+                <div>
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">DAILY CASH BOOK REPORT</h1>
+                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">${compName.toUpperCase()} • ${compProject} COMPREHENSIVE CASH LEDGER</div>
+                </div>
               </div>
-            ` : ''}
-            <div>
-              <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">DAILY CASH BOOK REPORT</h1>
-              <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
-                ${compName.toUpperCase()} • ${compProject} COMPREHENSIVE CASH LEDGER
-              </div>
-            </div>
-          </div>
-          <div style="text-align: right;">
-            <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
-              OFFICIAL CASH BOOK
-            </div>
-          </div>
-        </div>
-
-        <!-- Body Content -->
-        <div style="padding: 12px 32px 0 32px;">
-          
-          <!-- Upper Info Bar -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
-            <div>
-              <div style="font-size: 10.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">CASH DRAWER (GALLE KA HISAB):</div>
-              <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${compProject} SITE & COUNTER CASH</div>
-              <div style="font-size: 11px; color: #475569; margin-top: 2px;">
-                Project: <b>${compProject}</b> | Developer: <b>${compName}</b> | Phone: <b>${compPhone}</b>
+              <div style="text-align: right;">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">OFFICIAL CASH BOOK</div>
               </div>
             </div>
 
-            <div style="text-align: right; font-size: 11px; color: #475569;">
-              <div>Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong></div>
-              <div style="margin-top: 2px;">Report Generated: <strong style="color: #0d47a1;">${todayDate}</strong></div>
+            <div style="padding: 12px 32px 0 32px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
+                <div>
+                  <div style="font-size: 10.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">CASH DRAWER (GALLE KA HISAB):</div>
+                  <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${compProject} SITE & COUNTER CASH</div>
+                  <div style="font-size: 11px; color: #475569; margin-top: 2px;">Project: <b>${compProject}</b> | Developer: <b>${compName}</b> | Phone: <b>${compPhone}</b></div>
+                </div>
+                <div style="text-align: right; font-size: 11px; color: #475569;">
+                  <div>Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong></div>
+                  <div style="margin-top: 2px;">Report Generated: <strong style="color: #0d47a1;">${todayDate}</strong></div>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px;">
+                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
+                  <small style="font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; display: block;">Opening Balance</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">Rs. 0</div>
+                </div>
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 8px 14px;">
+                  <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Cash In (Aamad)</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #16a34a; margin-top: 2px;">Rs. ${totalIn.toLocaleString()}</div>
+                </div>
+                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 8px 14px;">
+                  <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out (Kharcha)</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #dc2626; margin-top: 2px;">Rs. ${totalOut.toLocaleString()}</div>
+                </div>
+                <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 14px;">
+                  <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Net Cash in Hand</small>
+                  <div style="font-size: 16px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${runningBal.toLocaleString()}</div>
+                </div>
+              </div>
+
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+                <thead>
+                  <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
+                    <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
+                    <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #0d47a1;">Date</th>
+                    <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Ref / Voucher</th>
+                    <th style="padding: 8px 10px; text-align: left; width: 28%; border: 1px solid #0d47a1;">Description / Particulars</th>
+                    <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Head / Category</th>
+                    <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Cash In (Rs.)</th>
+                    <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Cash Out (Rs.)</th>
+                    <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Balance (Rs.)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${rowsHtml}
+                </tbody>
+                <tfoot>
+                  <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 11px;">
+                    <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">GRAND TOTAL</td>
+                    <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${totalIn.toLocaleString()}</td>
+                    <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${totalOut.toLocaleString()}</td>
+                    <td style="text-align: right; padding: 8px 10px; color: #0d47a1;">Rs. ${runningBal.toLocaleString()}</td>
+                  </tr>
+                </tfoot>
+              </table>
             </div>
           </div>
 
-          <!-- 4 Summary KPI Cards -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px;">
-            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; display: block;">Opening Balance</small>
-              <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">Rs. 0</div>
+          <div style="padding: 10px 32px 14px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div style="text-align: center; width: 200px;">
+              <div style="height: 32px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">CASHIER / MUNSHI SIGNATURE</div>
             </div>
-            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 8px 14px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Cash In (Aamad)</small>
-              <div style="font-size: 16px; font-weight: 900; color: #16a34a; margin-top: 2px;">Rs. ${totalIn.toLocaleString()}</div>
-            </div>
-            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 8px 14px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out (Kharcha)</small>
-              <div style="font-size: 16px; font-weight: 900; color: #dc2626; margin-top: 2px;">Rs. ${totalOut.toLocaleString()}</div>
-            </div>
-            <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 14px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Net Cash in Hand</small>
-              <div style="font-size: 16px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${runningBal.toLocaleString()}</div>
+            <div style="text-align: center; width: 200px;">
+              <div style="height: 32px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">AUTHORIZED SIGNATURE</div>
             </div>
           </div>
-
-          <!-- Cash Book Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
-            <thead>
-              <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
-                <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
-                <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #0d47a1;">Date</th>
-                <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Ref / Voucher</th>
-                <th style="padding: 8px 10px; text-align: left; width: 28%; border: 1px solid #0d47a1;">Description / Particulars</th>
-                <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Head / Category</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Cash In (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Cash Out (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Balance (Rs.)</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-            <tfoot>
-              <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 11px;">
-                <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">GRAND TOTAL</td>
-                <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${totalIn.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${totalOut.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #0d47a1;">Rs. ${runningBal.toLocaleString()}</td>
-              </tr>
-            </tfoot>
-          </table>
-
         </div>
-      </div>
+      `;
 
-      <!-- Bottom Signatures Footer -->
-      <div style="padding: 10px 32px 14px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div style="text-align: center; width: 200px;">
-          <div style="height: 32px;"></div>
-          <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            CASHIER / MUNSHI SIGNATURE
-          </div>
-          <div style="font-size: 9px; color: #64748b;">(Counter Incharge)</div>
-        </div>
+      const opt = {
+        margin: [0, 0, 0, 0],
+        filename: `Cash_Book_Report_${todayDate.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
 
-        <div style="text-align: center; width: 200px;">
-          <div style="height: 32px;"></div>
-          <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            AUTHORIZED SIGNATURE
-          </div>
-          <div style="font-size: 9px; color: #64748b;">(Project Director / Audit)</div>
-        </div>
-      </div>
-
-    </div>
-  `;
-
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: `Cash_Book_Report_${todayDate.replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-
-  if (typeof html2pdf !== 'undefined') {
-    html2pdf().set(opt).from(pdfWrapper).save();
-  } else {
-    alert('PDF library load nahi ho saki.');
-  }
-}
+      if (typeof html2pdf !== 'undefined') {
+        html2pdf().set(opt).from(pdfWrapper).save();
+      } else {
+        alert('PDF library load nahi ho saki.');
+      }
+    }
 
 
 
@@ -16382,7 +16350,7 @@ function downloadSiteLedgerPDF() {
         <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 22px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
           <div style="display: flex; align-items: center; gap: 14px;">
             ${compLogo ? `
-              <div style="width: 52px; height: 52px; border-radius: 10px; background: #ffffff; padding: 4px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(0,0,0,0.2); overflow: hidden; flex-shrink: 0;">
+              <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                 <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
               </div>
             ` : `
