@@ -4437,6 +4437,50 @@
           </div>
         </div>
 
+<!-- ================= MODAL: OFFICE CASH IN (BOSS SE PAISE LENA) ================= -->
+<div id="officeCashInModal" class="modal-overlay" onclick="closeOfficeCashInModal(event)">
+  <div class="modal-card" style="max-width: 460px; border-radius: 18px;" onclick="event.stopPropagation()">
+    <div class="modal-header" style="background:#0f172a; color:#ffffff; padding:16px 20px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-vault" style="color:#22c55e;"></i> Add Office Petty Cash In
+      </h3>
+      <button class="btn-close-modal" type="button" onclick="closeOfficeCashInModal()" style="color:#cbd5e1; background:rgba(255,255,255,0.1);"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    
+    <div class="modal-body" style="padding:22px;">
+      <form id="officeCashInForm" onsubmit="saveOfficeCashIn(event)">
+        
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12.5px; font-weight:700; color:#334155; display:block; margin-bottom:5px;">Received From (Boss / Source) *</label>
+          <input type="text" id="ociPerson" placeholder="e.g. Boss / Farooq Boss / Bank Withdrawal" required style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13.5px; outline:none;" />
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12.5px; font-weight:700; color:#334155; display:block; margin-bottom:5px;">Date *</label>
+          <input type="date" id="ociDate" required style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13.5px; outline:none; font-weight:600;" />
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <label style="font-size:12.5px; font-weight:700; color:#166534; display:block; margin-bottom:5px;">Amount Received (Rs.) *</label>
+          <input type="number" id="ociAmount" min="1" placeholder="e.g. 20000" required style="width:100%; padding:11px 12px; border:1.5px solid #16a34a; border-radius:10px; font-size:16px; font-weight:900; color:#0f172a; outline:none;" />
+        </div>
+
+        <div style="margin-bottom:18px;">
+          <label style="font-size:12.5px; font-weight:700; color:#334155; display:block; margin-bottom:5px;">Description / Purpose</label>
+          <input type="text" id="ociRemarks" placeholder="e.g. Office Petty Cash Fund by Boss" style="width:100%; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:13.5px; outline:none;" />
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" class="btn-back" onclick="closeOfficeCashInModal()">Cancel</button>
+          <button type="submit" id="btnSaveOfficeCashIn" class="btn-action-primary" style="background:#16a34a; padding:10px 22px; font-weight:800;">
+            <i class="fa-solid fa-check"></i> Save Cash In
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
         <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
         
         <!-- ================= SECTION: PURCHASE LIST & LEDGER ================= -->
@@ -5400,38 +5444,53 @@
             </div>
           </div>
 
-          <!-- 3 KPI Cards -->
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:18px; margin-bottom:22px;">
-            <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
-              <div style="width:48px; height:48px; border-radius:12px; background:#dbeafe; color:#2563eb; display:flex; align-items:center; justify-content:center; font-size:20px;">
-                <i class="fa-solid fa-wallet"></i>
-              </div>
-              <div>
-                <div style="font-size:12px; font-weight:700; color:#1e40af;">Total Office Expenses</div>
-                <div id="cardTotalOfficeExpense" style="font-size:22px; font-weight:800; color:#0f172a;">Rs. 0</div>
-                <div style="font-size:11px; color:#64748b;" id="officePeriodBadgeTotal">All Time Records</div>
-              </div>
-            </div>
-
+          <!-- 4 Summary KPI Cards for Petty Cash & Expenses -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:22px;">
+            <!-- Total Cash In (From Boss) -->
             <div style="background:#f0fdf4; border:1.5px solid #bbf7d0; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
               <div style="width:48px; height:48px; border-radius:12px; background:#dcfce7; color:#16a34a; display:flex; align-items:center; justify-content:center; font-size:20px;">
-                <i class="fa-solid fa-circle-check"></i>
+                <i class="fa-solid fa-hand-holding-dollar"></i>
               </div>
               <div>
-                <div style="font-size:12px; font-weight:700; color:#166534;">Total Paid / Cleared</div>
-                <div id="cardTotalOfficePaid" style="font-size:22px; font-weight:800; color:#0f172a;">Rs. 0</div>
-                <div style="font-size:11px; color:#16a34a; font-weight:600;">Cleared Payments</div>
+                <div style="font-size:12px; font-weight:700; color:#166534;">Petty Cash In (Boss Se Aaye)</div>
+                <div id="cardTotalOfficeCashIn" style="font-size:22px; font-weight:900; color:#16a34a;">Rs. 0</div>
+                <div style="font-size:11px; color:#16a34a; font-weight:600;">Total Fund Received</div>
               </div>
             </div>
 
+            <!-- Total Cash Out (Spent) -->
+            <div style="background:#fef2f2; border:1.5px solid #fecaca; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:#fee2e2; color:#dc2626; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#991b1b;">Total Cash Out (Kharch Huye)</div>
+                <div id="cardTotalOfficePaid" style="font-size:22px; font-weight:900; color:#dc2626;">Rs. 0</div>
+                <div style="font-size:11px; color:#64748b;">Office Daily Expenses</div>
+              </div>
+            </div>
+
+            <!-- Remaining Cash in Hand (Boss Ka Baqaya) -->
+            <div style="background:#eff6ff; border:1.5px solid #bfdbfe; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
+              <div style="width:48px; height:48px; border-radius:12px; background:#dbeafe; color:#2563eb; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                <i class="fa-solid fa-vault"></i>
+              </div>
+              <div>
+                <div style="font-size:12px; font-weight:700; color:#1e40af;">Cash in Hand (Bache Hue Paise)</div>
+                <div id="cardOfficeCashInHand" style="font-size:22px; font-weight:900; color:#2563eb;">Rs. 0</div>
+                <div style="font-size:11px; color:#2563eb; font-weight:700;">Available Petty Cash</div>
+              </div>
+            </div>
+
+            <!-- Total Office Bill Payables -->
             <div style="background:#fffbeb; border:1.5px solid #fde68a; border-radius:16px; padding:18px; display:flex; align-items:center; gap:14px;">
               <div style="width:48px; height:48px; border-radius:12px; background:#fef3c7; color:#d97706; display:flex; align-items:center; justify-content:center; font-size:20px;">
                 <i class="fa-solid fa-clock-rotate-left"></i>
               </div>
               <div>
-                <div style="font-size:12px; font-weight:700; color:#92400e;">Remaining Balance</div>
-                <div id="cardTotalOfficeRemaining" style="font-size:22px; font-weight:800; color:#dc2626;">Rs. 0</div>
-                <div style="font-size:11px; color:#b45309; font-weight:600;"></div>
+                <div style="font-size:12px; font-weight:700; color:#92400e;">Pending Bills (Payable)</div>
+                <div id="cardTotalOfficeRemaining" style="font-size:22px; font-weight:800; color:#d97706;">Rs. 0</div>
+                <div style="font-size:11px; color:#b45309; font-weight:600;">Office Dues</div>
               </div>
             </div>
           </div>
@@ -5474,25 +5533,24 @@
             </div>
           </div>
 
-          <!-- Table -->
+          <!-- Table: Office Petty Cash Ledger -->
           <div class="table-container">
             <table class="erp-table">
               <thead>
-                <tr>
+                <tr style="background:#f8fafc;">
                   <th style="width:40px;">#</th>
                   <th>Date</th>
-                  <th>Category</th>
-                  <th>Paid To</th>
-                  <th>Description</th>
-                  <th>Total (Rs.)</th>
-                  <th>Paid (Rs.)</th>
-                  <th>Remaining (Rs.)</th>
-                  <th style="text-align:center;">Status</th>
-                  <th style="text-align:center; min-width:185px;">Actions</th>
+                  <th>Ref / Voucher</th>
+                  <th>Category / Head</th>
+                  <th>Description / Particulars</th>
+                  <th style="text-align:right; color:#16a34a;">Cash In (Rs.)</th>
+                  <th style="text-align:right; color:#dc2626;">Cash Out (Rs.)</th>
+                  <th style="text-align:right; color:#0f172a;">Petty Balance (Rs.)</th>
+                  <th style="text-align:center; min-width:140px;">Actions</th>
                 </tr>
               </thead>
               <tbody id="officeExpenseTableBody">
-                <tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);">Loading office expenses...</td></tr>
+                <tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Loading office petty cash ledger...</td></tr>
               </tbody>
             </table>
           </div>
@@ -6342,8 +6400,8 @@
         }
       }
 
-      // User ki Settings se Size aur Position uthana
-      const logoSize = parseFloat(document.getElementById('setLogoSize')?.value) || 75;
+      // User ki Settings se Size aur Position uthana (Default 95px)
+      const logoSize = parseFloat(document.getElementById('setLogoSize')?.value) || 95;
       const logoX = parseFloat(document.getElementById('setLogoX')?.value) || 0;
       const logoY = parseFloat(document.getElementById('setLogoY')?.value) || 0;
 
@@ -8867,8 +8925,8 @@ db.collection('customers').onSnapshot(snap => {
           <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
             <div style="display: flex; align-items: center; gap: 14px;">
              ${compLogo ? `
-                <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+                <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <img src="${compLogo}" style="height: 90px; max-width: 160px; object-fit: contain;" alt="Logo" />
                 </div>
               ` : ''}
               <div>
@@ -9086,7 +9144,6 @@ db.collection('customers').onSnapshot(snap => {
         handleOwnershipTypeChange();
       }
 
-      // Flats Dropdown with currently allotted flat
       const flatSelect = document.getElementById('custFlatSelect');
       if (flatSelect) {
         if (cleanType === 'Transfer') {
@@ -10388,14 +10445,85 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       }
     }
 
-    // 4. Load Data from Firebase
+    // ==========================================
+    // OFFICE PETTY CASH & EXPENSES CONTROLLER
+    // ==========================================
+    let allOfficeCashInData = [];
+
+    // Modal Open & Close Functions
+    function openOfficeCashInModal() {
+      const modal = document.getElementById('officeCashInModal');
+      const form = document.getElementById('officeCashInForm');
+      if (form) form.reset();
+      const dateEl = document.getElementById('ociDate');
+      if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeOfficeCashInModal() {
+      const modal = document.getElementById('officeCashInModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    // Save Cash In (Boss se paise aana)
+    async function saveOfficeCashIn(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveOfficeCashIn');
+      const person = document.getElementById('ociPerson').value.trim();
+      const date = document.getElementById('ociDate').value;
+      const amount = parseFloat(document.getElementById('ociAmount').value) || 0;
+      const remarks = document.getElementById('ociRemarks').value.trim() || 'Petty Cash Fund';
+
+      if (amount <= 0) {
+        alert("Bara-e-meherbani raqam darj karein.");
+        return;
+      }
+
+      const cashInRecord = {
+        type: 'IN',
+        refNo: 'CIN-' + Math.floor(1000 + Math.random() * 9000),
+        source: person,
+        date: date,
+        amount: amount,
+        remarks: remarks,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      try {
+        await db.collection('office_cash_in').add(cashInRecord);
+        closeOfficeCashInModal();
+        alert(`Rs. ${amount.toLocaleString()} Petty Cash mein kamiyabi se jama ho gaye!`);
+      } catch(err) {
+        alert("Error: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Save Cash In';
+      }
+    }
+
+    // Delete Cash In Entry
+    async function deleteOfficeCashIn(id) {
+      if (confirm("Kiya aap waqai is Cash In entry ko delete karna chahte hain?")) {
+        try {
+          await db.collection('office_cash_in').doc(id).delete();
+          alert("Cash In entry delete ho gayi.");
+        } catch(e) {
+          alert("Delete failed: " + e.message);
+        }
+      }
+    }
+
+    // Load Data from Firebase (Expenses + Cash In)
     function loadOfficeExpenses() {
       const today = new Date().toISOString().split('T')[0];
       if (document.getElementById('officeExpDate')) {
         document.getElementById('officeExpDate').value = today;
       }
 
-      // Load Categories
+      // 1. Categories
       db.collection('office_expense_categories').get().then(snap => {
         snap.forEach(doc => {
           const d = doc.data();
@@ -10406,35 +10534,35 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
         populateOfficeCategoryDropdowns();
       });
 
-      // Load Expenses
-      db.collection('office_expenses').orderBy('date', 'desc').onSnapshot(snap => {
+      // 2. Office Cash In Listener
+      db.collection('office_cash_in').orderBy('date', 'asc').onSnapshot(snap => {
+        allOfficeCashInData = [];
+        snap.forEach(doc => {
+          allOfficeCashInData.push({ id: doc.id, ...doc.data() });
+        });
+        filterOfficeExpenses();
+      });
+
+      // 3. Office Expenses Listener
+      db.collection('office_expenses').orderBy('date', 'asc').onSnapshot(snap => {
         allOfficeExpensesData = [];
         snap.forEach(doc => {
           allOfficeExpensesData.push({ id: doc.id, ...doc.data() });
         });
         filterOfficeExpenses();
-        updateDashboardChartsAndStats(); // <-- Dashboard par Office Expense foran update hoga
+        updateDashboardChartsAndStats();
       });
     }
 
-    // 5. Daily, Weekly, Monthly Filter Tab Handler
+    // Filter & Period Handler
     function setOfficePeriodFilter(period, btn) {
       currentOfficePeriod = period;
       document.querySelectorAll('#btnOfficePeriodAll, #btnOfficePeriodDaily, #btnOfficePeriodWeekly, #btnOfficePeriodMonthly').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
-
-      const badge = document.getElementById('officePeriodBadgeTotal');
-      if (badge) {
-        if (period === 'daily') badge.textContent = "Today's Office Expenses";
-        else if (period === 'weekly') badge.textContent = "This Week's Office Expenses";
-        else if (period === 'monthly') badge.textContent = "This Month's Office Expenses";
-        else badge.textContent = "All Time Records";
-      }
-
       filterOfficeExpenses();
     }
 
-    // 6. Filter Logic & Top KPI Cards Recalculation (With Datewise Support)
+    // Main Filter & Petty Cash Running Ledger Compiler
     function filterOfficeExpenses() {
       const query = (document.getElementById('officeExpSearchInput')?.value || '').toLowerCase().trim();
       const cat = document.getElementById('officeExpCategoryFilter')?.value || 'ALL';
@@ -10444,121 +10572,189 @@ openAndSwitch('paymentsSubmenu', 'navPaymentsParent', 'addSiteExpense', 'subAddS
       const now = new Date();
       const todayStr = now.toISOString().split('T')[0];
       const currentMonthPrefix = todayStr.substring(0, 7);
-
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(now.getDate() - 7);
       const sevenDaysStr = sevenDaysAgo.toISOString().split('T')[0];
 
-      const filtered = allOfficeExpensesData.filter(exp => {
-        // Datewise Filter (Agar user ne tareekh chuni ho)
-        if (dateFrom && exp.date && exp.date < dateFrom) return false;
-        if (dateTo && exp.date && exp.date > dateTo) return false;
+      // 1. Compile Unified Transactions (Cash In + Expenses Out)
+      let transactions = [];
 
-        // Period Tab Filter (Agar custom date na dali ho tab tabs chalenge)
-        let matchesPeriod = true;
-        if (!dateFrom && !dateTo) {
-          if (currentOfficePeriod === 'daily') {
-            matchesPeriod = (exp.date === todayStr);
-          } else if (currentOfficePeriod === 'weekly') {
-            matchesPeriod = (exp.date >= sevenDaysStr && exp.date <= todayStr);
-          } else if (currentOfficePeriod === 'monthly') {
-            matchesPeriod = (exp.date && exp.date.startsWith(currentMonthPrefix));
-          }
-        }
-
-        // Search Query & Category Filter
-        const matchesQuery = !query || 
-          (exp.description && exp.description.toLowerCase().includes(query)) ||
-          (exp.paidTo && exp.paidTo.toLowerCase().includes(query)) ||
-          (exp.category && exp.category.toLowerCase().includes(query));
-
-        const matchesCat = (cat === 'ALL' || exp.category === cat);
-
-        return matchesPeriod && matchesQuery && matchesCat;
+      // A. Cash In Entries (Boss se aayi raqam)
+      allOfficeCashInData.forEach(cin => {
+        transactions.push({
+          id: cin.id,
+          isCashIn: true,
+          date: cin.date,
+          ref: cin.refNo || 'CIN',
+          category: 'Petty Cash Fund',
+          party: cin.source || 'Boss / Fund',
+          desc: cin.remarks || 'Cash In from Boss',
+          cashIn: parseFloat(cin.amount) || 0,
+          cashOut: 0,
+          remaining: 0
+        });
       });
 
-      // 3 Top Cards Calculation
-      let sumTotal = 0;
-      let sumPaid = 0;
-      let sumRemaining = 0;
+      // B. Expense Entries (Office Kharche)
+      allOfficeExpensesData.forEach(exp => {
+        const paid = parseFloat(exp.paidAmount) || 0;
+        const total = parseFloat(exp.totalAmount) || 0;
+        const rem = parseFloat(exp.remainingAmount) || 0;
 
-      filtered.forEach(exp => {
-        sumTotal += (parseFloat(exp.totalAmount) || 0);
-        sumPaid += (parseFloat(exp.paidAmount) || 0);
-        sumRemaining += (parseFloat(exp.remainingAmount) || 0);
+        transactions.push({
+          id: exp.id,
+          isCashIn: false,
+          date: exp.date,
+          ref: 'OE-' + (exp.id ? exp.id.substring(0, 5).toUpperCase() : 'EXP'),
+          category: exp.category || 'Office Expense',
+          party: exp.paidTo || 'Staff / Vendor',
+          desc: exp.description || 'Office Expense',
+          cashIn: 0,
+          cashOut: paid, // Galle se nikle paise
+          totalBill: total,
+          remaining: rem,
+          rawExp: exp
+        });
       });
 
-      if (document.getElementById('cardTotalOfficeExpense')) {
-        document.getElementById('cardTotalOfficeExpense').textContent = `Rs. ${sumTotal.toLocaleString()}`;
-        document.getElementById('cardTotalOfficePaid').textContent = `Rs. ${sumPaid.toLocaleString()}`;
-        document.getElementById('cardTotalOfficeRemaining').textContent = `Rs. ${sumRemaining.toLocaleString()}`;
+      // Date ke mutabiq tarteeb (Ascending taake Ledger ka running balance theek ho)
+      transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // 2. Running Balance Calculate karna
+      let runningCashBalance = 0;
+      transactions.forEach(t => {
+        runningCashBalance += (t.cashIn - t.cashOut);
+        t.currentBalance = runningCashBalance;
+      });
+
+      // Global variable PDF aur Live banner ke liye
+      window.lastOfficeCashInHand = runningCashBalance;
+
+      // Banner update
+      const bannerEl = document.getElementById('liveOfficeCashInHand');
+      if (bannerEl) {
+        bannerEl.textContent = `Rs. ${runningCashBalance.toLocaleString()}`;
+        bannerEl.style.color = (runningCashBalance >= 0) ? '#22c55e' : '#ef4444';
       }
 
+      // 3. Filter Apply karna
+      const filtered = transactions.filter(t => {
+        if (dateFrom && t.date < dateFrom) return false;
+        if (dateTo && t.date > dateTo) return false;
+
+        if (!dateFrom && !dateTo) {
+          if (currentOfficePeriod === 'daily' && t.date !== todayStr) return false;
+          if (currentOfficePeriod === 'weekly' && (t.date < sevenDaysStr || t.date > todayStr)) return false;
+          if (currentOfficePeriod === 'monthly' && (!t.date || !t.date.startsWith(currentMonthPrefix))) return false;
+        }
+
+        const matchesQuery = !query || 
+          t.desc.toLowerCase().includes(query) ||
+          t.party.toLowerCase().includes(query) ||
+          t.category.toLowerCase().includes(query);
+
+        const matchesCat = (cat === 'ALL' || t.category === cat || t.isCashIn);
+
+        return matchesQuery && matchesCat;
+      });
+
+      // 4. KPI Cards Calculate karna
+      let totalCashInSum = 0;
+      let totalCashOutSum = 0;
+      let totalPendingBills = 0;
+
+      transactions.forEach(t => {
+        totalCashInSum += t.cashIn;
+        totalCashOutSum += t.cashOut;
+        totalPendingBills += t.remaining;
+      });
+
+      if (document.getElementById('cardTotalOfficeCashIn')) {
+        document.getElementById('cardTotalOfficeCashIn').textContent = `Rs. ${totalCashInSum.toLocaleString()}`;
+      }
+      if (document.getElementById('cardTotalOfficePaid')) {
+        document.getElementById('cardTotalOfficePaid').textContent = `Rs. ${totalCashOutSum.toLocaleString()}`;
+      }
+      if (document.getElementById('cardOfficeCashInHand')) {
+        document.getElementById('cardOfficeCashInHand').textContent = `Rs. ${runningCashBalance.toLocaleString()}`;
+        document.getElementById('cardOfficeCashInHand').style.color = (runningCashBalance >= 0) ? '#2563eb' : '#dc2626';
+      }
+      if (document.getElementById('cardTotalOfficeRemaining')) {
+        document.getElementById('cardTotalOfficeRemaining').textContent = `Rs. ${totalPendingBills.toLocaleString()}`;
+      }
+
+      window.currentFilteredOfficeTransactions = filtered;
       renderOfficeExpenseTable(filtered);
     }
 
-    // 7. Render Table
+    // 5. Render Petty Cash Ledger Table
     function renderOfficeExpenseTable(list) {
       const tbody = document.getElementById('officeExpenseTableBody');
       if (!tbody) return;
 
       if (!list || list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:30px; color:var(--text-muted);">Koi office expense record nahi mila.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:30px; color:var(--text-muted);">Koi entry mojood nahi hai.</td></tr>`;
         return;
       }
 
       let html = '';
-      list.forEach((exp, idx) => {
-        const total = parseFloat(exp.totalAmount) || 0;
-        const paid = parseFloat(exp.paidAmount) || 0;
-        const rem = parseFloat(exp.remainingAmount) || 0;
-
-        let statusBadge = '<span class="badge-status badge-available">Paid</span>';
-        if (rem > 0 && paid > 0) {
-          statusBadge = '<span class="badge-status badge-booked">Partial</span>';
-        } else if (rem > 0 && paid === 0) {
-          statusBadge = '<span class="badge-status badge-sold">Unpaid</span>';
-        }
-
-        html += `
-          <tr>
-            <td style="font-weight:700; color:#475569;">${idx + 1}</td>
-            <td><strong>${exp.date || 'N/A'}</strong></td>
-            <td><span class="badge-project-pill">${exp.category || 'General'}</span></td>
-            <td><strong style="color:#0f172a;">${exp.paidTo || 'N/A'}</strong></td>
-            <td>${exp.description || 'N/A'}</td>
-            <td><strong>Rs. ${total.toLocaleString()}</strong></td>
-            <td style="color:#16a34a; font-weight:700;">Rs. ${paid.toLocaleString()}</td>
-            <td style="color:${rem > 0 ? '#dc2626' : '#64748b'}; font-weight:800;">Rs. ${rem.toLocaleString()}</td>
-            <td style="text-align:center;">${statusBadge}</td>
-            <td style="text-align:center;">
-              <div style="display:inline-flex; gap:5px; flex-wrap:wrap; justify-content:center; align-items:center;">
-                <!-- Direct Pay Button -->
-                ${rem > 0 ? `
-                  <button class="btn-action-primary" style="background:#16a34a; padding:5px 10px; font-size:11.5px;" onclick="openQuickPayOfficeModal('${exp.id}')" title="Pay Remaining Balance">
-                    <i class="fa-solid fa-hand-holding-dollar"></i> Pay
-                  </button>
-                ` : ''}
-
-                <!-- Edit Button -->
-                <button class="btn-tbl-edit" onclick="editOfficeExpense('${exp.id}')" title="Edit Expense">
-                  <i class="fa-solid fa-pen-to-square"></i> Edit
-                </button>
-
-                <!-- PDF Voucher Button -->
-                <button class="btn-action-primary" style="background:#059669; padding:5px 9px; font-size:11.5px;" onclick="downloadOfficeExpensePDF('${exp.id}')" title="Download Voucher PDF">
-                  <i class="fa-solid fa-file-pdf"></i> PDF
-                </button>
-
-                <!-- Delete Button -->
-                <button class="btn-tbl-delete" onclick="deleteOfficeExpense('${exp.id}')" title="Delete">
+      list.forEach((t, idx) => {
+        if (t.isCashIn) {
+          // Cash In Row (Greenish / Highlighted)
+          html += `
+            <tr style="background:#f0fdf4;">
+              <td style="font-weight:700; color:#166534;">${idx + 1}</td>
+              <td><strong style="color:#0f172a;">${t.date}</strong></td>
+              <td><strong style="color:#16a34a;">${t.ref}</strong></td>
+              <td><span style="background:#dcfce7; color:#15803d; font-weight:800; padding:3px 9px; border-radius:12px; font-size:11px;">Cash In</span></td>
+              <td>
+                <strong style="color:#166534;">${t.desc}</strong>
+                <div style="font-size:11px; color:#64748b;">Source: ${t.party}</div>
+              </td>
+              <td style="text-align:right; font-weight:900; color:#16a34a; font-size:14px;">Rs. ${t.cashIn.toLocaleString()}</td>
+              <td style="text-align:right; color:#94a3b8;">-</td>
+              <td style="text-align:right; font-weight:900; color:#0f172a; font-size:14px;">Rs. ${t.currentBalance.toLocaleString()}</td>
+              <td style="text-align:center;">
+                <button type="button" class="btn-tbl-delete" onclick="deleteOfficeCashIn('${t.id}')" title="Delete Cash In">
                   <i class="fa-solid fa-trash-can"></i>
                 </button>
-              </div>
-            </td>
-          </tr>
-        `;
+              </td>
+            </tr>
+          `;
+        } else {
+          // Cash Out (Expense) Row
+          html += `
+            <tr>
+              <td style="font-weight:700; color:#475569;">${idx + 1}</td>
+              <td><strong>${t.date}</strong></td>
+              <td><strong style="color:#2563eb;">${t.ref}</strong></td>
+              <td><span class="badge-project-pill">${t.category}</span></td>
+              <td>
+                <strong style="color:#0f172a;">${t.desc}</strong>
+                <div style="font-size:11px; color:#64748b;">Paid To: ${t.party}</div>
+              </td>
+              <td style="text-align:right; color:#94a3b8;">-</td>
+              <td style="text-align:right; font-weight:900; color:#dc2626; font-size:14px;">Rs. ${t.cashOut.toLocaleString()}</td>
+              <td style="text-align:right; font-weight:900; color:${t.currentBalance >= 0 ? '#0f172a' : '#dc2626'}; font-size:14px;">
+                Rs. ${t.currentBalance.toLocaleString()}
+              </td>
+              <td style="text-align:center;">
+                <div style="display:inline-flex; gap:5px; align-items:center;">
+                  ${t.remaining > 0 ? `
+                    <button class="btn-action-primary" style="background:#16a34a; padding:5px 9px; font-size:11px;" onclick="openQuickPayOfficeModal('${t.id}')" title="Pay Balance">
+                      <i class="fa-solid fa-hand-holding-dollar"></i> Pay
+                    </button>
+                  ` : ''}
+                  <button class="btn-tbl-edit" onclick="editOfficeExpense('${t.id}')" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button class="btn-action-primary" style="background:#059669; padding:5px 8px; font-size:11px;" onclick="downloadOfficeExpensePDF('${t.id}')" title="PDF"><i class="fa-solid fa-file-pdf"></i></button>
+                  <button class="btn-tbl-delete" onclick="deleteOfficeExpense('${t.id}')" title="Delete"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }
       });
+
       tbody.innerHTML = html;
     }
 
@@ -12260,8 +12456,8 @@ loadLicenseSettings();
             <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 26px 36px 34px 36px; border-bottom-left-radius: 50% 20px; border-bottom-right-radius: 50% 20px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
               <div style="display: flex; align-items: center; gap: 14px;">
                 ${compLogo ? `
-<div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+                  <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: 90px; max-width: 160px; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : ''}
                 <div>
@@ -12486,7 +12682,7 @@ loadLicenseSettings();
                 </div>
               </div>
               <div style="word-break: break-word;">
-                <div style="font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;">ALLOTTED TO:</div>
+                <div style="font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;">:</div>
                 <div style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
                 <div style="font-size: 10px; color: #334155; margin-top: 1px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
                 <div style="font-size: 10px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b> | Phone: <b>${o1.mobile || '-'}</b></div>
@@ -12584,12 +12780,12 @@ loadLicenseSettings();
       let htmlContent = `
         <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0; ${isLongTerms ? 'page-break-after: always;' : ''}">
           <div>
-            <!-- Top Solid Header (Adjusted Height to 95px for Perfect Logo Fit) -->
-            <div style="background: ${theme.headerBg || '#525866'}; min-height: 95px; padding: 12px 24px 18px 24px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%; position: relative;">
-              <div style="display: flex; align-items: center; gap: 14px; min-width: 0;">
+            <!-- Top Solid Header (Adjusted Height to 115px for Large Logo Fit) -->
+            <div style="background: ${theme.headerBg || '#525866'}; min-height: 115px; padding: 10px 24px 16px 24px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%; position: relative;">
+              <div style="display: flex; align-items: center; gap: 16px; min-width: 0;">
                 ${compLogo ? `
-                  <div style="height: 65px; max-width: 120px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="max-height: 65px; max-width: 100%; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
+                  <div style="height: 95px; max-width: 170px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 95}px; max-height: 95px; max-width: 170px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
                 <div style="min-width: 0;">
@@ -12648,12 +12844,16 @@ loadLicenseSettings();
                 ${(() => {
                   const scheme = fin.planScheme || 'Plan1';
                   if (scheme === 'Plan2') {
+                    const qTotal = Number(fin.quarterly || 0);
+                    // 24 mahine mein 8 quarters (har 3 mahine baad)
+                    const qPerQuarter = Math.round(qTotal / 8);
+
                     return `
                       <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px; box-sizing: border-box;">
                         <thead>
                           <tr style="background: ${theme.primary}; color: #ffffff;">
-                            <th style="padding: 5px 8px; text-align: left; width: 48%; border: 1px solid ${theme.primary};">Plan 2: Stage / Milestone Description</th>
-                            <th style="padding: 5px 8px; text-align: center; width: 16%; border: 1px solid ${theme.primary};">Ratio %</th>
+                            <th style="padding: 5px 8px; text-align: left; width: 50%; border: 1px solid ${theme.primary};">Plan 2: Stage / Milestone Description</th>
+                            <th style="padding: 5px 8px; text-align: center; width: 14%; border: 1px solid ${theme.primary};">Ratio %</th>
                             <th style="padding: 5px 8px; text-align: right; width: 36%; border: 1px solid ${theme.primary};">Amount (Rs.)</th>
                           </tr>
                         </thead>
@@ -12661,8 +12861,8 @@ loadLicenseSettings();
                           <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; font-weight: 700; border: 1px solid #e2e8f0;">1. Booking Payment</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td></tr>
                           <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">2. Allocation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.allocation || 0).toLocaleString()}</td></tr>
                           <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">3. Confirmation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.confirmation || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 3.5px 8px; color:#166534; font-weight: 700; border: 1px solid #e2e8f0;">4. 24 Months Installments Pool (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()} / Month)</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 800; color: #166534;">40 %</td><td style="text-align: right; font-weight: 800; color:#166534; border: 1px solid #e2e8f0;">Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">5. Quarterly Installments</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.quarterly || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 3.5px 8px; color:#166534; font-weight: 700; border: 1px solid #e2e8f0;">4. 24 Months Installments (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}/Mo)</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 800; color: #166534;">40 %</td><td style="text-align: right; font-weight: 800; color:#166534; border: 1px solid #e2e8f0;">Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0f9ff;"><td style="padding: 3.5px 8px; color:#0369a1; font-weight: 700; border: 1px solid #e2e8f0;">5. Quarterly Installments (Rs. ${qPerQuarter.toLocaleString()}/Quarter)</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 800; color:#0369a1;">10 %</td><td style="text-align: right; font-weight: 800; color:#0369a1; border: 1px solid #e2e8f0;">Rs. ${Number(fin.quarterly || 0).toLocaleString()}</td></tr>
                           <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">6. On Finishing</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.finishing || 0).toLocaleString()}</td></tr>
                           <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">7. On Possession</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td></tr>
                         </tbody>
@@ -12670,6 +12870,16 @@ loadLicenseSettings();
                     `;
                   } else if (scheme === 'Plan3') {
                     const st = fin.stages || {};
+                    const p3Duration = parseInt(st.monthsCount || fin.durationMonths || 24);
+                    // Months ke hisaab se total quarters
+                    const p3TotalQuarters = Math.max(1, Math.round(p3Duration / 3));
+                    const p3QuarterAmount = Number(st.quarterly || 0);
+                    const p3PerQuarter = Math.round(p3QuarterAmount / p3TotalQuarters);
+
+                    // 7 Floors ki 7 Slabs
+                    const slabTotal = Number(st.slabCasting || 0);
+                    const perSlabRate = Math.round(slabTotal / 7);
+
                     return `
                       <div style="margin-bottom: 4px; width: 100%; box-sizing: border-box;">
                         <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 9px; box-sizing: border-box;">
@@ -12682,19 +12892,19 @@ loadLicenseSettings();
                             </tr>
                           </thead>
                           <tbody>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">1. On Booking</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.booking || fin.downPayment || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">10. On Slab Casting</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.slabCasting || 0).toLocaleString()}</td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">1. On Booking</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.booking || fin.downPayment || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">10. On Slab Casting (Rs. ${perSlabRate.toLocaleString()}/Slab)</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.slabCasting || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">2. On Allocation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.allocation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">11. On Block Masonry</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.blockMasonry || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">3. On Confirmation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.confirmation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">12. On Plaster</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.plaster || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">4. On Start of Work</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.startWork || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">13. On Electric Work</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.electricWork || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #166534;">5. Monthly Installment Pool</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 800; color: #166534;">Rs. ${Number(st.monthlyPool || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">14. On Plumbing Work</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.plumbingWork || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">6. Quarterly Installments</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.quarterly || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">15. On Colouring</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.colouring || 0).toLocaleString()}</td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f0f9ff;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0284c7;">6. Quarterly Installments (Rs. ${p3PerQuarter.toLocaleString()}/Quarter)</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 800; color: #0284c7;">Rs. ${Number(st.quarterly || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">15. On Colouring</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.colouring || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">7. On Excavation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.excavation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">16. On Flooring</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.flooring || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">8. On Foundation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.foundation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">17. On Finishing</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.finishing || 0).toLocaleString()}</td></tr>
                             <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">9. On Plinth</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.plinth || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: ${theme.primary};">18. On Possession</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 800; color: ${theme.primary};">Rs. ${Number(st.possession || 0).toLocaleString()}</td></tr>
                           </tbody>
                         </table>
                         <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 4px 10px; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; width: 100%; box-sizing: border-box;">
-                          <span style="font-weight: 700; color: #166534;"><i class="fa-solid fa-calculator"></i> Installment Plan Duration: <b>${fin.durationMonths || 24} Months</b></span>
+                          <span style="font-weight: 700; color: #166534;"><i class="fa-solid fa-calculator"></i> Installment Plan Duration: <b>${p3Duration} Months</b></span>
                           <span style="font-weight: 800; color: #15803d; font-size: 10.5px;">Monthly Rate: Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()} / Month</span>
                         </div>
                       </div>
@@ -12755,12 +12965,12 @@ loadLicenseSettings();
         htmlContent += `
           <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0;">
             <div style="display:flex; flex-direction:column; flex:1; min-height:0;">
-              <!-- Page 2 Header Banner (Adjusted Height & Perfect Logo Fit) -->
-              <div style="background: ${theme.headerBg || '#525866'}; min-height: 78px; height: 78px; padding: 0 24px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
-                <div style="display: flex; align-items: center; gap: 14px;">
+              <!-- Page 2 Header Banner (Adjusted Height & Large Logo Fit) -->
+              <div style="background: ${theme.headerBg || '#525866'}; min-height: 105px; height: 105px; padding: 0 24px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 16px;">
                   ${compLogo ? `
-                    <div style="height: 54px; max-width: 100px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                      <img src="${compLogo}" style="max-height: 54px; max-width: 100%; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
+                    <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      <img src="${compLogo}" style="height: ${comp.logoSize || 90}px; max-height: 90px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                     </div>
                   ` : ''}
                   <div>
@@ -12791,10 +13001,7 @@ loadLicenseSettings();
                   <div style="width: 100%;">${termsText}</div>
                 </div>
 
-                <!-- Legal Acceptance Declaration -->
-                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid ${theme.primary}; border-radius: 6px; padding: 7px 12px; margin-top: 8px; font-size: 8.8px; color: #1e40af; line-height: 1.45; box-sizing: border-box;">
-                  <b>Declaration & Acceptance:</b> I / We hereby solemnly affirm and declare that I / we have thoroughly read, understood, and unreservedly agree to abide by all the rules, regulations, bylaws, and Terms & Conditions of allotment mentioned above.
-                </div>
+                
               </div>
             </div>
 
@@ -13406,8 +13613,8 @@ loadLicenseSettings();
             <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 28px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
               <div style="display: flex; align-items: center; gap: 16px;">
                 ${compLogo ? `
-                  <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+                  <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: 90px; max-width: 160px; object-fit: contain;" alt="Logo" />
                   </div>
                 ` : `
                   <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
@@ -14623,19 +14830,24 @@ function renderCashBookReport() {
         });
       });
 
-      // 4. Purchases (Paid Amount Outflow) - FIXED
+      // 4. Purchases (Cash Outflow - Shows Both Paid & Cash Purchases)
       (allPurchaserData || []).forEach(pur => {
+        const total = parseFloat(pur.total || pur.totalAmount) || 0;
         const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-        // Sirf Cash wali payments Cash Book mein show hongi
-        if (paid > 0 && (pur.paymentMethod === 'Cash' || !pur.paymentMethod)) {
-          const modeLabel = pur.paymentMethod ? ` (${pur.paymentMethod})` : ' (Cash)';
+        const method = pur.paymentMethod || 'Cash';
+
+        // Agar Cash method ho to Paid raqam lein, agar paid 0 chhora ho to total lein
+        const cashSpent = (paid > 0) ? paid : (method === 'Cash' ? total : 0);
+
+        if (method === 'Cash' || paid > 0) {
+          const statusText = (paid > 0) ? '' : ' (Cash Bill)';
           cashTransactions.push({
             date: pur.date || new Date().toISOString().split('T')[0],
             ref: pur.billNo || 'PUR-BILL',
-            desc: `Purchase Payment - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${modeLabel}`,
+            desc: `Purchase - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${statusText}`,
             head: 'Material Purchase',
             cashIn: 0,
-            cashOut: paid
+            cashOut: cashSpent
           });
         }
       });
@@ -14829,19 +15041,22 @@ function downloadCashBookPDF() {
         });
       });
 
-      // 3. Purchases (Paid Amount Outflow) - FIXED
+      // 3. Purchases (Cash Outflow - Shows in PDF)
       (allPurchaserData || []).forEach(pur => {
+        const total = parseFloat(pur.total || pur.totalAmount) || 0;
         const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-        // Sirf Cash wali payments Cash Book PDF mein show hongi
-        if (paid > 0 && (pur.paymentMethod === 'Cash' || !pur.paymentMethod)) {
-          const modeLabel = pur.paymentMethod ? ` (${pur.paymentMethod})` : ' (Cash)';
+        const method = pur.paymentMethod || 'Cash';
+        const cashSpent = (paid > 0) ? paid : (method === 'Cash' ? total : 0);
+
+        if (method === 'Cash' || paid > 0) {
+          const statusText = (paid > 0) ? '' : ' (Cash Bill)';
           cashTransactions.push({
             date: pur.date || new Date().toISOString().split('T')[0],
             ref: pur.billNo || 'PUR-BILL',
-            desc: `Purchase Payment - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${modeLabel}`,
+            desc: `Purchase - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${statusText}`,
             head: 'Material Purchase',
             cashIn: 0,
-            cashOut: paid
+            cashOut: cashSpent
           });
         }
       });
@@ -15361,11 +15576,8 @@ function downloadProfitLossPDF() {
         <!-- Top Wave Header with Logo -->
         <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 20px 32px 28px 32px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
           <div style="display: flex; align-items: center; gap: 12px;">
-           ${compLogo ? `
-              <div style="height: 65px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 5px;">
-                <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
-              </div>
-            ` : ''}
+           <input type="number" id="setLogoSize" value="75" min="40" max="140" placeholder="e.g. 75" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700; outline: none;" />
+                  <small style="color: #64748b; font-size: 10px;">Default: 75 (Zyada karne se bara hoga)</small>
             <div>
               <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">PROFIT & LOSS STATEMENT</h1>
               <div style="font-size: 10px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
@@ -16721,96 +16933,53 @@ function downloadSiteLedgerPDF() {
 }
 
 // ========================================================
-// EXPORT FULL LEDGER PDF FOR OFFICE EXPENSES (FIXED & STYLED)
+// EXPORT OFFICIAL PETTY CASH LEDGER PDF (FOR BOSS / ACCOUNTS)
 // ========================================================
 function downloadOfficeLedgerPDF() {
-  const query = (document.getElementById('officeExpSearchInput')?.value || '').toLowerCase().trim();
-  const cat = document.getElementById('officeExpCategoryFilter')?.value || 'ALL';
-  const dateFrom = document.getElementById('officeExpDateFrom')?.value;
-  const dateTo = document.getElementById('officeExpDateTo')?.value;
+  const listToPrint = window.currentFilteredOfficeTransactions || [];
 
-  const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
-  const currentMonthPrefix = todayStr.substring(0, 7);
-
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(now.getDate() - 7);
-  const sevenDaysStr = sevenDaysAgo.toISOString().split('T')[0];
-
-  const filtered = allOfficeExpensesData.filter(exp => {
-    if (dateFrom && exp.date && exp.date < dateFrom) return false;
-    if (dateTo && exp.date && exp.date > dateTo) return false;
-
-    let matchesPeriod = true;
-    if (!dateFrom && !dateTo) {
-      if (currentOfficePeriod === 'daily') matchesPeriod = (exp.date === todayStr);
-      else if (currentOfficePeriod === 'weekly') matchesPeriod = (exp.date >= sevenDaysStr && exp.date <= todayStr);
-      else if (currentOfficePeriod === 'monthly') matchesPeriod = (exp.date && exp.date.startsWith(currentMonthPrefix));
-    }
-
-    const matchesQuery = !query || 
-      (exp.description && exp.description.toLowerCase().includes(query)) ||
-      (exp.paidTo && exp.paidTo.toLowerCase().includes(query)) ||
-      (exp.category && exp.category.toLowerCase().includes(query));
-
-    const matchesCat = (cat === 'ALL' || exp.category === cat);
-
-    return matchesPeriod && matchesQuery && matchesCat;
-  });
-
-  if (filtered.length === 0) {
-    alert("Print karne ke liye koi office expense record nahi hai.");
+  if (listToPrint.length === 0) {
+    alert("Print karne ke liye koi petty cash ledger record nahi hai.");
     return;
   }
 
-  let totalAmount = 0;
-  let paidAmount = 0;
-  let remainingAmount = 0;
+  let totalCashIn = 0;
+  let totalCashOut = 0;
   let rowsHtml = '';
 
-  filtered.forEach((exp, idx) => {
-    const total = parseFloat(exp.totalAmount) || 0;
-    const paid = parseFloat(exp.paidAmount) || 0;
-    const rem = parseFloat(exp.remainingAmount) || 0;
-
-    totalAmount += total;
-    paidAmount += paid;
-    remainingAmount += rem;
-
-    let status = 'Paid';
-    let statusBg = '#dcfce7';
-    let statusColor = '#15803d';
-
-    if (rem > 0 && paid > 0) {
-      status = 'Partial';
-      statusBg = '#fef3c7';
-      statusColor = '#b45309';
-    } else if (rem > 0 && paid === 0) {
-      status = 'Unpaid';
-      statusBg = '#fee2e2';
-      statusColor = '#dc2626';
-    }
+  listToPrint.forEach((t, idx) => {
+    totalCashIn += t.cashIn;
+    totalCashOut += t.cashOut;
 
     rowsHtml += `
-      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
-        <td style="padding: 8px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${exp.date || '-'}</td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0;"><span style="background: #eff6ff; color: #1d4ed8; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 10.5px;">${exp.category || '-'}</span></td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">${exp.paidTo || '-'}</td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0; color: #334155;">${exp.description || '-'}</td>
-        <td style="padding: 8px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Rs. ${total.toLocaleString()}</td>
-        <td style="padding: 8px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: #16a34a;">Rs. ${paid.toLocaleString()}</td>
-        <td style="padding: 8px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${rem > 0 ? '#dc2626' : '#16a34a'};">Rs. ${rem.toLocaleString()}</td>
-        <td style="padding: 8px 10px; text-align: center; border-right: 1px solid #e2e8f0;">
-          <span style="background: ${statusBg}; color: ${statusColor}; padding: 3px 10px; border-radius: 12px; font-size: 10.5px; font-weight: 800;">${status}</span>
+      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px; ${t.isCashIn ? 'background:#f0fdf4;' : ''}">
+        <td style="padding: 7px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
+        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${t.date || '-'}</td>
+        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: ${t.isCashIn ? '#16a34a' : '#0d47a1'};">${t.ref}</strong></td>
+        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><span style="background: ${t.isCashIn ? '#dcfce7' : '#eff6ff'}; color: ${t.isCashIn ? '#15803d' : '#1d4ed8'}; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 10px;">${t.category}</span></td>
+        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #0f172a;">
+          <strong>${t.desc}</strong>
+          <div style="font-size: 9.5px; color: #64748b;">${t.isCashIn ? 'From: ' : 'Paid To: '}<b>${t.party}</b></div>
+        </td>
+        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${t.cashIn > 0 ? '#16a34a' : '#94a3b8'};">
+          ${t.cashIn > 0 ? 'Rs. ' + t.cashIn.toLocaleString() : '-'}
+        </td>
+        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${t.cashOut > 0 ? '#dc2626' : '#94a3b8'};">
+          ${t.cashOut > 0 ? 'Rs. ' + t.cashOut.toLocaleString() : '-'}
+        </td>
+        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 900; color: ${t.currentBalance >= 0 ? '#0f172a' : '#dc2626'};">
+          Rs. ${t.currentBalance.toLocaleString()}
         </td>
       </tr>
     `;
   });
 
+  const netPettyInHand = totalCashIn - totalCashOut;
   const comp = getCompanyPrintProfile();
   const compLogo = comp.logo || settingLogoBase64 || '';
   const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const dateFrom = document.getElementById('officeExpDateFrom')?.value;
+  const dateTo = document.getElementById('officeExpDateTo')?.value;
 
   const pdfWrapper = document.createElement('div');
   pdfWrapper.style.width = '100%';
@@ -16823,74 +16992,69 @@ function downloadOfficeLedgerPDF() {
   pdfWrapper.innerHTML = `
     <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
       <div>
-        <!-- Top Blue Header Banner -->
+        <!-- Top Wave Header with Logo -->
         <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 22px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
           <div style="display: flex; align-items: center; gap: 14px;">
             ${compLogo ? `
-              <div style="height: 75px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;">
+              <div style="height: 65px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;">
                 <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
               </div>
-            ` : `
-              <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
-                <i class="fa-solid fa-briefcase"></i>
-              </div>
-            `}
+            ` : ''}
             <div>
-              <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">OFFICE EXPENSE LEDGER</h1>
+              <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">OFFICE PETTY CASH LEDGER</h1>
               <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
-                ${comp.name.toUpperCase()} • ${comp.project.toUpperCase()} HEAD OFFICE ADMINISTRATIVE RECORD
+                ${comp.name.toUpperCase()} • ${comp.project.toUpperCase()} CASH IN & OUT ACCOUNTABILITY STATEMENT
               </div>
             </div>
           </div>
 
           <div style="text-align: right;">
             <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
-              OFFICIAL LEDGER
+              OFFICIAL CASH LEDGER
             </div>
             <div style="font-size: 10px; color: #bbdefb; margin-top: 4px; font-weight: 600;">Printed: ${todayDate}</div>
           </div>
         </div>
 
-        <!-- Meta Bar & 3 KPI Cards -->
+        <!-- Meta Bar & 3 Summary KPI Cards -->
         <div style="padding: 14px 32px 0 32px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
             <div style="font-size: 11px; color: #334155;">
-              Branch: <strong>Head Office</strong> | Developer: <strong>${comp.name}</strong> | Category: <strong>${cat}</strong>
+              Branch: <strong>Head Office</strong> | Developer: <strong>${comp.name}</strong> | Project: <strong>${comp.project}</strong>
             </div>
             <div style="text-align: right; font-size: 11px; color: #475569;">
-              Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong>
+              Date Range: <strong>${dateFrom ? dateFrom : 'Beginning'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong>
             </div>
           </div>
 
-          <!-- 3 Summary KPI Cards -->
+          <!-- 3 KPI Cards for the Boss -->
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px;">
-            <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Total Office Expenses</small>
-              <div style="font-size: 17px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${totalAmount.toLocaleString()}</div>
-            </div>
             <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Paid / Cleared</small>
-              <div style="font-size: 17px; font-weight: 900; color: #15803d; margin-top: 2px;">Rs. ${paidAmount.toLocaleString()}</div>
+              <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Petty Cash In (Boss Se Aaye)</small>
+              <div style="font-size: 17px; font-weight: 900; color: #15803d; margin-top: 2px;">Rs. ${totalCashIn.toLocaleString()}</div>
             </div>
             <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Remaining Balance (Payable)</small>
-              <div style="font-size: 17px; font-weight: 900; color: #b91c1c; margin-top: 2px;">Rs. ${remainingAmount.toLocaleString()}</div>
+              <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out (Office Kharche)</small>
+              <div style="font-size: 17px; font-weight: 900; color: #dc2626; margin-top: 2px;">Rs. ${totalCashOut.toLocaleString()}</div>
+            </div>
+            <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 10px 16px;">
+              <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Cash In Hand (Bache Hue Paise)</small>
+              <div style="font-size: 17px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${netPettyInHand.toLocaleString()}</div>
             </div>
           </div>
 
-          <!-- Table -->
+          <!-- Petty Cash Table -->
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
             <thead>
               <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
                 <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
-                <th style="padding: 8px 10px; text-align: left; width: 10%; border: 1px solid #0d47a1;">Date</th>
-                <th style="padding: 8px 10px; text-align: left; width: 15%; border: 1px solid #0d47a1;">Category</th>
-                <th style="padding: 8px 10px; text-align: left; width: 16%; border: 1px solid #0d47a1;">Paid To</th>
-                <th style="padding: 8px 10px; text-align: left; width: 25%; border: 1px solid #0d47a1;">Description</th>
-                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #0d47a1;">Total (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Paid (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Remaining</th>
-                <th style="padding: 8px 10px; text-align: center; width: 9%; border: 1px solid #0d47a1;">Status</th>
+                <th style="padding: 8px 10px; text-align: left; width: 11%; border: 1px solid #0d47a1;">Date</th>
+                <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #0d47a1;">Ref / Voucher</th>
+                <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Head / Category</th>
+                <th style="padding: 8px 10px; text-align: left; width: 33%; border: 1px solid #0d47a1;">Description / Particulars</th>
+                <th style="padding: 8px 10px; text-align: right; width: 10%; border: 1px solid #0d47a1;">Cash In (Rs.)</th>
+                <th style="padding: 8px 10px; text-align: right; width: 10%; border: 1px solid #0d47a1;">Cash Out (Rs.)</th>
+                <th style="padding: 8px 10px; text-align: right; width: 10%; border: 1px solid #0d47a1;">Balance (Rs.)</th>
               </tr>
             </thead>
             <tbody>
@@ -16898,11 +17062,10 @@ function downloadOfficeLedgerPDF() {
             </tbody>
             <tfoot>
               <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 11px;">
-                <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">GRAND TOTAL</td>
-                <td style="text-align: right; padding: 8px 10px; color: #0f172a;">Rs. ${totalAmount.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${paidAmount.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${remainingAmount.toLocaleString()}</td>
-                <td style="border-right: 1px solid #cbd5e1;"></td>
+                <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">NET BALANCE (CASH IN HAND)</td>
+                <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${totalCashIn.toLocaleString()}</td>
+                <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${totalCashOut.toLocaleString()}</td>
+                <td style="text-align: right; padding: 8px 10px; color: #0d47a1; font-size: 12px;">Rs. ${netPettyInHand.toLocaleString()}</td>
               </tr>
             </tfoot>
           </table>
@@ -16914,13 +17077,13 @@ function downloadOfficeLedgerPDF() {
         <div style="text-align: center; width: 220px;">
           <div style="height: 35px;"></div>
           <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            PREPARED BY (ACCOUNTS)
+            CASHIER / PETTY CASH HOLDER
           </div>
         </div>
         <div style="text-align: center; width: 220px;">
           <div style="height: 35px;"></div>
           <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            AUTHORIZED SIGNATURE
+            APPROVED BY (BOSS / DIRECTOR)
           </div>
         </div>
       </div>
@@ -16929,7 +17092,7 @@ function downloadOfficeLedgerPDF() {
 
   const opt = {
     margin: [0, 0, 0, 0],
-    filename: `Office_Expense_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`,
+    filename: `Office_Petty_Cash_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
