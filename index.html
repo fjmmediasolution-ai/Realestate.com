@@ -12584,23 +12584,23 @@ loadLicenseSettings();
       let htmlContent = `
         <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0; ${isLongTerms ? 'page-break-after: always;' : ''}">
           <div>
-            <!-- Top Solid Header (Fixed Height 74px) -->
-            <div style="background: ${theme.headerBg || '#525866'}; height: 74px; min-height: 74px; max-height: 74px; padding: 0 24px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%; position: relative;">
+            <!-- Top Solid Header (Adjusted Height to 95px for Perfect Logo Fit) -->
+            <div style="background: ${theme.headerBg || '#525866'}; min-height: 95px; padding: 12px 24px 18px 24px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%; position: relative;">
               <div style="display: flex; align-items: center; gap: 14px; min-width: 0;">
                 ${compLogo ? `
-                  <div style="width: ${Math.round((comp.logoSize || 75) * 0.9)}px; height: 48px; min-height: 48px; max-height: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative;">
-                    <img src="${compLogo}" style="height: ${comp.logoSize || 75}px; max-height: none; max-width: none; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px); position: absolute;" alt="Logo" />
+                  <div style="height: 65px; max-width: 120px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="max-height: 65px; max-width: 100%; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
                 <div style="min-width: 0;">
                   <h1 style="margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${compProject}</h1>
-                  <div style="font-size: 9.5px; color: ${theme.secondary || '#e2e8f0'}; font-weight: 800; letter-spacing: 0.8px; margin-top: 2px;">
+                  <div style="font-size: 9.5px; color: ${theme.secondary || '#e2e8f0'}; font-weight: 800; letter-spacing: 0.8px; margin-top: 3px;">
                     OFFICIAL PROJECT REGISTRATION DOCUMENTS
                   </div>
                 </div>
               </div>
               <div style="text-align: right; flex-shrink: 0;">
-                <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+                <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                   REF: ${bookingId}
                 </div>
               </div>
@@ -12749,50 +12749,50 @@ loadLicenseSettings();
       `;
 
       // ========================================================
-      // PAGE 2: TERMS & CONDITIONS (3 SIGNATURES)
+      // PAGE 2: TERMS & CONDITIONS (3 SIGNATURES - FULL PAGE FIT)
       // ========================================================
       if (isLongTerms) {
         htmlContent += `
-          <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0;">
-            <div>
-              <!-- Page 2 Header Banner -->
-              <div style="background: ${theme.headerBg || '#525866'}; height: 56px; min-height: 56px; max-height: 56px; padding: 0 24px; border-bottom-left-radius: 50% 14px; border-bottom-right-radius: 50% 14px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
-                <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0;">
+            <div style="display:flex; flex-direction:column; flex:1; min-height:0;">
+              <!-- Page 2 Header Banner (Adjusted Height & Perfect Logo Fit) -->
+              <div style="background: ${theme.headerBg || '#525866'}; min-height: 78px; height: 78px; padding: 0 24px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+                <div style="display: flex; align-items: center; gap: 14px;">
                   ${compLogo ? `
-                    <div style="width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                      <img src="${compLogo}" style="max-height: 100%; max-width: 100%; object-fit: contain;" alt="Logo" />
+                    <div style="height: 54px; max-width: 100px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      <img src="${compLogo}" style="max-height: 54px; max-width: 100%; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                     </div>
                   ` : ''}
                   <div>
-                    <h2 style="margin: 0; font-size: 16px; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; color: #ffffff;">${compProject}</h2>
-                    <div style="font-size: 8.5px; color: ${theme.secondary || '#e2e8f0'}; font-weight: 700; letter-spacing: 0.5px;">
+                    <h2 style="margin: 0; font-size: 19px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #ffffff;">${compProject}</h2>
+                    <div style="font-size: 9.5px; color: ${theme.secondary || '#e2e8f0'}; font-weight: 800; letter-spacing: 0.8px; margin-top: 2px;">
                       TERMS & CONDITIONS OF ALLOTMENT (PAGE 2)
                     </div>
                   </div>
                 </div>
                 <div style="text-align: right;">
-                  <div style="font-size: 10.5px; font-weight: 800; background: rgba(255,255,255,0.15); padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+                  <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                     REF: ${bookingId}
                   </div>
                 </div>
               </div>
 
-              <!-- Page 2 Terms & Conditions Content -->
-              <div style="padding: 10px 24px 4px 24px; box-sizing: border-box; width: 100%;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid ${theme.primary}; padding-bottom: 4px; margin-bottom: 6px;">
-                  <h3 style="margin: 0; font-size: 12.5px; font-weight: 900; color: ${theme.primary}; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+              <!-- Page 2 Terms & Conditions Content (Expanded to Fill Page) -->
+              <div style="padding: 10px 24px 6px 24px; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid ${theme.primary}; padding-bottom: 5px; margin-bottom: 8px;">
+                  <h3 style="margin: 0; font-size: 13px; font-weight: 900; color: ${theme.primary}; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
                     <i class="fa-solid fa-file-contract"></i> Standard Terms & Conditions of Allotment
                   </h3>
-                  <span style="font-size: 10px; font-weight: 700; color: #475569;">Flat No: <b style="color:#0f172a;">${c.flatNo || '-'}</b></span>
+                  <span style="font-size: 11px; font-weight: 800; color: #0f172a;">Flat No: <b style="color:${theme.primary}; font-size: 12px;">${c.flatNo || '-'}</b></span>
                 </div>
 
-                <!-- 26 Terms Container (Compact Line-Height) -->
-                <div style="background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 7.8px; color: #1e293b; line-height: 1.32; white-space: pre-line; word-break: break-word; box-sizing: border-box;">
-                  ${termsText}
+                <!-- Terms Container: Height aur Line-Height Adjusted for Full Page Fit -->
+                <div style="background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 8.8px; color: #1e293b; line-height: 1.52; white-space: pre-line; word-break: break-word; box-sizing: border-box; flex: 1; min-height: 0; overflow: hidden; display: flex; align-items: stretch;">
+                  <div style="width: 100%;">${termsText}</div>
                 </div>
 
                 <!-- Legal Acceptance Declaration -->
-                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 3.5px solid ${theme.primary}; border-radius: 6px; padding: 5px 10px; margin-top: 6px; font-size: 8px; color: #1e40af; line-height: 1.35;">
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-left: 4px solid ${theme.primary}; border-radius: 6px; padding: 7px 12px; margin-top: 8px; font-size: 8.8px; color: #1e40af; line-height: 1.45; box-sizing: border-box;">
                   <b>Declaration & Acceptance:</b> I / We hereby solemnly affirm and declare that I / we have thoroughly read, understood, and unreservedly agree to abide by all the rules, regulations, bylaws, and Terms & Conditions of allotment mentioned above.
                 </div>
               </div>
