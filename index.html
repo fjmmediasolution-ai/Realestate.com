@@ -2885,6 +2885,10 @@
             <input type="text" id="modalFlatSize" placeholder="e.g. 850" required />
           </div>
           <div>
+            <label>Category / Unit Type</label>
+            <input type="text" id="modalFlatCategory" placeholder="e.g. 2 Bed DD, 2 Bed Lounge" />
+          </div>
+          <div>
             <label>Price (Rs.) *</label>
             <input type="text" id="modalFlatPrice" placeholder="e.g. 8,00,000" required />
           </div>
@@ -2980,6 +2984,12 @@
                   <div>
                     <label>Size (Sq. Ft)</label>
                     <input type="text" id="custSize" placeholder="Select flat above" readonly style="background:#f1f5f9; font-weight:600; color:#0f172a;" />
+                  </div>
+
+                  <!-- Flat Category / Unit Type Input -->
+                  <div>
+                    <label style="color:#1e40af; font-weight:800;">Flat Category / Unit Type *</label>
+                    <input type="text" id="custCategory" placeholder="e.g. 2 Bed DD, 2 Bed Lounge" style="background:#ffffff; font-weight:700; color:#0f172a; border-color:#2563eb;" />
                   </div>
 
                   <!-- Ownership Type Dropdown (Default Single Owner) -->
@@ -6400,8 +6410,8 @@
         }
       }
 
-      // User ki Settings se Size aur Position uthana (Default 95px)
-      const logoSize = parseFloat(document.getElementById('setLogoSize')?.value) || 95;
+      // User ki Settings se Size aur Position uthana (Default 85px Exact Match)
+      const logoSize = parseFloat(document.getElementById('setLogoSize')?.value) || 85;
       const logoX = parseFloat(document.getElementById('setLogoX')?.value) || 0;
       const logoY = parseFloat(document.getElementById('setLogoY')?.value) || 0;
 
@@ -6410,7 +6420,9 @@
         secondary: '#e2e8f0',
         secondaryLight: '#f1f5f9',
         headerBg: '#525866',
-        gradient: '#525866'
+        tableHeader: '#525866',
+        ribbonBg: '#525866',
+        subText: '#e2e8f0'
       };
 
       return { name, project, phone, whatsapp, email, regNo, address, logo, theme, logoSize, logoX, logoY };
@@ -7509,21 +7521,24 @@ function loadFlats() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-   // 2. Download Official Project Profile PDF (Strict Single Page 100% Fit)
+   // 2. Download Official Project Profile PDF (Fixed - Single Page 100% Reliable Render)
     function downloadProjectPDF(projectId) {
       const p = allProjectsData.find(item => item.id === projectId);
-      if (!p) return;
+      if (!p) {
+        alert('Project record nahi mila.');
+        return;
+      }
 
       const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      // Settings se Company Name, Address, Contacts, Logo aur Terms nikalna
+      // Settings se Company Name, Address, Contacts aur Logo uthana
       const comp = getCompanyPrintProfile();
-      const compName = comp.name;
-      const compPhone = comp.phone;
-      const compWhatsapp = comp.whatsapp;
-      const compEmail = comp.email;
-      const compAddress = comp.address || 'Head Office';
-      const compLogo = comp.logo;
+      const compName = comp.name || 'Bilal Builders & Developers';
+      const compPhone = comp.phone || '';
+      const compWhatsapp = comp.whatsapp || '';
+      const compEmail = comp.email || '';
+      const compAddress = comp.address || 'Head Office, Karachi';
+      const compLogo = comp.logo || settingLogoBase64 || '';
 
       const termsText = document.getElementById('setLegalTermsText')?.value.trim() || 
         "1. All bookings and allotments are governed under project bylaws.\n" +
@@ -7531,95 +7546,114 @@ function loadFlats() {
         "3. Building architecture, utilities, and structure are verified by engineering authorities.";
 
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.width = '210mm';
+      pdfWrapper.style.minWidth = '210mm';
       pdfWrapper.style.maxWidth = '210mm';
       pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.padding = '0';
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
       pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
+        <div style="background:#ffffff; width:210mm; min-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; margin:0 auto; padding:0; position:relative;">
+          
           <div>
-            <!-- Top Blue Wave Header with Logo -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 30px 24px 30px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-               ${compLogo ? `
-                  <div style="height: 75px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;">
-                    <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+            <!-- Top Slate Grey Header (#525866) with Logo -->
+            <div style="background: #525866; min-height: 105px; padding: 14px 28px 20px 28px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+              <div style="display: flex; align-items: center; gap: 16px;">
+                ${compLogo ? `
+                  <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
                 <div>
-                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase;">${p.name}</h1>
-                  <div style="font-size: 10px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+                  <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${p.name || 'PROJECT PORTFOLIO'}</h1>
+                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
                     ${compName.toUpperCase()} • OFFICIAL PROJECT PORTFOLIO & SPECIFICATIONS
                   </div>
                 </div>
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+              <div style="text-align: right; flex-shrink: 0;">
+                <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                   PROJECT OVERVIEW
                 </div>
               </div>
             </div>
 
             <!-- Body Content -->
-            <div style="padding: 14px 30px 6px 30px;">
+            <div style="padding: 14px 28px 6px 28px; box-sizing: border-box; width: 100%;">
               
-              <!-- Upper Info Bar (Settings Company Profile & Issuance Meta) -->
+              <!-- Upper Info Bar (Project Identity & Issuance Meta) -->
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
-                <div>
-                  <div style="font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 2px;">PROJECT IDENTITY:</div>
-                  <div style="font-size: 17px; font-weight: 900; color: #0d47a1; text-transform: uppercase;">${p.name}</div>
-                  <div style="font-size: 11.5px; color: #334155; margin-top: 2px;">Developer: <strong style="color: #0f172a;">${compName}</strong></div>
+                <div style="width: 50%;">
+                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">PROJECT IDENTITY:</div>
+                  <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${p.name || 'N/A'}</div>
+                  <div style="font-size: 11px; color: #334155; margin-top: 2px;">Developer: <strong style="color: #0f172a;">${compName}</strong></div>
                   <div style="font-size: 11px; color: #475569;">City: <strong style="color: #0f172a;">${p.city || 'Karachi'}</strong></div>
                   <div style="font-size: 11px; color: #475569;">Phone: <strong>${compPhone}</strong> ${compWhatsapp ? ' | WhatsApp: <strong>' + compWhatsapp + '</strong>' : ''}</div>
                   <div style="font-size: 11px; color: #475569;">Email: <strong>${compEmail}</strong></div>
                 </div>
 
-                <div style="text-align: right; max-width: 48%;">
-                  <div style="font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 2px;">ISSUANCE DETAILS:</div>
-                  <div style="font-size: 12.5px; font-weight: 800; color: #0f172a;">Corporate Portfolio Dossier</div>
+                <div style="width: 48%; text-align: right;">
+                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">ISSUANCE DETAILS:</div>
+                  <div style="font-size: 12px; font-weight: 800; color: #0f172a;">Corporate Portfolio Dossier</div>
                   <div style="font-size: 11px; color: #475569; margin-top: 2px;">Date: <strong style="color: #0d47a1;">${todayDate}</strong></div>
-                  <div style="font-size: 11px; color: #475569; margin-top: 2px; line-height: 1.3;">Head Office: <strong>${compAddress}</strong></div>
+                  <div style="font-size: 10.5px; color: #475569; margin-top: 2px; line-height: 1.35;">Head Office: <strong>${compAddress}</strong></div>
                 </div>
               </div>
 
               <!-- Main Address Banner -->
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 8px; padding: 9px 14px; margin-bottom: 11px;">
-                <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">LOCATION / ADDRESS:</div>
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px;">
+                <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">LOCATION / SITE ADDRESS:</div>
                 <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; line-height: 1.4;">${p.location || 'N/A'}</div>
               </div>
 
-              <!-- 4 Specifications Grid Cards -->
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 11px;">
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">TOTAL FLOORS</small>
-                  <div style="font-size: 15px; font-weight: 900; color: #0f172a;">${p.floors || 'N/A'}</div>
-                </div>
+              <!-- 4 Specifications Cards (Reliable Table Layout - No Blank Bug) -->
+              <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 12px;">
+                <tr>
+                  <td style="width: 50%; padding-right: 6px; padding-bottom: 10px;">
+                    <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">TOTAL FLOORS</small>
+                      <div style="font-size: 15px; font-weight: 900; color: #0f172a;">${p.floors || 'N/A'}</div>
+                    </div>
+                  </td>
+                  <td style="width: 50%; padding-left: 6px; padding-bottom: 10px;">
+                    <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">TOTAL FLATS / UNITS</small>
+                      <div style="font-size: 15px; font-weight: 900; color: #16a34a;">${p.flatsCount || '0'} Units</div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 50%; padding-right: 6px;">
+                    <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">PROJECT CITY</small>
+                      <div style="font-size: 15px; font-weight: 900; color: #0284c7;">${p.city || 'Karachi'}</div>
+                    </div>
+                  </td>
+                  <td style="width: 50%; padding-left: 6px;">
+                    <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">PROJECT STATUS</small>
+                      <div style="font-size: 15px; font-weight: 900; color: #15803d;">Active Construction</div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
 
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">TOTAL FLATS / UNITS</small>
-                  <div style="font-size: 15px; font-weight: 900; color: #16a34a;">${p.flatsCount || '0'} Units</div>
+              ${p.description ? `
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 14px; margin-bottom: 12px;">
+                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">DESCRIPTION / PROJECT HIGHLIGHTS:</div>
+                  <div style="font-size: 11px; color: #334155; line-height: 1.4;">${p.description}</div>
                 </div>
+              ` : ''}
 
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">PROJECT CITY</small>
-                  <div style="font-size: 15px; font-weight: 900; color: #0284c7;">${p.city || 'N/A'}</div>
+              <!-- Terms & Conditions Box -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px;">
+                <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">
+                  TERMS & CONDITIONS:
                 </div>
-
-                <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 9px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">PROJECT STATUS</small>
-                  <div style="font-size: 15px; font-weight: 900; color: #15803d;">Active Construction</div>
-                </div>
-              </div>
-
-              <!-- Terms & Conditions Box (Pulls directly from Settings) -->
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 14px;">
-                <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px; display: flex; align-items: center; gap: 5px;">
-                  <i class="fa-solid fa-file-contract"></i> TERMS & CONDITIONS :
-                </div>
-                <div style="font-size: 8.5px; color: #334155; line-height: 1.4; white-space: pre-line;">
+                <div style="font-size: 8.5px; color: #334155; line-height: 1.45; white-space: pre-line;">
                   ${termsText}
                 </div>
               </div>
@@ -7628,11 +7662,11 @@ function loadFlats() {
           </div>
 
           <!-- Bottom: Clean Footer with Authorized Sign -->
-          <div style="padding: 0 30px 20px 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div style="padding: 0 28px 24px 28px; display: flex; justify-content: space-between; align-items: flex-end; box-sizing: border-box; width: 100%;">
             
             <!-- Left: Authorized Person Signature -->
             <div style="text-align: center; width: 210px;">
-              <div style="height: 30px;"></div>
+              <div style="height: 35px;"></div>
               <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
                 AUTHORIZED PERSON SIGNATURE
               </div>
@@ -7652,11 +7686,11 @@ function loadFlats() {
 
       const opt = {
         margin: [0, 0, 0, 0],
-        filename: `Project_${p.name.replace(/\s+/g, '_')}_Portfolio.pdf`,
+        filename: `Project_${(p.name || 'Project').replace(/\s+/g, '_')}_Portfolio.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'avoid-all' }
+        pagebreak: { mode: ['css', 'legacy'] }
       };
 
       if (typeof html2pdf !== 'undefined') {
@@ -8053,11 +8087,12 @@ async function confirmStatusChange() {
         availableFlats.forEach(f => {
           const opt = document.createElement('option');
           opt.value = f.id;
-          opt.textContent = `${f.flatNo} (${f.floor || 'Floor'} - Available)`;
+          opt.textContent = `${f.flatNo} (${f.floor || 'Floor'} - ${f.category || 'Available'})`;
           opt.setAttribute('data-floor', f.floor || '');
           opt.setAttribute('data-size', f.size || '');
           opt.setAttribute('data-price', f.price || '');
           opt.setAttribute('data-flatno', f.flatNo || '');
+          opt.setAttribute('data-category', f.category || '');
           select.appendChild(opt);
         });
       } else {
@@ -8075,11 +8110,15 @@ async function confirmStatusChange() {
       if (!flat) {
         document.getElementById('custFloor').value = '';
         document.getElementById('custSize').value = '';
+        if (document.getElementById('custCategory')) document.getElementById('custCategory').value = '';
         return;
       }
 
       document.getElementById('custFloor').value = flat.floor || '';
       document.getElementById('custSize').value = flat.size ? `${flat.size} Sq. Ft` : '';
+      if (document.getElementById('custCategory')) {
+        document.getElementById('custCategory').value = flat.category || '';
+      }
 
       const cleanPrice = String(flat.price || '').replace(/,/g, '').trim();
       if (!isNaN(cleanPrice) && cleanPrice !== '') {
@@ -8479,6 +8518,7 @@ async function confirmStatusChange() {
         flatNo: flatNo,
         floor: document.getElementById('custFloor').value || '',
         size: document.getElementById('custSize').value || '',
+        category: document.getElementById('custCategory')?.value.trim() || selectedOption.getAttribute('data-category') || '',
         ownershipType: ownershipType,
         financials: finPayload,
 
@@ -9165,8 +9205,17 @@ db.collection('customers').onSnapshot(snap => {
         if (c.flatId) flatSelect.value = c.flatId;
       }
 
-      if (document.getElementById('custFloor')) document.getElementById('custFloor').value = c.floor || '';
-      if (document.getElementById('custSize')) document.getElementById('custSize').value = c.size || '';
+      const flatData = {
+    project: document.getElementById('modalFlatProject').value,
+    flatNo: document.getElementById('modalFlatNo').value.trim(),
+    floor: document.getElementById('modalFlatFloor').value,
+    size: document.getElementById('modalFlatSize').value.trim(),
+    price: document.getElementById('modalFlatPrice').value.trim(),
+    status: document.getElementById('modalFlatStatus').value,
+    notes: document.getElementById('modalFlatNotes').value.trim(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+      if (document.getElementById('custCategory')) document.getElementById('custCategory').value = c.category || '';
 
     // Financials Fill (Plan 1, 2, 3)
       const fin = c.financials || {};
@@ -12266,21 +12315,21 @@ loadLicenseSettings();
         <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           
           <div>
-            <!-- Top Blue Wave Header with Logo & Project Title -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 28px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- Top Slate Grey Header (#525866) with Logo -->
+            <div style="background: #525866; min-height: 105px; padding: 14px 34px 20px 34px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+              <div style="display: flex; align-items: center; gap: 16px;">
                ${compLogo ? `
-                  <div style="height: 75px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;">
-                    <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+                  <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
                 <div>
-                  <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">RECEIPT</h1>
-                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">${compProject.toUpperCase()} • PAYMENT ACKNOWLEDGEMENT</div>
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">RECEIPT</h1>
+                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">${compProject.toUpperCase()} • PAYMENT ACKNOWLEDGEMENT</div>
                 </div>
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+              <div style="text-align: right; flex-shrink: 0;">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                   NO: ${p.receiptNo || 'BH-REC'}
                 </div>
               </div>
@@ -12452,21 +12501,21 @@ loadLicenseSettings();
       pdfWrapper.innerHTML = `
         <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           <div>
-            <!-- Top Blue Wave Header with Logo -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 26px 36px 34px 36px; border-bottom-left-radius: 50% 20px; border-bottom-right-radius: 50% 20px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- Top Slate Grey Header (#525866) with Logo -->
+            <div style="background: #525866; min-height: 105px; padding: 14px 36px 20px 36px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+              <div style="display: flex; align-items: center; gap: 16px;">
                 ${compLogo ? `
-                  <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="height: 90px; max-width: 160px; object-fit: contain;" alt="Logo" />
+                  <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
                 <div>
-                  <h1 style="margin: 0; font-size: 28px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">PURCHASE BILL</h1>
-                  <div style="font-size: 11px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">PROJECT: ${compProject.toUpperCase()}</div>
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">PURCHASE BILL</h1>
+                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">PROJECT: ${compProject.toUpperCase()} • OFFICIAL MATERIAL BILL</div>
                 </div>
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 14px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3);">
+              <div style="text-align: right; flex-shrink: 0;">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                   NO: ${billNo}
                 </div>
               </div>
@@ -12636,6 +12685,10 @@ loadLicenseSettings();
                   <div style="font-size: 9.5px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b></div>
                   <div style="font-size: 9.5px; color: #334155;">Phone: <b>${o1.mobile || '-'}</b></div>
                   <div style="font-size: 9px; color: #64748b; line-height: 1.2;">Address: ${o1.address || '-'}</div>
+                  <!-- Next of Kin for Owner 1 -->
+                  <div style="font-size: 8.5px; color: #0f172a; margin-top: 3px; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1px solid #cbd5e1;">
+                    <b>Next of Kin:</b> ${o1.nominee?.name && o1.nominee.name !== 'N/A' ? `${o1.nominee.name} (${o1.nominee.relation || 'Nominee'}) - CNIC: ${o1.nominee.cnic || '-'}` : 'N/A'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -12658,6 +12711,10 @@ loadLicenseSettings();
                   <div style="font-size: 9.5px; color: #334155;">CNIC: <b>${o2.cnic || '-'}</b></div>
                   <div style="font-size: 9.5px; color: #334155;">Phone: <b>${o2.mobile || '-'}</b></div>
                   <div style="font-size: 9px; color: #64748b; line-height: 1.2;">Address: ${o2.address || o1.address || '-'}</div>
+                  <!-- Next of Kin for Owner 2 -->
+                  <div style="font-size: 8.5px; color: #0f172a; margin-top: 3px; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1px solid #cbd5e1;">
+                    <b>Next of Kin:</b> ${o2.nominee?.name && o2.nominee.name !== 'N/A' ? `${o2.nominee.name} (${o2.nominee.relation || 'Nominee'}) - CNIC: ${o2.nominee.cnic || '-'}` : 'N/A'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -12682,12 +12739,18 @@ loadLicenseSettings();
                 </div>
               </div>
               <div style="word-break: break-word;">
-                <div style="font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;">:</div>
+                <div style="font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;">ALLOTTEE INFORMATION:</div>
                 <div style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
                 <div style="font-size: 10px; color: #334155; margin-top: 1px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
                 <div style="font-size: 10px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b> | Phone: <b>${o1.mobile || '-'}</b></div>
                 <div style="font-size: 9.5px; color: #64748b; margin-top: 1px; line-height: 1.25;">Address: ${o1.address || '-'}</div>
-                <div style="font-size: 9.5px; color: ${theme.primary}; font-weight: 700; margin-top: 2px;">Ownership: ${c.ownershipType || 'Single Owner'}</div>
+                
+                <!-- Exact Match Image 1: Next of Kin (Nominee) -->
+                <div style="font-size: 10px; color: #0f172a; margin-top: 4px; background: #f8fafc; border: 1px solid #cbd5e1; border-left: 3px solid ${theme.primary}; padding: 3px 8px; border-radius: 4px;">
+                  <b>Next of Kin (Nominee):</b> ${o1.nominee?.name && o1.nominee.name !== 'N/A' ? `${o1.nominee.name} ${o1.nominee.relation && o1.nominee.relation !== 'N/A' ? `(${o1.nominee.relation})` : ''} - CNIC: ${o1.nominee.cnic || 'N/A'}` : 'N/A'}
+                </div>
+
+                <div style="font-size: 9.5px; color: ${theme.primary}; font-weight: 700; margin-top: 3px;">Ownership: ${c.ownershipType || 'Single Owner'}</div>
               </div>
             </div>
             <div style="width: 40%; text-align: right; box-sizing: border-box; word-break: break-word;">
@@ -12825,14 +12888,13 @@ loadLicenseSettings();
 
               ${ownersDetailsHtml}
 
-              <!-- Property Allocation Strip -->
-              <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-left: 5px solid ${theme.primary}; border-radius: 8px; padding: 6px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;">
-                <div style="font-size: 10.5px; color: #0f172a; min-width: 0;">
+              <!-- Property Allocation Strip (Category & Size Prominently Displayed) -->
+              <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-left: 5px solid ${theme.primary}; border-radius: 8px; padding: 7px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;">
+                <div style="font-size: 10.5px; color: #0f172a; min-width: 0; line-height: 1.4;">
                   <b>PROJECT:</b> <span style="font-weight: 800; color: ${theme.primary};">${compProject}</span> &nbsp;|&nbsp;
                   <b>FLAT NO:</b> <span style="font-weight: 900; color: ${theme.primary}; font-size: 12px;">${c.flatNo || '-'}</span> &nbsp;|&nbsp;
-                  ${flatCategory ? `<b>CATEGORY:</b> <span style="font-weight: 900; color: #0d47a1; text-transform: uppercase;">${flatCategory}</span> &nbsp;|&nbsp;` : ''}
                   <b>FLOOR:</b> <span style="font-weight: 700; color: #0f172a;">${c.floor || '-'}</span> &nbsp;|&nbsp;
-                  <b>SIZE:</b> <span style="font-weight: 700; color: #0f172a;">${c.size ? c.size + (String(c.size).includes('Sq') ? '' : ' Sq. Ft') : '-'}</span>
+                  <b>UNIT SIZE:</b> <span style="font-weight: 800; color: #0d47a1;">${flatCategory ? flatCategory + ' - ' : ''}${c.size ? c.size + (String(c.size).includes('Sq') ? '' : ' Sq. Ft') : '-'}</span>
                 </div>
                 <div style="font-size: 10.5px; color: #0f172a; flex-shrink: 0;">
                   <b>TOTAL AGREED PRICE:</b> <span style="font-weight: 900; color: ${theme.primary}; font-size: 12.5px;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
@@ -13056,23 +13118,23 @@ loadLicenseSettings();
       pdfWrapper.innerHTML = `
         <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           <div>
-            <!-- Top Blue Wave Header with Logo -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 30px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-              <div style="display: flex; align-items: center; gap: 12px;">
+            <!-- Top Slate Grey Header (#525866) with Logo -->
+            <div style="background: #525866; min-height: 105px; padding: 14px 34px 20px 34px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+              <div style="display: flex; align-items: center; gap: 16px;">
                ${compLogo ? `
-                  <div style="height: 70px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 12px; background: transparent;">
-                    <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain; background: transparent;" alt="Logo" />
+                  <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
-              <div>
-                  <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">SITE EXPENSE VOUCHER</h1>
-                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
-                    ${compProject} • CONSTRUCTION EXPENSE RECORD
+                <div>
+                  <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">EXPENSE VOUCHER</h1>
+                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+                    ${compProject} • OFFICIAL EXPENSE VOUCHER
                   </div>
                 </div>
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+              <div style="text-align: right; flex-shrink: 0;">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                   NO: ${voucherNo}
                 </div>
               </div>
@@ -13609,27 +13671,27 @@ loadLicenseSettings();
       pdfWrapper.innerHTML = `
         <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
           <div>
-            <!-- Top Blue Wave Header with Logo -->
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 22px 34px 28px 34px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+            <!-- Top Slate Grey Header (#525866) with Logo -->
+            <div style="background: #525866; min-height: 105px; padding: 14px 34px 20px 34px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
               <div style="display: flex; align-items: center; gap: 16px;">
                 ${compLogo ? `
-                  <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="height: 90px; max-width: 160px; object-fit: contain;" alt="Logo" />
+                  <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : `
-                  <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
+                  <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
                     <i class="fa-solid fa-file-invoice"></i>
                   </div>
                 `}
                 <div>
-                  <h1 style="margin: 0; font-size: 25px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">${voucherTitle}</h1>
-                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${voucherTitle}</h1>
+                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
                     ${compProject} • OFFICIAL ACCOUNTS VOUCHER
                   </div>
                 </div>
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 13px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+              <div style="text-align: right; flex-shrink: 0;">
+                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
                   NO: ${v.voucherNo || 'VR-1001'}
                 </div>
               </div>
@@ -15135,7 +15197,7 @@ function downloadCashBookPDF() {
       pdfWrapper.innerHTML = `
         <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
           <div>
-            <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
+            <div style="background: #525866; min-height: 105px; padding: 14px 32px 18px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
               <div style="display: flex; align-items: center; gap: 14px;">
 ${compLogo ? `<div style="height: 75px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;"><img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" /></div>` : ''}
                 <div>
@@ -15473,13 +15535,13 @@ function downloadProfitLossPDF() {
 
   // Settings se Logo aur Project Details uthana
   const comp = getCompanyPrintProfile();
-  const compProject = comp.project;
-  const compName = comp.name;
-  const compAddress = comp.address || 'Head Office';
-  const compPhone = comp.phone;
-  const compLogo = comp.logo;
+  const compProject = comp.project || 'BILAL HEIGHTS';
+  const compName = comp.name || 'Bilal Builders & Developers';
+  const compAddress = comp.address || 'Head Office, Karachi';
+  const compPhone = comp.phone || '';
+  const compLogo = comp.logo || settingLogoBase64 || '';
 
-// 1. Revenue & Collections
+  // 1. Revenue & Collections
   let totalInstallments = 0;
   (allPaymentsData || []).forEach(p => {
     if (dateFrom && p.date < dateFrom) return;
@@ -15497,7 +15559,7 @@ function downloadProfitLossPDF() {
     if (dateFrom && cDate && cDate < dateFrom) return;
     if (dateTo && cDate && cDate > dateTo) return;
 
- const hasDownRec = (allPaymentsData || []).some(p => 
+    const hasDownRec = (allPaymentsData || []).some(p => 
       ((p.customerId && p.customerId === c.id) || (p.flatNo && c.flatNo && p.flatNo === c.flatNo)) && 
       (p.head === 'Down Payment' || p.head === 'Booking / Down Payment')
     );
@@ -15563,55 +15625,61 @@ function downloadProfitLossPDF() {
   const netMargin = grandRevenue > 0 ? Math.round((netProfit / grandRevenue) * 100) : 0;
 
   const pdfWrapper = document.createElement('div');
-  pdfWrapper.style.width = '100%';
+  pdfWrapper.style.width = '210mm';
+  pdfWrapper.style.minWidth = '210mm';
   pdfWrapper.style.maxWidth = '210mm';
   pdfWrapper.style.margin = '0 auto';
+  pdfWrapper.style.padding = '0';
   pdfWrapper.style.background = '#ffffff';
   pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
   pdfWrapper.style.boxSizing = 'border-box';
 
   pdfWrapper.innerHTML = `
-    <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
+    <div style="background:#ffffff; width:210mm; min-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; margin:0 auto; padding:0; position:relative;">
       <div>
-        <!-- Top Wave Header with Logo -->
-        <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 20px 32px 28px 32px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-           <input type="number" id="setLogoSize" value="75" min="40" max="140" placeholder="e.g. 75" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 13px; font-weight: 700; outline: none;" />
-                  <small style="color: #64748b; font-size: 10px;">Default: 75 (Zyada karne se bara hoga)</small>
+        <!-- Top Slate Grey Header (#525866) with Logo -->
+        <div style="background: #525866; min-height: 105px; padding: 14px 28px 20px 28px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            ${compLogo ? `
+              <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
+              </div>
+            ` : ''}
             <div>
-              <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">PROFIT & LOSS STATEMENT</h1>
-              <div style="font-size: 10px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+              <h1 style="margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">PROFIT & LOSS STATEMENT</h1>
+              <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
                 ${compName.toUpperCase()} • ${compProject} FINANCIAL PERFORMANCE
               </div>
             </div>
           </div>
-          <div style="text-align: right;">
-            <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+          <div style="text-align: right; flex-shrink: 0;">
+            <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
               NET MARGIN: ${netMargin}%
             </div>
+            <div style="font-size: 9.5px; color: #e2e8f0; margin-top: 4px; font-weight: 600;">Date: ${todayDate}</div>
           </div>
         </div>
 
         <!-- Upper Info Bar -->
-        <div style="padding: 14px 32px 6px 32px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
+        <div style="padding: 12px 28px 6px 28px; box-sizing: border-box; width: 100%;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 6px;">
             <div>
-              <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">PROJECT FINANCIALS:</div>
+              <div style="font-size: 9.5px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 2px;">PROJECT FINANCIALS:</div>
               <div style="font-size: 15px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${compProject}</div>
-              <div style="font-size: 11px; color: #475569; margin-top: 2px;">Developer: <b>${compName}</b> | Phone: <b>${compPhone}</b></div>
+              <div style="font-size: 10.5px; color: #475569; margin-top: 2px;">Developer: <b>${compName}</b> | Phone: <b>${compPhone}</b></div>
             </div>
 
-            <div style="text-align: right; font-size: 11px; color: #475569;">
+            <div style="text-align: right; font-size: 10.5px; color: #475569;">
               <div>Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong></div>
-              <div style="margin-top: 2px;">Statement Date: <strong style="color: #0d47a1;">${todayDate}</strong></div>
+              <div style="margin-top: 2px;">Head Office: <strong>${compAddress}</strong></div>
             </div>
           </div>
 
           <!-- 5 Summary KPI Cards -->
-          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px;">
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 10px;">
             <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 7px 10px;">
               <small style="font-size: 8.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Total Revenue</small>
-              <div style="font-size: 13.5px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${grandRevenue.toLocaleString()}</div>
+              <div style="font-size: 13.5px; font-weight: 900; color: #0f172a; margin-top: 2px;">Rs. ${grandRevenue.toLocaleString()}</div>
             </div>
             <div style="background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 7px 10px;">
               <small style="font-size: 8.5px; font-weight: 700; color: #9a3412; text-transform: uppercase; display: block;">Construction</small>
@@ -15632,18 +15700,18 @@ function downloadProfitLossPDF() {
           </div>
 
           <!-- Formal P&L Statement Table -->
-          <table style="width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 10px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px;">
             <thead>
-              <tr style="background: #0d47a1; color: #ffffff;">
-                <th style="padding: 7px 12px; text-align: left; width: 60%; border: 1px solid #0d47a1;">Account Head / Financial Category</th>
-                <th style="padding: 7px 12px; text-align: right; width: 20%; border: 1px solid #0d47a1;">Breakdown (Rs.)</th>
-                <th style="padding: 7px 12px; text-align: right; width: 20%; border: 1px solid #0d47a1;">Net Amount (Rs.)</th>
+              <tr style="background: #525866; color: #ffffff;">
+                <th style="padding: 7px 12px; text-align: left; width: 60%; border: 1px solid #525866;">Account Head / Financial Category</th>
+                <th style="padding: 7px 12px; text-align: right; width: 20%; border: 1px solid #525866;">Breakdown (Rs.)</th>
+                <th style="padding: 7px 12px; text-align: right; width: 20%; border: 1px solid #525866;">Net Amount (Rs.)</th>
               </tr>
             </thead>
             <tbody>
               <!-- 1. Revenue -->
               <tr style="background: #f8fafc; font-weight: 800;">
-                <td colspan="3" style="color: #0d47a1; padding: 6px 12px; border: 1px solid #e2e8f0;">1. REVENUE & CASH INFLOWS</td>
+                <td colspan="3" style="color: #3b4252; padding: 5px 12px; border: 1px solid #e2e8f0;">1. REVENUE & CASH INFLOWS</td>
               </tr>
               <tr style="border-bottom: 1px solid #e2e8f0;">
                 <td style="padding: 5px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Total Property Allotments / Recovery</td>
@@ -15653,7 +15721,7 @@ function downloadProfitLossPDF() {
 
               <!-- 2. Construction Costs -->
               <tr style="background: #f8fafc; font-weight: 800;">
-                <td colspan="3" style="color: #ea580c; padding: 6px 12px; border: 1px solid #e2e8f0;">2. DIRECT CONSTRUCTION COSTS</td>
+                <td colspan="3" style="color: #ea580c; padding: 5px 12px; border: 1px solid #e2e8f0;">2. DIRECT CONSTRUCTION COSTS</td>
               </tr>
               <tr style="border-bottom: 1px solid #e2e8f0;">
                 <td style="padding: 5px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Raw Material Purchases (Cement, Steel, Bricks etc.)</td>
@@ -15673,15 +15741,15 @@ function downloadProfitLossPDF() {
               </tr>
 
               <!-- Gross Profit -->
-              <tr style="background: #eff6ff; font-weight: 900; border-top: 1.5px solid #0d47a1; border-bottom: 1.5px solid #0d47a1;">
-                <td style="padding: 6px 12px; color: #0d47a1; border-left: 1px solid #0d47a1; border-right: 1px solid #0d47a1;">GROSS PROFIT</td>
-                <td style="padding: 6px 12px; text-align: right; border-right: 1px solid #0d47a1;">-</td>
-                <td style="padding: 6px 12px; text-align: right; color: ${grossProfit >= 0 ? '#16a34a' : '#dc2626'}; border-right: 1px solid #0d47a1;">Rs. ${grossProfit.toLocaleString()}</td>
+              <tr style="background: #f8fafc; font-weight: 900; border-top: 1.5px solid #525866; border-bottom: 1.5px solid #525866;">
+                <td style="padding: 6px 12px; color: #3b4252; border-left: 1px solid #525866; border-right: 1px solid #525866;">GROSS PROFIT</td>
+                <td style="padding: 6px 12px; text-align: right; border-right: 1px solid #525866;">-</td>
+                <td style="padding: 6px 12px; text-align: right; color: ${grossProfit >= 0 ? '#16a34a' : '#dc2626'}; border-right: 1px solid #525866;">Rs. ${grossProfit.toLocaleString()}</td>
               </tr>
 
               <!-- 3. Operating Expenses -->
               <tr style="background: #f8fafc; font-weight: 800;">
-                <td colspan="3" style="color: #dc2626; padding: 6px 12px; border: 1px solid #e2e8f0;">3. OPERATING & ADMINISTRATIVE EXPENSES</td>
+                <td colspan="3" style="color: #dc2626; padding: 5px 12px; border: 1px solid #e2e8f0;">3. OPERATING & ADMINISTRATIVE EXPENSES</td>
               </tr>
               <tr style="border-bottom: 1px solid #e2e8f0;">
                 <td style="padding: 5px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Site Expenses (Labour, Fuel, Maintenance, Cartage)</td>
@@ -15706,10 +15774,10 @@ function downloadProfitLossPDF() {
               </tr>
 
               <!-- Net Profit / Loss -->
-              <tr style="background: ${netProfit >= 0 ? '#f0fdf4' : '#fef2f2'}; font-weight: 900; font-size: 12px; border-top: 2px solid #0f172a; border-bottom: 2px solid #0f172a;">
-                <td style="padding: 8px 12px; color: #0f172a; border-left: 1px solid #0f172a; border-right: 1px solid #0f172a;">NET PROFIT / (LOSS)</td>
-                <td style="padding: 8px 12px; text-align: right; border-right: 1px solid #0f172a;">-</td>
-                <td style="padding: 8px 12px; text-align: right; color: ${netProfit >= 0 ? '#16a34a' : '#dc2626'}; border-right: 1px solid #0f172a;">Rs. ${netProfit.toLocaleString()}</td>
+              <tr style="background: ${netProfit >= 0 ? '#f0fdf4' : '#fef2f2'}; font-weight: 900; font-size: 11px; border-top: 2px solid #0f172a; border-bottom: 2px solid #0f172a;">
+                <td style="padding: 7px 12px; color: #0f172a; border-left: 1px solid #0f172a; border-right: 1px solid #0f172a;">NET PROFIT / (LOSS)</td>
+                <td style="padding: 7px 12px; text-align: right; border-right: 1px solid #0f172a;">-</td>
+                <td style="padding: 7px 12px; text-align: right; color: ${netProfit >= 0 ? '#16a34a' : '#dc2626'}; border-right: 1px solid #0f172a;">Rs. ${netProfit.toLocaleString()}</td>
               </tr>
             </tbody>
           </table>
@@ -15718,9 +15786,9 @@ function downloadProfitLossPDF() {
       </div>
 
       <!-- Bottom Signatures Footer -->
-      <div style="padding: 0 32px 24px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="padding: 0 28px 20px 28px; display: flex; justify-content: space-between; align-items: flex-end; box-sizing: border-box; width: 100%;">
         <div style="text-align: center; width: 190px;">
-          <div style="height: 35px;"></div>
+          <div style="height: 32px;"></div>
           <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
             PREPARED BY (ACCOUNTS)
           </div>
@@ -15728,7 +15796,7 @@ function downloadProfitLossPDF() {
         </div>
 
         <div style="text-align: center; width: 190px;">
-          <div style="height: 35px;"></div>
+          <div style="height: 32px;"></div>
           <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
             AUTHORIZED SIGNATURE
           </div>
@@ -15743,9 +15811,9 @@ function downloadProfitLossPDF() {
     margin: [0, 0, 0, 0],
     filename: `Profit_Loss_Statement_${todayDate.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: 'avoid-all' }
+    pagebreak: { mode: ['css', 'legacy'] }
   };
 
   if (typeof html2pdf !== 'undefined') {
@@ -16359,11 +16427,11 @@ function downloadAccountLedgerPDF() {
 
   // Settings se Logo aur Company Info uthana
   const comp = getCompanyPrintProfile();
-  const compProject = comp.project;
-  const compName = comp.name;
-  const compAddress = comp.address || 'Head Office';
-  const compPhone = comp.phone;
-  const compLogo = comp.logo;
+  const compProject = comp.project || 'BILAL HEIGHTS';
+  const compName = comp.name || 'Bilal Builders & Developers';
+  const compAddress = comp.address || 'Head Office, Karachi';
+  const compPhone = comp.phone || '';
+  const compLogo = comp.logo || settingLogoBase64 || '';
 
   const isAll = (!selectedAcc || selectedAcc === 'ALL' || selectedAcc.toLowerCase().includes('consolidated') || selectedAcc.toLowerCase().includes('all accounts'));
   const cleanTargetName = isAll ? '' : extractCleanAccName(selectedAcc);
@@ -16384,7 +16452,7 @@ function downloadAccountLedgerPDF() {
     }
   }
 
-  // Transactions compile karna (Smart Matching with Designation)
+  // Transactions compile karna
   let ledgerEntries = [];
 
   // 1. Customer Receipts
@@ -16458,7 +16526,7 @@ function downloadAccountLedgerPDF() {
       <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
         <td style="padding: 7px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
         <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${entry.date || '-'}</td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: #0d47a1;">${entry.ref || '-'}</strong></td>
+        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: #3b4252;">${entry.ref || '-'}</strong></td>
         <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #0f172a;">${entry.desc || '-'}</td>
         <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${entry.debit > 0 ? '#dc2626' : '#64748b'};">${entry.debit > 0 ? 'Rs. ' + entry.debit.toLocaleString() : '-'}</td>
         <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${entry.credit > 0 ? '#16a34a' : '#64748b'};">${entry.credit > 0 ? 'Rs. ' + entry.credit.toLocaleString() : '-'}</td>
@@ -16482,25 +16550,26 @@ function downloadAccountLedgerPDF() {
   pdfWrapper.innerHTML = `
     <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
       <div>
-        <!-- Top Blue Wave Header with Logo -->
-        <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 24px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-          <div style="display: flex; align-items: center; gap: 14px;">
+        <!-- Top Slate Grey Header (#525866) with Logo -->
+        <div style="background: #525866; min-height: 105px; padding: 14px 32px 18px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 16px;">
            ${compLogo ? `
-              <div style="height: 65px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 5px;">
-                <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
+              <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;">
+                <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
               </div>
             ` : ''}
             <div>
-              <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">ACCOUNT LEDGER STATEMENT</h1>
-              <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
+              <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">ACCOUNT LEDGER STATEMENT</h1>
+              <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
                 ${compName.toUpperCase()} • ${compProject} OFFICIAL FINANCIAL LEDGER
               </div>
             </div>
           </div>
-          <div style="text-align: right;">
-            <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
+          <div style="text-align: right; flex-shrink: 0;">
+            <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
               OFFICIAL LEDGER
             </div>
+            <div style="font-size: 9.5px; color: #e2e8f0; margin-top: 4px; font-weight: 600;">Date: ${todayDate}</div>
           </div>
         </div>
 
@@ -16510,8 +16579,8 @@ function downloadAccountLedgerPDF() {
           <!-- Upper Info & Account Meta Bar -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
             <div>
-              <div style="font-size: 10.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">LEDGER ACCOUNT:</div>
-              <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${selectedAcc === 'ALL' ? 'CONSOLIDATED (ALL ACCOUNTS)' : selectedAcc}</div>
+              <div style="font-size: 10px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 2px;">LEDGER ACCOUNT:</div>
+              <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${selectedAcc === 'ALL' || !selectedAcc ? 'CONSOLIDATED (ALL ACCOUNTS)' : selectedAcc}</div>
               ${accMeta ? `
                 <div style="font-size: 11px; color: #475569; margin-top: 2px;">
                   Type: <b>${accMeta.type || 'General'}</b> | Mobile: <b>${accMeta.mobile || '-'}</b> ${accMeta.cnic && accMeta.cnic !== 'N/A' ? '| CNIC: <b>' + accMeta.cnic + '</b>' : ''}
@@ -16520,9 +16589,9 @@ function downloadAccountLedgerPDF() {
             </div>
 
             <div style="text-align: right; font-size: 11px; color: #475569;">
-              <div>Project: <strong style="color: #0d47a1;">${compProject}</strong> | Developer: <strong>${compName}</strong></div>
+              <div>Project: <strong style="color: #3b4252;">${compProject}</strong> | Developer: <strong>${compName}</strong></div>
               <div style="margin-top: 2px;">Date Range: <strong>${dateFrom ? dateFrom : 'Beginning'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong></div>
-              <div style="margin-top: 2px;">Statement Date: <strong style="color: #0d47a1;">${todayDate}</strong></div>
+              <div style="margin-top: 2px;">Head Office: <strong>${compAddress}</strong></div>
             </div>
           </div>
 
@@ -16540,23 +16609,23 @@ function downloadAccountLedgerPDF() {
               <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Credit (Rs.)</small>
               <div style="font-size: 16px; font-weight: 900; color: #16a34a; margin-top: 2px;">Rs. ${totalCredit.toLocaleString()}</div>
             </div>
-            <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 14px;">
+            <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 8px 14px;">
               <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Closing Balance</small>
-              <div style="font-size: 16px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${runningBal.toLocaleString()}</div>
+              <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">Rs. ${runningBal.toLocaleString()}</div>
             </div>
           </div>
 
           <!-- Ledger Transactions Table -->
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
             <thead>
-              <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
-                <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
-                <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #0d47a1;">Date</th>
-                <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Ref / Voucher No</th>
-                <th style="padding: 8px 10px; text-align: left; width: 38%; border: 1px solid #0d47a1;">Description / Narration</th>
-                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #0d47a1;">Debit (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #0d47a1;">Credit (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #0d47a1;">Balance (Rs.)</th>
+              <tr style="background: #525866; color: #ffffff; font-size: 10.5px;">
+                <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #525866;">#</th>
+                <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #525866;">Date</th>
+                <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #525866;">Ref / Voucher No</th>
+                <th style="padding: 8px 10px; text-align: left; width: 38%; border: 1px solid #525866;">Description / Narration</th>
+                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #525866;">Debit (Rs.)</th>
+                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #525866;">Credit (Rs.)</th>
+                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #525866;">Balance (Rs.)</th>
               </tr>
             </thead>
             <tbody>
@@ -16567,7 +16636,7 @@ function downloadAccountLedgerPDF() {
                 <td colspan="4" style="text-align: right; padding: 8px 10px; color: #0f172a;">GRAND TOTAL</td>
                 <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${totalDebit.toLocaleString()}</td>
                 <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${totalCredit.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #0d47a1;">Rs. ${runningBal.toLocaleString()}</td>
+                <td style="text-align: right; padding: 8px 10px; color: #0f172a;">Rs. ${runningBal.toLocaleString()}</td>
               </tr>
             </tfoot>
           </table>
@@ -16599,7 +16668,7 @@ function downloadAccountLedgerPDF() {
 
   const opt = {
     margin: [0, 0, 0, 0],
-    filename: `Account_Ledger_${selectedAcc.replace(/\s+/g, '_')}_${todayDate.replace(/\s+/g, '_')}.pdf`,
+    filename: `Account_Ledger_${(selectedAcc || 'All').replace(/\s+/g, '_')}_${todayDate.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
@@ -16714,7 +16783,7 @@ function closeAccountLedgerModal() {
 
 
 // ========================================================
-// EXPORT FULL LEDGER PDF FOR SITE EXPENSES (FIXED & STYLED)
+// EXPORT FULL LEDGER PDF FOR SITE EXPENSES (STRICT 1-PAGE COMPACT FLOW)
 // ========================================================
 function downloadSiteLedgerPDF() {
   const query = (document.getElementById('siteExpSearchInput')?.value || '').toLowerCase().trim();
@@ -16785,17 +16854,17 @@ function downloadSiteLedgerPDF() {
     }
 
     rowsHtml += `
-      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
-        <td style="padding: 8px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${exp.date || '-'}</td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0;"><span style="background: #eff6ff; color: #1d4ed8; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 10.5px;">${exp.category || '-'}</span></td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">${exp.paidTo || '-'}</td>
-        <td style="padding: 8px 10px; border-right: 1px solid #e2e8f0; color: #334155;">${exp.description || '-'}</td>
-        <td style="padding: 8px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Rs. ${total.toLocaleString()}</td>
-        <td style="padding: 8px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: #16a34a;">Rs. ${paid.toLocaleString()}</td>
-        <td style="padding: 8px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${rem > 0 ? '#dc2626' : '#16a34a'};">Rs. ${rem.toLocaleString()}</td>
-        <td style="padding: 8px 10px; text-align: center; border-right: 1px solid #e2e8f0;">
-          <span style="background: ${statusBg}; color: ${statusColor}; padding: 3px 10px; border-radius: 12px; font-size: 10.5px; font-weight: 800;">${status}</span>
+      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 10px;">
+        <td style="padding: 5px 8px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${exp.date || '-'}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0;"><span style="background: #f1f5f9; color: #334155; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 9.5px;">${exp.category || '-'}</span></td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">${exp.paidTo || '-'}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #334155;">${exp.description || '-'}</td>
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Rs. ${total.toLocaleString()}</td>
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: #16a34a;">Rs. ${paid.toLocaleString()}</td>
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${rem > 0 ? '#dc2626' : '#16a34a'};">Rs. ${rem.toLocaleString()}</td>
+        <td style="padding: 5px 8px; text-align: center; border-right: 1px solid #e2e8f0;">
+          <span style="background: ${statusBg}; color: ${statusColor}; padding: 2px 8px; border-radius: 10px; font-size: 9.5px; font-weight: 800;">${status}</span>
         </td>
       </tr>
     `;
@@ -16806,117 +16875,119 @@ function downloadSiteLedgerPDF() {
   const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
   const pdfWrapper = document.createElement('div');
-  pdfWrapper.style.width = '100%';
+  pdfWrapper.style.width = '297mm';
   pdfWrapper.style.maxWidth = '297mm';
   pdfWrapper.style.margin = '0 auto';
+  pdfWrapper.style.padding = '0';
   pdfWrapper.style.background = '#ffffff';
   pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
   pdfWrapper.style.boxSizing = 'border-box';
 
   pdfWrapper.innerHTML = `
-    <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
-      <div>
-        <!-- Top Blue Header Banner -->
-        <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 22px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            ${compLogo ? `
-              <div style="height: 55px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
-              </div>
-            ` : `
-              <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.2); border: 1.5px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
-                <i class="fa-solid fa-helmet-safety"></i>
-              </div>
-            `}
-            <div>
-              <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">SITE EXPENSE LEDGER</h1>
-              <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
-                ${comp.name.toUpperCase()} • ${comp.project.toUpperCase()} CONSTRUCTION SITE RECORD
-              </div>
-            </div>
-          </div>
-
-          <div style="text-align: right;">
-            <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
-              OFFICIAL LEDGER
-            </div>
-            <div style="font-size: 10px; color: #bbdefb; margin-top: 4px; font-weight: 600;">Printed: ${todayDate}</div>
-          </div>
-        </div>
-
-        <!-- Meta Bar & 3 KPI Cards -->
-        <div style="padding: 14px 32px 0 32px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
-            <div style="font-size: 11px; color: #334155;">
-              Project: <strong style="color: #0d47a1; font-size: 12px;">${comp.project}</strong> | Developer: <strong>${comp.name}</strong> | Category: <strong>${cat}</strong>
-            </div>
-            <div style="text-align: right; font-size: 11px; color: #475569;">
-              Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong>
-            </div>
-          </div>
-
-          <!-- 3 Summary KPI Cards -->
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px;">
-            <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Total Site Expenses</small>
-              <div style="font-size: 17px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${totalAmount.toLocaleString()}</div>
-            </div>
-            <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Paid / Disbursed</small>
-              <div style="font-size: 17px; font-weight: 900; color: #15803d; margin-top: 2px;">Rs. ${paidAmount.toLocaleString()}</div>
-            </div>
-            <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Remaining Balance (Payable)</small>
-              <div style="font-size: 17px; font-weight: 900; color: #b91c1c; margin-top: 2px;">Rs. ${remainingAmount.toLocaleString()}</div>
-            </div>
-          </div>
-
-          <!-- Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
-            <thead>
-              <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
-                <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
-                <th style="padding: 8px 10px; text-align: left; width: 10%; border: 1px solid #0d47a1;">Date</th>
-                <th style="padding: 8px 10px; text-align: left; width: 15%; border: 1px solid #0d47a1;">Category</th>
-                <th style="padding: 8px 10px; text-align: left; width: 16%; border: 1px solid #0d47a1;">Paid To</th>
-                <th style="padding: 8px 10px; text-align: left; width: 25%; border: 1px solid #0d47a1;">Description</th>
-                <th style="padding: 8px 10px; text-align: right; width: 12%; border: 1px solid #0d47a1;">Total (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Paid (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Remaining</th>
-                <th style="padding: 8px 10px; text-align: center; width: 9%; border: 1px solid #0d47a1;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-            <tfoot>
-              <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 11px;">
-                <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">GRAND TOTAL</td>
-                <td style="text-align: right; padding: 8px 10px; color: #0f172a;">Rs. ${totalAmount.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${paidAmount.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${remainingAmount.toLocaleString()}</td>
-                <td style="border-right: 1px solid #cbd5e1;"></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+    <div style="background:#ffffff; width:297mm; box-sizing:border-box; margin:0 auto; padding: 0 0 10px 0;">
       
-      <!-- Signatures Footer -->
-      <div style="padding: 10px 32px 14px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div style="text-align: center; width: 220px;">
-          <div style="height: 35px;"></div>
-          <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            PREPARED BY (MUNSHI / SITE)
+      <!-- Top Slate Grey Header (#525866) -->
+      <div style="background: #525866; min-height: 85px; padding: 10px 28px 14px 28px; border-bottom-left-radius: 50% 14px; border-bottom-right-radius: 50% 14px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          ${compLogo ? `
+            <div style="height: 70px; max-width: 140px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <img src="${compLogo}" style="height: ${comp.logoSize ? Math.min(comp.logoSize, 70) : 70}px; max-height: 70px; max-width: 140px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
+            </div>
+          ` : `
+            <div style="width: 44px; height: 44px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 20px; flex-shrink: 0;">
+              <i class="fa-solid fa-helmet-safety"></i>
+            </div>
+          `}
+          <div>
+            <h1 style="margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">SITE EXPENSE LEDGER</h1>
+            <div style="font-size: 9.5px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+              ${comp.name.toUpperCase()} • ${comp.project.toUpperCase()} CONSTRUCTION SITE RECORD
+            </div>
           </div>
         </div>
-        <div style="text-align: center; width: 220px;">
-          <div style="height: 35px;"></div>
-          <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            AUTHORIZED SIGNATURE
+
+        <div style="text-align: right; flex-shrink: 0;">
+          <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+            OFFICIAL LEDGER
           </div>
+          <div style="font-size: 9px; color: #e2e8f0; margin-top: 3px; font-weight: 600;">Printed: ${todayDate}</div>
         </div>
       </div>
+
+      <!-- Meta Bar & 3 KPI Cards -->
+      <div style="padding: 10px 28px 0 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 5px;">
+          <div style="font-size: 10.5px; color: #334155;">
+            Project: <strong style="color: #3b4252; font-size: 11.5px;">${comp.project}</strong> | Developer: <strong>${comp.name}</strong> | Category: <strong>${cat}</strong>
+          </div>
+          <div style="text-align: right; font-size: 10.5px; color: #475569;">
+            Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong>
+          </div>
+        </div>
+
+        <!-- 3 Summary KPI Cards (Compact) -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px;">
+            <small style="font-size: 8.5px; font-weight: 700; color: #475569; text-transform: uppercase; display: block;">Total Site Expenses</small>
+            <div style="font-size: 14.5px; font-weight: 900; color: #0f172a; margin-top: 1px;">Rs. ${totalAmount.toLocaleString()}</div>
+          </div>
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 7px 12px;">
+            <small style="font-size: 8.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Paid / Disbursed</small>
+            <div style="font-size: 14.5px; font-weight: 900; color: #15803d; margin-top: 1px;">Rs. ${paidAmount.toLocaleString()}</div>
+          </div>
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 7px 12px;">
+            <small style="font-size: 8.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Remaining Balance (Payable)</small>
+            <div style="font-size: 14.5px; font-weight: 900; color: #b91c1c; margin-top: 1px;">Rs. ${remainingAmount.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+          <thead>
+            <tr style="background: #525866; color: #ffffff; font-size: 9.5px;">
+              <th style="padding: 6px 8px; text-align: center; width: 30px; border: 1px solid #525866;">#</th>
+              <th style="padding: 6px 8px; text-align: left; width: 10%; border: 1px solid #525866;">Date</th>
+              <th style="padding: 6px 8px; text-align: left; width: 14%; border: 1px solid #525866;">Category</th>
+              <th style="padding: 6px 8px; text-align: left; width: 16%; border: 1px solid #525866;">Paid To</th>
+              <th style="padding: 6px 8px; text-align: left; width: 26%; border: 1px solid #525866;">Description</th>
+              <th style="padding: 6px 8px; text-align: right; width: 12%; border: 1px solid #525866;">Total (Rs.)</th>
+              <th style="padding: 6px 8px; text-align: right; width: 11%; border: 1px solid #525866;">Paid (Rs.)</th>
+              <th style="padding: 6px 8px; text-align: right; width: 11%; border: 1px solid #525866;">Remaining</th>
+              <th style="padding: 6px 8px; text-align: center; width: 8%; border: 1px solid #525866;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+          <tfoot>
+            <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 10px;">
+              <td colspan="5" style="text-align: right; padding: 6px 8px; color: #0f172a;">GRAND TOTAL</td>
+              <td style="text-align: right; padding: 6px 8px; color: #0f172a;">Rs. ${totalAmount.toLocaleString()}</td>
+              <td style="text-align: right; padding: 6px 8px; color: #16a34a;">Rs. ${paidAmount.toLocaleString()}</td>
+              <td style="text-align: right; padding: 6px 8px; color: #dc2626;">Rs. ${remainingAmount.toLocaleString()}</td>
+              <td style="border-right: 1px solid #cbd5e1;"></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Signatures Footer Attached directly below table -->
+        <div style="margin-top: 14px; padding: 6px 4px 10px 4px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div style="text-align: center; width: 180px;">
+            <div style="height: 24px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 9.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+              PREPARED BY (MUNSHI / SITE)
+            </div>
+          </div>
+          <div style="text-align: center; width: 180px;">
+            <div style="height: 24px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 9.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+              AUTHORIZED SIGNATURE
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   `;
 
@@ -16924,16 +16995,16 @@ function downloadSiteLedgerPDF() {
     margin: [0, 0, 0, 0],
     filename: `Site_Expense_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    pagebreak: { mode: 'css' }
   };
 
   if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
 }
 
 // ========================================================
-// EXPORT OFFICIAL PETTY CASH LEDGER PDF (FOR BOSS / ACCOUNTS)
+// EXPORT OFFICIAL PETTY CASH LEDGER PDF (1-PAGE FIT & SLATE GREY #525866)
 // ========================================================
 function downloadOfficeLedgerPDF() {
   const listToPrint = window.currentFilteredOfficeTransactions || [];
@@ -16952,22 +17023,22 @@ function downloadOfficeLedgerPDF() {
     totalCashOut += t.cashOut;
 
     rowsHtml += `
-      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px; ${t.isCashIn ? 'background:#f0fdf4;' : ''}">
-        <td style="padding: 7px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${t.date || '-'}</td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: ${t.isCashIn ? '#16a34a' : '#0d47a1'};">${t.ref}</strong></td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><span style="background: ${t.isCashIn ? '#dcfce7' : '#eff6ff'}; color: ${t.isCashIn ? '#15803d' : '#1d4ed8'}; padding: 2px 8px; border-radius: 6px; font-weight: 700; font-size: 10px;">${t.category}</span></td>
-        <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #0f172a;">
+      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 10px; ${t.isCashIn ? 'background:#f0fdf4;' : ''}">
+        <td style="padding: 5px 8px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${t.date || '-'}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0;"><strong style="color: ${t.isCashIn ? '#16a34a' : '#3b4252'};">${t.ref}</strong></td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0;"><span style="background: ${t.isCashIn ? '#dcfce7' : '#f1f5f9'}; color: ${t.isCashIn ? '#15803d' : '#334155'}; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 9px;">${t.category}</span></td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #0f172a;">
           <strong>${t.desc}</strong>
-          <div style="font-size: 9.5px; color: #64748b;">${t.isCashIn ? 'From: ' : 'Paid To: '}<b>${t.party}</b></div>
+          <div style="font-size: 9px; color: #64748b;">${t.isCashIn ? 'Source: ' : 'Paid To: '}<b>${t.party}</b></div>
         </td>
-        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${t.cashIn > 0 ? '#16a34a' : '#94a3b8'};">
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${t.cashIn > 0 ? '#16a34a' : '#94a3b8'};">
           ${t.cashIn > 0 ? 'Rs. ' + t.cashIn.toLocaleString() : '-'}
         </td>
-        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${t.cashOut > 0 ? '#dc2626' : '#94a3b8'};">
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${t.cashOut > 0 ? '#dc2626' : '#94a3b8'};">
           ${t.cashOut > 0 ? 'Rs. ' + t.cashOut.toLocaleString() : '-'}
         </td>
-        <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 900; color: ${t.currentBalance >= 0 ? '#0f172a' : '#dc2626'};">
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 900; color: ${t.currentBalance >= 0 ? '#0f172a' : '#dc2626'};">
           Rs. ${t.currentBalance.toLocaleString()}
         </td>
       </tr>
@@ -16982,111 +17053,117 @@ function downloadOfficeLedgerPDF() {
   const dateTo = document.getElementById('officeExpDateTo')?.value;
 
   const pdfWrapper = document.createElement('div');
-  pdfWrapper.style.width = '100%';
+  pdfWrapper.style.width = '297mm';
   pdfWrapper.style.maxWidth = '297mm';
   pdfWrapper.style.margin = '0 auto';
+  pdfWrapper.style.padding = '0';
   pdfWrapper.style.background = '#ffffff';
   pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
   pdfWrapper.style.boxSizing = 'border-box';
 
   pdfWrapper.innerHTML = `
-    <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
-      <div>
-        <!-- Top Wave Header with Logo -->
-        <div style="background: linear-gradient(135deg, #092c6b 0%, #0d47a1 50%, #1976d2 100%); padding: 18px 32px 22px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff;">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            ${compLogo ? `
-              <div style="height: 65px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;">
-                <img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" />
-              </div>
-            ` : ''}
-            <div>
-              <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">OFFICE PETTY CASH LEDGER</h1>
-              <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">
-                ${comp.name.toUpperCase()} • ${comp.project.toUpperCase()} CASH IN & OUT ACCOUNTABILITY STATEMENT
-              </div>
-            </div>
-          </div>
-
-          <div style="text-align: right;">
-            <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">
-              OFFICIAL CASH LEDGER
-            </div>
-            <div style="font-size: 10px; color: #bbdefb; margin-top: 4px; font-weight: 600;">Printed: ${todayDate}</div>
-          </div>
-        </div>
-
-        <!-- Meta Bar & 3 Summary KPI Cards -->
-        <div style="padding: 14px 32px 0 32px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
-            <div style="font-size: 11px; color: #334155;">
-              Branch: <strong>Head Office</strong> | Developer: <strong>${comp.name}</strong> | Project: <strong>${comp.project}</strong>
-            </div>
-            <div style="text-align: right; font-size: 11px; color: #475569;">
-              Date Range: <strong>${dateFrom ? dateFrom : 'Beginning'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong>
-            </div>
-          </div>
-
-          <!-- 3 KPI Cards for the Boss -->
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 14px;">
-            <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Petty Cash In (Boss Se Aaye)</small>
-              <div style="font-size: 17px; font-weight: 900; color: #15803d; margin-top: 2px;">Rs. ${totalCashIn.toLocaleString()}</div>
-            </div>
-            <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out (Office Kharche)</small>
-              <div style="font-size: 17px; font-weight: 900; color: #dc2626; margin-top: 2px;">Rs. ${totalCashOut.toLocaleString()}</div>
-            </div>
-            <div style="background: #f0f7ff; border: 1.5px solid #bfdbfe; border-radius: 8px; padding: 10px 16px;">
-              <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Cash In Hand (Bache Hue Paise)</small>
-              <div style="font-size: 17px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${netPettyInHand.toLocaleString()}</div>
-            </div>
-          </div>
-
-          <!-- Petty Cash Table -->
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
-            <thead>
-              <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
-                <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
-                <th style="padding: 8px 10px; text-align: left; width: 11%; border: 1px solid #0d47a1;">Date</th>
-                <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #0d47a1;">Ref / Voucher</th>
-                <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Head / Category</th>
-                <th style="padding: 8px 10px; text-align: left; width: 33%; border: 1px solid #0d47a1;">Description / Particulars</th>
-                <th style="padding: 8px 10px; text-align: right; width: 10%; border: 1px solid #0d47a1;">Cash In (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 10%; border: 1px solid #0d47a1;">Cash Out (Rs.)</th>
-                <th style="padding: 8px 10px; text-align: right; width: 10%; border: 1px solid #0d47a1;">Balance (Rs.)</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-            <tfoot>
-              <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 11px;">
-                <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">NET BALANCE (CASH IN HAND)</td>
-                <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${totalCashIn.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${totalCashOut.toLocaleString()}</td>
-                <td style="text-align: right; padding: 8px 10px; color: #0d47a1; font-size: 12px;">Rs. ${netPettyInHand.toLocaleString()}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+    <div style="background:#ffffff; width:297mm; box-sizing:border-box; margin:0 auto; padding: 0 0 10px 0;">
       
-      <!-- Signatures Footer -->
-      <div style="padding: 10px 32px 14px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div style="text-align: center; width: 220px;">
-          <div style="height: 35px;"></div>
-          <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            CASHIER / PETTY CASH HOLDER
+      <!-- Top Slate Grey Header (#525866) with Logo -->
+      <div style="background: #525866; min-height: 85px; padding: 10px 28px 14px 28px; border-bottom-left-radius: 50% 14px; border-bottom-right-radius: 50% 14px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          ${compLogo ? `
+            <div style="height: 70px; max-width: 140px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <img src="${compLogo}" style="height: ${comp.logoSize ? Math.min(comp.logoSize, 70) : 70}px; max-height: 70px; max-width: 140px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
+            </div>
+          ` : `
+            <div style="width: 44px; height: 44px; border-radius: 8px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 20px; flex-shrink: 0;">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+          `}
+          <div>
+            <h1 style="margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">OFFICE PETTY CASH LEDGER</h1>
+            <div style="font-size: 9.5px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+              ${comp.name.toUpperCase()} • ${comp.project.toUpperCase()} CASH IN & OUT ACCOUNTABILITY STATEMENT
+            </div>
           </div>
         </div>
-        <div style="text-align: center; width: 220px;">
-          <div style="height: 35px;"></div>
-          <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-            APPROVED BY (BOSS / DIRECTOR)
+
+        <div style="text-align: right; flex-shrink: 0;">
+          <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+            OFFICIAL CASH LEDGER
           </div>
+          <div style="font-size: 9px; color: #e2e8f0; margin-top: 3px; font-weight: 600;">Printed: ${todayDate}</div>
         </div>
       </div>
+
+      <!-- Meta Bar & 3 Summary KPI Cards -->
+      <div style="padding: 10px 28px 0 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 5px;">
+          <div style="font-size: 10.5px; color: #334155;">
+            Branch: <strong>Head Office</strong> | Developer: <strong>${comp.name}</strong> | Project: <strong>${comp.project}</strong>
+          </div>
+          <div style="text-align: right; font-size: 10.5px; color: #475569;">
+            Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong>
+          </div>
+        </div>
+
+        <!-- 3 KPI Cards for the Boss -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 7px 12px;">
+            <small style="font-size: 8.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Petty Cash In (Boss Se Aaye)</small>
+            <div style="font-size: 14.5px; font-weight: 900; color: #15803d; margin-top: 1px;">Rs. ${totalCashIn.toLocaleString()}</div>
+          </div>
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 7px 12px;">
+            <small style="font-size: 8.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out (Office Kharche)</small>
+            <div style="font-size: 14.5px; font-weight: 900; color: #dc2626; margin-top: 1px;">Rs. ${totalCashOut.toLocaleString()}</div>
+          </div>
+          <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 7px 12px;">
+            <small style="font-size: 8.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Cash In Hand (Bache Hue Paise)</small>
+            <div style="font-size: 14.5px; font-weight: 900; color: #0f172a; margin-top: 1px;">Rs. ${netPettyInHand.toLocaleString()}</div>
+          </div>
+        </div>
+
+        <!-- Petty Cash Table -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+          <thead>
+            <tr style="background: #525866; color: #ffffff; font-size: 9.5px;">
+              <th style="padding: 6px 8px; text-align: center; width: 30px; border: 1px solid #525866;">#</th>
+              <th style="padding: 6px 8px; text-align: left; width: 10%; border: 1px solid #525866;">Date</th>
+              <th style="padding: 6px 8px; text-align: left; width: 12%; border: 1px solid #525866;">Ref / Voucher</th>
+              <th style="padding: 6px 8px; text-align: left; width: 14%; border: 1px solid #525866;">Head / Category</th>
+              <th style="padding: 6px 8px; text-align: left; width: 34%; border: 1px solid #525866;">Description / Particulars</th>
+              <th style="padding: 6px 8px; text-align: right; width: 10%; border: 1px solid #525866;">Cash In (Rs.)</th>
+              <th style="padding: 6px 8px; text-align: right; width: 10%; border: 1px solid #525866;">Cash Out (Rs.)</th>
+              <th style="padding: 6px 8px; text-align: right; width: 10%; border: 1px solid #525866;">Balance (Rs.)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+          <tfoot>
+            <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 10px;">
+              <td colspan="5" style="text-align: right; padding: 6px 8px; color: #0f172a;">NET BALANCE (CASH IN HAND)</td>
+              <td style="text-align: right; padding: 6px 8px; color: #16a34a;">Rs. ${totalCashIn.toLocaleString()}</td>
+              <td style="text-align: right; padding: 6px 8px; color: #dc2626;">Rs. ${totalCashOut.toLocaleString()}</td>
+              <td style="text-align: right; padding: 6px 8px; color: #0f172a; font-size: 11px;">Rs. ${netPettyInHand.toLocaleString()}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Signatures Footer -->
+        <div style="margin-top: 14px; padding: 6px 4px 10px 4px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div style="text-align: center; width: 220px;">
+            <div style="height: 24px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 9.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+              CASHIER / PETTY CASH HOLDER
+            </div>
+          </div>
+          <div style="text-align: center; width: 220px;">
+            <div style="height: 24px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 9.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+              APPROVED BY (BOSS / DIRECTOR)
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </div>
   `;
 
@@ -17094,9 +17171,9 @@ function downloadOfficeLedgerPDF() {
     margin: [0, 0, 0, 0],
     filename: `Office_Petty_Cash_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    pagebreak: { mode: 'css' }
   };
 
   if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
