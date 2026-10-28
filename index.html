@@ -12448,7 +12448,7 @@ loadLicenseSettings();
       else alert('PDF library load nahi ho saki.');
     }
 
-    // 2. PURCHASE BILL (CLEAN VENDOR INVOICE - NO CUSTOMER TERMS, PROPER SIGNATURES)
+    // 2. PURCHASE BILL (SLATE GREY #525866 - NO BLUE COLOR & 1-PAGE FIT)
     function downloadPurchaseBillPDF(id) {
       const p = allPurchaserData.find(x => x.id === id);
       if (!p) return;
@@ -12459,50 +12459,52 @@ loadLicenseSettings();
       const paid = Number(p.paid || p.paidAmount || 0);
       const remaining = Number(p.remaining || p.remainingAmount || 0);
 
-    // Settings se Logo aur Project Details uthana
+      // Settings se Logo aur Project Details uthana
       const comp = getCompanyPrintProfile();
       const compProject = comp.project || p.project || 'BILAL HEIGHTS';
-      const compName = comp.name;
-      const compAddress = comp.address || 'Site Office';
-      const compPhone = comp.phone;
-      const compLogo = comp.logo;
+      const compName = comp.name || 'Bilal Builders & Developers';
+      const compAddress = comp.address || 'Site Office, Karachi';
+      const compPhone = comp.phone || '';
+      const compLogo = comp.logo || settingLogoBase64 || '';
 
       let itemsRowsHtml = '';
       if (p.itemsList && p.itemsList.length > 0) {
         p.itemsList.forEach((itm) => {
           itemsRowsHtml += `
             <tr style="border-bottom: 1px solid #e2e8f0;">
-              <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight:600;">${itm.item || 'Material Item'}</td>
-              <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${itm.qty || 1} ${itm.unit || ''}</td>
-              <td style="padding: 10px 14px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
-              <td style="padding: 10px 14px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
+              <td style="padding: 8px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight:600;">${itm.item || 'Material Item'}</td>
+              <td style="padding: 8px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${itm.qty || 1} ${itm.unit || ''}</td>
+              <td style="padding: 8px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.rate || 0).toLocaleString()}</td>
+              <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${Number(itm.amount || 0).toLocaleString()}</td>
             </tr>
           `;
         });
       } else {
         itemsRowsHtml = `
           <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 10px 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight:600;">${p.item || 'Construction Materials'}</td>
-            <td style="padding: 10px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${p.qty || '1'}</td>
-            <td style="padding: 10px 14px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
-            <td style="padding: 10px 14px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${total.toLocaleString()}</td>
+            <td style="padding: 8px 12px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; font-weight:600;">${p.item || 'Construction Materials'}</td>
+            <td style="padding: 8px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">${p.qty || '1'}</td>
+            <td style="padding: 8px 12px; text-align: right; color: #334155; border-right: 1px solid #e2e8f0;">Rs. ${Number(p.rate || 0).toLocaleString()}</td>
+            <td style="padding: 8px 12px; text-align: right; font-weight: 700; color: #0f172a; border-right: 1px solid #e2e8f0;">Rs. ${total.toLocaleString()}</td>
           </tr>
         `;
       }
 
       const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.width = '100%';
+      pdfWrapper.style.width = '210mm';
+      pdfWrapper.style.minWidth = '210mm';
       pdfWrapper.style.maxWidth = '210mm';
       pdfWrapper.style.margin = '0 auto';
+      pdfWrapper.style.padding = '0';
       pdfWrapper.style.background = '#ffffff';
       pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
       pdfWrapper.style.boxSizing = 'border-box';
 
       pdfWrapper.innerHTML = `
-        <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
+        <div style="background:#ffffff; width:210mm; min-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; margin:0 auto; padding:0; position:relative;">
           <div>
             <!-- Top Slate Grey Header (#525866) with Logo -->
-            <div style="background: #525866; min-height: 105px; padding: 14px 36px 20px 36px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+            <div style="background: #525866; min-height: 105px; padding: 14px 34px 20px 34px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
               <div style="display: flex; align-items: center; gap: 16px;">
                 ${compLogo ? `
                   <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -12522,74 +12524,76 @@ loadLicenseSettings();
             </div>
 
             <!-- Upper Meta: Supplier & Consignee -->
-            <div style="padding: 24px 36px 10px 36px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+            <div style="padding: 18px 34px 10px 34px; box-sizing: border-box; width: 100%;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
                 <div style="width: 48%;">
-                  <div style="font-size: 12px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">Bill From (Supplier / Vendor):</div>
-                  <div style="font-size: 16px; font-weight: 800; color: #0f172a;">${p.vendor || 'Authorized Supplier'}</div>
-                  <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">Material & Construction Supplier</div>
-                  <div style="font-size: 11.5px; color: #16a34a; font-weight: 700; margin-top: 2px;"><i class="fa-solid fa-circle-check"></i> Quality & Delivery Verified on Site</div>
+                  <div style="font-size: 11px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 3px;">Bill From (Supplier / Vendor):</div>
+                  <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${p.vendor || 'Authorized Supplier'}</div>
+                  <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Material & Construction Supplier</div>
+                  <div style="font-size: 11px; color: #16a34a; font-weight: 700; margin-top: 2px;">
+                    <i class="fa-solid fa-circle-check"></i> Quality & Delivery Verified on Site
+                  </div>
                 </div>
 
-                <div style="width: 45%; text-align: right;">
-                  <div style="font-size: 12px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 4px;">Consignee / Site Office:</div>
-                  <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${compProject} Site Office</div>
-                  <div style="font-size: 11.5px; color: #64748b; margin-top: 3px;">${compAddress}</div>
-                  <div style="font-size: 11.5px; color: #64748b;">Phone: ${compPhone}</div>
+                <div style="width: 48%; text-align: right;">
+                  <div style="font-size: 11px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 3px;">Consignee / Site Office:</div>
+                  <div style="font-size: 14px; font-weight: 800; color: #0f172a;">${compProject} Site Office</div>
+                  <div style="font-size: 11px; color: #64748b; margin-top: 2px;">${compAddress}</div>
+                  <div style="font-size: 11px; color: #64748b;">Phone: ${compPhone}</div>
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 18px;">
-                <div style="font-size: 12.5px; font-weight: 700; color: #334155;">
+              <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 14px;">
+                <div style="font-size: 11.5px; font-weight: 700; color: #334155;">
                   Date: <span style="font-weight: 600; color: #0f172a;">${todayDate}</span>
                 </div>
-                <div style="font-size: 12px; color: #64748b; font-weight: 600;">
+                <div style="font-size: 11px; color: #64748b; font-weight: 600;">
                   Payment Mode: <strong style="color:#0f172a;">${p.paymentMethod || 'Cash'}</strong>
                 </div>
               </div>
 
-              <!-- Items Table -->
-              <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px;">
+              <!-- Slate Grey Items Table (#525866) -->
+              <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 11px;">
                 <thead>
-                  <tr style="background: #0d47a1; color: #ffffff;">
-                    <th style="padding: 10px 14px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #0d47a1;">Item Description</th>
-                    <th style="padding: 10px 14px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #0d47a1;">Quantity</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #0d47a1;">Unit Rate</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #0d47a1;">Total (Rs.)</th>
+                  <tr style="background: #525866; color: #ffffff;">
+                    <th style="padding: 8px 12px; text-align: left; font-weight: 700; width: 48%; border: 1px solid #525866;">Item Description</th>
+                    <th style="padding: 8px 12px; text-align: center; font-weight: 700; width: 14%; border: 1px solid #525866;">Quantity</th>
+                    <th style="padding: 8px 12px; text-align: right; font-weight: 700; width: 18%; border: 1px solid #525866;">Unit Rate</th>
+                    <th style="padding: 8px 12px; text-align: right; font-weight: 700; width: 20%; border: 1px solid #525866;">Total (Rs.)</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${itemsRowsHtml}
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 9px 14px; color: #166534; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Amount Paid</td>
-                    <td style="padding: 9px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
-                    <td style="padding: 9px 14px; text-align: right; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
-                    <td style="padding: 9px 14px; text-align: right; font-weight: 800; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
+                    <td style="padding: 7px 12px; color: #166534; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Amount Paid</td>
+                    <td style="padding: 7px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
+                    <td style="padding: 7px 12px; text-align: right; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
+                    <td style="padding: 7px 12px; text-align: right; font-weight: 800; color: #166534; border-right: 1px solid #e2e8f0;">Rs. ${paid.toLocaleString()}</td>
                   </tr>
                   <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 9px 14px; color: #dc2626; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Remaining Balance (Payable)</td>
-                    <td style="padding: 9px 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
-                    <td style="padding: 9px 14px; text-align: right; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
-                    <td style="padding: 9px 14px; text-align: right; font-weight: 800; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
+                    <td style="padding: 7px 12px; color: #dc2626; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">Remaining Balance (Payable)</td>
+                    <td style="padding: 7px 12px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0;">-</td>
+                    <td style="padding: 7px 12px; text-align: right; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
+                    <td style="padding: 7px 12px; text-align: right; font-weight: 800; color: #dc2626; border-right: 1px solid #e2e8f0;">Rs. ${remaining.toLocaleString()}</td>
                   </tr>
                 </tbody>
               </table>
 
-              <!-- Total Ribbon -->
-              <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
-                <div style="background: #0d47a1; color: #ffffff; padding: 10px 24px; border-radius: 7px; display: flex; gap: 28px; align-items: center; min-width: 250px; justify-content: space-between;">
-                  <span style="font-size: 13px; font-weight: 700; text-transform: uppercase;">Total Bill Amount</span>
-                  <span style="font-size: 16px; font-weight: 900;">Rs. ${total.toLocaleString()}</span>
+              <!-- Total Ribbon (Charcoal Slate Grey #525866) -->
+              <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+                <div style="background: #525866; color: #ffffff; padding: 9px 22px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 240px; justify-content: space-between;">
+                  <span style="font-size: 11.5px; font-weight: 700; text-transform: uppercase;">Total Bill Amount</span>
+                  <span style="font-size: 15px; font-weight: 900;">Rs. ${total.toLocaleString()}</span>
                 </div>
               </div>
 
-              <!-- Notes Box (Agar koi remarks enter kiye gaye hon to) -->
+              <!-- Notes Box with Slate Border -->
               ${p.notes ? `
-                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
-                  <div style="font-size: 11px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">
-                    Remarks / Delivery Notes:
+                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #525866; border-radius: 6px; padding: 10px 14px; margin-bottom: 14px;">
+                  <div style="font-size: 10px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 2px;">
+                    REMARKS / DELIVERY NOTES:
                   </div>
-                  <div style="font-size: 11px; color: #334155; line-height: 1.5;">
+                  <div style="font-size: 10.5px; color: #334155; line-height: 1.4;">
                     ${p.notes}
                   </div>
                 </div>
@@ -12598,20 +12602,20 @@ loadLicenseSettings();
             </div>
           </div>
 
-          <!-- Bottom: Clean Professional Dual Signatures for Purchase Bill -->
-          <div style="padding: 0 36px 36px 36px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <!-- Bottom: Dual Signatures -->
+          <div style="padding: 0 34px 28px 34px; display: flex; justify-content: space-between; align-items: flex-end; box-sizing: border-box; width: 100%;">
             <!-- Left Side: Supplier / Vendor Signature -->
-            <div style="text-align: center; width: 220px;">
-              <div style="height: 40px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+            <div style="text-align: center; width: 210px;">
+              <div style="height: 38px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
                 SUPPLIER / VENDOR SIGNATURE
               </div>
             </div>
 
             <!-- Right Side: Store Incharge / Verified By -->
-            <div style="text-align: center; width: 220px;">
-              <div style="height: 40px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+            <div style="text-align: center; width: 210px;">
+              <div style="height: 38px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
                 STORE INCHARGE / VERIFIED BY
               </div>
             </div>
@@ -12623,9 +12627,9 @@ loadLicenseSettings();
         margin: [0, 0, 0, 0],
         filename: `Purchase_Bill_${billNo}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'avoid-all' }
+        pagebreak: { mode: 'css' }
       };
 
       if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
@@ -13646,156 +13650,157 @@ loadLicenseSettings();
       }
     }
 
-  // 6. OFFICIAL PAYMENT / RECEIPT VOUCHER (CLEAN SIMPLE PATTERN WITHOUT CASH & DEBIT/CREDIT)
-    function downloadVoucherA4PDF(v) {
-      const isPayment = (v.type === 'PAYMENT');
-      // "CASH" word removed - only PAYMENT VOUCHER or RECEIPT VOUCHER
-      const voucherTitle = isPayment ? 'PAYMENT VOUCHER' : 'RECEIPT VOUCHER';
-      const todayDate = v.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  // 6. OFFICIAL PAYMENT / RECEIPT VOUCHER (SLATE GREY #525866 - NO BLUE COLOR)
+  function downloadVoucherA4PDF(v) {
+    const isPayment = (v.type === 'PAYMENT');
+    const voucherTitle = isPayment ? 'PAYMENT VOUCHER' : 'RECEIPT VOUCHER';
+    const todayDate = v.date || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      // Settings se live Logo aur Project Details uthana
-      const comp = getCompanyPrintProfile();
-      const compProject = comp.project;
-      const compName = comp.name;
-      const compAddress = comp.address || 'Head Office';
-      const compLogo = comp.logo || settingLogoBase64 || '';
+    // Settings se live Logo aur Project Details uthana
+    const comp = getCompanyPrintProfile();
+    const compProject = comp.project || 'BILAL HEIGHTS';
+    const compName = comp.name || 'Bilal Builders & Developers';
+    const compAddress = comp.address || 'Head Office, Karachi';
+    const compLogo = comp.logo || settingLogoBase64 || '';
 
-      const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.width = '100%';
-      pdfWrapper.style.maxWidth = '210mm';
-      pdfWrapper.style.margin = '0 auto';
-      pdfWrapper.style.background = '#ffffff';
-      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      pdfWrapper.style.boxSizing = 'border-box';
+    const pdfWrapper = document.createElement('div');
+    pdfWrapper.style.width = '210mm';
+    pdfWrapper.style.minWidth = '210mm';
+    pdfWrapper.style.maxWidth = '210mm';
+    pdfWrapper.style.margin = '0 auto';
+    pdfWrapper.style.padding = '0';
+    pdfWrapper.style.background = '#ffffff';
+    pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+    pdfWrapper.style.boxSizing = 'border-box';
 
-      pdfWrapper.innerHTML = `
-        <div style="background:#ffffff; width:210mm; height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative;">
-          <div>
-            <!-- Top Slate Grey Header (#525866) with Logo -->
-            <div style="background: #525866; min-height: 105px; padding: 14px 34px 20px 34px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
-              <div style="display: flex; align-items: center; gap: 16px;">
-                ${compLogo ? `
-                  <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
-                  </div>
-                ` : `
-                  <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
-                    <i class="fa-solid fa-file-invoice"></i>
-                  </div>
-                `}
-                <div>
-                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${voucherTitle}</h1>
-                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
-                    ${compProject} • OFFICIAL ACCOUNTS VOUCHER
-                  </div>
+    pdfWrapper.innerHTML = `
+      <div style="background:#ffffff; width:210mm; min-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; margin:0 auto; padding:0; position:relative;">
+        <div>
+          <!-- Top Slate Grey Header (#525866) with Logo -->
+          <div style="background: #525866; min-height: 105px; padding: 14px 34px 20px 34px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              ${compLogo ? `
+                <div style="height: 85px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  <img src="${compLogo}" style="height: ${comp.logoSize || 85}px; max-height: 85px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                 </div>
-              </div>
-              <div style="text-align: right; flex-shrink: 0;">
-                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
-                  NO: ${v.voucherNo || 'VR-1001'}
+              ` : `
+                <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 22px; flex-shrink: 0;">
+                  <i class="fa-solid fa-file-invoice"></i>
+                </div>
+              `}
+              <div>
+                <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${voucherTitle}</h1>
+                <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+                  ${compProject} • OFFICIAL ACCOUNTS VOUCHER
                 </div>
               </div>
             </div>
-
-            <!-- Upper Meta Information -->
-            <div style="padding: 20px 34px 10px 34px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px;">
-                <div style="width: 48%;">
-                  <div style="font-size: 11.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">
-                    ${isPayment ? 'PAID TO:' : 'RECEIVED FROM:'}
-                  </div>
-                  <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${v.party || 'Account / Beneficiary'}</div>
-                  <div style="font-size: 11.5px; color: #475569; margin-top: 3px;">Head: <b style="color:#0f172a;">${v.head || 'General'}</b></div>
-                </div>
-
-                <div style="width: 48%; text-align: right;">
-                  <div style="font-size: 11.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">ACCOUNTS DEPARTMENT:</div>
-                  <div style="font-size: 14px; font-weight: 800; color: #0f172a;">${compProject} Project Office</div>
-                  <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">${compAddress}</div>
-                </div>
+            <div style="text-align: right; flex-shrink: 0;">
+              <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+                NO: ${v.voucherNo || 'VR-1001'}
               </div>
-
-              <div style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 16px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
-                Date: <span style="font-weight: 600; color: #0f172a;">${todayDate}</span>
-              </div>
-
-              <!-- Simple Clean Voucher Table (Without Debit/Credit) -->
-              <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                <thead>
-                  <tr style="background: #0d47a1; color: #ffffff;">
-                    <th style="padding: 10px 14px; text-align: left; font-weight: 700; width: 55%; border: 1px solid #0d47a1;">Particulars / Narration</th>
-                    <th style="padding: 10px 14px; text-align: center; font-weight: 700; width: 23%; border: 1px solid #0d47a1;">Account Head</th>
-                    <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 22%; border: 1px solid #0d47a1;">Amount (Rs.)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style="border-bottom: 1.5px solid #e2e8f0;">
-                    <td style="padding: 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; line-height: 1.6; word-break: break-word; vertical-align: top;">
-                      ${v.narration || 'Transaction Recorded'}
-                    </td>
-                    <td style="padding: 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0; font-weight: 600; line-height: 1.6; word-break: break-word; vertical-align: top;">
-                      ${v.head || 'General'}
-                    </td>
-                    <td style="padding: 14px; text-align: right; font-weight: 800; font-size: 13.5px; color: #0f172a; border-right: 1px solid #e2e8f0; vertical-align: top;">
-                      Rs. ${Number(v.amount || 0).toLocaleString()}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <!-- Amount in Words & Total Amount Ribbon -->
-              <div style="display: flex; justify-content: space-between; align-items: stretch; gap: 14px; margin-top: 16px;">
-                <!-- Left: Amount In Words Box -->
-                <div style="flex: 1; background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 6px; padding: 10px 14px; display: flex; flex-direction: column; justify-content: center;">
-                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">Amount in Words:</div>
-                  <div style="font-size: 12px; font-weight: 800; color: #0f172a; line-height: 1.35;">
-                    ${v.amountInWords || numberToWordsRupees(v.amount)}
-                  </div>
-                </div>
-
-                <!-- Right: Total Amount Ribbon (Total Cash Replaced with Total Amount) -->
-                <div style="background: #0d47a1; color: #ffffff; padding: 12px 24px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 250px; justify-content: space-between;">
-                  <span style="font-size: 12.5px; font-weight: 700; text-transform: uppercase;">Total Amount</span>
-                  <span style="font-size: 16px; font-weight: 900;">Rs. ${Number(v.amount || 0).toLocaleString()}</span>
-                </div>
-              </div>
-
             </div>
           </div>
 
-          <!-- Bottom: Clean Dual Signatures -->
-          <div style="padding: 0 34px 34px 34px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <!-- Left: Receiver Signature -->
-            <div style="text-align: center; width: 210px;">
-              <div style="height: 40px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-                RECEIVER SIGNATURE
+          <!-- Upper Meta Information -->
+          <div style="padding: 20px 34px 10px 34px; box-sizing: border-box; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+              <div style="width: 48%;">
+                <div style="font-size: 11px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 3px;">
+                  ${isPayment ? 'PAID TO:' : 'RECEIVED FROM:'}
+                </div>
+                <div style="font-size: 15px; font-weight: 800; color: #0f172a;">${v.party || 'Account / Beneficiary'}</div>
+                <div style="font-size: 11.5px; color: #475569; margin-top: 3px;">Head: <b style="color:#0f172a;">${v.head || 'General'}</b></div>
+              </div>
+
+              <div style="width: 48%; text-align: right;">
+                <div style="font-size: 11px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 3px;">ACCOUNTS DEPARTMENT:</div>
+                <div style="font-size: 14px; font-weight: 800; color: #0f172a;">${compProject} Project Office</div>
+                <div style="font-size: 11px; color: #64748b; margin-top: 2px; line-height: 1.35;">${compAddress}</div>
               </div>
             </div>
 
-            <!-- Right: Accounts / Manager Signature -->
-            <div style="text-align: center; width: 210px;">
-              <div style="height: 40px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-                ACCOUNTS / MANAGER SIGN
+            <div style="font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 16px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
+              Date: <span style="font-weight: 600; color: #0f172a;">${todayDate}</span>
+            </div>
+
+            <!-- Slate Grey Voucher Table (#525866) -->
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px;">
+              <thead>
+                <tr style="background: #525866; color: #ffffff;">
+                  <th style="padding: 10px 14px; text-align: left; font-weight: 700; width: 55%; border: 1px solid #525866;">Particulars / Narration</th>
+                  <th style="padding: 10px 14px; text-align: center; font-weight: 700; width: 23%; border: 1px solid #525866;">Account Head</th>
+                  <th style="padding: 10px 14px; text-align: right; font-weight: 700; width: 22%; border: 1px solid #525866;">Amount (Rs.)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1.5px solid #e2e8f0;">
+                  <td style="padding: 14px; color: #334155; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; line-height: 1.6; word-break: break-word; vertical-align: top;">
+                    ${v.narration || 'Transaction Recorded'}
+                  </td>
+                  <td style="padding: 14px; text-align: center; color: #64748b; border-right: 1px solid #e2e8f0; font-weight: 600; line-height: 1.6; word-break: break-word; vertical-align: top;">
+                    ${v.head || 'General'}
+                  </td>
+                  <td style="padding: 14px; text-align: right; font-weight: 800; font-size: 13.5px; color: #0f172a; border-right: 1px solid #e2e8f0; vertical-align: top;">
+                    Rs. ${Number(v.amount || 0).toLocaleString()}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Amount in Words & Total Amount Ribbon (#525866) -->
+            <div style="display: flex; justify-content: space-between; align-items: stretch; gap: 14px; margin-top: 16px;">
+              <!-- Left: Amount In Words Box -->
+              <div style="flex: 1; background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #525866; border-radius: 6px; padding: 10px 14px; display: flex; flex-direction: column; justify-content: center;">
+                <div style="font-size: 10px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 2px;">Amount in Words:</div>
+                <div style="font-size: 12px; font-weight: 800; color: #0f172a; line-height: 1.35;">
+                  ${v.amountInWords || numberToWordsRupees(v.amount)}
+                </div>
               </div>
+
+              <!-- Right: Total Amount Ribbon (Charcoal Slate Grey #525866) -->
+              <div style="background: #525866; color: #ffffff; padding: 12px 24px; border-radius: 6px; display: flex; gap: 24px; align-items: center; min-width: 250px; justify-content: space-between;">
+                <span style="font-size: 12.5px; font-weight: 700; text-transform: uppercase;">Total Amount</span>
+                <span style="font-size: 16px; font-weight: 900;">Rs. ${Number(v.amount || 0).toLocaleString()}</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Bottom: Clean Dual Signatures -->
+        <div style="padding: 0 34px 28px 34px; display: flex; justify-content: space-between; align-items: flex-end; box-sizing: border-box; width: 100%;">
+          <!-- Left: Receiver Signature -->
+          <div style="text-align: center; width: 210px;">
+            <div style="height: 38px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+              RECEIVER SIGNATURE
+            </div>
+          </div>
+
+          <!-- Right: Accounts / Manager Signature -->
+          <div style="text-align: center; width: 210px;">
+            <div style="height: 38px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+              ACCOUNTS / MANAGER SIGN
             </div>
           </div>
         </div>
-      `;
+      </div>
+    `;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `${v.voucherNo || 'VOUCHER'}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'avoid-all' }
-      };
+    const opt = {
+      margin: [0, 0, 0, 0],
+      filename: `${v.voucherNo || 'VOUCHER'}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: 'css' }
+    };
 
-      if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
-      else alert('PDF library load nahi ho saki.');
-    }
+    if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
+    else alert('PDF library load nahi ho saki.');
+  }
     
 function filterCashVouchersTable() {
   const q = (document.getElementById('cvSearchInput')?.value || '').toLowerCase().trim();
@@ -15058,246 +15063,262 @@ async function saveCashDrawerEntry(e) {
 }
 
 function downloadCashBookPDF() {
-      const dateFrom = document.getElementById('cbFilterDateFrom')?.value || '';
-      const dateTo = document.getElementById('cbFilterDateTo')?.value || '';
-      const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const dateFrom = document.getElementById('cbFilterDateFrom')?.value || '';
+  const dateTo = document.getElementById('cbFilterDateTo')?.value || '';
+  const todayDate = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
-      const compProject = document.getElementById('setProjectTitle')?.value.trim() || 'BILAL HEIGHTS';
-      const compName = document.getElementById('setCompanyName')?.value.trim() || 'Bilal Builders & Developers';
-      const compAddress = document.getElementById('setCompanyAddress')?.value.trim() || 'Main Clifton Boulevard, Karachi';
-      const compPhone = document.getElementById('setCompanyPhone')?.value.trim() || '021-35890000';
+  const comp = getCompanyPrintProfile();
+  const compProject = comp.project || 'BILAL HEIGHTS';
+  const compName = comp.name || 'Bilal Builders & Developers';
+  const compAddress = comp.address || 'Head Office, Karachi';
+  const compPhone = comp.phone || '';
+  const compLogo = comp.logo || settingLogoBase64 || '';
 
-      let compLogo = settingLogoBase64;
-      if (!compLogo) {
-        const logoEl = document.getElementById('setLogoImg');
-        if (logoEl && logoEl.src && logoEl.style.display !== 'none' && !logoEl.src.includes('undefined')) {
-          compLogo = logoEl.src;
-        }
-      }
+  let cashTransactions = [];
 
-      let cashTransactions = [];
+  // 1. Customer Cash Payments
+  (allPaymentsData || []).forEach(p => {
+    const modeLabel = p.mode ? ` (${p.mode})` : '';
+    cashTransactions.push({
+      date: p.date,
+      ref: p.receiptNo || 'BH-REC',
+      desc: `Customer Payment - ${p.customerName || 'Customer'} (Flat ${p.flatNo || '-'})${modeLabel}`,
+      head: p.head || 'Monthly Installment',
+      cashIn: parseFloat(p.amount) || 0,
+      cashOut: 0
+    });
+  });
 
-      // 1. Customer Cash Payments
-      (allPaymentsData || []).forEach(p => {
-        const modeLabel = p.mode ? ` (${p.mode})` : '';
-        cashTransactions.push({
-          date: p.date,
-          ref: p.receiptNo || 'BH-REC',
-          desc: `Customer Payment - ${p.customerName} (Flat ${p.flatNo})${modeLabel}`,
-          head: p.head || 'Monthly Installment',
-          cashIn: parseFloat(p.amount) || 0,
-          cashOut: 0
-        });
+  // 2. Cash Vouchers (CPV & CRV)
+  (allCashVouchersData || []).forEach(v => {
+    const amt = parseFloat(v.amount) || 0;
+    cashTransactions.push({
+      date: v.date,
+      ref: v.voucherNo || 'CV',
+      desc: `${v.party || 'Account'} - ${v.narration || ''}`,
+      head: v.head || 'Cash Voucher',
+      cashIn: (v.type === 'RECEIPT') ? amt : 0,
+      cashOut: (v.type === 'PAYMENT') ? amt : 0
+    });
+  });
+
+  // 3. Purchases (Cash Outflow)
+  (allPurchaserData || []).forEach(pur => {
+    const total = parseFloat(pur.total || pur.totalAmount) || 0;
+    const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
+    const method = pur.paymentMethod || 'Cash';
+    const cashSpent = (paid > 0) ? paid : (method === 'Cash' ? total : 0);
+
+    if (method === 'Cash' || paid > 0) {
+      const statusText = (paid > 0) ? '' : ' (Cash Bill)';
+      cashTransactions.push({
+        date: pur.date || new Date().toISOString().split('T')[0],
+        ref: pur.billNo || 'PUR-BILL',
+        desc: `Purchase - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${statusText}`,
+        head: 'Material Purchase',
+        cashIn: 0,
+        cashOut: cashSpent
       });
+    }
+  });
 
-      // 2. Cash Vouchers (CPV & CRV)
-      (allCashVouchersData || []).forEach(v => {
-        const amt = parseFloat(v.amount) || 0;
-        cashTransactions.push({
-          date: v.date,
-          ref: v.voucherNo || 'CV',
-          desc: `${v.party || 'Account'} - ${v.narration || ''}`,
-          head: v.head || 'Cash Voucher',
-          cashIn: (v.type === 'RECEIPT') ? amt : 0,
-          cashOut: (v.type === 'PAYMENT') ? amt : 0
-        });
+  // 4. Site Expenses
+  (allSiteExpensesData || []).forEach(se => {
+    const paid = parseFloat(se.paidAmount) || 0;
+    if (paid > 0) {
+      cashTransactions.push({
+        date: se.date || new Date().toISOString().split('T')[0],
+        ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
+        desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
+        head: se.category || 'Site Expense',
+        cashIn: 0,
+        cashOut: paid
       });
+    }
+  });
 
-      // 3. Purchases (Cash Outflow - Shows in PDF)
-      (allPurchaserData || []).forEach(pur => {
-        const total = parseFloat(pur.total || pur.totalAmount) || 0;
-        const paid = parseFloat(pur.paid || pur.paidAmount) || 0;
-        const method = pur.paymentMethod || 'Cash';
-        const cashSpent = (paid > 0) ? paid : (method === 'Cash' ? total : 0);
-
-        if (method === 'Cash' || paid > 0) {
-          const statusText = (paid > 0) ? '' : ' (Cash Bill)';
-          cashTransactions.push({
-            date: pur.date || new Date().toISOString().split('T')[0],
-            ref: pur.billNo || 'PUR-BILL',
-            desc: `Purchase - ${pur.vendor || 'Supplier'} (${pur.item || 'Material'})${statusText}`,
-            head: 'Material Purchase',
-            cashIn: 0,
-            cashOut: cashSpent
-          });
-        }
+  // 5. Office Expenses
+  (allOfficeExpensesData || []).forEach(oe => {
+    const paid = parseFloat(oe.paidAmount) || 0;
+    if (paid > 0) {
+      cashTransactions.push({
+        date: oe.date || new Date().toISOString().split('T')[0],
+        ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
+        desc: `${oe.paidTo || 'Staff'} - ${oe.description || ''}`,
+        head: oe.category || 'Office Expense',
+        cashIn: 0,
+        cashOut: paid
       });
+    }
+  });
 
-      // 4. Site Expenses
-      (allSiteExpensesData || []).forEach(se => {
-        const paid = parseFloat(se.paidAmount) || 0;
-        if (paid > 0) {
-          cashTransactions.push({
-            date: se.date || new Date().toISOString().split('T')[0],
-            ref: 'SE-' + (se.id ? se.id.substring(0, 5).toUpperCase() : 'EXP'),
-            desc: `${se.paidTo || 'Site Worker'} - ${se.description || ''}`,
-            head: se.category || 'Site Expense',
-            cashIn: 0,
-            cashOut: paid
-          });
-        }
-      });
+  cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-      // 5. Office Expenses
-      (allOfficeExpensesData || []).forEach(oe => {
-        const paid = parseFloat(oe.paidAmount) || 0;
-        if (paid > 0) {
-          cashTransactions.push({
-            date: oe.date || new Date().toISOString().split('T')[0],
-            ref: 'OE-' + (oe.id ? oe.id.substring(0, 5).toUpperCase() : 'EXP'),
-            desc: `${oe.paidTo || 'Staff'} - ${oe.description || ''}`,
-            head: oe.category || 'Office Expense',
-            cashIn: 0,
-            cashOut: paid
-          });
-        }
-      });
+  let filtered = cashTransactions.filter(item => {
+    if (dateFrom && item.date < dateFrom) return false;
+    if (dateTo && item.date > dateTo) return false;
+    return true;
+  });
 
-      cashTransactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+  let totalIn = 0; 
+  let totalOut = 0; 
+  let runningBal = 0; 
+  let rowsHtml = '';
 
-      let filtered = cashTransactions.filter(item => {
-        if (dateFrom && item.date < dateFrom) return false;
-        if (dateTo && item.date > dateTo) return false;
-        return true;
-      });
+  filtered.forEach((item, idx) => {
+    totalIn += item.cashIn;
+    totalOut += item.cashOut;
+    runningBal += (item.cashIn - item.cashOut);
 
-      let totalIn = 0; let totalOut = 0; let runningBal = 0; let rowsHtml = '';
+    rowsHtml += `
+      <tr style="border-bottom: 1px solid #e2e8f0; font-size: 10px;">
+        <td style="padding: 5px 8px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${item.date || '-'}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0;"><strong style="color: #3b4252;">${item.ref}</strong></td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #0f172a;">${item.desc}</td>
+        <td style="padding: 5px 8px; border-right: 1px solid #e2e8f0; color: #475569;"><span style="background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-weight: 600; font-size: 9.5px;">${item.head}</span></td>
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashIn > 0 ? '#16a34a' : '#64748b'};">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashOut > 0 ? '#dc2626' : '#64748b'};">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
+        <td style="padding: 5px 8px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
+      </tr>
+    `;
+  });
 
-      filtered.forEach((item, idx) => {
-        totalIn += item.cashIn;
-        totalOut += item.cashOut;
-        runningBal += (item.cashIn - item.cashOut);
+  if (!rowsHtml) {
+    rowsHtml = `<tr><td colspan="8" style="text-align: center; padding: 20px; color: #64748b;">Chuni gayi tareekh mein koi cash transaction nahi mili.</td></tr>`;
+  }
 
-        rowsHtml += `
-          <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
-            <td style="padding: 7px 10px; text-align: center; color: #475569; font-weight: 700; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0;">${idx + 1}</td>
-            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #334155; font-weight: 600;">${item.date || '-'}</td>
-            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0;"><strong style="color: #0d47a1;">${item.ref}</strong></td>
-            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #0f172a;">${item.desc}</td>
-            <td style="padding: 7px 10px; border-right: 1px solid #e2e8f0; color: #475569;"><span style="background: #f1f5f9; padding: 2px 8px; border-radius: 6px; font-weight: 600;">${item.head}</span></td>
-            <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashIn > 0 ? '#16a34a' : '#64748b'};">${item.cashIn > 0 ? 'Rs. ' + item.cashIn.toLocaleString() : '-'}</td>
-            <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 700; color: ${item.cashOut > 0 ? '#dc2626' : '#64748b'};">${item.cashOut > 0 ? 'Rs. ' + item.cashOut.toLocaleString() : '-'}</td>
-            <td style="padding: 7px 10px; text-align: right; border-right: 1px solid #e2e8f0; font-weight: 800; color: ${runningBal >= 0 ? '#0f172a' : '#dc2626'};">Rs. ${runningBal.toLocaleString()}</td>
-          </tr>
-        `;
-      });
+  const pdfWrapper = document.createElement('div');
+  pdfWrapper.style.width = '297mm';
+  pdfWrapper.style.maxWidth = '297mm';
+  pdfWrapper.style.margin = '0 auto';
+  pdfWrapper.style.padding = '0';
+  pdfWrapper.style.background = '#ffffff';
+  pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+  pdfWrapper.style.boxSizing = 'border-box';
 
-      if (!rowsHtml) {
-        rowsHtml = `<tr><td colspan="8" style="text-align: center; padding: 25px; color: #64748b;">Chuni gayi tareekh mein koi cash transaction nahi mili.</td></tr>`;
-      }
-
-      const pdfWrapper = document.createElement('div');
-      pdfWrapper.style.width = '100%';
-      pdfWrapper.style.maxWidth = '297mm';
-      pdfWrapper.style.margin = '0 auto';
-      pdfWrapper.style.background = '#ffffff';
-      pdfWrapper.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
-      pdfWrapper.style.boxSizing = 'border-box';
-
-      pdfWrapper.innerHTML = `
-        <div style="background:#ffffff; width:297mm; min-height:205mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; padding: 0 0 10px 0;">
-          <div>
-            <div style="background: #525866; min-height: 105px; padding: 14px 32px 18px 32px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
-              <div style="display: flex; align-items: center; gap: 14px;">
-${compLogo ? `<div style="height: 75px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 8px;"><img src="${compLogo}" style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="Logo" /></div>` : ''}
-                <div>
-                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase;">DAILY CASH BOOK REPORT</h1>
-                  <div style="font-size: 10.5px; color: #bbdefb; font-weight: 700; letter-spacing: 0.8px; margin-top: 3px;">${compName.toUpperCase()} • ${compProject} COMPREHENSIVE CASH LEDGER</div>
-                </div>
+  pdfWrapper.innerHTML = `
+    <div style="background:#ffffff; width:297mm; box-sizing:border-box; margin:0 auto; padding: 0 0 10px 0;">
+      <div>
+        <!-- Top Slate Grey Header (#525866) with Logo -->
+        <div style="background: #525866; min-height: 85px; padding: 10px 28px 14px 28px; border-bottom-left-radius: 50% 14px; border-bottom-right-radius: 50% 14px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            ${compLogo ? `
+              <div style="height: 70px; max-width: 140px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <img src="${compLogo}" style="height: ${comp.logoSize ? Math.min(comp.logoSize, 70) : 70}px; max-height: 70px; max-width: 140px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 12px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.18); padding: 6px 14px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.3);">OFFICIAL CASH BOOK</div>
+            ` : ''}
+            <div>
+              <h1 style="margin: 0; font-size: 20px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">DAILY CASH BOOK REPORT</h1>
+              <div style="font-size: 9.5px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
+                ${compName.toUpperCase()} • ${compProject} COMPREHENSIVE CASH LEDGER
               </div>
-            </div>
-
-            <div style="padding: 12px 32px 0 32px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
-                <div>
-                  <div style="font-size: 10.5px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">CASH DRAWER (GALLE KA HISAB):</div>
-                  <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${compProject} SITE & COUNTER CASH</div>
-                  <div style="font-size: 11px; color: #475569; margin-top: 2px;">Project: <b>${compProject}</b> | Developer: <b>${compName}</b> | Phone: <b>${compPhone}</b></div>
-                </div>
-                <div style="text-align: right; font-size: 11px; color: #475569;">
-                  <div>Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong></div>
-                  <div style="margin-top: 2px;">Report Generated: <strong style="color: #0d47a1;">${todayDate}</strong></div>
-                </div>
-              </div>
-
-              <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px;">
-                <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 700; color: #64748b; text-transform: uppercase; display: block;">Opening Balance</small>
-                  <div style="font-size: 16px; font-weight: 900; color: #0f172a; margin-top: 2px;">Rs. 0</div>
-                </div>
-                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 8px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Cash In </small>
-                  <div style="font-size: 16px; font-weight: 900; color: #16a34a; margin-top: 2px;">Rs. ${totalIn.toLocaleString()}</div>
-                </div>
-                <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 8px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out</small>
-                  <div style="font-size: 16px; font-weight: 900; color: #dc2626; margin-top: 2px;">Rs. ${totalOut.toLocaleString()}</div>
-                </div>
-                <div style="background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 14px;">
-                  <small style="font-size: 9.5px; font-weight: 700; color: #1e40af; text-transform: uppercase; display: block;">Net Cash in Hand</small>
-                  <div style="font-size: 16px; font-weight: 900; color: #0d47a1; margin-top: 2px;">Rs. ${runningBal.toLocaleString()}</div>
-                </div>
-              </div>
-
-              <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
-                <thead>
-                  <tr style="background: #0d47a1; color: #ffffff; font-size: 10.5px;">
-                    <th style="padding: 8px 10px; text-align: center; width: 35px; border: 1px solid #0d47a1;">#</th>
-                    <th style="padding: 8px 10px; text-align: left; width: 12%; border: 1px solid #0d47a1;">Date</th>
-                    <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Ref / Voucher</th>
-                    <th style="padding: 8px 10px; text-align: left; width: 28%; border: 1px solid #0d47a1;">Description / Particulars</th>
-                    <th style="padding: 8px 10px; text-align: left; width: 14%; border: 1px solid #0d47a1;">Head / Category</th>
-                    <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Cash In (Rs.)</th>
-                    <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Cash Out (Rs.)</th>
-                    <th style="padding: 8px 10px; text-align: right; width: 11%; border: 1px solid #0d47a1;">Balance (Rs.)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${rowsHtml}
-                </tbody>
-                <tfoot>
-                  <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 11px;">
-                    <td colspan="5" style="text-align: right; padding: 8px 10px; color: #0f172a;">GRAND TOTAL</td>
-                    <td style="text-align: right; padding: 8px 10px; color: #16a34a;">Rs. ${totalIn.toLocaleString()}</td>
-                    <td style="text-align: right; padding: 8px 10px; color: #dc2626;">Rs. ${totalOut.toLocaleString()}</td>
-                    <td style="text-align: right; padding: 8px 10px; color: #0d47a1;">Rs. ${runningBal.toLocaleString()}</td>
-                  </tr>
-                </tfoot>
-              </table>
             </div>
           </div>
-
-          <div style="padding: 10px 32px 14px 32px; display: flex; justify-content: space-between; align-items: flex-end;">
-            <div style="text-align: center; width: 200px;">
-              <div style="height: 32px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">CASHIER / MUNSHI SIGNATURE</div>
+          <div style="text-align: right; flex-shrink: 0;">
+            <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+              OFFICIAL CASH BOOK
             </div>
-            <div style="text-align: center; width: 200px;">
-              <div style="height: 32px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">AUTHORIZED SIGNATURE</div>
-            </div>
+            <div style="font-size: 9px; color: #e2e8f0; margin-top: 3px; font-weight: 600;">Printed: ${todayDate}</div>
           </div>
         </div>
-      `;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `Cash_Book_Report_${todayDate.replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-      };
+        <!-- Meta Bar & 4 KPI Cards -->
+        <div style="padding: 10px 28px 0 28px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 5px;">
+            <div>
+              <div style="font-size: 9.5px; font-weight: 800; color: #525866; text-transform: uppercase; margin-bottom: 2px;">CASH DRAWER (GALLE KA HISAB):</div>
+              <div style="font-size: 14.5px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${compProject} SITE & COUNTER CASH</div>
+              <div style="font-size: 10px; color: #475569; margin-top: 1px;">Project: <b>${compProject}</b> | Developer: <b>${compName}</b> | Phone: <b>${compPhone}</b></div>
+            </div>
+            <div style="text-align: right; font-size: 10px; color: #475569;">
+              <div>Date Range: <strong>${dateFrom ? dateFrom : 'All Records'}</strong> to <strong>${dateTo ? dateTo : 'Today'}</strong></div>
+              <div style="margin-top: 2px;">Report Generated: <strong>${todayDate}</strong></div>
+            </div>
+          </div>
 
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(pdfWrapper).save();
-      } else {
-        alert('PDF library load nahi ho saki.');
-      }
-    }
+          <!-- 4 Summary KPI Cards (Slate Theme - No Bright Blue) -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px;">
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 7px 12px;">
+              <small style="font-size: 8.5px; font-weight: 700; color: #475569; text-transform: uppercase; display: block;">Opening Balance</small>
+              <div style="font-size: 14px; font-weight: 900; color: #0f172a; margin-top: 1px;">Rs. 0</div>
+            </div>
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 7px 12px;">
+              <small style="font-size: 8.5px; font-weight: 700; color: #166534; text-transform: uppercase; display: block;">Total Cash In</small>
+              <div style="font-size: 14px; font-weight: 900; color: #16a34a; margin-top: 1px;">Rs. ${totalIn.toLocaleString()}</div>
+            </div>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 7px 12px;">
+              <small style="font-size: 8.5px; font-weight: 700; color: #991b1b; text-transform: uppercase; display: block;">Total Cash Out</small>
+              <div style="font-size: 14px; font-weight: 900; color: #dc2626; margin-top: 1px;">Rs. ${totalOut.toLocaleString()}</div>
+            </div>
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 7px 12px;">
+              <small style="font-size: 8.5px; font-weight: 700; color: #3b4252; text-transform: uppercase; display: block;">Net Cash in Hand</small>
+              <div style="font-size: 14px; font-weight: 900; color: #0f172a; margin-top: 1px;">Rs. ${runningBal.toLocaleString()}</div>
+            </div>
+          </div>
+
+          <!-- Slate Grey Table (#525866) -->
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px;">
+            <thead>
+              <tr style="background: #525866; color: #ffffff; font-size: 9.5px;">
+                <th style="padding: 6px 8px; text-align: center; width: 30px; border: 1px solid #525866;">#</th>
+                <th style="padding: 6px 8px; text-align: left; width: 11%; border: 1px solid #525866;">Date</th>
+                <th style="padding: 6px 8px; text-align: left; width: 13%; border: 1px solid #525866;">Ref / Voucher</th>
+                <th style="padding: 6px 8px; text-align: left; width: 30%; border: 1px solid #525866;">Description / Particulars</th>
+                <th style="padding: 6px 8px; text-align: left; width: 14%; border: 1px solid #525866;">Head / Category</th>
+                <th style="padding: 6px 8px; text-align: right; width: 11%; border: 1px solid #525866;">Cash In (Rs.)</th>
+                <th style="padding: 6px 8px; text-align: right; width: 11%; border: 1px solid #525866;">Cash Out (Rs.)</th>
+                <th style="padding: 6px 8px; text-align: right; width: 10%; border: 1px solid #525866;">Balance (Rs.)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+            <tfoot>
+              <tr style="background: #f8fafc; font-weight: 800; border: 1.5px solid #cbd5e1; font-size: 10px;">
+                <td colspan="5" style="text-align: right; padding: 6px 8px; color: #0f172a;">GRAND TOTAL</td>
+                <td style="text-align: right; padding: 6px 8px; color: #16a34a;">Rs. ${totalIn.toLocaleString()}</td>
+                <td style="text-align: right; padding: 6px 8px; color: #dc2626;">Rs. ${totalOut.toLocaleString()}</td>
+                <td style="text-align: right; padding: 6px 8px; color: #0f172a;">Rs. ${runningBal.toLocaleString()}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Signatures Footer -->
+      <div style="margin-top: 14px; padding: 6px 28px 14px 28px; display: flex; justify-content: space-between; align-items: flex-end;">
+        <div style="text-align: center; width: 200px;">
+          <div style="height: 24px;"></div>
+          <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 9.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+            CASHIER / MUNSHI SIGNATURE
+          </div>
+        </div>
+        <div style="text-align: center; width: 200px;">
+          <div style="height: 24px;"></div>
+          <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 9.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+            AUTHORIZED SIGNATURE
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const opt = {
+    margin: [0, 0, 0, 0],
+    filename: `Cash_Book_Report_${todayDate.replace(/\s+/g, '_')}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+    pagebreak: { mode: 'css' }
+  };
+
+  if (typeof html2pdf !== 'undefined') {
+    html2pdf().set(opt).from(pdfWrapper).save();
+  } else {
+    alert('PDF library load nahi ho saki.');
+  }
+}
 
 
 
