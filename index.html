@@ -6388,7 +6388,41 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
+
+  
   <script>
+
+// ========================================================
+// SUPER FAST & LIGHTWEIGHT PDF GENERATION ENGINE
+// ========================================================
+function generateFastPDF(element, filename, orientation = 'portrait') {
+  if (typeof html2pdf === 'undefined') {
+    alert('PDF library load nahi ho saki. Internet connection check karein.');
+    return;
+  }
+
+  // Optimized Settings: 1.6 scale bohot sharp rehta hai aur 3-4x tez download hota hai
+  const opt = {
+    margin: [0, 0, 0, 0],
+    filename: filename,
+    image: { type: 'jpeg', quality: 0.88 },
+    html2canvas: {
+      scale: 1.6,          // 2.2 se kam kar ke 1.6 kiya (Instant Render)
+      useCORS: true,
+      scrollY: 0,
+      logging: false,      // Console freeze hone se rokega
+      removeContainer: true
+    },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: orientation },
+    pagebreak: { mode: ['css', 'legacy'] }
+  };
+
+  // Fast download trigger
+  html2pdf().set(opt).from(element).save().then(() => {
+    // Memory release taake software slow na ho
+    if (element && element.remove) element.remove();
+  });
+}
 
    // ========================================================
     // GLOBAL COMPANY PRINT PROFILE (WITH LOGO SIZE & SHIFT)
@@ -7521,7 +7555,7 @@ function loadFlats() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-   // 2. Download Official Project Profile PDF (Fixed - Single Page 100% Reliable Render)
+   // 2. Download Official Project Profile PDF (Without Terms & Conditions - Clean Portfolio)
     function downloadProjectPDF(projectId) {
       const p = allProjectsData.find(item => item.id === projectId);
       if (!p) {
@@ -7539,11 +7573,6 @@ function loadFlats() {
       const compEmail = comp.email || '';
       const compAddress = comp.address || 'Head Office, Karachi';
       const compLogo = comp.logo || settingLogoBase64 || '';
-
-      const termsText = document.getElementById('setLegalTermsText')?.value.trim() || 
-        "1. All bookings and allotments are governed under project bylaws.\n" +
-        "2. Possession rights will only be handed over upon 100% dues clearance.\n" +
-        "3. Building architecture, utilities, and structure are verified by engineering authorities.";
 
       const pdfWrapper = document.createElement('div');
       pdfWrapper.style.width = '210mm';
@@ -7568,93 +7597,86 @@ function loadFlats() {
                   </div>
                 ` : ''}
                 <div>
-                  <h1 style="margin: 0; font-size: 23px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${p.name || 'PROJECT PORTFOLIO'}</h1>
-                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 700; letter-spacing: 0.8px; margin-top: 2px;">
-                    ${compName.toUpperCase()} • OFFICIAL PROJECT PORTFOLIO & SPECIFICATIONS
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;"><b>${p.name || 'PROJECT PORTFOLIO'}</b></h1>
+                  <div style="font-size: 10px; color: #e2e8f0; font-weight: 800; letter-spacing: 0.8px; margin-top: 2px;">
+                    <b>${compName.toUpperCase()} • OFFICIAL PROJECT PORTFOLIO & SPECIFICATIONS</b>
                   </div>
                 </div>
               </div>
               <div style="text-align: right; flex-shrink: 0;">
-                <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
-                  PROJECT OVERVIEW
+                <div style="font-size: 11.5px; font-weight: 900; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+                  <b>PROJECT OVERVIEW</b>
                 </div>
               </div>
             </div>
 
             <!-- Body Content -->
-            <div style="padding: 14px 28px 6px 28px; box-sizing: border-box; width: 100%;">
+            <div style="padding: 16px 28px 10px 28px; box-sizing: border-box; width: 100%;">
               
               <!-- Upper Info Bar (Project Identity & Issuance Meta) -->
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 10px;">
                 <div style="width: 50%;">
-                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">PROJECT IDENTITY:</div>
-                  <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase;">${p.name || 'N/A'}</div>
-                  <div style="font-size: 11px; color: #334155; margin-top: 2px;">Developer: <strong style="color: #0f172a;">${compName}</strong></div>
-                  <div style="font-size: 11px; color: #475569;">City: <strong style="color: #0f172a;">${p.city || 'Karachi'}</strong></div>
-                  <div style="font-size: 11px; color: #475569;">Phone: <strong>${compPhone}</strong> ${compWhatsapp ? ' | WhatsApp: <strong>' + compWhatsapp + '</strong>' : ''}</div>
-                  <div style="font-size: 11px; color: #475569;">Email: <strong>${compEmail}</strong></div>
+                  <div style="font-size: 10px; font-weight: 900; color: #525866; text-transform: uppercase; margin-bottom: 2px;"><b>PROJECT IDENTITY:</b></div>
+                  <div style="font-size: 17px; font-weight: 900; color: #0f172a; text-transform: uppercase;"><b>${p.name || 'N/A'}</b></div>
+                  <div style="font-size: 11.5px; color: #334155; margin-top: 3px;">Developer: <strong style="color: #0f172a;"><b>${compName}</b></strong></div>
+                  <div style="font-size: 11.5px; color: #475569;">City: <strong style="color: #0f172a;"><b>${p.city || 'Karachi'}</b></strong></div>
+                  <div style="font-size: 11.5px; color: #475569;">Phone: <b>${compPhone}</b> ${compWhatsapp ? ' | WhatsApp: <b>' + compWhatsapp + '</b>' : ''}</div>
+                  <div style="font-size: 11.5px; color: #475569;">Email: <b>${compEmail}</b></div>
                 </div>
 
                 <div style="width: 48%; text-align: right;">
-                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">ISSUANCE DETAILS:</div>
-                  <div style="font-size: 12px; font-weight: 800; color: #0f172a;">Corporate Portfolio Dossier</div>
-                  <div style="font-size: 11px; color: #475569; margin-top: 2px;">Date: <strong style="color: #0d47a1;">${todayDate}</strong></div>
-                  <div style="font-size: 10.5px; color: #475569; margin-top: 2px; line-height: 1.35;">Head Office: <strong>${compAddress}</strong></div>
+                  <div style="font-size: 10px; font-weight: 900; color: #525866; text-transform: uppercase; margin-bottom: 2px;"><b>ISSUANCE DETAILS:</b></div>
+                  <div style="font-size: 13px; font-weight: 900; color: #0f172a;"><b>Corporate Portfolio Dossier</b></div>
+                  <div style="font-size: 11.5px; color: #475569; margin-top: 3px;">Date: <strong style="color: #0f172a;"><b>${todayDate}</b></strong></div>
+                  <div style="font-size: 11px; color: #475569; margin-top: 3px; line-height: 1.35;">Head Office: <b>${compAddress}</b></div>
                 </div>
               </div>
 
-              <!-- Main Address Banner -->
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid #0d47a1; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px;">
-                <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">LOCATION / SITE ADDRESS:</div>
-                <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; line-height: 1.4;">${p.location || 'N/A'}</div>
+              <!-- Main Location / Address Banner -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 5px solid #525866; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+                <div style="font-size: 10px; font-weight: 900; color: #525866; text-transform: uppercase; margin-bottom: 2px;"><b>LOCATION / SITE ADDRESS:</b></div>
+                <div style="font-size: 13px; font-weight: 800; color: #0f172a; line-height: 1.4;">${p.location || 'N/A'}</div>
               </div>
 
-              <!-- 4 Specifications Cards (Reliable Table Layout - No Blank Bug) -->
-              <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 12px;">
+              <!-- 4 Specifications Cards -->
+              <table style="width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 14px;">
                 <tr>
-                  <td style="width: 50%; padding-right: 6px; padding-bottom: 10px;">
+                  <td style="width: 50%; padding-right: 8px; padding-bottom: 10px;">
                     <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
-                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">TOTAL FLOORS</small>
-                      <div style="font-size: 15px; font-weight: 900; color: #0f172a;">${p.floors || 'N/A'}</div>
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;"><b>TOTAL FLOORS</b></small>
+                      <div style="font-size: 16px; font-weight: 900; color: #0f172a;"><b>${p.floors || 'N/A'}</b></div>
                     </div>
                   </td>
-                  <td style="width: 50%; padding-left: 6px; padding-bottom: 10px;">
+                  <td style="width: 50%; padding-left: 8px; padding-bottom: 10px;">
                     <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
-                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">TOTAL FLATS / UNITS</small>
-                      <div style="font-size: 15px; font-weight: 900; color: #16a34a;">${p.flatsCount || '0'} Units</div>
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;"><b>TOTAL FLATS / UNITS</b></small>
+                      <div style="font-size: 16px; font-weight: 900; color: #16a34a;"><b>${p.flatsCount || '0'} Units</b></div>
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td style="width: 50%; padding-right: 6px;">
+                  <td style="width: 50%; padding-right: 8px;">
                     <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
-                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">PROJECT CITY</small>
-                      <div style="font-size: 15px; font-weight: 900; color: #0284c7;">${p.city || 'Karachi'}</div>
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;"><b>PROJECT CITY</b></small>
+                      <div style="font-size: 16px; font-weight: 900; color: #0284c7;"><b>${p.city || 'Karachi'}</b></div>
                     </div>
                   </td>
-                  <td style="width: 50%; padding-left: 6px;">
+                  <td style="width: 50%; padding-left: 8px;">
                     <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 14px;">
-                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;">PROJECT STATUS</small>
-                      <div style="font-size: 15px; font-weight: 900; color: #15803d;">Active Construction</div>
+                      <small style="font-size: 9.5px; font-weight: 800; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 2px;"><b>PROJECT STATUS</b></small>
+                      <div style="font-size: 16px; font-weight: 900; color: #15803d;"><b>Active Construction</b></div>
                     </div>
                   </td>
                 </tr>
               </table>
 
-              ${p.description ? `
-                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 9px 14px; margin-bottom: 12px;">
-                  <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 2px;">DESCRIPTION / PROJECT HIGHLIGHTS:</div>
-                  <div style="font-size: 11px; color: #334155; line-height: 1.4;">${p.description}</div>
+              <!-- PROJECT DESCRIPTION BOX (PROMINENT & EXPANDED) -->
+              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 5px solid #525866; border-radius: 8px; padding: 14px 16px; margin-top: 6px; box-sizing: border-box;">
+                <div style="font-size: 11px; font-weight: 900; color: #525866; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 7px;">
+                  <i class="fa-solid fa-align-left"></i> <b>DESCRIPTION / PROJECT HIGHLIGHTS:</b>
                 </div>
-              ` : ''}
-
-              <!-- Terms & Conditions Box -->
-              <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 10px 14px;">
-                <div style="font-size: 10px; font-weight: 800; color: #0d47a1; text-transform: uppercase; margin-bottom: 3px;">
-                  TERMS & CONDITIONS:
-                </div>
-                <div style="font-size: 8.5px; color: #334155; line-height: 1.45; white-space: pre-line;">
-                  ${termsText}
+                <div style="font-size: 11.5px; font-weight: 700; color: #0f172a; line-height: 1.6; white-space: pre-line; word-break: break-word;">
+                  ${p.description && p.description.trim() ? p.description.trim() : 'Project details and architectural specifications recorded in engineering archives.'}
                 </div>
               </div>
 
@@ -7662,20 +7684,20 @@ function loadFlats() {
           </div>
 
           <!-- Bottom: Clean Footer with Authorized Sign -->
-          <div style="padding: 0 28px 24px 28px; display: flex; justify-content: space-between; align-items: flex-end; box-sizing: border-box; width: 100%;">
+          <div style="padding: 0 28px 28px 28px; display: flex; justify-content: space-between; align-items: flex-end; box-sizing: border-box; width: 100%;">
             
             <!-- Left: Authorized Person Signature -->
-            <div style="text-align: center; width: 210px;">
-              <div style="height: 35px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
-                AUTHORIZED PERSON SIGNATURE
+            <div style="text-align: center; width: 220px;">
+              <div style="height: 38px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 5px; font-size: 11px; font-weight: 900; color: #0f172a; text-transform: uppercase;">
+                <b>AUTHORIZED PERSON SIGNATURE</b>
               </div>
-              <div style="font-size: 9px; color: #64748b; font-weight: 600;">(Corporate Management)</div>
+              <div style="font-size: 9.5px; color: #64748b; font-weight: 700;">(Corporate Management)</div>
             </div>
 
             <!-- Right: System Footer Meta -->
-            <div style="font-size: 9.5px; color: #64748b; text-align: right;">
-              <strong style="color: #0f172a; font-size: 11px;">BILLAL HEIGHTS Enterprise Edition</strong><br>
+            <div style="font-size: 10px; color: #64748b; text-align: right;">
+              <strong style="color: #0f172a; font-size: 11.5px;"><b>BILLAL HEIGHTS Enterprise Edition</b></strong><br>
               Official Documentation & Engineering Record
             </div>
 
@@ -7684,20 +7706,8 @@ function loadFlats() {
         </div>
       `;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `Project_${(p.name || 'Project').replace(/\s+/g, '_')}_Portfolio.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
-
-      if (typeof html2pdf !== 'undefined') {
-        html2pdf().set(opt).from(pdfWrapper).save();
-      } else {
-        alert('PDF library load nahi ho saki. Internet connection check karein.');
-      }
+      // Fast PDF Engine se download
+      generateFastPDF(pdfWrapper, `Project_${(p.name || 'Project').replace(/\s+/g, '_')}_Portfolio.pdf`, 'portrait');
     }
 
 function updateFlatsFilterProjects() {
@@ -9066,20 +9076,7 @@ db.collection('customers').onSnapshot(snap => {
       </div>
     `;
 
-    const opt = {
-      margin: [0, 0, 0, 0],
-      filename: `Customer_Directory_Report_${todayDate.replace(/\s+/g, '_')}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
-    if (typeof html2pdf !== 'undefined') {
-      html2pdf().set(opt).from(pdfWrapper).save();
-    } else {
-      alert('PDF library load nahi ho saki. Internet connection check karein.');
-    }
+    generateFastPDF(pdfWrapper, `Customer_Directory_Report_${todayDate.replace(/\s+/g, '_')}.pdf`, 'landscape');
   }
     // Missing Helper: Flats for Transfer dropdown
     function populateFlatsForTransfer() {
@@ -12435,17 +12432,7 @@ loadLicenseSettings();
         </div>
       `;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `Invoice_${p.receiptNo || 'BH'}_Flat_${p.flatNo}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'avoid-all' }
-      };
-
-      if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
-      else alert('PDF library load nahi ho saki.');
+      generateFastPDF(pdfWrapper, `Invoice_${p.receiptNo || 'BH'}_Flat_${p.flatNo}.pdf`, 'portrait');
     }
 
     // 2. PURCHASE BILL (SLATE GREY #525866 - NO BLUE COLOR & 1-PAGE FIT)
@@ -12623,20 +12610,10 @@ loadLicenseSettings();
         </div>
       `;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `Purchase_Bill_${billNo}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'css' }
-      };
-
-      if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
-      else alert('PDF library load nahi ho saki.');
+      generateFastPDF(pdfWrapper, `Purchase_Bill_${billNo}.pdf`, 'portrait');
     }
 
-   // 3. ALLOTMENT DOSSIER / APPLICATION FORM (PAGE 1: CUSTOMER SIGNATURE ONLY | PAGE 2: 3 SIGNATURES)
+   // 3. ALLOTMENT DOSSIER / APPLICATION FORM (TERMS: BOLD FONT + INCREASED LENGTH & SIZE)
     function downloadCustomerPDF(customerId) {
       const c = allCustomersData.find(item => item.id === customerId);
       if (!c) return;
@@ -12660,64 +12637,90 @@ loadLicenseSettings();
       const flatObj = allFlatsData.find(f => (f.id && f.id === c.flatId) || (f.flatNo && String(f.flatNo).trim() === String(c.flatNo).trim()));
       const flatCategory = c.category || flatObj?.category || '';
 
-      const termsText = document.getElementById('setLegalTermsText')?.value.trim() || (typeof defaultLegalTerms !== 'undefined' ? defaultLegalTerms : 
-        "1. All bookings and allotments are governed under project bylaws.\n" +
-        "2. Possession rights will only be handed over upon 100% dues clearance.\n" +
-        "3. Building architecture, utilities, and structure are verified by engineering authorities.");
+      // --- TERMS & CONDITIONS (PART 1: CLAUSES 1 TO 6 FOR PAGE 1 - BOLD & DETAILED) ---
+      const termsPart1 = `<b>1.</b> The name of the Project is to be <b>"Bilal Heights"</b> which is being constructed by <b>AL-Bilal Builders & Developers</b> at Plot # SB-06, Survey 265 Anware Ibraheem, Near To Alfallah Police Station, Malir, Karachi.
+<b>2.</b> All installments must be paid on the <b>due dates</b> specified in the agreed payment schedule.
+<b>3.</b> <b>Physical possession</b> of the unit shall be handed over only after <b>100% of the total unit price</b>, all outstanding dues, documentation charges, and utility charges have been paid by <b>Allottee</b> in full and all required formalities have been completed.
+<b>4.</b> Transfer of the unit to any third party shall require prior approval and a <b>No Objection Certificate (NOC)</b> from management, full clearance of all outstanding dues, and payment of the prescribed <b>transfer fees</b>.
+<b>5.</b> The Apartment of the above project are offered for sale on ownership basis and shall be booked on <b>"First-come, First-served"</b> basis against <b>Cash only</b>. The Terms & Conditions, Application Form, Cost & Payment Schedule, Specifications, Undertakings and other approved documents etc. shall be signed by the applicant (allottee) which will form part of <b>Contract/Agreement for Allotment</b> of the said unit of the project.
+<b>6.</b> The <b>demand notice</b> of payment and all other correspondence will be dispatched by post on the address of the applicant given in the application form. The <b>Company</b> shall not be responsible for non-delivery of communication if the applicant does not notify change of address in advance.`;
 
-      const isLongTerms = (termsText && termsText.length > 300);
+      // --- TERMS & CONDITIONS (PART 2: CLAUSES 7 TO 26 FOR PAGE 2 - BOLD & FULL LENGTH) ---
+      const termsPart2 = `<b>7.</b> The <b>possession and ownership</b> of the Unit shall remain with the <b>Company</b> until full payment including service charges for utilities and documentation etc. are made by the applicant.
+<b>8.</b> The <b>allottee</b> shall not sell, transfer or assign his unit before <b>3 months</b> after the start of work and without the prior written permission of the <b>Company</b>. The Company may allow such sale, transfer or assignment only upon payment of all outstanding dues from the allottee. The Company reserves the right to charge <b>transfer fee</b> for allowing such sale, transfer or assignment.
+<b>9.</b> The applicant shall make the payment of installments within the period specified in the demand notice. If the applicant fails to pay the dues within the period specified in the final notice, the allocation will be liable to <b>cancellation</b> as per clause (11) of this form.
+<b>10.</b> In case of failure, on the part of applicant, to make payments within the prescribed period or after 7 days of <b>FINAL NOTICE</b>, the allocation/allotment will stand cancelled, the amount deposited by the applicant shall be refunded after the completion of this project or resale of the particular Unit. An amount equal to <b>10% of the total cost</b> of the Unit agreed will be deducted from the refundable amount.
+<b>11.</b> In case an applicant subsequently wishes to surrender his/her Unit or it stands cancelled on the basis of clause (11) above, the amount will be refunded after completion of this project and deduction of <b>10% of the total agreed price</b> of the Unit will be made from the installment deposited by the applicant, being the service & establishment charges.
+<b>12.</b> The applicant will pay <b>lease expenses, documentation charges</b>, outer development charges and all other ancillary and miscellaneous expenses to the <b>Company</b> as determined by them for fulfillment of the formalities of various departments/agencies as and when asked by the Company within the prescribed period of time. The cost of Unit does not include ground rent, lease execution, registration charges and legal expenses, electric, water and gas meter connection charges and/or internal/external development charges. The applicant on demand shall pay such charges.
+<b>13.</b> The construction of project is expected to be completed within the given time subject to the condition of force majeure, strike, riots, war and other calamities, which are beyond the control of the <b>Company</b>. This also includes, change in fiscal policies of the government. In such condition the builder shall be at liberty to refine/interrupt the construction schedule.
+<b>14.</b> The <b>maintenance</b> of the building will be the responsibility of the <b>Company</b>. The allot-tee will be bound to pay the <b>monthly maintenance charges</b> To The Company. The Company reserves the right to hand over the maintenance to the union at its own direction.
+<b>15.</b> The <b>Company</b> will make every effort to obtain permanent electric and gas connection and meters in the name of individual allot-tee at the earliest by making timely payment of challans, estimates, connection charges etc. in connection with these services, however the Company accepts no responsibility if the supply of any of the above mentioned services is delayed.
+<b>16.</b> The applicant shall take over the <b>physical possession</b> of the Unit within 15 days from issuance of intimation letter by the <b>Company</b> after clearance of all the outstanding dues and charges. In case of any delay on the part of applicant the Company shall charge penalty for care taking of his/her Unit. In case of any of the losses or damages of his/her booked Unit or fixture and fittings therein, due to theft, malicious tactics, natural/climatic occurrences, antisocial activities, riots and forced/illegal occupancy etc. the resultant losses or damages will be made good by the applicant.
+<b>17.</b> The construction will be done according to the plan/specification, however, changes in Elevation / designing and/or the Unit can be made by the <b>Company</b>, if necessary.
+<b>18.</b> The applicant shall not carry out any addition or alterations involving structures of the building within the Unit allotted to him/her (the structure includes Columns, Slabs and Beams) shall not change the present elevation of the building or any part thereof under any circumstances. This restriction will continue even after the applicant takes the <b>possession</b> of the Unit.
+<b>19.</b> (a) To permit the representative of the <b>Company</b> to enter into the Unit for ascertaining the observance of the covenants or for laying, testing, or service mains, cables, pipes, drains, service and other items etc. the applicant shall take all precautions against the tampering of all such other services.
+(b) Not to make any partitions, alteration, addition or any holes, attachments or adhesion of any nature without the consent of the <b>Company</b>.
+(c) Covered area of Unit will include ancillary and services area wall, passages, corridors, staircase, and balcony etc.
+(d) No extra work will be carried out by the <b>Company</b> on the request of applicant under any circumstances during the construction/finishing of the project.
+(e) The applicant will not misuse the amenities provided by the <b>Company</b> nor will he cover/encroach the open area.
+(f) To use the Unit for the purpose as specified and approved by the <b>Company</b>.
+<b>20.</b> The <b>Company</b> shall have <b>First lien, claim and charge</b> on the Unit, its fixture, and fitting and contents therein, in respect of any amount liable to be paid by the applicant to the Company.
+<b>21.</b> I/We undertake to visit the office of the <b>Company</b>/Office of the Sub-Registrar as and when required for any signatures.
+<b>22.</b> The allotment on booking of all Units will be <b>provisional</b> until final payment is cleared.
+<b>23.</b> The use of exterior walls, front and common area is reserved by the <b>Company</b> for any commercial or other use at the discretion of the Company.
+<b>24.</b> All serial numbers and/or other identification numbers and marking given in the layout plans booking and/or allocation letter pertaining to Units are on ad hoc, temporary and tentative basis and the <b>Company</b> reserves the right to amend/change/or renumber the same if found necessary.
+<b>25.</b> The Unit/Apartment may Not be used for commercial activities and is <b>only for residential purposes</b>.
+<b>26.</b> I/We hereby declare that I/We have read the terms and conditions of Booking/Allocation in the project, printed in this application form and I/We accept the same. I/We further declare that I/We shall abide by the existing terms and conditions and those, which may be prescribed by <b>company</b> for the purchase of a apartment in this project further.`;
 
       let ownersDetailsHtml = '';
       if (isJoint) {
         ownersDetailsHtml = `
-          <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; width: 100%; box-sizing: border-box;">
+          <div style="display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; width: 100%; box-sizing: border-box;">
             <!-- Owner 1 Column -->
-            <div style="width: 49%; background: #f8fafc; border: 1.5px solid ${theme.secondary || '#bfdbfe'}; border-radius: 8px; padding: 8px 10px; box-sizing: border-box;">
-              <div style="display: flex; gap: 10px; align-items: flex-start;">
+            <div style="width: 49%; background: #f8fafc; border: 1.5px solid ${theme.secondary || '#bfdbfe'}; border-radius: 8px; padding: 7px 9px; box-sizing: border-box;">
+              <div style="display: flex; gap: 9px; align-items: flex-start;">
                 <div style="display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
-                  <div style="width: 48px; height: 54px; border-radius: 6px; border: 1.5px solid ${theme.primary}; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
-                    ${o1.photo ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` : `<div style="font-size:8px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
+                  <div style="width: 46px; height: 52px; border-radius: 6px; border: 1.5px solid ${theme.primary}; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                    ${o1.photo ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` : `<div style="font-size:8px; color:#94a3b8; font-weight:800;">PHOTO</div>`}
                   </div>
-                  <div style="width: 48px; height: 46px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                  <div style="width: 46px; height: 44px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
                     ${o1.thumb ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` : `<i class="fa-solid fa-fingerprint" style="font-size:20px; color:#94a3b8;"></i>`}
                   </div>
                 </div>
                 <div style="flex: 1; min-width: 0; word-break: break-word;">
-                  <div style="font-size: 9px; font-weight: 800; color: ${theme.primary}; text-transform: uppercase;">OWNER 1 (PARTNER 1):</div>
-                  <div style="font-size: 11.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 1px;">${o1.name || 'Allottee Name'}</div>
-                  <div style="font-size: 9.5px; color: #334155;">S/O: <b>${o1.fatherHusband || '-'}</b></div>
-                  <div style="font-size: 9.5px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b></div>
-                  <div style="font-size: 9.5px; color: #334155;">Phone: <b>${o1.mobile || '-'}</b></div>
-                  <div style="font-size: 9px; color: #64748b; line-height: 1.2;">Address: ${o1.address || '-'}</div>
-                  <!-- Next of Kin for Owner 1 -->
-                  <div style="font-size: 8.5px; color: #0f172a; margin-top: 3px; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1px solid #cbd5e1;">
-                    <b>Next of Kin:</b> ${o1.nominee?.name && o1.nominee.name !== 'N/A' ? `${o1.nominee.name} (${o1.nominee.relation || 'Nominee'}) - CNIC: ${o1.nominee.cnic || '-'}` : 'N/A'}
+                  <div style="font-size: 8.5px; font-weight: 800; color: ${theme.primary}; text-transform: uppercase;"><b>APPLICANT 1 (PARTNER 1):</b></div>
+                  <div style="font-size: 11px; font-weight: 900; color: #0f172a; text-transform: uppercase; margin-top: 1px;"><b>${o1.name || 'Allottee Name'}</b></div>
+                  <div style="font-size: 9px; color: #0f172a; font-weight: 700;">S/O: <b>${o1.fatherHusband || '-'}</b></div>
+                  <div style="font-size: 9px; color: #0f172a; font-weight: 700;">CNIC: <b>${o1.cnic || '-'}</b></div>
+                  <div style="font-size: 9px; color: #0f172a; font-weight: 700;">Phone: <b>${o1.mobile || '-'}</b></div>
+                  <div style="font-size: 8.5px; color: #334155; font-weight: 600; line-height: 1.2;">Address: ${o1.address || '-'}</div>
+                  <div style="font-size: 8px; color: #0f172a; margin-top: 3px; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1.5px solid #cbd5e1;">
+                    <b>Next of Kin:</b> <b>${o1.nominee?.name && o1.nominee.name !== 'N/A' ? `${o1.nominee.name} (${o1.nominee.relation || 'Nominee'}) - CNIC: ${o1.nominee.cnic || '-'}` : 'N/A'}</b>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Owner 2 Column -->
-            <div style="width: 49%; background: #f8fafc; border: 1.5px solid ${theme.secondary || '#bae6fd'}; border-radius: 8px; padding: 8px 10px; box-sizing: border-box;">
-              <div style="display: flex; gap: 10px; align-items: flex-start;">
+            <div style="width: 49%; background: #f8fafc; border: 1.5px solid ${theme.secondary || '#bae6fd'}; border-radius: 8px; padding: 7px 9px; box-sizing: border-box;">
+              <div style="display: flex; gap: 9px; align-items: flex-start;">
                 <div style="display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
-                  <div style="width: 48px; height: 54px; border-radius: 6px; border: 1.5px solid ${theme.primary}; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
-                    ${o2.photo ? `<img src="${o2.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` : `<div style="font-size:8px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
+                  <div style="width: 46px; height: 52px; border-radius: 6px; border: 1.5px solid ${theme.primary}; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                    ${o2.photo ? `<img src="${o2.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` : `<div style="font-size:8px; color:#94a3b8; font-weight:800;">PHOTO</div>`}
                   </div>
-                  <div style="width: 48px; height: 46px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                  <div style="width: 46px; height: 44px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
                     ${o2.thumb ? `<img src="${o2.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` : `<i class="fa-solid fa-fingerprint" style="font-size:20px; color:#94a3b8;"></i>`}
                   </div>
                 </div>
                 <div style="flex: 1; min-width: 0; word-break: break-word;">
-                  <div style="font-size: 9px; font-weight: 800; color: ${theme.primary}; text-transform: uppercase;">OWNER 2 (PARTNER 2):</div>
-                  <div style="font-size: 11.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 1px;">${o2.name || 'Partner Name'}</div>
-                  <div style="font-size: 9.5px; color: #334155;">S/O: <b>${o2.fatherHusband || '-'}</b></div>
-                  <div style="font-size: 9.5px; color: #334155;">CNIC: <b>${o2.cnic || '-'}</b></div>
-                  <div style="font-size: 9.5px; color: #334155;">Phone: <b>${o2.mobile || '-'}</b></div>
-                  <div style="font-size: 9px; color: #64748b; line-height: 1.2;">Address: ${o2.address || o1.address || '-'}</div>
-                  <!-- Next of Kin for Owner 2 -->
-                  <div style="font-size: 8.5px; color: #0f172a; margin-top: 3px; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1px solid #cbd5e1;">
-                    <b>Next of Kin:</b> ${o2.nominee?.name && o2.nominee.name !== 'N/A' ? `${o2.nominee.name} (${o2.nominee.relation || 'Nominee'}) - CNIC: ${o2.nominee.cnic || '-'}` : 'N/A'}
+                  <div style="font-size: 8.5px; font-weight: 800; color: ${theme.primary}; text-transform: uppercase;"><b>APPLICANT 2 (PARTNER 2):</b></div>
+                  <div style="font-size: 11px; font-weight: 900; color: #0f172a; text-transform: uppercase; margin-top: 1px;"><b>${o2.name || 'Partner Name'}</b></div>
+                  <div style="font-size: 9px; color: #0f172a; font-weight: 700;">S/O: <b>${o2.fatherHusband || '-'}</b></div>
+                  <div style="font-size: 9px; color: #0f172a; font-weight: 700;">CNIC: <b>${o2.cnic || '-'}</b></div>
+                  <div style="font-size: 9px; color: #0f172a; font-weight: 700;">Phone: <b>${o2.mobile || '-'}</b></div>
+                  <div style="font-size: 8.5px; color: #334155; font-weight: 600; line-height: 1.2;">Address: ${o2.address || o1.address || '-'}</div>
+                  <div style="font-size: 8px; color: #0f172a; margin-top: 3px; background: #ffffff; padding: 2px 5px; border-radius: 4px; border: 1.5px solid #cbd5e1;">
+                    <b>Next of Kin:</b> <b>${o2.nominee?.name && o2.nominee.name !== 'N/A' ? `${o2.nominee.name} (${o2.nominee.relation || 'Nominee'}) - CNIC: ${o2.nominee.cnic || '-'}` : 'N/A'}</b>
                   </div>
                 </div>
               </div>
@@ -12726,108 +12729,102 @@ loadLicenseSettings();
         `;
       } else {
         ownersDetailsHtml = `
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; width: 100%; box-sizing: border-box;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; width: 100%; box-sizing: border-box;">
             <div style="width: 58%; box-sizing: border-box;">
-              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
                 <div style="text-align: center; flex-shrink: 0;">
-                  <div style="width: 60px; height: 66px; border-radius: 6px; border: 1.5px solid ${theme.primary}; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
-                    ${o1.photo ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` : `<div style="font-size:9px; color:#94a3b8; font-weight:700;">PHOTO</div>`}
+                  <div style="width: 56px; height: 62px; border-radius: 6px; border: 1.5px solid ${theme.primary}; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                    ${o1.photo ? `<img src="${o1.photo}" style="width:100%; height:100%; object-fit:cover;" alt="Photo" />` : `<div style="font-size:8px; color:#94a3b8; font-weight:800;">PHOTO</div>`}
                   </div>
-                  <small style="font-size: 8px; font-weight: 700; color: #475569; display: block; margin-top: 2px;">Allottee Photo</small>
+                  <small style="font-size: 7.5px; font-weight: 800; color: #475569; display: block; margin-top: 1px;"><b>Allottee Photo</b></small>
                 </div>
                 <div style="text-align: center; flex-shrink: 0;">
-                  <div style="width: 60px; height: 66px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
-                    ${o1.thumb ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` : `<i class="fa-solid fa-fingerprint" style="font-size:26px; color:#94a3b8;"></i>`}
+                  <div style="width: 56px; height: 62px; border-radius: 6px; border: 1.5px solid #16a34a; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center;">
+                    ${o1.thumb ? `<img src="${o1.thumb}" style="width:100%; height:100%; object-fit:contain;" alt="Thumb" />` : `<i class="fa-solid fa-fingerprint" style="font-size:24px; color:#94a3b8;"></i>`}
                   </div>
-                  <small style="font-size: 8px; font-weight: 700; color: #166534; display: block; margin-top: 2px;">Verified Thumb</small>
+                  <small style="font-size: 7.5px; font-weight: 800; color: #166534; display: block; margin-top: 1px;"><b>Verified Thumb</b></small>
                 </div>
               </div>
               <div style="word-break: break-word;">
-                <div style="font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;">ALLOTTEE INFORMATION:</div>
-                <div style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-top: 2px;">${o1.name || 'Allottee Name'}</div>
-                <div style="font-size: 10px; color: #334155; margin-top: 1px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
-                <div style="font-size: 10px; color: #334155;">CNIC: <b>${o1.cnic || '-'}</b> | Phone: <b>${o1.mobile || '-'}</b></div>
-                <div style="font-size: 9.5px; color: #64748b; margin-top: 1px; line-height: 1.25;">Address: ${o1.address || '-'}</div>
+                <div style="font-size: 9.5px; font-weight: 900; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;"><b>ALLOTTEE INFORMATION:</b></div>
+                <div style="font-size: 12.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; margin-top: 1px;"><b>${o1.name || 'Allottee Name'}</b></div>
+                <div style="font-size: 9.5px; color: #0f172a; font-weight: 700; margin-top: 1px;">S/O, W/O: <b>${o1.fatherHusband || '-'}</b></div>
+                <div style="font-size: 9.5px; color: #0f172a; font-weight: 700;">CNIC: <b>${o1.cnic || '-'}</b> | Phone: <b>${o1.mobile || '-'}</b></div>
+                <div style="font-size: 9px; color: #334155; font-weight: 600; margin-top: 1px; line-height: 1.25;">Address: <b>${o1.address || '-'}</b></div>
                 
-                <!-- Exact Match Image 1: Next of Kin (Nominee) -->
-                <div style="font-size: 10px; color: #0f172a; margin-top: 4px; background: #f8fafc; border: 1px solid #cbd5e1; border-left: 3px solid ${theme.primary}; padding: 3px 8px; border-radius: 4px;">
-                  <b>Next of Kin (Nominee):</b> ${o1.nominee?.name && o1.nominee.name !== 'N/A' ? `${o1.nominee.name} ${o1.nominee.relation && o1.nominee.relation !== 'N/A' ? `(${o1.nominee.relation})` : ''} - CNIC: ${o1.nominee.cnic || 'N/A'}` : 'N/A'}
+                <div style="font-size: 9px; color: #0f172a; margin-top: 3px; background: #f8fafc; border: 1px solid #cbd5e1; border-left: 3px solid ${theme.primary}; padding: 3px 8px; border-radius: 4px;">
+                  <b>Next of Kin (Nominee):</b> <b>${o1.nominee?.name && o1.nominee.name !== 'N/A' ? `${o1.nominee.name} ${o1.nominee.relation && o1.nominee.relation !== 'N/A' ? `(${o1.nominee.relation})` : ''} - CNIC: ${o1.nominee.cnic || 'N/A'}` : 'N/A'}</b>
                 </div>
 
-                <div style="font-size: 9.5px; color: ${theme.primary}; font-weight: 700; margin-top: 3px;">Ownership: ${c.ownershipType || 'Single Owner'}</div>
+                <div style="font-size: 9px; color: ${theme.primary}; font-weight: 800; margin-top: 2px;">Ownership: <b>${c.ownershipType || 'Single Owner'}</b></div>
               </div>
             </div>
             <div style="width: 40%; text-align: right; box-sizing: border-box; word-break: break-word;">
-              <div style="font-size: 10px; font-weight: 800; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;">PROJECT AUTHORITY:</div>
-              <div style="font-size: 13px; font-weight: 800; color: ${theme.primary}; margin-top: 2px;">${compProject}</div>
-              <div style="font-size: 10px; color: #475569; margin-top: 2px; line-height: 1.3;">${compAddress}</div>
-              <div style="font-size: 10px; color: #475569; margin-top: 1px;">Tel: ${compPhone}</div>
-              <div style="margin-top: 10px; font-size: 10.5px; font-weight: 700; color: #0f172a;">
-                Date: <span style="font-weight: 600; color: #475569;">${todayDate}</span>
+              <div style="font-size: 9.5px; font-weight: 900; color: #0f172a; margin-bottom: 1px; text-transform: uppercase; border-bottom: 1.5px solid ${theme.primary}; display: inline-block; padding-bottom: 1px;"><b>PROJECT AUTHORITY:</b></div>
+              <div style="font-size: 12.5px; font-weight: 900; color: ${theme.primary}; margin-top: 1px;"><b>${compProject}</b></div>
+              <div style="font-size: 9.5px; color: #334155; font-weight: 700; margin-top: 1px; line-height: 1.3;"><b>${compAddress}</b></div>
+              <div style="font-size: 9.5px; color: #334155; font-weight: 700; margin-top: 1px;">Tel: <b>${compPhone}</b></div>
+              <div style="margin-top: 8px; font-size: 10px; font-weight: 800; color: #0f172a;">
+                Date: <span style="font-weight: 800; color: #0f172a;"><b>${todayDate}</b></span>
               </div>
             </div>
           </div>
         `;
       }
 
-      // 1. PAGE 1: SIRF CUSTOMER SIGNATURE (DAAYEIN TARAF)
+      // PAGE 1 SIGNATURE: Right aligned
       let page1SignaturesHtml = '';
       if (isJoint) {
         page1SignaturesHtml = `
-          <div style="padding: 0 24px 18px 24px; display: flex; justify-content: flex-end; gap: 30px; align-items: flex-end; width: 100%; box-sizing: border-box;">
-            <div style="text-align: center; width: 160px;">
-              <div style="height: 32px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">OWNER 1 SIGNATURE</div>
-              <div style="font-size: 8.5px; color: #64748b;">(${o1.name || 'Partner 1'})</div>
+          <div style="padding: 0 24px 14px 24px; display: flex; justify-content: flex-end; gap: 30px; align-items: flex-end; width: 100%; box-sizing: border-box;">
+            <div style="text-align: center; width: 170px;">
+              <div style="height: 26px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 10px; font-weight: 900; color: #0f172a; text-transform: uppercase;"><b>APPLICANT 1 SIGNATURE</b></div>
+              <div style="font-size: 8px; color: #475569; font-weight: 700;">(${o1.name || 'Partner 1'})</div>
             </div>
-            <div style="text-align: center; width: 160px;">
-              <div style="height: 32px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase;">OWNER 2 SIGNATURE</div>
-              <div style="font-size: 8.5px; color: #64748b;">(${o2.name || 'Partner 2'})</div>
+            <div style="text-align: center; width: 170px;">
+              <div style="height: 26px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 3px; font-size: 10px; font-weight: 900; color: #0f172a; text-transform: uppercase;"><b>APPLICANT 2 SIGNATURE</b></div>
+              <div style="font-size: 8px; color: #475569; font-weight: 700;">(${o2.name || 'Partner 2'})</div>
             </div>
           </div>
         `;
       } else {
         page1SignaturesHtml = `
-          <div style="padding: 0 24px 18px 24px; display: flex; justify-content: flex-end; align-items: flex-end; width: 100%; box-sizing: border-box;">
-            <div style="text-align: center; width: 200px;">
-              <div style="height: 34px;"></div>
-              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-                CUSTOMER SIGNATURE
+          <div style="padding: 0 24px 14px 24px; display: flex; justify-content: flex-end; align-items: flex-end; width: 100%; box-sizing: border-box;">
+            <div style="text-align: center; width: 220px;">
+              <div style="height: 28px;"></div>
+              <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+                <b>APPLICANT SIGNATURE</b>
               </div>
             </div>
           </div>
         `;
       }
 
-      // 2. PAGE 2: 3 SIGNATURES UNDER TERMS & CONDITIONS
+      // PAGE 2 SIGNATURES: 3 Signatures
       const page2TermsSignaturesHtml = `
-        <div style="padding: 0 24px 14px 24px; display: flex; justify-content: space-between; align-items: flex-end; width: 100%; box-sizing: border-box;">
-          
-          <!-- 1. Booked By -->
-          <div style="text-align: center; width: 180px;">
-            <div style="height: 28px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-              BOOKED BY
+        <div style="padding: 0 24px 18px 24px; display: flex; justify-content: space-between; align-items: flex-end; width: 100%; box-sizing: border-box;">
+          <div style="text-align: center; width: 190px;">
+            <div style="height: 30px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+              <b>BOOKED BY</b>
             </div>
           </div>
 
-          <!-- 2. Signature of Applicant -->
-          <div style="text-align: center; width: 210px;">
-            <div style="height: 28px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-              SIGNATURE OF APPLICANT
+          <div style="text-align: center; width: 230px;">
+            <div style="height: 30px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+              <b>SIGNATURE OF APPLICANT</b>
             </div>
           </div>
 
-          <!-- 3. Authorized Signature -->
-          <div style="text-align: center; width: 180px;">
-            <div style="height: 28px;"></div>
-            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
-              AUTHORIZED SIGNATURE
+          <div style="text-align: center; width: 190px;">
+            <div style="height: 30px;"></div>
+            <div style="border-top: 1.5px solid #0f172a; padding-top: 4px; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">
+              <b>AUTHORIZED SIGNATURE</b>
             </div>
           </div>
-
         </div>
       `;
 
@@ -12842,66 +12839,66 @@ loadLicenseSettings();
       pdfWrapper.style.boxSizing = 'border-box';
 
       // ========================================================
-      // PAGE 1: APPLICATION FORM (SIRF CUSTOMER SIGNATURE)
+      // PAGE 1: APPLICATION FORM (TERMS 1 TO 6: BOLD FONT + INCREASED LENGTH)
       // ========================================================
       let htmlContent = `
-        <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0; ${isLongTerms ? 'page-break-after: always;' : ''}">
+        <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0; page-break-after: always;">
           <div>
-            <!-- Top Solid Header (Adjusted Height to 115px for Large Logo Fit) -->
-            <div style="background: ${theme.headerBg || '#525866'}; min-height: 115px; padding: 10px 24px 16px 24px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%; position: relative;">
+            <!-- Top Solid Header (Page 1 Only) -->
+            <div style="background: ${theme.headerBg || '#525866'}; min-height: 110px; padding: 10px 24px 14px 24px; border-bottom-left-radius: 50% 18px; border-bottom-right-radius: 50% 18px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%; position: relative;">
               <div style="display: flex; align-items: center; gap: 16px; min-width: 0;">
                 ${compLogo ? `
-                  <div style="height: 95px; max-width: 170px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <img src="${compLogo}" style="height: ${comp.logoSize || 95}px; max-height: 95px; max-width: 170px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
+                  <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <img src="${compLogo}" style="height: ${comp.logoSize || 90}px; max-height: 90px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
                   </div>
                 ` : ''}
                 <div style="min-width: 0;">
-                  <h1 style="margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;">${compProject}</h1>
+                  <h1 style="margin: 0; font-size: 22px; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; color: #ffffff;"><b>${compProject}</b></h1>
                   <div style="font-size: 9.5px; color: ${theme.secondary || '#e2e8f0'}; font-weight: 800; letter-spacing: 0.8px; margin-top: 3px;">
-                    OFFICIAL PROJECT REGISTRATION DOCUMENTS
+                    <b>OFFICIAL PROJECT REGISTRATION DOCUMENTS</b>
                   </div>
                 </div>
               </div>
               <div style="text-align: right; flex-shrink: 0;">
-                <div style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
-                  REF: ${bookingId}
+                <div style="font-size: 11px; font-weight: 900; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
+                  <b>REF: ${bookingId}</b>
                 </div>
               </div>
             </div>
 
             <!-- Body Content -->
-            <div style="padding: 6px 24px 4px 24px; box-sizing: border-box; width: 100%;">
+            <div style="padding: 4px 24px 2px 24px; box-sizing: border-box; width: 100%;">
               
-              <!-- Center Application Form Title -->
-              <div style="text-align: center; margin: 12px 0 8px 0;">
-                <span style="display: inline-block; font-size: 13px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: ${theme.primary}; background: ${theme.secondaryLight || '#eff6ff'}; border: 1.5px solid ${theme.secondary || '#bfdbfe'}; padding: 4px 22px; border-radius: 20px;">
-                  Application Form
+              <!-- Center Application Form Title (Header Background Color & White Text) -->
+              <div style="text-align: center; margin: 6px 0 6px 0;">
+                <span style="display: inline-block; font-size: 12px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; color: #ffffff; background: ${theme.headerBg || '#525866'}; border: 1.5px solid ${theme.headerBg || '#525866'}; padding: 4px 25px; border-radius: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                  <b>Application Form</b>
                 </span>
               </div>
 
               ${isJoint ? `
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 8px; width: 100%; box-sizing: border-box;">
-                  <div style="font-size: 10px; color: #334155;">
-                    Project: <b style="color:${theme.primary};">${compProject}</b> | Head Office: ${compAddress} | Tel: <b>${compPhone}</b>
+                  <div style="font-size: 10px; color: #334155; font-weight: 700;">
+                    Project: <b style="color:${theme.primary};">${compProject}</b> | Head Office: <b>${compAddress}</b> | Tel: <b>${compPhone}</b>
                   </div>
-                  <div style="font-size: 10px; font-weight: 700; color: #0f172a;">
-                    Date: <span style="font-weight: 600; color: #475569;">${todayDate}</span>
+                  <div style="font-size: 10px; font-weight: 800; color: #0f172a;">
+                    Date: <span style="font-weight: 800; color: #0f172a;"><b>${todayDate}</b></span>
                   </div>
                 </div>
               ` : ''}
 
               ${ownersDetailsHtml}
 
-              <!-- Property Allocation Strip (Category & Size Prominently Displayed) -->
-              <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-left: 5px solid ${theme.primary}; border-radius: 8px; padding: 7px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;">
-                <div style="font-size: 10.5px; color: #0f172a; min-width: 0; line-height: 1.4;">
-                  <b>PROJECT:</b> <span style="font-weight: 800; color: ${theme.primary};">${compProject}</span> &nbsp;|&nbsp;
-                  <b>FLAT NO:</b> <span style="font-weight: 900; color: ${theme.primary}; font-size: 12px;">${c.flatNo || '-'}</span> &nbsp;|&nbsp;
-                  <b>FLOOR:</b> <span style="font-weight: 700; color: #0f172a;">${c.floor || '-'}</span> &nbsp;|&nbsp;
-                  <b>UNIT SIZE:</b> <span style="font-weight: 800; color: #0d47a1;">${flatCategory ? flatCategory + ' - ' : ''}${c.size ? c.size + (String(c.size).includes('Sq') ? '' : ' Sq. Ft') : '-'}</span>
+              <!-- Property Allocation Strip -->
+              <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-left: 5px solid ${theme.primary}; border-radius: 7px; padding: 5px 10px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box;">
+                <div style="font-size: 10px; color: #0f172a; min-width: 0; line-height: 1.4;">
+                  <b>PROJECT:</b> <span style="font-weight: 900; color: ${theme.primary};"><b>${compProject}</b></span> &nbsp;|&nbsp;
+                  <b>FLAT NO:</b> <span style="font-weight: 900; color: ${theme.primary}; font-size: 11.5px;"><b>${c.flatNo || '-'}</b></span> &nbsp;|&nbsp;
+                  <b>FLOOR:</b> <span style="font-weight: 900; color: #0f172a;"><b>${c.floor || '-'}</b></span> &nbsp;|&nbsp;
+                  <b>UNIT SIZE:</b> <span style="font-weight: 900; color: #0d47a1;"><b>${flatCategory ? flatCategory + ' - ' : ''}${c.size ? c.size + (String(c.size).includes('Sq') ? '' : ' Sq. Ft') : '-'}</b></span>
                 </div>
-                <div style="font-size: 10.5px; color: #0f172a; flex-shrink: 0;">
-                  <b>TOTAL AGREED PRICE:</b> <span style="font-weight: 900; color: ${theme.primary}; font-size: 12.5px;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
+                <div style="font-size: 10px; color: #0f172a; flex-shrink: 0;">
+                  <b>TOTAL AGREED PRICE:</b> <span style="font-weight: 900; color: ${theme.primary}; font-size: 12px;"><b>Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</b></span>
                 </div>
               </div>
 
@@ -12911,85 +12908,81 @@ loadLicenseSettings();
                   const scheme = fin.planScheme || 'Plan1';
                   if (scheme === 'Plan2') {
                     const qTotal = Number(fin.quarterly || 0);
-                    // 24 mahine mein 8 quarters (har 3 mahine baad)
                     const qPerQuarter = Math.round(qTotal / 8);
 
                     return `
-                      <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px; box-sizing: border-box;">
+                      <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 3px; font-size: 9px; box-sizing: border-box;">
                         <thead>
                           <tr style="background: ${theme.primary}; color: #ffffff;">
-                            <th style="padding: 5px 8px; text-align: left; width: 50%; border: 1px solid ${theme.primary};">Plan 2: Stage / Milestone Description</th>
-                            <th style="padding: 5px 8px; text-align: center; width: 14%; border: 1px solid ${theme.primary};">Ratio %</th>
-                            <th style="padding: 5px 8px; text-align: right; width: 36%; border: 1px solid ${theme.primary};">Amount (Rs.)</th>
+                            <th style="padding: 4px 6px; text-align: left; width: 50%; border: 1px solid ${theme.primary};"><b>Plan 2: Stage / Milestone Description</b></th>
+                            <th style="padding: 4px 6px; text-align: center; width: 14%; border: 1px solid ${theme.primary};"><b>Ratio %</b></th>
+                            <th style="padding: 4px 6px; text-align: right; width: 36%; border: 1px solid ${theme.primary};"><b>Amount (Rs.)</b></th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; font-weight: 700; border: 1px solid #e2e8f0;">1. Booking Payment</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">10 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">2. Allocation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.allocation || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">3. Confirmation Payment</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">5 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.confirmation || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 3.5px 8px; color:#166534; font-weight: 700; border: 1px solid #e2e8f0;">4. 24 Months Installments (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}/Mo)</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 800; color: #166534;">40 %</td><td style="text-align: right; font-weight: 800; color:#166534; border: 1px solid #e2e8f0;">Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0f9ff;"><td style="padding: 3.5px 8px; color:#0369a1; font-weight: 700; border: 1px solid #e2e8f0;">5. Quarterly Installments (Rs. ${qPerQuarter.toLocaleString()}/Quarter)</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 800; color:#0369a1;">10 %</td><td style="text-align: right; font-weight: 800; color:#0369a1; border: 1px solid #e2e8f0;">Rs. ${Number(fin.quarterly || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">6. On Finishing</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.finishing || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; border: 1px solid #e2e8f0;">7. On Possession</td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 700;">15 %</td><td style="text-align: right; font-weight: 700; border: 1px solid #e2e8f0;">Rs. ${Number(fin.possession || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; font-weight: 800; border: 1px solid #e2e8f0;"><b>1. Booking Payment</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900;"><b>10 %</b></td><td style="text-align: right; font-weight: 900; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.downPayment || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; font-weight: 800; border: 1px solid #e2e8f0;"><b>2. Allocation Payment</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900;"><b>5 %</b></td><td style="text-align: right; font-weight: 900; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.allocation || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; font-weight: 800; border: 1px solid #e2e8f0;"><b>3. Confirmation Payment</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900;"><b>5 %</b></td><td style="text-align: right; font-weight: 900; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.confirmation || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 3px 6px; color:#166534; font-weight: 900; border: 1px solid #e2e8f0;"><b>4. 24 Months Installments (Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}/Mo)</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900; color: #166534;"><b>40 %</b></td><td style="text-align: right; font-weight: 900; color:#166534; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.installmentsPool || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0; background: #f0f9ff;"><td style="padding: 3px 6px; color:#0369a1; font-weight: 900; border: 1px solid #e2e8f0;"><b>5. Quarterly Installments (Rs. ${qPerQuarter.toLocaleString()}/Quarter)</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900; color:#0369a1;"><b>10 %</b></td><td style="text-align: right; font-weight: 900; color:#0369a1; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.quarterly || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; font-weight: 800; border: 1px solid #e2e8f0;"><b>6. On Finishing</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900;"><b>15 %</b></td><td style="text-align: right; font-weight: 900; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.finishing || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; font-weight: 800; border: 1px solid #e2e8f0;"><b>7. On Possession</b></td><td style="text-align: center; border: 1px solid #e2e8f0; font-weight: 900;"><b>15 %</b></td><td style="text-align: right; font-weight: 900; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.possession || 0).toLocaleString()}</b></td></tr>
                         </tbody>
                       </table>
                     `;
                   } else if (scheme === 'Plan3') {
                     const st = fin.stages || {};
                     const p3Duration = parseInt(st.monthsCount || fin.durationMonths || 24);
-                    // Months ke hisaab se total quarters
                     const p3TotalQuarters = Math.max(1, Math.round(p3Duration / 3));
                     const p3QuarterAmount = Number(st.quarterly || 0);
                     const p3PerQuarter = Math.round(p3QuarterAmount / p3TotalQuarters);
-
-                    // 7 Floors ki 7 Slabs
                     const slabTotal = Number(st.slabCasting || 0);
                     const perSlabRate = Math.round(slabTotal / 7);
 
                     return `
-                      <div style="margin-bottom: 4px; width: 100%; box-sizing: border-box;">
-                        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 9px; box-sizing: border-box;">
+                      <div style="margin-bottom: 3px; width: 100%; box-sizing: border-box;">
+                        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 8.5px; box-sizing: border-box;">
                           <thead>
                             <tr style="background: ${theme.primary}; color: #ffffff;">
-                              <th style="padding: 4px 6px; text-align: left; width: 33%; border: 1px solid ${theme.primary};">Plan 3: Construction Stage (1-9)</th>
-                              <th style="padding: 4px 6px; text-align: right; width: 17%; border: 1px solid ${theme.primary};">Amount (Rs.)</th>
-                              <th style="padding: 4px 6px; text-align: left; width: 33%; border: 1px solid ${theme.primary};">Construction Stage (10-18)</th>
-                              <th style="padding: 4px 6px; text-align: right; width: 17%; border: 1px solid ${theme.primary};">Amount (Rs.)</th>
+                              <th style="padding: 3.5px 5px; text-align: left; width: 33%; border: 1px solid ${theme.primary};"><b>Plan 3: Construction Stage (1-9)</b></th>
+                              <th style="padding: 3.5px 5px; text-align: right; width: 17%; border: 1px solid ${theme.primary};"><b>Amount (Rs.)</b></th>
+                              <th style="padding: 3.5px 5px; text-align: left; width: 33%; border: 1px solid ${theme.primary};"><b>Construction Stage (10-18)</b></th>
+                              <th style="padding: 3.5px 5px; text-align: right; width: 17%; border: 1px solid ${theme.primary};"><b>Amount (Rs.)</b></th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">1. On Booking</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.booking || fin.downPayment || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">10. On Slab Casting (Rs. ${perSlabRate.toLocaleString()}/Slab)</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.slabCasting || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">2. On Allocation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.allocation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">11. On Block Masonry</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.blockMasonry || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">3. On Confirmation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.confirmation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">12. On Plaster</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.plaster || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">4. On Start of Work</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.startWork || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">13. On Electric Work</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.electricWork || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #166534;">5. Monthly Installment Pool</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 800; color: #166534;">Rs. ${Number(st.monthlyPool || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">14. On Plumbing Work</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.plumbingWork || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f0f9ff;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0284c7;">6. Quarterly Installments (Rs. ${p3PerQuarter.toLocaleString()}/Quarter)</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 800; color: #0284c7;">Rs. ${Number(st.quarterly || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">15. On Colouring</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.colouring || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">7. On Excavation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.excavation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">16. On Flooring</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.flooring || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">8. On Foundation</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.foundation || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">17. On Finishing</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.finishing || 0).toLocaleString()}</td></tr>
-                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 600;">9. On Plinth</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 700;">Rs. ${Number(st.plinth || 0).toLocaleString()}</td><td style="padding: 3px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: ${theme.primary};">18. On Possession</td><td style="padding: 3px 6px; text-align: right; border: 1px solid #e2e8f0; font-weight: 800; color: ${theme.primary};">Rs. ${Number(st.possession || 0).toLocaleString()}</td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>1. On Booking</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.booking || fin.downPayment || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800; color: #0f172a;"><b>10. On Slab Casting (Rs. ${perSlabRate.toLocaleString()}/Slab)</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.slabCasting || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>2. On Allocation</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.allocation || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>11. On Block Masonry</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.blockMasonry || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>3. On Confirmation</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.confirmation || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>12. On Plaster</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.plaster || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>4. On Start of Work</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.startWork || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>13. On Electric Work</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.electricWork || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 900; color: #166534;"><b>5. Monthly Installment Pool</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900; color: #166534;"><b>Rs. ${Number(st.monthlyPool || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>14. On Plumbing Work</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.plumbingWork || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0; background: #f0f9ff;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 900; color: #0284c7;"><b>6. Quarterly Installments (Rs. ${p3PerQuarter.toLocaleString()}/Quarter)</b></td><td style="text-align: right; padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 900; color: #0284c7;"><b>Rs. ${Number(st.quarterly || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>15. On Colouring</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.colouring || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>7. On Excavation</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.excavation || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>16. On Flooring</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.flooring || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>8. On Foundation</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.foundation || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>17. On Finishing</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.finishing || 0).toLocaleString()}</b></td></tr>
+                            <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 800;"><b>9. On Plinth</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900;"><b>Rs. ${Number(st.plinth || 0).toLocaleString()}</b></td><td style="padding: 2.5px 5px; border: 1px solid #e2e8f0; font-weight: 900; color: ${theme.primary};"><b>18. On Possession</b></td><td style="padding: 2.5px 5px; text-align: right; border: 1px solid #e2e8f0; font-weight: 900; color: ${theme.primary};"><b>Rs. ${Number(st.possession || 0).toLocaleString()}</b></td></tr>
                           </tbody>
                         </table>
-                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 4px 10px; margin-top: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; width: 100%; box-sizing: border-box;">
-                          <span style="font-weight: 700; color: #166534;"><i class="fa-solid fa-calculator"></i> Installment Plan Duration: <b>${p3Duration} Months</b></span>
-                          <span style="font-weight: 800; color: #15803d; font-size: 10.5px;">Monthly Rate: Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()} / Month</span>
+                        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 5px; padding: 3px 8px; margin-top: 3px; display: flex; justify-content: space-between; align-items: center; font-size: 9px; width: 100%; box-sizing: border-box;">
+                          <span style="font-weight: 900; color: #166534;"><i class="fa-solid fa-calculator"></i> Installment Plan Duration: <b>${p3Duration} Months</b></span>
+                          <span style="font-weight: 900; color: #15803d; font-size: 10px;"><b>Monthly Rate: Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()} / Month</b></span>
                         </div>
                       </div>
                     `;
                   } else {
                     return `
-                      <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 4px; font-size: 9.5px; box-sizing: border-box;">
+                      <table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 3px; font-size: 9px; box-sizing: border-box;">
                         <thead>
                           <tr style="background: ${theme.primary}; color: #ffffff;">
-                            <th style="padding: 5px 8px; text-align: left; width: 44%; border: 1px solid ${theme.primary};">Plan 1: Description</th>
-                            <th style="padding: 5px 8px; text-align: center; width: 18%; border: 1px solid ${theme.primary};">Details</th>
-                            <th style="padding: 5px 8px; text-align: right; width: 18%; border: 1px solid ${theme.primary};">Payment Stage</th>
-                            <th style="padding: 5px 8px; text-align: right; width: 20%; border: 1px solid ${theme.primary};">Amount</th>
+                            <th style="padding: 4px 6px; text-align: left; width: 44%; border: 1px solid ${theme.primary};"><b>Plan 1: Description</b></th>
+                            <th style="padding: 4px 6px; text-align: center; width: 18%; border: 1px solid ${theme.primary};"><b>Details</b></th>
+                            <th style="padding: 4px 6px; text-align: right; width: 18%; border: 1px solid ${theme.primary};"><b>Payment Stage</b></th>
+                            <th style="padding: 4px 6px; text-align: right; width: 20%; border: 1px solid ${theme.primary};"><b>Amount</b></th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; color: #0f172a; font-weight: 700; border: 1px solid #e2e8f0;">Apartment Allocation (Flat ${c.flatNo || '-'})</td><td style="padding: 3.5px 8px; text-align: center; color: #475569; border: 1px solid #e2e8f0;">Floor: ${c.floor || 'Ground'} (${c.size || ''})</td><td style="padding: 3.5px 8px; text-align: right; color: #334155; border: 1px solid #e2e8f0;">Total Price</td><td style="padding: 3.5px 8px; text-align: right; font-weight: 800; color: #0f172a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; color: #334155; border: 1px solid #e2e8f0;">Booking / Down Payment</td><td style="padding: 3.5px 8px; text-align: center; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Paid</td><td style="padding: 3.5px 8px; text-align: right; color: #16a34a; font-weight: 700; border: 1px solid #e2e8f0;">Initial</td><td style="padding: 3.5px 8px; text-align: right; font-weight: 700; color: #16a34a; border: 1px solid #e2e8f0;">Rs. ${Number(fin.downPayment || 0).toLocaleString()}</td></tr>
-                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3.5px 8px; color: #334155; border: 1px solid #e2e8f0;">Monthly Installment Schedule</td><td style="padding: 3.5px 8px; text-align: center; color: ${theme.primary}; font-weight: 700; border: 1px solid #e2e8f0;">${fin.durationMonths || 36} Months</td><td style="padding: 3.5px 8px; text-align: right; color: ${theme.primary}; font-weight: 700; border: 1px solid #e2e8f0;">Per Month</td><td style="padding: 3.5px 8px; text-align: right; font-weight: 800; color: ${theme.primary}; border: 1px solid #e2e8f0;">Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; color: #0f172a; font-weight: 800; border: 1px solid #e2e8f0;"><b>Apartment Allocation (Flat ${c.flatNo || '-'})</b></td><td style="padding: 3px 6px; text-align: center; color: #475569; font-weight: 800; border: 1px solid #e2e8f0;"><b>Floor: ${c.floor || 'Ground'} (${c.size || ''})</b></td><td style="padding: 3px 6px; text-align: right; color: #334155; font-weight: 800; border: 1px solid #e2e8f0;"><b>Total Price</b></td><td style="padding: 3px 6px; text-align: right; font-weight: 900; color: #0f172a; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; color: #334155; font-weight: 800; border: 1px solid #e2e8f0;"><b>Booking / Down Payment</b></td><td style="padding: 3px 6px; text-align: center; color: #16a34a; font-weight: 900; border: 1px solid #e2e8f0;"><b>Paid</b></td><td style="padding: 3px 6px; text-align: right; color: #16a34a; font-weight: 800; border: 1px solid #e2e8f0;"><b>Initial</b></td><td style="padding: 3px 6px; text-align: right; font-weight: 900; color: #16a34a; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.downPayment || 0).toLocaleString()}</b></td></tr>
+                          <tr style="border-bottom: 1px solid #e2e8f0;"><td style="padding: 3px 6px; color: #334155; font-weight: 800; border: 1px solid #e2e8f0;"><b>Monthly Installment Schedule</b></td><td style="padding: 3px 6px; text-align: center; color: ${theme.primary}; font-weight: 900; border: 1px solid #e2e8f0;"><b>${fin.durationMonths || 36} Months</b></td><td style="padding: 3px 6px; text-align: right; color: ${theme.primary}; font-weight: 800; border: 1px solid #e2e8f0;"><b>Per Month</b></td><td style="padding: 3px 6px; text-align: right; font-weight: 900; color: ${theme.primary}; border: 1px solid #e2e8f0;"><b>Rs. ${Number(fin.monthlyInstallment || 0).toLocaleString()}</b></td></tr>
                         </tbody>
                       </table>
                     `;
@@ -12998,102 +12991,62 @@ loadLicenseSettings();
               </div>
 
               <!-- Total Ribbon -->
-              <div style="display: flex; justify-content: flex-end; margin-top: 4px; margin-bottom: 6px; width: 100%; box-sizing: border-box;">
-                <div style="background: ${theme.primary}; color: #ffffff; padding: 6px 18px; border-radius: 6px; display: flex; gap: 20px; align-items: center; min-width: 220px; justify-content: space-between;">
-                  <span style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Total Deal</span>
-                  <span style="font-size: 13.5px; font-weight: 900;">Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</span>
+              <div style="display: flex; justify-content: flex-end; margin-top: 3px; margin-bottom: 6px; width: 100%; box-sizing: border-box;">
+                <div style="background: ${theme.primary}; color: #ffffff; padding: 5px 16px; border-radius: 5px; display: flex; gap: 18px; align-items: center; min-width: 210px; justify-content: space-between;">
+                  <span style="font-size: 10.5px; font-weight: 900; text-transform: uppercase;"><b>TOTAL DEAL</b></span>
+                  <span style="font-size: 13px; font-weight: 900;"><b>Rs. ${Number(fin.totalPrice || 0).toLocaleString()}</b></span>
                 </div>
               </div>
 
-              ${!isLongTerms ? `
-                <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-left: 4px solid ${theme.primary}; border-radius: 8px; padding: 6px 12px; margin-top: 4px; margin-bottom: 8px; width: 100%; box-sizing: border-box;">
-                  <div style="font-size: 9.5px; font-weight: 800; color: ${theme.primary}; text-transform: uppercase; margin-bottom: 2px;">
-                    <i class="fa-solid fa-file-contract"></i> TERMS & CONDITIONS OF ALLOTMENT:
-                  </div>
-                  <div style="font-size: 8px; color: #334155; line-height: 1.3; white-space: pre-line; word-break: break-word;">
-                    ${termsText}
-                  </div>
+              <!-- PAGE 1: TERMS & CONDITIONS (INCREASED LENGTH, BOLD 700 TEXT) -->
+              <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; margin-top: 5px; margin-bottom: 4px; width: 100%; box-sizing: border-box;">
+                <div style="font-size: 10px; font-weight: 900; color: #0f172a; text-transform: uppercase; margin-bottom: 4px; border-bottom: 1.5px solid #cbd5e1; padding-bottom: 3px; display: flex; justify-content: space-between; align-items: center;">
+                  <span><i class="fa-solid fa-file-contract" style="color: ${theme.primary};"></i> <b>STANDARD TERMS & CONDITIONS OF ALLOTMENT:</b></span>
+                  <span style="font-size: 8.5px; color: #64748b; font-weight: 900;"><b>(Continued on Page 2)</b></span>
                 </div>
-              ` : ''}
+                <div style="font-size: 9px; font-weight: 700; color: #0f172a; line-height: 1.52; white-space: pre-line; word-break: break-word;">
+                  ${termsPart1}
+                </div>
+              </div>
 
             </div>
           </div>
 
-          <!-- Bottom: Page 1 Signature (Sirf Customer Signature) -->
+          <!-- Bottom: Page 1 Signature -->
           ${page1SignaturesHtml}
         </div>
       `;
 
       // ========================================================
-      // PAGE 2: TERMS & CONDITIONS (3 SIGNATURES - FULL PAGE FIT)
+      // PAGE 2: TERMS & CONDITIONS (EXPANDED FULL LENGTH + BOLD FONT)
       // ========================================================
-      if (isLongTerms) {
-        htmlContent += `
-          <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:0;">
-            <div style="display:flex; flex-direction:column; flex:1; min-height:0;">
-              <!-- Page 2 Header Banner (Adjusted Height & Large Logo Fit) -->
-              <div style="background: ${theme.headerBg || '#525866'}; min-height: 105px; height: 105px; padding: 0 24px; border-bottom-left-radius: 50% 16px; border-bottom-right-radius: 50% 16px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; box-sizing: border-box; width: 100%;">
-                <div style="display: flex; align-items: center; gap: 16px;">
-                  ${compLogo ? `
-                    <div style="height: 90px; max-width: 160px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                      <img src="${compLogo}" style="height: ${comp.logoSize || 90}px; max-height: 90px; max-width: 160px; object-fit: contain; transform: translate(${comp.logoX || 0}px, ${comp.logoY || 0}px);" alt="Logo" />
-                    </div>
-                  ` : ''}
-                  <div>
-                    <h2 style="margin: 0; font-size: 19px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; color: #ffffff;">${compProject}</h2>
-                    <div style="font-size: 9.5px; color: ${theme.secondary || '#e2e8f0'}; font-weight: 800; letter-spacing: 0.8px; margin-top: 2px;">
-                      TERMS & CONDITIONS OF ALLOTMENT (PAGE 2)
-                    </div>
-                  </div>
-                </div>
-                <div style="text-align: right;">
-                  <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.8px; background: rgba(255,255,255,0.15); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); color: #ffffff;">
-                    REF: ${bookingId}
-                  </div>
-                </div>
-              </div>
-
-              <!-- Page 2 Terms & Conditions Content (Expanded to Fill Page) -->
-              <div style="padding: 10px 24px 6px 24px; box-sizing: border-box; width: 100%; display: flex; flex-direction: column; flex: 1; min-height: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid ${theme.primary}; padding-bottom: 5px; margin-bottom: 8px;">
-                  <h3 style="margin: 0; font-size: 13px; font-weight: 900; color: ${theme.primary}; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
-                    <i class="fa-solid fa-file-contract"></i> Standard Terms & Conditions of Allotment
-                  </h3>
-                  <span style="font-size: 11px; font-weight: 800; color: #0f172a;">Flat No: <b style="color:${theme.primary}; font-size: 12px;">${c.flatNo || '-'}</b></span>
-                </div>
-
-                <!-- Terms Container: Height aur Line-Height Adjusted for Full Page Fit -->
-                <div style="background: #f8fafc; border: 1.2px solid #cbd5e1; border-radius: 8px; padding: 10px 14px; font-size: 8.8px; color: #1e293b; line-height: 1.52; white-space: pre-line; word-break: break-word; box-sizing: border-box; flex: 1; min-height: 0; overflow: hidden; display: flex; align-items: stretch;">
-                  <div style="width: 100%;">${termsText}</div>
-                </div>
-
-                
-              </div>
+      htmlContent += `
+        <div style="background:#ffffff; width:210mm; min-height:295mm; max-height:295mm; height:295mm; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box; overflow:hidden; position:relative; margin:0 auto; padding:18px 24px 14px 24px;">
+          <div style="display:flex; flex-direction:column; flex:1; min-height:0;">
+            
+            <!-- Top Sub-Header Bar (NO Big Banner at all) -->
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0f172a; padding-bottom: 6px; margin-bottom: 10px;">
+              <h3 style="margin: 0; font-size: 13.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-file-contract" style="color: ${theme.primary};"></i> <b>STANDARD TERMS & CONDITIONS OF ALLOTMENT</b>
+              </h3>
+              <span style="font-size: 12px; font-weight: 900; color: #0f172a;">Flat No: <b style="color:${theme.primary}; font-size: 13.5px;"><b>${c.flatNo || '-'}</b></b></span>
             </div>
 
-            <!-- Page 2 Bottom Signatures (Teeno Signatures: Booked by, Applicant, Authorized) -->
-            ${page2TermsSignaturesHtml}
+            <!-- Terms Container: Bold 700 Font + Increased Length/Line-Height to Fill Page 2 -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 12px 16px; font-size: 9.2px; font-weight: 700; color: #0f172a; line-height: 1.56; white-space: pre-line; word-break: break-word; box-sizing: border-box; flex: 1; min-height: 0; overflow: hidden;">
+              ${termsPart2}
+            </div>
           </div>
-        `;
-      }
+
+          <!-- Page 2 Bottom 3 Signatures: BOOKED BY, SIGNATURE OF APPLICANT, AUTHORIZED SIGNATURE -->
+          ${page2TermsSignaturesHtml}
+        </div>
+      `;
 
       pdfWrapper.innerHTML = htmlContent;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `Allotment_Order_${bookingId}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2, 
-          useCORS: true, 
-          scrollY: 0
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
-
-      if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
-      else alert('PDF library load nahi ho saki.');
+      // Fast PDF Generator Call
+      generateFastPDF(pdfWrapper, `Allotment_Order_${bookingId}.pdf`, 'portrait');
     }
 
    // 4. SITE EXPENSE VOUCHER (STRICT SINGLE PAGE A4, LOGO + CLEAN SIGNATURES, NO THANK YOU)
@@ -13369,17 +13322,7 @@ loadLicenseSettings();
         </div>
       `;
 
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `Office_Voucher_${voucherNo}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: 'avoid-all' }
-      };
-
-      if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
-      else alert('PDF library load nahi ho saki.');
+      generateFastPDF(pdfWrapper, `Office_Voucher_${voucherNo}.pdf`, 'portrait');
     }
 
 
@@ -13789,17 +13732,7 @@ loadLicenseSettings();
       </div>
     `;
 
-    const opt = {
-      margin: [0, 0, 0, 0],
-      filename: `${v.voucherNo || 'VOUCHER'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: 'css' }
-    };
-
-    if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
-    else alert('PDF library load nahi ho saki.');
+    generateFastPDF(pdfWrapper, `${v.voucherNo || 'VOUCHER'}.pdf`, 'portrait');
   }
     
 function filterCashVouchersTable() {
@@ -15304,20 +15237,7 @@ function downloadCashBookPDF() {
     </div>
   `;
 
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: `Cash_Book_Report_${todayDate.replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: 'css' }
-  };
-
-  if (typeof html2pdf !== 'undefined') {
-    html2pdf().set(opt).from(pdfWrapper).save();
-  } else {
-    alert('PDF library load nahi ho saki.');
-  }
+  generateFastPDF(pdfWrapper, `Cash_Book_Report_${todayDate.replace(/\s+/g, '_')}.pdf`, 'landscape');
 }
 
 
@@ -15828,20 +15748,7 @@ function downloadProfitLossPDF() {
     </div>
   `;
 
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: `Profit_Loss_Statement_${todayDate.replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['css', 'legacy'] }
-  };
-
-  if (typeof html2pdf !== 'undefined') {
-    html2pdf().set(opt).from(pdfWrapper).save();
-  } else {
-    alert('PDF library load nahi ho saki.');
-  }
+  generateFastPDF(pdfWrapper, `Profit_Loss_Statement_${todayDate.replace(/\s+/g, '_')}.pdf`, 'portrait');
 }
 
 
@@ -16687,20 +16594,7 @@ function downloadAccountLedgerPDF() {
     </div>
   `;
 
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: `Account_Ledger_${(selectedAcc || 'All').replace(/\s+/g, '_')}_${todayDate.replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2.2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-  };
-
-  if (typeof html2pdf !== 'undefined') {
-    html2pdf().set(opt).from(pdfWrapper).save();
-  } else {
-    alert('PDF library load nahi ho saki.');
-  }
+  generateFastPDF(pdfWrapper, `Account_Ledger_${(selectedAcc || 'All').replace(/\s+/g, '_')}_${todayDate.replace(/\s+/g, '_')}.pdf`, 'landscape');
 }
 
 // Direct Click Attachment (Bina DOMContentLoaded ke intizar ke foran kaam karega)
@@ -17012,16 +16906,7 @@ function downloadSiteLedgerPDF() {
     </div>
   `;
 
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: `Site_Expense_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: 'css' }
-  };
-
-  if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
+  generateFastPDF(pdfWrapper, `Site_Expense_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`, 'landscape');
 }
 
 // ========================================================
@@ -17188,16 +17073,7 @@ function downloadOfficeLedgerPDF() {
     </div>
   `;
 
-  const opt = {
-    margin: [0, 0, 0, 0],
-    filename: `Office_Petty_Cash_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    pagebreak: { mode: 'css' }
-  };
-
-  if (typeof html2pdf !== 'undefined') html2pdf().set(opt).from(pdfWrapper).save();
+  generateFastPDF(pdfWrapper, `Office_Petty_Cash_Ledger_${todayDate.replace(/\s+/g, '_')}.pdf`, 'landscape');
 }
 
   </script>
